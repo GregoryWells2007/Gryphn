@@ -21,9 +21,14 @@ add_compile_definitions(GN_REVEAL_IMPL)
 add_subdirectory(depends/metal-cpp)
 
 add_library(glfw SHARED IMPORTED)
-set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/build/depends/glfw/glfw-3.4/src/libglfw.dylib)
+set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/build/depends/glfw/glfw-3.4/src/libglfw.3.4.dylib)
 
 target_link_libraries(GryphnMetalImpl METAL_CPP glfw spirv-cross-core spirv-cross-msl spirv-cross-cpp)
+
+target_link_libraries(GryphnMetalImpl
+    "-framework IOKit"
+    "-framework CoreFoundation"
+)
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/gryphn/rendering_apis)
 add_custom_command(TARGET GryphnMetalImpl POST_BUILD

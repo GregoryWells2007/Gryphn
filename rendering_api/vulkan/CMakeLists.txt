@@ -17,12 +17,19 @@ target_include_directories(GryphnVulkanImpl PUBLIC
 add_compile_definitions(GN_REVEAL_IMPL)
 
 add_library(glfw SHARED IMPORTED)
-set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/build/depends/glfw/glfw-3.4/src/libglfw.dylib)
+set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/build/depends/glfw/glfw-3.4/src/libglfw.3.4.dylib)
 
 add_library(libvulkan SHARED IMPORTED)
 set_target_properties(libvulkan PROPERTIES IMPORTED_LOCATION /Applications/vulkansdk/macOS/lib/libvulkan.dylib)
 
-target_link_libraries(GryphnVulkanImpl glfw libvulkan )
+target_link_libraries(GryphnVulkanImpl glfw libvulkan)
+
+target_link_libraries(GryphnVulkanImpl
+    "-framework IOKit"
+    "-framework CoreFoundation"
+    "-framework CoreGraphics"
+    "-framework AppKit"
+)
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/gryphn/rendering_apis)
 add_custom_command(TARGET GryphnVulkanImpl POST_BUILD

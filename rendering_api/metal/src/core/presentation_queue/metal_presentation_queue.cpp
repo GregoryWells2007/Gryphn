@@ -100,9 +100,8 @@ GN_EXPORT gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presenta
     return GN_SUCCESS;
 }
 GN_EXPORT void gnDestroyPresentationQueueFn(gnPresentationQueue& queue) {
-    /*for (int i = 0; i < gnListLength(queue.images); i++) {
+    for (int i = 0; i < gnListLength(queue.images); i++) {
         gnDestroyTexture(queue.images[i]);
     }
-    queue.images = gnCreateList<gnTexture>();*/
-    std::cout << "gnDestroyPresentationQueueFn needs fixin\n";
+    queue.images = gnCreateList<gnTexture>();
 }
