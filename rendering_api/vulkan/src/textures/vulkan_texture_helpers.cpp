@@ -182,7 +182,7 @@ gnReturnCode vulkanCreateImage(const gnOutputDevice& outputDevice,
 
     VkResult result = vkCreateImage(outputDevice.outputDevice->device, &imageInfo, nullptr, &image);
     if (result != VK_SUCCESS) {
-        GN_RETURN_ERROR(std::to_string(result).c_str());
+        return gnReturnError(GN_FAILED_TO_CREATE_IMAGE, std::to_string(result).c_str());
     }
 
     VkMemoryRequirements memRequirements;
@@ -197,12 +197,12 @@ gnReturnCode vulkanCreateImage(const gnOutputDevice& outputDevice,
         outputDevice.physicalOutputDevice->physicalOutputDevice->device,
         memRequirements.memoryTypeBits, properties,
         &memoryTypeIndex) != GN_SUCCESS) {
-            GN_RETURN_ERROR("Failed to find memory type");
+            return gnReturnError(GN_FAILED_TO_CREATE_IMAGE, "Failed to find memory type");
     }
     allocInfo.memoryTypeIndex = memoryTypeIndex;
 
     if (vkAllocateMemory(outputDevice.outputDevice->device, &allocInfo, nullptr, &imageMemory) != VK_SUCCESS) {
-        GN_RETURN_ERROR("Failed to allocate memory");
+        return gnReturnError(GN_FAILED_TO_CREATE_IMAGE, "Failed to allocate memory");
     }
 
     vkBindImageMemory(outputDevice.outputDevice->device, image, imageMemory, 0);

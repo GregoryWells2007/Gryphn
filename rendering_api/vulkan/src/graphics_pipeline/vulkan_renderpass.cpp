@@ -60,7 +60,7 @@ GN_EXPORT gnReturnCode gnCreateRenderPassFn(gnRenderPass* renderPass, const gnOu
         colorAttachmentRef.attachment = i;
 
         if (renderPass->presentationQueue == nullptr) {
-            GN_RETURN_ERROR("the presentation queue has not been set");
+            return gnReturnError(GN_FAILED_CREATE_RENDERPASS, "the presentation queue has not been set");
         }
 
         if (renderPass->attachments[i].colorMode == GN_RGBA8) {

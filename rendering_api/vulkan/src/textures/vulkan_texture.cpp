@@ -179,11 +179,11 @@ GN_EXPORT gnReturnCode gnCreateTextureFn(gnTexture* texture, const gnOutputDevic
             if (vulkanCreateImage(outputDevice, texture->textureExtent.x, texture->textureExtent.y,
                 depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
                 texture->texture->textureImage, texture->texture->textureImageMemory) != GN_SUCCESS) {
-                    GN_RETURN_ERROR("Failed to create depth image");
+                    return gnReturnError(GN_FAILED_TO_CREATE_IMAGE, "Failed to create depth image");
             }
 
             gnReturnCode errorCode = createImageView(outputDevice, texture->texture->textureImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT, &texture->texture->textureImageView);
-            if (transitionImageLayout(outputDevice, texture->texture->textureImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) != GN_FAILED) GN_RETURN_ERROR("Failed to transition image layout");
+            if (transitionImageLayout(outputDevice, texture->texture->textureImage, depthFormat, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) != GN_SUCCESS) return gnReturnError(GN_FAILED_TO_CREATE_IMAGE, "Failed to transition image layout");
         }
     } else {
         if (vulkanCreateCubeMap(outputDevice, texture->textureExtent.x, texture->textureExtent.y, texture->texture->textureImage, texture->texture->textureImageMemory) != GN_SUCCESS)
@@ -217,7 +217,7 @@ GN_EXPORT gnReturnCode gnCreateTextureFn(gnTexture* texture, const gnOutputDevic
         samplerInfo.maxLod = 0.0f;
 
         if (vkCreateSampler(outputDevice.outputDevice->device, &samplerInfo, nullptr, &texture->texture->textureSampler) != VK_SUCCESS)
-            GN_RETURN_ERROR("Failed to create texture sampler");
+            return gnReturnError(GN_FAILED_TO_CREATE_IMAGE, "Failed to create texture sampler");
     }
 
     return GN_SUCCESS;

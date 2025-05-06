@@ -24,7 +24,7 @@ GN_EXPORT gnReturnCode gnCreateRenderPassFn(gnRenderPass* renderPass, const gnOu
         else if (renderPass->attachments[i].colorMode == GN_DEPTH8_STENCIL24) {}
         else {
             std::string return_code = "GN_RENDERPASS_ATTATCHMENT_(" + std::to_string(i) + ")" + "_UNSUPPORTED_COLOR_MODE";
-            GN_RETURN_ERROR(return_code.c_str());
+            return gnReturnError(GN_UNKNOWN_COLOR_FORMAT, return_code.c_str());
         }
     }
 

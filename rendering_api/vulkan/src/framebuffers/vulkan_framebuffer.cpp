@@ -30,7 +30,7 @@ GN_EXPORT gnReturnCode gnCreateFramebufferFn(gnFramebuffer* framebuffer, const g
 
 
     if (vkCreateFramebuffer(renderpass.renderpass->outputDevice->outputDevice->device, &framebufferInfo, nullptr, &framebuffer->framebuffer->framebuffer) != VK_SUCCESS) {
-        GN_RETURN_ERROR("Failed to create framebuffer");
+        return gnReturnError(GN_FAILED_TO_CREATE_FRAMEBUFFER, "im to lazy to query vulkan why");
     }
 
     return GN_SUCCESS;

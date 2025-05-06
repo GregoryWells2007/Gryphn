@@ -56,7 +56,7 @@ GN_EXPORT gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presenta
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
     if (vkCreateSwapchainKHR(device.outputDevice->device, &createInfo, nullptr, &presentationQueue->presentationQueue->swapChain) != VK_SUCCESS) {
-        GN_RETURN_ERROR("failed to create swap chain!");
+        gnReturnError(GN_FAILED_CREATE_PRESENTATION_QUEUE, "too lazy to query vulkan why");
     }
 
     std::vector<VkImage> swapChainImages;

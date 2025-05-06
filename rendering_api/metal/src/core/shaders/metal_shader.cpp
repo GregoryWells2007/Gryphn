@@ -1,7 +1,7 @@
 #include "metal_shader_module.h"
-#include "metal_shader.h"
 #include "spirv_msl.hpp"
 #include "core/devices/metal_output_devices.h"
+#include "core/shaders/gryphn_shader.h"
 
 static uint32_t* chars_to_uint32s(const char* chars, size_t num_chars) {
   if (chars == NULL || num_chars == 0) {
@@ -93,7 +93,7 @@ GN_EXPORT gnReturnCode gnBuildShaderModuleFn(gnShaderModule* shaderModule, const
         shaderModule->shaderModule->uniformBufferOffset = 0;
         shaderModule->shaderModule->pushConstantOffset = largestBinding + 1;
     } else {
-        GN_RETURN_ERROR("GN_UNKNOWN_SHADER_MODULE_TYPE_(I prolly lazy)");
+        return gnReturnError(GN_UNKNOWN_SHADER_MODULE, "unknown shader module type (vertex and fragment are the only supported ones for now)");
     }
 
     // std::cout << shaderSource << "\n";
@@ -103,9 +103,9 @@ GN_EXPORT gnReturnCode gnBuildShaderModuleFn(gnShaderModule* shaderModule, const
     NS::String* sourceCode = NS::String::string(shaderSource.c_str(), NS::StringEncoding::UTF8StringEncoding);
     MTL::Library* shaderLib = outputDeviec.outputDevice->device->newLibrary(sourceCode, mtloptions, &error);
     if (!shaderLib)
-        GN_RETURN_ERROR(error->localizedDescription()->utf8String());
+        return gnReturnError(GN_SHADER_FAILED_TO_COMPILE, error->localizedDescription()->utf8String());
     if (shaderLib->functionNames()->count() > 1)
-        GN_RETURN_ERROR("More than one shader function in shader");
+        return gnReturnError(GN_SHADER_FAILED_TO_COMPILE, "More than one shader function in shader");
 
     shaderModule->shaderModule->shaderFunction = shaderLib->newFunction(reinterpret_cast<NS::String*>(shaderLib->functionNames()->object(0)));
     return GN_SUCCESS;

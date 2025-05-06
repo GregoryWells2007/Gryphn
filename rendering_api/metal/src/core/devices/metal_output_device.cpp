@@ -62,7 +62,7 @@ GN_EXPORT gnReturnCode gnRegisterOutputDeviceFn(gnOutputDevice* outputDevice, co
         MTL::CompileOptions* options = nullptr;
         MTL::Library* library = physicalDevice.physicalOutputDevice->device->newLibrary(NS::String::string(shaderSrc, NS::UTF8StringEncoding), options, &error);
         if (!library) {
-            GN_RETURN_ERROR(error->localizedDescription()->utf8String());
+            return gnReturnError(GN_FAILED_CREATE_DEVICE, error->localizedDescription()->utf8String());
         }
         MTL::Function* vs = library->newFunction(NS::String::string("vs_main", NS::UTF8StringEncoding));
         MTL::Function* fs = library->newFunction(NS::String::string("fs_main", NS::UTF8StringEncoding));
@@ -74,61 +74,7 @@ GN_EXPORT gnReturnCode gnRegisterOutputDeviceFn(gnOutputDevice* outputDevice, co
 
         instance.instance->framebufferRenderer = outputDevice->outputDevice->device->newRenderPipelineState(pipelineDesc, &error);
         if (!instance.instance->framebufferRenderer) {
-            GN_RETURN_ERROR(error->localizedDescription()->utf8String());
-        }
-    }
-
-    {
-        const char* shaderSrc = R"metal(
-        #include <metal_stdlib>
-        using namespace metal;
-
-        struct VertexIn {
-            float3 position;
-            float2 uv;
-        };
-
-        struct VertexOut {
-            float4 position [[position]];
-        };
-
-        vertex VertexOut vs_main(uint vertexID [[vertex_id]]) {
-            float2 positions[6] = {
-                {-0.5, -0.5},
-                { 0.5, -0.5},
-                {-0.5,  0.5},
-                { 0.5, -0.5},
-                {-0.5,  0.5},
-                { 0.5,  0.5}
-            };
-
-            VertexOut out;
-            out.position = float4(positions[vertexID], 0.0, 1.0);
-            return out;
-        }
-
-        fragment float4 fs_main(VertexOut in [[stage_in]]) {
-            return float4(1.0, 1.0, 1.0, 1.0);
-        }
-        )metal";
-
-        NS::Error* error = nullptr;
-        MTL::CompileOptions* options = nullptr;
-        MTL::Library* library = physicalDevice.physicalOutputDevice->device->newLibrary(NS::String::string(shaderSrc, NS::UTF8StringEncoding), options, &error);
-        if (!library) {
-            GN_RETURN_ERROR(error->localizedDescription()->utf8String());
-        }
-        MTL::Function* vs = library->newFunction(NS::String::string("vs_main", NS::UTF8StringEncoding));
-        MTL::Function* fs = library->newFunction(NS::String::string("fs_main", NS::UTF8StringEncoding));
-
-        MTL::RenderPipelineDescriptor* pipelineDesc = MTL::RenderPipelineDescriptor::alloc()->init();
-        pipelineDesc->setVertexFunction(vs);
-        pipelineDesc->setFragmentFunction(fs);
-        pipelineDesc->colorAttachments()->object(0)->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
-
-        instance.instance->testSquareRenderer = outputDevice->outputDevice->device->newRenderPipelineState(pipelineDesc, &error);
-        if (!instance.instance->framebufferRenderer) {
-            GN_RETURN_ERROR(error->localizedDescription()->utf8String());
+            return gnReturnError(GN_FAILED_CREATE_DEVICE, error->localizedDescription()->utf8String());
         }
     }
 

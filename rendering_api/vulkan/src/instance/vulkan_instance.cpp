@@ -70,7 +70,7 @@ void gnInstanceSetAppInfoFn(gnInstance& instance, gnAppInfo& info) {
 
 GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance) {
     if (instance->debugger != nullptr && !checkValidationLayerSupport(instance->debugger->debug_layers)) {
-        GN_RETURN_ERROR("validation layers requested, but not available!");
+        return gnReturnError(GN_FAILED_CREATE_INSTANCE, "validation layers requested, but not available!");
     }
     gnInstanceSetAppInfoFn(*instance, instance->AppInfo);
 
@@ -103,7 +103,7 @@ GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance) {
     }
 
     if (vkCreateInstance(&createInfo, nullptr, &instance->instance->vk_instance) != VK_SUCCESS) {
-        return GN_FAILED;
+        return gnReturnError(GN_FAILED_CREATE_INSTANCE, "im to lazy to query vulkan why");
     }
 
     if (instance->debugger->debugger == nullptr) instance->debugger->debugger = new gnPlatformDebugger();
@@ -121,11 +121,11 @@ GN_EXPORT gnReturnCode gnInstanceSetWindowFn(gnInstance& instance, GLFWwindow* w
     instance.instance->window = window;
 
     if (glfwVulkanSupported() != GLFW_TRUE) {
-        GN_RETURN_ERROR("vulkan is not actually supported\n");
+        return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "vulkan is not actually supported\n");
     }
 
     VkResult result = glfwCreateWindowSurface(instance.instance->vk_instance, window, nullptr, &instance.instance->window_surface);\
     if (result != VK_SUCCESS)
-        GN_RETURN_ERROR(std::to_string(result).c_str());
+        return gnReturnError(GN_FAILED_TO_ATTACH_WINDOW, std::to_string(result).c_str());
     return GN_SUCCESS;
 }

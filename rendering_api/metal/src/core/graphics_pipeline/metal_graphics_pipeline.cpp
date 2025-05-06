@@ -117,12 +117,12 @@ GN_EXPORT void gnGraphicsPipelineAddPushConstantFn(gnGraphicsPipeline& graphicsP
 
 }
 GN_EXPORT gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline* graphicsPipeline, gnOutputDevice& outputDevice) {
-    if (graphicsPipeline->graphicsPipeline == nullptr) GN_RETURN_ERROR("Need to call one gnGraphicsPipeline function to create a graphics pipeline");
+    if (graphicsPipeline->graphicsPipeline == nullptr) graphicsPipeline->graphicsPipeline = new gnPlatformGraphicsPipeline();
     NS::Error* error = nullptr;
     graphicsPipeline->graphicsPipeline->renderPipelineDescriptor->colorAttachments()->object(0)->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
     graphicsPipeline->graphicsPipeline->renderPipelineState = outputDevice.outputDevice->device->newRenderPipelineState(graphicsPipeline->graphicsPipeline->renderPipelineDescriptor, &error);
     if (!graphicsPipeline->graphicsPipeline->renderPipelineState)
-        GN_RETURN_ERROR(error->localizedDescription()->utf8String());
+        return gnReturnError(GN_FAILED_CREATE_GRAPHICS_PIPELINE, error->localizedDescription()->utf8String());
 
     graphicsPipeline->graphicsPipeline->depthStencilState = outputDevice.outputDevice->device->newDepthStencilState(graphicsPipeline->graphicsPipeline->depthStateDescriptor);
     graphicsPipeline->graphicsPipeline->outputDevice = &outputDevice;

@@ -49,14 +49,14 @@ GN_EXPORT gnErrorCode gnCreateTextureFn(gnTexture* texture, const gnOutputDevice
     if (texture->textureColorFormat == GN_RED)
         textureDescriptor->setPixelFormat(MTL::PixelFormatR8Unorm);
     else if (texture->textureColorFormat == GN_RGB8)
-        return gnReturnError("GN_RGB8_UNSUPPORTED");
+        return gnReturnError(GN_UNSUPPORTED_COLOR_FORMAT, "GN_RGB8_UNSUPPORTED");
     else if (texture->textureColorFormat == GN_RGBA8)
         textureDescriptor->setPixelFormat(MTL::PixelFormatRGBA8Unorm);
     else if (texture->textureColorFormat == GN_BGRA8)
         textureDescriptor->setPixelFormat(MTL::PixelFormatBGRA8Unorm);
     else if (texture->textureColorFormat == GN_DEPTH_STENCIL)
         textureDescriptor->setPixelFormat(MTL::PixelFormatDepth32Float_Stencil8);
-    else return gnReturnError("GN_UNSUPPORTED_PIXEL_FORMAT");
+    else return gnReturnError(GN_UNKNOWN_COLOR_FORMAT, "unknown pixel format");
 
     textureDescriptor->setWidth(texture->textureExtent.x);
     textureDescriptor->setHeight(texture->textureExtent.y);

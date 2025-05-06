@@ -1,5 +1,6 @@
 #pragma once
 #include <gryphn/gryphn_utils.h>
+#include "vector"
 
 struct gnPlatformCommandBuffer;
 struct gnOutputDevice;

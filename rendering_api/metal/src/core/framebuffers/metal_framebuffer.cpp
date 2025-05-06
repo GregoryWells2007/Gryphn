@@ -42,7 +42,7 @@ GN_EXPORT gnReturnCode gnCreateFramebufferFn(gnFramebuffer* framebuffer, const g
             stencilAttachment->setStoreAction(MTL::StoreActionStore);
             stencilAttachment->release();
         } else {
-            GN_RETURN_ERROR("fuck you (line 46 in metal_framebuffer.cpp)");
+            return gnReturnError(GN_UNKNOWN_FRAMEBUFFER_ATTACHMENT, "GN_DEPTH_ATTACHMENT and GN_STENCIL_ATTACHMENT are unsupported on metal for now");
         }
     }
     return GN_SUCCESS;

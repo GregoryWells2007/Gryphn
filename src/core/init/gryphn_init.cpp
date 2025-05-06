@@ -15,41 +15,41 @@ static void* gnRenderingAPILIB;
 
 #define gnLoadDLLFunction(dll, func, func_name) \
  gnPlatformLoadDLLFunction(dll, func, func_name); \
- if (func == nullptr) return gnReturnError(gnString("GN_FUNC_(") + gnString(#func) + ")_NOT_LOADED")
+ if (func == nullptr) return gnReturnError(GN_FUNCTION_NOT_FOUND, gnString("GN_FUNC_(") + gnString(#func) + ")_NOT_LOADED")
 
 gnReturnCode gnInit(gnRenderingAPI RenderingAPI) {
     gnString libName = "";
 
     switch (RenderingAPI) {
         case GN_RENDERINGAPI_NONE: {
-            return { GN_FAILED, "GN_ERROR_RENDERINGAPI_NONE_UNSUPPORTED" };
+            return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "rendering api_none unsupported");
         }
         case GN_RENDERINGAPI_SOFTWARE: {
-            return { GN_FAILED, "GN_ERROR_SOFRWARE_UNSUPPORTED" };
+            return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "rendering api_software unsupported");
         }
         case GN_RENDERINGAPI_OPENGL: {
-            return { GN_FAILED, "GN_ERROR_OPENGL_UNSUPPORTED" };
+            return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "rendering api_opengl unsupported");
         }
         case GN_RENDERINGAPI_VULKAN: {
-            if (!RenderingAPISupported(GN_RENDERINGAPI_VULKAN)) return { GN_FAILED, "GN_ERROR_VUKAN_UNSUPPORTED" };
+            if (!RenderingAPISupported(GN_RENDERINGAPI_VULKAN)) return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "rendering api vulkan unsupported");
             libName = "GryphnVulkanImpl";
             break;
         }
         case GN_RENDERINGAPI_DIRECTX11: {
-            return { GN_FAILED, "GN_ERROR_DIRECTX11_UNSUPPORTED" };
+            return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "rendering api directx11 unsupported");
         }
         case GN_RENDERINGAPI_DIRECTX12: {
-            return { GN_FAILED, "GN_ERROR_DIRECTX12_UNSUPPORTED" };
+            return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "rendering api directx12 unsupported");
         }
         case GN_RENDERINGAPI_METAL: {
-            if (!RenderingAPISupported(GN_RENDERINGAPI_METAL)) return { GN_FAILED, "GN_ERROR_METAL_UNSUPPORTED" };
+            if (!RenderingAPISupported(GN_RENDERINGAPI_METAL)) return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "rendering api metal unsupported");
             libName = "GryphnMetalImpl";
             break;
         }
     }
 
     gnRenderingAPILIB = gnPlatformLoadDLL(gnString("gryphn/rendering_apis/") + libName);
-    if (!gnRenderingAPILIB) { return gnReturnError("GN_ERROR_UNABLE_TO_LOAD_DLL"); }
+    if (!gnRenderingAPILIB) { return gnReturnError(GN_UNABLE_TO_LOAD_DLL, "GN_ERROR_UNABLE_TO_LOAD_DLL"); }
 
     gnLoadDLLFunction(gnRenderingAPILIB, gnCreateInstance, "gnCreateInstanceFn");
     gnLoadDLLFunction(gnRenderingAPILIB, gnDestroyInstance, "gnDestroyInstanceFn");
