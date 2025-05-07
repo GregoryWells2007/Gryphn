@@ -3,7 +3,6 @@
 #include "vulkan_texture.h"
 #include "core/textures/gryphn_texture.h"
 #include "../output_device/vulkan_output_devices.h"
-#include "../commands/vulkan_command_buffer.h"
 #include "../vertex_buffers/vulkan_buffers.h"
 
 void vulkanTexture(gnTexture* texture) {
