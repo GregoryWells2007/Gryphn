@@ -5,6 +5,7 @@ GN_EXPORT gnReturnCode gnCreateSyncSemaphoreFn(gnSyncSemaphore* semaphore, const
     semaphore->semaphore = new gnPlatformSyncSemaphore();
     semaphore->semaphore->semaphore = dispatch_semaphore_create(0);
     // semaphore->semaphore->semaphore = device.outputDevice->device->newFence();
+    return GN_SUCCESS;
 }
 GN_EXPORT void gnDestroySyncSemaphoreFn(const gnSyncSemaphore& semaphore) {
     // semaphore.semaphore->semaphore->release();
