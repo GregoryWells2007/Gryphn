@@ -110,13 +110,6 @@ GN_EXPORT void gnCommandPushConstantFn(gnCommandBuffer& commandBuffer, const gnG
 GN_EXPORT void gnCommandEndRenderPassFn(const gnCommandBuffer& commandBuffer) {
     vkCmdEndRenderPass(commandBuffer.commandBuffer->commandBuffer);
 }
-void gnCommandBindShader(const gnCommandBuffer& commandBuffer, const gnShader& shader) {
-    // vkCmdBindShadersEXT(
-    //     commandBuffer.commandBuffer->commandBuffer,
-    //     2,
-    //     VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_FRAGMENT_BIT,
-    //     const VkShaderEXT*                          pShaders);
-}
 GN_EXPORT gnReturnCode gnCommandBufferEndFn(const gnCommandBuffer& commandBuffer) {
     if (vkEndCommandBuffer(commandBuffer.commandBuffer->commandBuffer) != VK_SUCCESS) {
         return GN_FAILED;
