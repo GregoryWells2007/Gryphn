@@ -119,13 +119,14 @@ GN_EXPORT void gnGraphicsPipelineSetColorBlendFn(gnGraphicsPipeline& pipeline, g
     // if (colorBlend) { /* TODO: Debugger needs to throw some errors */ return; }
 
     pipeline.graphicsPipeline->colorBlendAttachment.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-    pipeline.graphicsPipeline->colorBlendAttachment.blendEnable = (colorBlend) ? VK_TRUE : VK_FALSE;
-    pipeline.graphicsPipeline->colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
-    pipeline.graphicsPipeline->colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    pipeline.graphicsPipeline->colorBlendAttachment.blendEnable = VK_TRUE;
+
     pipeline.graphicsPipeline->colorBlendAttachment.colorBlendOp = VK_BLEND_OP_ADD;
-    pipeline.graphicsPipeline->colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_ONE;
-    pipeline.graphicsPipeline->colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ZERO;
     pipeline.graphicsPipeline->colorBlendAttachment.alphaBlendOp = VK_BLEND_OP_ADD;
+    pipeline.graphicsPipeline->colorBlendAttachment.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    pipeline.graphicsPipeline->colorBlendAttachment.srcAlphaBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
+    pipeline.graphicsPipeline->colorBlendAttachment.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
+    pipeline.graphicsPipeline->colorBlendAttachment.dstAlphaBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
 
     pipeline.graphicsPipeline->colorBlending.pAttachments = &pipeline.graphicsPipeline->colorBlendAttachment;
 
@@ -166,7 +167,7 @@ GN_EXPORT void gnGraphicsPipelineEnableDepthTestFn(gnGraphicsPipeline& pipeline,
     } else {
         pipeline.graphicsPipeline->depthStencil.depthTestEnable = VK_FALSE;
     }
-    pipeline.graphicsPipeline->depthStencil.depthWriteEnable = VK_TRUE;
+    pipeline.graphicsPipeline->depthStencil.depthWriteEnable = (depthTest == true) ? VK_TRUE : VK_FALSE;
     pipeline.graphicsPipeline->depthStencil.depthCompareOp = VK_COMPARE_OP_LESS;
     pipeline.graphicsPipeline->depthStencil.depthBoundsTestEnable = VK_FALSE;
     pipeline.graphicsPipeline->depthStencil.minDepthBounds = 0.0f; // Optional
