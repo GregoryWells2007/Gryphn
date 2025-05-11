@@ -17,17 +17,24 @@ gnReturnCode findDepthFormat(const gnOutputDevice& outputDevice, VkFormat& forma
     );
 }
 
+VkFormat findDepthFormat(const gnOutputDevice& outputDevice) {
+    VkFormat format;
+    findSupportedFormat(outputDevice,
+        {VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
+        VK_IMAGE_TILING_OPTIMAL,
+        VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT, format
+    );
+    return format;
+}
+
+
 VkFormat vulkanFormatFromGryphnFormat(const gnOutputDevice& outputDevice, gnColorMode colorMode) {
     switch (colorMode) {
         case GN_RED: return VK_FORMAT_R8_UNORM;
         case GN_RGB8: return VK_FORMAT_R8G8B8A8_SRGB;
         case GN_RGBA8:  return VK_FORMAT_R8G8B8A8_SRGB;
         case GN_BGRA8:  return VK_FORMAT_B8G8R8A8_SRGB;
-        case GN_DEPTH_STENCIL: {
-            VkFormat depthFormat;
-            findDepthFormat(outputDevice, depthFormat);
-            return depthFormat;
-        }
+        case GN_DEPTH_STENCIL: return findDepthFormat(outputDevice);
     }
     return VK_FORMAT_R8_UNORM;
 }
