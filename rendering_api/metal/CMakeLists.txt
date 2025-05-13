@@ -11,7 +11,6 @@ target_include_directories(GryphnMetalImpl PUBLIC
     ${CMAKE_SOURCE_DIR}/gryphn/include/
     ${CMAKE_SOURCE_DIR}/gryphn/src/
     ${CMAKE_SOURCE_DIR}/gryphn/src/
-    ${CMAKE_SOURCE_DIR}/depends/glfw/glfw-3.4/include/
     depends/metal-cpp/
     src/
     depends/SPIRV-Cross/
@@ -21,10 +20,7 @@ add_compile_definitions(GN_REVEAL_IMPL)
 add_subdirectory(depends/metal-cpp)
 add_subdirectory(depends/SPIRV-Cross)
 
-add_library(glfw SHARED IMPORTED)
-set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/build/depends/glfw/glfw-3.4/src/libglfw.3.4.dylib)
-
-target_link_libraries(GryphnMetalImpl METAL_CPP glfw spirv-cross-core spirv-cross-msl spirv-cross-cpp)
+target_link_libraries(GryphnMetalImpl METAL_CPP spirv-cross-core spirv-cross-msl spirv-cross-cpp)
 
 target_link_libraries(GryphnMetalImpl
     "-framework IOKit"

@@ -54,7 +54,27 @@ gnReturnCode gnInit(gnRenderingAPI RenderingAPI) {
     gnLoadDLLFunction(gnRenderingAPILIB, gnCreateInstance, "gnCreateInstanceFn");
     gnLoadDLLFunction(gnRenderingAPILIB, gnDestroyInstance, "gnDestroyInstanceFn");
     gnLoadDLLFunction(gnRenderingAPILIB, gnGetPlatformLayerName, "gnGetPlatformLayerNameFn");
-    gnLoadDLLFunction(gnRenderingAPILIB, gnInstanceSetWindow, "gnInstanceSetWindowFn");
+
+    // LOAD THE SET WINDOW FUNCTIONS
+    #ifdef GN_PLATFORM_LINUX
+        #ifdef GN_WINDOW_X11
+            gnLoadDLLFunction(gnRenderingAPILIB, gnCreateX11WindowSurface, "gnCreateX11WindowSurfaceFn");
+        #endif
+        #ifdef GN_WINDOW_WAYLAND
+            gnLoadDLLFunction(gnRenderingAPILIB, gnCreateWaylandWindowSurface, "gnCreateWaylandWindowSurfaceFn");
+        #endif
+    #endif
+
+
+    #ifdef GN_PLATFORM_WIN32
+        gnLoadDLLFunction(gnRenderingAPILIB, gnCreateWindowsWindowSurface, "gnCreateWindowsWindowSurfaceFn");
+    #endif
+
+    #ifdef GN_PLATFORM_MACOS
+        gnLoadDLLFunction(gnRenderingAPILIB, gnCreateMacOSWindowSurface, "gnCreateMacOSWindowSurfaceFn");
+    #endif
+    // This is stupid
+
     gnLoadDLLFunction(gnRenderingAPILIB, gnCreateDebugger, "gnCreateDebuggerFn");
     gnLoadDLLFunction(gnRenderingAPILIB, gnDestroyDebugger, "gnDestroyDebuggerFn");
     gnLoadDLLFunction(gnRenderingAPILIB, gnGetPhysicalOutputDevices, "gnGetPhysicalOutputDevicesFn");

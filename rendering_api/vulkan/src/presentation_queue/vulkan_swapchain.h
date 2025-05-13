@@ -1,5 +1,4 @@
 #pragma once
-#include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
 #include <gryphn/gryphn_utils.h>
 #include <cstdint> // Necessary for uint32_t
@@ -7,6 +6,7 @@
 #include <algorithm> // Necessary for std::clamp
 #include "vector"
 #include "set"
+#include <iostream>
 
 const std::vector<const char*> deviceExtensions = {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
@@ -33,16 +33,16 @@ static VkPresentModeKHR chooseSwapPresentMode(const std::vector<VkPresentModeKHR
     return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-static VkExtent2D chooseSwapExtent(GLFWwindow* window, const VkSurfaceCapabilitiesKHR& capabilities) {
+static VkExtent2D chooseSwapExtent(gnVec2 size, const VkSurfaceCapabilitiesKHR& capabilities) {
     if (capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
         return capabilities.currentExtent;
     } else {
-        int width, height;
-        glfwGetFramebufferSize(window, &width, &height);
+        // int width, height;
+        // glfwGetFramebufferSize(window, &width, &height);
 
         VkExtent2D actualExtent = {
-            static_cast<uint32_t>(width),
-            static_cast<uint32_t>(height)
+            static_cast<uint32_t>(size.x),
+            static_cast<uint32_t>(size.y)
         };
 
         actualExtent.width = std::clamp(actualExtent.width, capabilities.minImageExtent.width, capabilities.maxImageExtent.width);

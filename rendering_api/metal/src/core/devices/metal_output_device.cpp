@@ -1,8 +1,6 @@
 #include <core/output_device/gryphn_physical_output_device.h>
 #include <Metal/Metal.hpp>
-// #include
 #include <core/metal_instance.h>
-#include <GLFW/glfw3.h>
 #include "metal_output_devices.h"
 
 struct mtlFramebufferVertex {

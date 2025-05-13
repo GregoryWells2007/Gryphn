@@ -21,7 +21,7 @@ GN_EXPORT gnDevicePresentationDetails gnGetDevicePresentationDetailsFn(const gnP
 
 GN_EXPORT gnReturnCode gnPresentationQueueGetNextImageAsyncFn(gnPresentationQueue& presentationQueue, const gnSyncSemaphore& semaphore, gnUInt* imageIndex) {
     mtlObjectCSetContentViewsLayer(
-        presentationQueue.presentationQueue->outputDevice->outputDevice->instance->instance->window,
+        presentationQueue.presentationQueue->outputDevice->outputDevice->instance->instance->metalContentView,
         presentationQueue.presentationQueue->layer);
 
     presentationQueue.presentationQueue->currentDrawableIndex++;
@@ -43,7 +43,7 @@ GN_EXPORT gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presenta
     presentationQueue->presentationQueue->outputDevice = const_cast<gnOutputDevice*>(&device);
 
     presentationQueue->presentationQueue->layer = CA::MetalLayer::layer();
-    presentationQueue->presentationQueue->layer->setPixelFormat(MTL::PixelFormat::PixelFormatBGRA8Unorm_sRGB);
+    presentationQueue->presentationQueue->layer->setPixelFormat(MTL::PixelFormat::PixelFormatBGRA8Unorm);
     presentationQueue->presentationQueue->layer->setFramebufferOnly(true);
     presentationQueue->presentationQueue->layer->setDrawableSize({ (double)details.ImageSize.x, (double)details.ImageSize.y });
     presentationQueue->presentationQueue->layer->setDevice(device.outputDevice->device);
@@ -51,7 +51,7 @@ GN_EXPORT gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presenta
     mtlInitializeMetalLayer(presentationQueue->presentationQueue->layer, true);
 
     mtlObjectCSetContentViewsLayer(
-        device.outputDevice->instance->instance->window,
+        device.outputDevice->instance->instance->metalContentView,
         presentationQueue->presentationQueue->layer);
 
     for (int i = 0; i < details.ImageCount; i++) {

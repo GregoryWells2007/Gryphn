@@ -11,12 +11,12 @@ struct vulkanSwapchainDetails {
     SwapChainSupportDetails swapChainSupport;
 };
 
-static vulkanSwapchainDetails vulkanGetSwapchainDetails(GLFWwindow* window, const VkSurfaceKHR& surface, const VkPhysicalDevice& physicalDevice) {
+static vulkanSwapchainDetails vulkanGetSwapchainDetails(gnVec2 size, const VkSurfaceKHR& surface, const VkPhysicalDevice& physicalDevice) {
     SwapChainSupportDetails swapChainSupport = querySwapChainSupport(surface, physicalDevice);
 
     VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
     VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-    VkExtent2D extent = chooseSwapExtent(window, swapChainSupport.capabilities);
+    VkExtent2D extent = chooseSwapExtent(size, swapChainSupport.capabilities);
 
     return {
         surfaceFormat, presentMode, extent, swapChainSupport

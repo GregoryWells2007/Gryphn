@@ -1,11 +1,10 @@
-#define GLFW_INCLUDE_VULKAN
-#include <GLFW/glfw3.h>
-
 #include "gryphn/gryphn_utils.h"
 #include "vector"
 #include <cstring>
 #include "debugger/vulkan_debugger.h"
 #include "vulkan_instance.h"
+
+
 
 // now I gotta do some shit to setup debug layers
 bool checkValidationLayerSupport(gnList<gnString> layers_to_validate) {
@@ -33,21 +32,24 @@ bool checkValidationLayerSupport(gnList<gnString> layers_to_validate) {
     return true;
 }
 
-std::vector<const char*> getRequiredExtensions(bool validation_layers_required) {
-    uint32_t glfwExtensionCount = 0;
-    const char** glfwExtensions;
-    glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+// std::vector<const char*> getRequiredExtensions(bool validation_layers_required, gnInstance& instance) {
+//     // uint32_t glfwExtensionCount = 0;
+//     // const char** glfwExtensions;
+//     // glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
-    std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+//     std::vector<const char*> extensions(instance.instance->extensions, instance.instance->extensions + instance.instance->extensionCount);
 
-    if (validation_layers_required) {
-        extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-    }
-    extensions.push_back("VK_KHR_portability_enumeration");
-    extensions.push_back("VK_EXT_metal_surface");
+//     if (validation_layers_required) {
+//         extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+//     }
 
-    return extensions;
-}
+//     #ifdef GN_PLATFORM_MACOS
+//     extensions.push_back("VK_KHR_portability_enumeration");
+//     extensions.push_back("VK_EXT_metal_surface");
+//     #endif
+
+//     return extensions;
+// }
 
 void gnInstanceSetAppInfoFn(gnInstance& instance, gnAppInfo& info) {
     if (instance.instance == nullptr) instance.instance = new gnPlatformInstanceData();
@@ -76,14 +78,36 @@ GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance) {
 
     instance->valid = true;
 
+    #ifdef GN_PLATFORM_LINUX
+    #ifdef GN_WINDOW_X11
+    instance->instance->extensions.push_back("VK_KHR_xlib_surface");
+    #endif
+    #ifdef GN_WINFDOW_WAYLAND
+    instance->instance->extensions.push_back("VK_KHR_wayland_surface");
+    #endif
+    #endif
+    #ifdef GN_PLATFORM_WINDOWS
+    instance->instance->extensions.push_back("VK_MVK_macos_surface");
+    #endif
+    #ifdef GN_PLATFORM_MACOS
+    instance->instance->extensions.push_back("VK_MVK_macos_surface");
+    instance->instance->extensions.push_back("VK_KHR_portability_enumeration");
+    instance->instance->extensions.push_back("VK_EXT_metal_surface");
+    #endif
+
+
+    instance->instance->extensions.push_back("VK_KHR_surface");
+    if (instance->debugger)
+        instance->instance->extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+
     VkInstanceCreateInfo createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &instance->instance->appInfo;
     createInfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-    auto extensions = getRequiredExtensions(instance->debugger);
+    // auto extensions = getRequiredExtensions(instance->debugger);
 
-    createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());;
-    createInfo.ppEnabledExtensionNames = extensions.data();
+    createInfo.enabledExtensionCount = static_cast<uint32_t>(instance->instance->extensions.size());;
+    createInfo.ppEnabledExtensionNames = instance->instance->extensions.data();
 
     VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
     if (instance->debugger != nullptr) {
@@ -115,17 +139,4 @@ GN_EXPORT void gnDestroyInstanceFn(gnInstance& instance) {
     instance.valid = false;
     vkDestroySurfaceKHR(instance.instance->vk_instance, instance.instance->window_surface, nullptr);
     vkDestroyInstance(instance.instance->vk_instance, nullptr);
-}
-
-GN_EXPORT gnReturnCode gnInstanceSetWindowFn(gnInstance& instance, GLFWwindow* window) {
-    instance.instance->window = window;
-
-    if (glfwVulkanSupported() != GLFW_TRUE) {
-        return gnReturnError(GN_UNSUPPORTED_RENDERING_API, "vulkan is not actually supported\n");
-    }
-
-    VkResult result = glfwCreateWindowSurface(instance.instance->vk_instance, window, nullptr, &instance.instance->window_surface);\
-    if (result != VK_SUCCESS)
-        return gnReturnError(GN_FAILED_TO_ATTACH_WINDOW, std::to_string(result).c_str());
-    return GN_SUCCESS;
 }

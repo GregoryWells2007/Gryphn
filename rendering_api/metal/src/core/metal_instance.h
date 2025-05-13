@@ -13,9 +13,6 @@
 struct GLFWwindow;
 
 struct gnPlatformInstanceData {
-    NS::Window* metalWindow;
     NS::View* metalContentView;
-    GLFWwindow* window;
-
     MTL::RenderPipelineState* framebufferRenderer, *testSquareRenderer;
 };

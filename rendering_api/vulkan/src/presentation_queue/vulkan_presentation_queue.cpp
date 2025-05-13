@@ -15,13 +15,11 @@ GN_EXPORT gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presenta
     presentationQueue->presentationQueue->outputDevice = const_cast<gnOutputDevice*>(&device);
 
     vulkanSwapchainDetails swapchain_details = vulkanGetSwapchainDetails(
-            device.physicalOutputDevice->physicalOutputDevice->instance->instance->window,
-            device.physicalOutputDevice->physicalOutputDevice->instance->instance->window_surface,
-            device.physicalOutputDevice->physicalOutputDevice->device
+        { (float)details.ImageSize.x, (float)details.ImageSize.y },
+        device.physicalOutputDevice->physicalOutputDevice->instance->instance->window_surface,
+        device.physicalOutputDevice->physicalOutputDevice->device
     );
     presentationQueue->presentationQueue->swapchainDetails = swapchain_details;
-
-    //std::cout << "Swapchain Image Format: " << presentationQueue->presentation_queue->swapchainDetails.surfaceFormat << "\n";
 
     VkSwapchainCreateInfoKHR createInfo{};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
