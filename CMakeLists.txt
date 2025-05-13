@@ -25,6 +25,4 @@ if(UNIX AND NOT APPLE)
     add_subdirectory(rendering_api/vulkan/)
 endif()
 
-add_subdirectory(depends/SPIRV-Cross/)
-
 target_link_libraries(Gryphn)

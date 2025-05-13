@@ -19,6 +19,7 @@ target_include_directories(GryphnMetalImpl PUBLIC
 # target_link_options(GryphnMetalImpl PRIVATE -rdynamic)
 add_compile_definitions(GN_REVEAL_IMPL)
 add_subdirectory(depends/metal-cpp)
+add_subdirectory(depends/SPIRV-Cross)
 
 add_library(glfw SHARED IMPORTED)
 set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/build/depends/glfw/glfw-3.4/src/libglfw.3.4.dylib)
