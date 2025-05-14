@@ -24,7 +24,8 @@ typedef enum gnReturnMessage {
     GN_FAILED_CREATE_RENDERPASS,
     GN_FAILED_CREATE_INSTANCE,
     GN_FAILED_TO_ATTACH_WINDOW,
-    GN_FAILED_TO_CREATE_IMAGE
+    GN_FAILED_TO_CREATE_IMAGE,
+    GN_FAILED_CREATE_WINDOW_SURFACE
 } gnReturnMessage;
 
 inline gnString lastReturnAPIMessage = "";

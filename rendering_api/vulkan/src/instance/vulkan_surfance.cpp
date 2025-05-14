@@ -11,7 +11,9 @@ GN_EXPORT gnReturnCode gnCreateX11WindowSurfaceFn(gnInstance& instance, Display*
     info.dpy = display;
     info.window = window;
 
-    vkCreateXlibSurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
+    VkResult result = vkCreateXlibSurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
+    if (result != VK_SUCCESS)
+        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
     return GN_SUCCESS;
 }
 #endif
@@ -26,7 +28,9 @@ GN_EXPORT gnReturnCode gnCreateWaylandWindowSurfaceFn(gnInstance& instance, wl_d
     info.surface = surface;
 
     VkSurfaceKHR surface;
-    vkCreateWaylandSurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
+    VkResult result = vkCreateWaylandSurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
+    if (result != VK_SUCCESS)
+        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
     return GN_SUCCESS;
 }
 #endif
@@ -41,11 +45,12 @@ GN_EXPORT gnReturnCode gnCreateWindowsWindowSurfaceFn(gnInstance& instance, HWND
     info.hinstance = instance;
 
     VkSurfaceKHR surface;
-    vkCreateWin32SurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
+    VkResult result = vkCreateWin32SurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
+    if (result != VK_SUCCESS)
+        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
     return GN_SUCCESS;
 }
 #endif
-#include "vulkan/vulkan_macos.h"
 #include "vulkan/vulkan_metal.h"
 
 #ifdef GN_PLATFORM_MACOS
@@ -62,9 +67,8 @@ GN_EXPORT gnReturnCode gnCreateMacOSWindowSurfaceFn(gnInstance& instance, NS::Wi
 
     VkSurfaceKHR surface;
     VkResult result = vkCreateMetalSurfaceEXT(instance.instance->vk_instance, &surfaceCreateInfo, nullptr, &instance.instance->window_surface);
-
-    // VkSurfaceKHR surface;
-    // vkCreateMacOSSurfaceMVK(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
-    // return GN_SUCCESS;
+    if (result != VK_SUCCESS)
+        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
+    return GN_SUCCESS;
 }
 #endif

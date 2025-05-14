@@ -32,36 +32,11 @@ bool checkValidationLayerSupport(gnList<gnString> layers_to_validate) {
     return true;
 }
 
-// std::vector<const char*> getRequiredExtensions(bool validation_layers_required, gnInstance& instance) {
-//     // uint32_t glfwExtensionCount = 0;
-//     // const char** glfwExtensions;
-//     // glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
-
-//     std::vector<const char*> extensions(instance.instance->extensions, instance.instance->extensions + instance.instance->extensionCount);
-
-//     if (validation_layers_required) {
-//         extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-//     }
-
-//     #ifdef GN_PLATFORM_MACOS
-//     extensions.push_back("VK_KHR_portability_enumeration");
-//     extensions.push_back("VK_EXT_metal_surface");
-//     #endif
-
-//     return extensions;
-// }
-
 void gnInstanceSetAppInfoFn(gnInstance& instance, gnAppInfo& info) {
     if (instance.instance == nullptr) instance.instance = new gnPlatformInstanceData();
 
     instance.AppInfo = info;
     instance.instance->appInfo = {};
-    // instance.instance_data->appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-    // instance.instance_data->appInfo.pApplicationName = gnToCString(info.ApplicationName);
-    // instance.instance_data->appInfo.applicationVersion = info.ApplicationVersion;
-    // instance.instance_data->appInfo.pEngineName = gnToCString(info.EngineName);
-    // instance.instance_data->appInfo.engineVersion = info.EngineVersion;
-    // instance.instance_data->appInfo.apiVersion = VK_API_VERSION_1_0; // fuck ass code idk what to do with it
     instance.instance->appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     instance.instance->appInfo.pApplicationName = "Hello Triangle";
     instance.instance->appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
