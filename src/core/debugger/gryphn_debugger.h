@@ -15,7 +15,7 @@ ACCESS_LEVEL:
     gnList<gnString> debug_layers = gnCreateList<gnString>();
 public:
     gnDebugger() {
-        if (debugger) gnDebugError("Debugger instance already created (you can only have one debugger)");
+        if (debugger) gnDebugError(gnCreateString("Debugger instance already created (you can only have one debugger)"));
         gnDebuggerInstance = this;
     }
 };

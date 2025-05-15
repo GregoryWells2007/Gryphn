@@ -28,7 +28,7 @@ typedef enum gnReturnMessage {
     GN_FAILED_CREATE_WINDOW_SURFACE
 } gnReturnMessage;
 
-inline gnString lastReturnAPIMessage = "";
+inline gnString lastReturnAPIMessage = gnCreateEmptyString();
 inline gnReturnMessage lastReturnMessage = GN_UNKNOWN_ERROR;
 
 static const gnString gnGetErrorString() { return lastReturnAPIMessage; }

@@ -1,3 +1,4 @@
+#define GN_UTILS_CPP
 #include <core/init/gryphn_init.h>
 #include <dlfcn.h>
 #include <platform/gryphn_platform_include.h>

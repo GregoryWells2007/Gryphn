@@ -1,6 +1,8 @@
+#define GN_UTILS_CPP
 #include "gryphn_file.h"
 #include "fstream"
 #include "iostream"
+
 
 gnFile gnLoadFile(const gnString& path, gnFileType type) {
     gnFile new_file = gnFile();

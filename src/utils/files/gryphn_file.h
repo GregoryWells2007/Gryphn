@@ -24,7 +24,7 @@ ACCESS_LEVEL:
                                                     // buttttt as code astetic once said "premature optimization is like totally the root of all evil bro *procedes to hit bong*"
                                                     // i think i remember that right, i need to fix this but templates are hard and im not
 
-    gnString path = gnCreateString();
+    gnString path = gnCreateEmptyString();
     gnFileType type = gnFileType::Text; // who loads binary files anyway *silence*, i do I guess thats why I wrote this
 public:
     gnFile() {}
