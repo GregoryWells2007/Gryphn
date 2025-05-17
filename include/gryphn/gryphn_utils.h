@@ -9,7 +9,7 @@
 #include <utils/types/gryphn_color.h>
 #include <utils/types/gryphn_color_format.h>
 #include <utils/types/gryphn_image_format.h>
-#include <utils/files/gryphn_file.h>
+#include <utils/gryphn_access_level.h>
 
 #include <cstdint>
 typedef uint32_t gnUInt;
