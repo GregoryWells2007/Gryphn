@@ -1,5 +1,4 @@
 #ifdef GN_PLATFORM_MACOS
-#define GN_UTILS_CPP
 #include <platform/platform_macos/gryphn_platform_macos.h>
 #include <dlfcn.h>
 
