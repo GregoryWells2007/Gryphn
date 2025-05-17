@@ -6,6 +6,10 @@ void gnSetShaderModuleType(gnShaderModule& module, gnShaderModuleStage shaderMod
 void gnSetShaderModuleUse(gnShaderModule& module, gnShaderUse shaderUse) {
     module.shaderUse = shaderUse;
 }
+void gnSetShaderModuleCode(gnShaderModule& module, gnByte* shaderModuleCode, size_t dataSize) {
+    module.codeSize = dataSize;
+    module.shaderData = shaderModuleCode;
+}
 void gnSetShaderModuleCode(gnShaderModule& module, gnList<gnByte>& shaderModuleCode) {
     module.codeSize = gnListLength(shaderModuleCode);
     module.shaderData = gnListData(shaderModuleCode);

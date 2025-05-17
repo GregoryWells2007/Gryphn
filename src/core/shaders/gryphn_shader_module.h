@@ -34,6 +34,7 @@ public:
 void gnSetShaderModuleType(gnShaderModule& module, gnShaderModuleStage shaderModuleType);
 void gnSetShaderModuleUse(gnShaderModule& module, gnShaderUse shaderUse);
 
+void gnSetShaderModuleCode(gnShaderModule& module, gnByte* shaderModuleCode, gnSize codeSize);
 void gnSetShaderModuleCode(gnShaderModule& module, gnList<gnByte>& shaderModuleCode);
 void gnSetShaderModuleCode(gnShaderModule& module, gnList<gnByte> shaderModuleCode);
 void gnSetShaderModuleCode(gnShaderModule& module, const std::vector<char>& shaderModuleCode);
