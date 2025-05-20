@@ -24,7 +24,7 @@ inline gnReturnCode (*gnCreatePresentationQueue)(gnPresentationQueue* presentati
 inline void (*gnDestroyPresentationQueue)(gnPresentationQueue& queue);
 inline gnImageFormat (*_gnPresentationQueueGetImageFormat)(gnPresentationQueue& presentationQueue);
 inline gnImageFormat gnPresentationQueueGetImageFormat(gnPresentationQueue& presentationQueue) {
-    std::cout << "gnPresentationQueueGetImageFormat should lowkey become supported\n";
+    // std::cout << "gnPresentationQueueGetImageFormat should lowkey become supported\n";
     return _gnPresentationQueueGetImageFormat(presentationQueue);
 }
 inline gnPresentationQueueState (*gnPresentationQueueGetState)(gnPresentationQueue& presentationQueue);

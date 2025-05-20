@@ -1,28 +1,17 @@
 #pragma once
-#include <gryphn/gryphn_utils.h>
-#include <iostream>
-#include "gryphn_layers.h"
+#include "utils/strings/gryphn_string.h"
+#include "utils/gryphn_error_code.h"
 
 struct gnPlatformDebugger;
-struct gnDebugger;
 
-static gnDebugger* gnDebuggerInstance = nullptr;
-inline void gnDebugError(gnString error);
+typedef struct gnDebuggerInfo_t {
+    int layerCount;
+    gnString* layerNames;
+} gnDebuggerInfo;
 
-struct gnDebugger {
-ACCESS_LEVEL:
-    gnPlatformDebugger* debugger;
-    gnList<gnString> debug_layers = gnCreateList<gnString>();
-public:
-    gnDebugger() {
-        if (debugger) gnDebugError(gnCreateString("Debugger instance already created (you can only have one debugger)"));
-        gnDebuggerInstance = this;
-    }
-};
+typedef struct gnDebugger_t {
+    struct gnPlatformDebugger* debugger;
+} gnDebugger;
 
-inline void gnDebugError(gnString error) { std::cout << gnToCString(error) << "\n"; }
-void gnAddDebugLayer(gnDebugger& debugger, const gnString& layer);
-const gnList<gnString>& gnDebuggerGetDebugLayers(gnDebugger& debugger);
-
-inline gnReturnCode (*gnCreateDebugger)(gnDebugger* instance);
-inline void (*gnDestroyDebugger)(gnDebugger& instance);
+gnReturnCode gnCreateDebugger(gnDebugger* debugger, const struct gnDebuggerInfo_t info);
+gnReturnCode gnDestroyDebugger(gnDebugger* debugger);

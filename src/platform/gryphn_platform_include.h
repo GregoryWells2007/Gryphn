@@ -1,8 +1,8 @@
 #pragma once
-
+#include "core/gryphn_rendering_api.h"
 
 #ifdef GN_PLATFORM_LINUX
-#include <platform/platform_linux/gryphn_platform_linux.h>
+#include "platform_linux/gryphn_platform_linux.h"
 #endif
 
 #ifdef GN_PLATFORM_MACOS
@@ -10,16 +10,14 @@
 #endif
 
 #ifdef GN_PLATFORM_WINDOWS
-#include <platform/platform_windows/gryphn_platform_windows.h>
+#include "platform_windows/gryphn_platform_windows.h"
 #endif
 
-#include <core/gryphn_rendering_api.h>
+gnRenderingAPI* gnGetSupportedRenderingAPIs(int* count);
 
-std::vector<gnRenderingAPI> gnGetSupportedRenderingAPIS();
-void* gnPlatformLoadDLL(gnString name);
-void* gnLoadFunctionPtr(void* dll, gnString name);
-
-template <typename function>
-void gnPlatformLoadDLLFunction(void *dll, function& func, gnString name) {
-    func = (function)gnLoadFunctionPtr(dll, name);
-}
+// #ifdef __cplusplus
+// template <typename function>
+// void gnPlatformLoadDLLFunction(void *dll, function& func, gnString name) {
+//     func = (function)gnLoadFunctionPtr(dll, name);
+// }
+// #endif

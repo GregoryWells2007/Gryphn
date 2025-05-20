@@ -25,7 +25,7 @@ typedef char gnChar;
 
 typedef struct gnString {
     gnChar* value;
-#ifdef GN_UTILS_CPP
+#ifdef __cplusplus
     gnString(const gnChar* input) {
         this->value = new gnChar[strlen(input) + 1]; // so like my dumbass forgot to put this earlier and some shit was broken but now it fixed
                                                      // I was wondering why one specific string crashed my program, it was my fault
