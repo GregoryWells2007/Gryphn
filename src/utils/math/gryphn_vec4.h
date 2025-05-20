@@ -1,33 +1,87 @@
+// typedef gnType4<uint32_t> gnUInt4;
+// typedef gnType4<int32_t> gnInt4;
+
+
 #pragma once
-
-// very shitty vec4 class
-// I also use this same thing to make my color class dont worry abt it
-
 #include "stdint.h"
 
-template <typename T>
-struct gnType4 {
+typedef struct gnVec4 {
     union {
-    struct { T a, b, c, d; };
-    struct { T x, y, z, w; };
+        struct { float a, b, c, d; };
+        struct { float x, y, z, w; };
     };
-public:
-    gnType4(T a, T b, T c, T d) { this->a = a; this->b = b; this->c = c; this->d = d; }
-    gnType4() {};
-};
 
-template <typename T1, typename T2, typename T3, typename T4>
-struct gnMultiType4 {
-    union {
-    struct { T1 r; T2 g; T3 b; T4 a; };
-    struct { T1 x; T2 y; T3 z; T4 w; };
-    };
-public:
-    gnMultiType4(T1 r, T2 g, T3 b, T4 a) { this->r = r; this->g = g; this->b = b; this->a = a; }
-    gnMultiType4() {};
-};
+#ifdef GN_UTILS_CPP
+    gnVec4(float x, float y, float z, float w) { this->x = x; this->y = y; this->z = z; this->w = w; }
+    gnVec4(float s) { this->x = s; this->y = s; this->z = s; this->w = w; }
+    gnVec4() {};
 
-typedef gnType4<float> gnVec4;
+    gnVec4 operator-(const gnVec4& other) {
+        gnVec4 returnGnVec4;
+        returnGnVec4.x = this->x - other.x;
+        returnGnVec4.y = this->y - other.y;
+        returnGnVec4.z = this->z - other.z;
+        returnGnVec4.w = this->w - other.w;
+        return returnGnVec4;
+    }
+
+    bool operator==(const gnVec4& other) const {
+        return this->a == other.a && this->b == other.b && this->c == other.c && this->d == other.d;
+    }
+#endif
+} gnVec4;
+
+typedef gnVec4 gnFVec4;
 typedef gnVec4 gnFloat4;
-typedef gnType4<uint32_t> gnUInt4;
-typedef gnType4<int32_t> gnInt4;
+
+typedef struct gnUInt4 {
+    union {
+        struct { uint32_t a, b, c, d; };
+        struct { uint32_t x, y, z, w; };
+    };
+
+#ifdef GN_UTILS_CPP
+    gnUInt4(uint32_t x, uint32_t y, uint32_t z, uint32_t w) { this->x = x; this->y = y; this->z = z; this->w = w; }
+    gnUInt4(uint32_t s) { this->x = s; this->y = s; this->z = s; this->w = s; }
+    gnUInt4() {};
+
+    gnUInt4 operator-(const gnUInt4& other) {
+        gnUInt4 returnGnVec4;
+        returnGnVec4.x = this->x - other.x;
+        returnGnVec4.y = this->y - other.y;
+        returnGnVec4.z = this->z - other.z;
+        returnGnVec4.w = this->w - other.w;
+        return returnGnVec4;
+    }
+
+    bool operator==(const gnUInt4& other) const {
+        return this->a == other.a && this->b == other.b && this->c == other.c && this->d == other.d;
+    }
+#endif
+} gnUInt4;
+
+typedef struct gnInt4 {
+    union {
+        struct { int a, b, c, d; };
+        struct { int x, y, z, w; };
+    };
+
+#ifdef GN_UTILS_CPP
+    gnInt4(int x, int y, int z, int w) { this->x = x; this->y = y; this->z = z; this->w = w; }
+    gnInt4(int s) { this->x = s; this->y = s; this->z = s; this->w = s; }
+    gnInt4() {};
+
+    gnInt4 operator-(const gnInt4& other) {
+        gnInt4 returnGnVec4;
+        returnGnVec4.x = this->x - other.x;
+        returnGnVec4.y = this->y - other.y;
+        returnGnVec4.z = this->z - other.z;
+        returnGnVec4.w = this->w - other.w;
+        return returnGnVec4;
+    }
+
+    bool operator==(const gnInt4& other) const {
+        return this->a == other.a && this->b == other.b && this->c == other.c;
+    }
+#endif
+} gnInt4;

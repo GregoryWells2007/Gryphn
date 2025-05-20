@@ -105,6 +105,11 @@ GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance) {
         return gnReturnError(GN_FAILED_CREATE_INSTANCE, "im to lazy to query vulkan why");
     }
 
+    uint32_t deviceCount;
+    vkEnumeratePhysicalDevices(instance->instance->vk_instance, &deviceCount, nullptr);
+    if (deviceCount == 0)
+        return gnReturnError(GN_FAILED_CREATE_INSTANCE, "no devices support vulkan");
+
     if (instance->debugger->debugger == nullptr) instance->debugger->debugger = new gnPlatformDebugger();
     instance->debugger->debugger->instance = &instance->instance->vk_instance;
     return GN_SUCCESS;

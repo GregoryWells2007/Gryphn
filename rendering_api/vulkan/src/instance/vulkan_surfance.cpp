@@ -13,7 +13,7 @@ GN_EXPORT gnReturnCode gnCreateX11WindowSurfaceFn(gnInstance& instance, Display*
 
     VkResult result = vkCreateXlibSurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
     if (result != VK_SUCCESS)
-        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
+        return gnReturnError(GN_FAILED_TO_ATTACH_WINDOW, result);
     return GN_SUCCESS;
 }
 #endif
@@ -30,7 +30,7 @@ GN_EXPORT gnReturnCode gnCreateWaylandWindowSurfaceFn(gnInstance& instance, wl_d
     VkSurfaceKHR surface;
     VkResult result = vkCreateWaylandSurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
     if (result != VK_SUCCESS)
-        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
+        return gnReturnError(GN_FAILED_TO_ATTACH_WINDOW, result);
     return GN_SUCCESS;
 }
 #endif
@@ -47,7 +47,7 @@ GN_EXPORT gnReturnCode gnCreateWindowsWindowSurfaceFn(gnInstance& instance, HWND
     VkSurfaceKHR surface;
     VkResult result = vkCreateWin32SurfaceKHR(instance.instance->vk_instance, &info, nullptr, &instance.instance->window_surface);
     if (result != VK_SUCCESS)
-        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
+        return gnReturnError(GN_FAILED_TO_ATTACH_WINDOW, result);
     return GN_SUCCESS;
 }
 #endif
@@ -55,10 +55,6 @@ GN_EXPORT gnReturnCode gnCreateWindowsWindowSurfaceFn(gnInstance& instance, HWND
 
 #ifdef GN_PLATFORM_MACOS
 GN_EXPORT gnReturnCode gnCreateMacOSWindowSurfaceFn(gnInstance& instance, NS::Window* window, NS::View* view) {
-    // VkMacOSSurfaceCreateInfoMVK info{};
-    // info.sType = VK_STRUCTURE_TYPE_MACOS_SURFACE_CREATE_INFO_MVK;
-    // info.pView = (void*)view;
-
     VkMetalSurfaceCreateInfoEXT surfaceCreateInfo = {};
     surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;
     surfaceCreateInfo.pNext = nullptr;
@@ -68,7 +64,7 @@ GN_EXPORT gnReturnCode gnCreateMacOSWindowSurfaceFn(gnInstance& instance, NS::Wi
     VkSurfaceKHR surface;
     VkResult result = vkCreateMetalSurfaceEXT(instance.instance->vk_instance, &surfaceCreateInfo, nullptr, &instance.instance->window_surface);
     if (result != VK_SUCCESS)
-        return gnReturnError(GN_FAILED_CREATE_WINDOW_SURFACE, result);
+        return gnReturnError(GN_FAILED_TO_ATTACH_WINDOW, result);
     return GN_SUCCESS;
 }
 #endif

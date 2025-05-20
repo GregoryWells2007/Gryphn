@@ -1,37 +1,80 @@
 #pragma once
-
-// very shitty vec3 class
-// i really want to write some math for this shit but im a lazy little cunt and im not doing all that shit
-
 #include "stdint.h"
 
-template <typename T>
-struct gnType3 {
+typedef struct gnVec3 {
     union {
-    struct { T a, b, c; };
-    struct { T x, y, z; };
+        struct { float a, b, c; };
+        struct { float x, y, z; };
     };
-public:
-    gnType3(T a, T b, T c) { this->a = a; this->b = b; this->c = c; }
-    gnType3() {};
 
-    bool operator==(const gnType3& other) const {
+#ifdef GN_UTILS_CPP
+    gnVec3(float x, float y, float z) { this->x = x; this->y = y; this->z = z; }
+    gnVec3(float s) { this->x = s; this->y = s; this->z = s; }
+    gnVec3() {};
+
+    gnVec3 operator-(const gnVec3& other) {
+        gnVec3 returnGnVec3;
+        returnGnVec3.x = this->x - other.x;
+        returnGnVec3.y = this->y - other.y;
+        returnGnVec3.z = this->z - other.z;
+        return returnGnVec3;
+    }
+
+    bool operator==(const gnVec3& other) const {
         return this->a == other.a && this->b == other.b && this->c == other.c;
     }
-};
+#endif
+} gnVec3;
 
-template <typename T1, typename T2, typename T3>
-struct gnMultiType3 {
-    union {
-    struct { T1 a; T2 b; T3 c; };
-    struct { T1 x; T2 y; T3 z; };
-    };
-public:
-    gnMultiType3(T1 a, T2 b, T3 c) { this->a = a; this->b = b; this->c = c; }
-    gnMultiType3() {};
-};
-
-typedef gnType3<float> gnVec3;
+typedef gnVec3 gnFVec3;
 typedef gnVec3 gnFloat3;
-typedef gnType3<uint32_t> gnUInt3;
-typedef gnType3<int32_t> gnInt3;
+
+typedef struct gnUInt3 {
+    union {
+        struct { uint32_t a, b, c; };
+        struct { uint32_t x, y, z; };
+    };
+
+#ifdef GN_UTILS_CPP
+    gnUInt3(uint32_t x, uint32_t y) { this->x = x; this->y = y; this->z = z; }
+    gnUInt3(uint32_t s) { this->x = s; this->y = s; this->z = s; }
+    gnUInt3() {};
+
+    gnUInt3 operator-(const gnUInt3& other) {
+        gnUInt3 returnGnVec3;
+        returnGnVec3.x = this->x - other.x;
+        returnGnVec3.y = this->y - other.y;
+        returnGnVec3.z = this->z - other.z;
+        return returnGnVec3;
+    }
+
+    bool operator==(const gnUInt3& other) const {
+        return this->a == other.a && this->b == other.b && this->c == other.c;
+    }
+#endif
+} gnUInt3;
+
+typedef struct gnInt3 {
+    union {
+        struct { int a, b, c; };
+        struct { int x, y, z; };
+    };
+
+#ifdef GN_UTILS_CPP
+    gnInt3(int x, int y, int z) { this->x = x; this->y = y; this->z = z; }
+    gnInt3(int s) { this->x = s; this->y = s; this->z = s; }
+    gnInt3() {};
+
+    gnInt3 operator-(const gnInt3& other) {
+        gnInt3 returnGnVec3;
+        returnGnVec3.x = this->x - other.x;
+        returnGnVec3.y = this->y - other.y;
+        returnGnVec3.z = this->z - other.z;
+        return returnGnVec3;
+    }
+
+    bool operator==(const gnInt3& other) const {
+        return this->a == other.a && this->b == other.b && this->c == other.c;
+    }
+#endif
+} gnInt3;

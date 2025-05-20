@@ -16,4 +16,4 @@ public:
 
 gnString gnGetPhysicalOutputDeviceName(const gnPhysicalOutputDevice& device);
 inline bool (*gnDeviceSupportsAPI)(const gnPhysicalOutputDevice& device);
-inline gnList<gnPhysicalOutputDevice> (*gnGetPhysicalOutputDevices)(const gnInstance& instance);
+inline gnPhysicalOutputDevice* (*gnGetPhysicalOutputDevices)(const gnInstance& instance, uint32_t* count);

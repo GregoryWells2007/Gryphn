@@ -1,11 +1,9 @@
-#include "utils/strings/gryphn_string.h"
+#pragma once
 
 typedef enum gnReturnCode {
-    GN_SUCCESS, GN_FAILED, GN_FATAL,
+    GN_SUCCESS, GN_WARNING, GN_FAILED,
     GN_ERROR = GN_FAILED
 } gnReturnCode;
-
-typedef gnReturnCode gnErrorCode;
 
 typedef enum gnReturnMessage {
     GN_UNKNOWN_ERROR,
@@ -24,18 +22,8 @@ typedef enum gnReturnMessage {
     GN_FAILED_CREATE_RENDERPASS,
     GN_FAILED_CREATE_INSTANCE,
     GN_FAILED_TO_ATTACH_WINDOW,
-    GN_FAILED_TO_CREATE_IMAGE,
-    GN_FAILED_CREATE_WINDOW_SURFACE
+    GN_FAILED_TO_CREATE_IMAGE
 } gnReturnMessage;
 
-inline gnString lastReturnAPIMessage = gnCreateEmptyString();
-inline gnReturnMessage lastReturnMessage = GN_UNKNOWN_ERROR;
-
-static const gnString gnGetErrorString() { return lastReturnAPIMessage; }
-static const gnReturnMessage gnGetErrorMessage() { return lastReturnMessage; }
-
-static gnReturnCode gnReturnError(gnReturnMessage message, gnString errorMessage) {
-    lastReturnAPIMessage = errorMessage;
-    lastReturnMessage = message;
-    return GN_ERROR;
-}
+typedef gnReturnCode gnErrorCode;
+typedef gnReturnMessage gnErrorMessage;

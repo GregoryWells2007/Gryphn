@@ -2,17 +2,17 @@
 #include <Metal/Metal.hpp>
 #include "metal_output_devices.h"
 
-GN_EXPORT gnList<gnPhysicalOutputDevice> gnGetPhysicalOutputDevicesFn(const gnInstance& instance) {
-    gnList<gnPhysicalOutputDevice> physicalOutputDevices = gnCreateList<gnPhysicalOutputDevice>();
+GN_EXPORT gnPhysicalOutputDevice* gnGetPhysicalOutputDevicesFn(const gnInstance& instance, uint32_t* count) {
+    // gnList<gnPhysicalOutputDevice> physicalOutputDevices = gnCreateList<gnPhysicalOutputDevice>();
     NS::Array *devices = MTL::CopyAllDevices();
+    gnPhysicalOutputDevice* devicesList = (gnPhysicalOutputDevice*)malloc(sizeof(gnPhysicalOutputDevice) * devices->count());
     for (int i = 0; i < devices->count(); i++) {
-        gnPhysicalOutputDevice physicalOutputDevice;
-        physicalOutputDevice.outputDeviceName = reinterpret_cast<MTL::Device*>(devices->object(0))->name()->cString(NS::StringEncoding::UTF8StringEncoding);
-        physicalOutputDevice.physicalOutputDevice = new gnPlatformPhysicalOutputDevice();
-        physicalOutputDevice.physicalOutputDevice->device = reinterpret_cast<MTL::Device*>(devices->object(0));
-        gnListAdd(physicalOutputDevices, physicalOutputDevice);
+        devicesList[i].outputDeviceName = reinterpret_cast<MTL::Device*>(devices->object(0))->name()->cString(NS::StringEncoding::UTF8StringEncoding);
+        devicesList[i].physicalOutputDevice = new gnPlatformPhysicalOutputDevice();
+        devicesList[i].physicalOutputDevice->device = reinterpret_cast<MTL::Device*>(devices->object(0));
     }
-    return physicalOutputDevices;
+    *count = devices->count();
+    return devicesList;
 }
 
 GN_EXPORT gnBool gnDeviceSupportsAPIFn(const gnPhysicalOutputDevice& device) {
