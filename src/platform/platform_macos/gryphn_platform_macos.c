@@ -18,7 +18,7 @@ gnRenderingAPI* gnGetSupportedRenderingAPIs(int* count) {
 struct gnDynamicLibrary_t* gnLoadDynamicLibrary(const gnString path) {
     struct gnDynamicLibrary_t* dll = malloc(sizeof(struct gnDynamicLibrary_t));
     dll->dllPtr = dlopen(gnToCString(gnCombineStrings(path, ".dylib")), RTLD_LAZY),
-    dll->isValid = true
+    dll->isValid = true;
     if (dll->dllPtr == NULL) dll->isValid = false;
     return dll;
 }

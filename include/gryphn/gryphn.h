@@ -1,6 +1,6 @@
 #pragma once
 #include <platform/gryphn_platform_include.h>
-#include <core/init/gryphn_init.h>
+#include <core/instance/init/gryphn_init.h>
 #include <core/instance/gryphn_instance.h>
 
 // #pragma once

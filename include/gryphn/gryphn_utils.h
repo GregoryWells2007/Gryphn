@@ -17,4 +17,4 @@
 // typedef float gnFloat;
 // typedef size_t gnSize;
 
-// #define GN_EXPORT extern "C"
+#define GN_EXPORT extern "C"

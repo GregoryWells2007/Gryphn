@@ -1,3 +1,4 @@
+#include "utils/gryphn_bool.h"
 #include <core/gryphn_support.h>
 
 GN_EXPORT gnBool gnAPISupportsFn(gnFeature feature) {
