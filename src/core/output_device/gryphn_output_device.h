@@ -1,19 +1,16 @@
 #pragma once
-#include <gryphn/gryphn_utils.h>
-#include "gryphn_physical_output_device.h"
+#include <core/output_device/gryphn_physical_output_device.h>
 
 struct gnPlatformOutputDevice;
-struct gnPhysicalOutputDevice;
-struct gnInstance;
+struct gnDeviceFunctions_t;
 
-struct gnOutputDevice {
-ACCESS_LEVEL:
-    gnPlatformOutputDevice* outputDevice = nullptr;
-    gnPhysicalOutputDevice* physicalOutputDevice;
-public:
-    gnOutputDevice() {}
-};
+typedef struct gnOutputDevice_t {
+    struct gnPlatformOutputDevice* outputDevice;
+    struct gnDeviceFunctions_t* deviceFunctions;
+    gnPhysicalDevice* physicalDevice;
+} gnOutputDevice;
 
-inline gnReturnCode (*gnRegisterOutputDevice)(gnOutputDevice* outputDevice, const gnInstance& instance, const gnPhysicalOutputDevice& physicalDevice);
-inline void (*gnWaitForDevice)(const gnOutputDevice& device);
-inline void (*gnDestroyOutputDevice)(gnOutputDevice& device);
+gnReturnCode gnRegisterOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, const gnPhysicalDevice physicalDevice);
+void gnDestroyOutputDevice(gnOutputDevice* device);
+
+// inline void (*gnWaitForDevice)(const gnOutputDevice& device);

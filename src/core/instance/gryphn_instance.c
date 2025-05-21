@@ -8,7 +8,6 @@ gnReturnCode gnCreateInstance(gnInstance* instance, struct gnInstanceInfo_t info
     if (instance->dynamicLib == NULL) return GN_UNABLE_TO_LOAD_DYNAMIC_LIBARRY;
     instance->functions = malloc(sizeof(struct gnFunctions_t));
     gnLoadFunctions(instance->dynamicLib, instance->functions);
-
     return instance->functions->_gnCreateInstance(instance, info);
 }
 void gnDestroyInstance(gnInstance* instance) {

@@ -40,4 +40,12 @@ void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* funct
     gnLoadDLLFunction(lib, functions->_gnDestroyInstance, "gnDestroyInstanceFn");
     gnLoadDLLFunction(lib, functions->_gnCreateDebugger, "gnCreateDebuggerFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyDebugger, "gnDestroyDebuggerFn");
+    gnLoadDLLFunction(lib, functions->_gnGetPhysicalDevices, "gnGetPhysicalDevicesFn");
+    gnLoadDLLFunction(lib, functions->_gnDeviceSupportsAPI, "gnDeviceSupportsAPIFn");
+    gnLoadDLLFunction(lib, functions->_gnRegisterOutputDevice, "gnRegisterOutputDeviceFn");
+    gnLoadDLLFunction(lib, functions->_gnDestroyOutputDevice, "gnDestroyOutputDeviceFn");
+}
+
+void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFunctions_t* functions) {
+
 }
