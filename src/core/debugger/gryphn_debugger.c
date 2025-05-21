@@ -1,17 +1,11 @@
-#undef GN_UTILS_CPP
 #include "gryphn_debugger.h"
+#include "core/gryphn_platform_functions.h"
+#include "stdio.h"
 
-static gnReturnCode (*_gnCreateDebugger)(gnDebugger* debugger, const struct gnDebuggerInfo_t info);
-static void (*_gnDestroyDebugger)(gnDebugger* debugger);
-
-void gn_load_functions() {
-
+gnReturnCode gnCreateDebugger(gnDebugger* debugger, gnInstance* instance, const struct gnDebuggerInfo_t info) {
+    debugger->instance = instance;
+    return instance->functions->_gnCreateDebugger(debugger, instance, info);
 }
-
-// void gnAddDebugLayer(gnDebugger& debugger, const gnString& layer) {
-//     gnListAdd(debugger.debug_layers, layer);
-// }
-
-// const gnList<gnString>& gnDebuggerGetDebugLayers(gnDebugger& debugger) {
-//     return debugger.debug_layers;
-// }
+void gnDestroyDebugger(gnDebugger* debugger) {
+    debugger->instance->functions->_gnDestroyDebugger(debugger);
+}

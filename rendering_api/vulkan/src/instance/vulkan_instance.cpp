@@ -1,56 +1,9 @@
 #include "gryphn/gryphn_utils.h"
 #include "vector"
-#include <cstring>
-// #include "debugger/vulkan_debugger.h"
 #include "vulkan_instance.h"
-
-
-
-// now I gotta do some shit to setup debug layers
-bool checkValidationLayerSupport(std::vector<std::string> layers_to_validate) {
-    uint32_t layerCount;
-    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-
-    std::vector<VkLayerProperties> availableLayers(layerCount);
-    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
-    for (int i = 0; i < layers_to_validate.size(); i++) {
-        bool layerFound = false;
-
-        for (const auto& layerProperties : availableLayers) {
-            if (strcmp(layers_to_validate[i].c_str(), layerProperties.layerName) == 0) {
-                layerFound = true;
-                break;
-            }
-        }
-
-        if (!layerFound)
-            return false;
-    }
-
-    return true;
-}
-
-// void gnInstanceSetAppInfoFn(gnInstance& instance, gnInstanceInfo& info) {
-    // if (instance.instance == nullptr) instance.instance = new gnPlatformInstanceData();
-
-//     instance.AppInfo = info;
-//     instance.instance->appInfo = {};
-//     instance.instance->appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-//     instance.instance->appInfo.pApplicationName = "Hello Triangle";
-//     instance.instance->appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-//     instance.instance->appInfo.pEngineName = "No Engine";
-//     instance.instance->appInfo.engineVersion = VK_MAKE_VERSION(1, 0, 0);
-//     instance.instance->appInfo.apiVersion = VK_API_VERSION_1_3;
-// }
 
 GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance, gnInstanceInfo instanceInfo) {
     instance->instance = new gnPlatformInstance();
-
-    // if (instance->debugger != nullptr && !checkValidationLayerSupport(instance->debugger->debug_layers)) {
-    //     return gnReturnError(GN_FAILED_CREATE_INSTANCE, "validation layers requested, but not available!");
-    // }
-    // gnInstanceSetAppInfoFn(*instance, instance->AppInfo);
 
     instance->valid = true;
 
@@ -73,8 +26,7 @@ GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance, gnInstanceInfo i
 
 
     instance->instance->extensions.push_back("VK_KHR_surface");
-    // if (instance->debugger)
-    //     instance->instance->extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    instance->instance->extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
     VkApplicationInfo appInfo = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
@@ -89,34 +41,14 @@ GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance, gnInstanceInfo i
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
     createInfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-    // auto extensions = getRequiredExtensions(instance->debugger);
 
     createInfo.enabledExtensionCount = static_cast<uint32_t>(instance->instance->extensions.size());;
     createInfo.ppEnabledExtensionNames = instance->instance->extensions.data();
-
-    // VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo{};
-    // if (instance->debugger != nullptr) {
-    //     auto validation_layers = instance->debugger->debug_layers;
-
-    //     gnList<const char*> validation_layers_c = gnCreateList<const char*>();
-    //     for (int i = 0; i < gnListLength(validation_layers); i++)
-    //         gnListAdd(validation_layers_c, gnToCString(validation_layers[i]));
-
-    //     createInfo.enabledLayerCount = static_cast<uint32_t>(gnListLength(validation_layers_c));
-    //     createInfo.ppEnabledLayerNames = gnListData(validation_layers_c);
-
-    //     populateDebugMessengerCreateInfo(debugCreateInfo);
-    //     createInfo.pNext = (VkDebugUtilsMessengerCreateInfoEXT*) &debugCreateInfo;
-    // } else {
-        createInfo.enabledLayerCount = 0;
-    // }
 
     if (vkCreateInstance(&createInfo, nullptr, &instance->instance->vk_instance) != VK_SUCCESS) {
         return GN_FAILED_CREATE_INSTANCE;
     }
 
-    // if (instance->debugger->debugger == nullptr) instance->debugger->debugger = new gnPlatformDebugger();
-    // instance->debugger->debugger->instance = &instance->instance->vk_instance;
     return GN_SUCCESS;
 }
 

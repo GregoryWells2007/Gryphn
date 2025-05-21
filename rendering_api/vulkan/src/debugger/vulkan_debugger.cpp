@@ -1,5 +1,34 @@
-#include "iostream"
 #include "vulkan_debugger.h"
+#include "instance/vulkan_instance.h"
+
+bool checkValidationLayerSupport(std::vector<std::string> layers_to_validate) {
+    uint32_t layerCount;
+    vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
+
+    std::vector<VkLayerProperties> availableLayers(layerCount);
+    vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
+
+    for (int i = 0; i < layers_to_validate.size(); i++) {
+        bool layerFound = false;
+
+        for (const auto& layerProperties : availableLayers) {
+            if (strcmp(layers_to_validate[i].c_str(), layerProperties.layerName) == 0) {
+                layerFound = true;
+                break;
+            }
+        }
+
+        if (!layerFound)
+            return false;
+    }
+
+    return true;
+}
+
+typedef struct vk_userData_t {
+    gnDebuggerCallback debuggerCallback;
+    void* userData;
+} vkUserData;
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -7,22 +36,42 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData) {
 
-    if (messageSeverity >= VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
-        std::cerr << "validation layer error: " << pCallbackData->pMessage << std::endl;
-    else
-        std::cout << "validation layer: " << pCallbackData->pMessage << std::endl;
+    vk_userData_t userData = *(struct vk_userData_t*)pUserData;
 
+    gnMessageSeverity severity;
+    gnMessageType type;
+    gnMessageData data = {
+        .message = gnCreateString(pCallbackData->pMessage)
+    };
+
+    switch (messageSeverity) {
+    default: break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: severity = GN_MESSAGE_VERBOSE; break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: severity = GN_MESSAGE_INFO; break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: severity = GN_MESSAGE_WARNING; break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: severity = GN_MESSAGE_ERROR; break;
+    }
+
+    switch (messageType) {
+    default: break;
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: type = GN_DEBUG_MESSAGE_GENERAL; break;
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT: type = GN_DEBUG_MESSAGE_VALIDATION; break;
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: type = GN_DEBUG_MESSAGE_PERFORMANCE; break;
+    }
+
+    gnDebuggerCallback callback = *userData.debuggerCallback;
+    gnBool result = callback(severity, type, data, userData.userData);
+    if (result == gnFalse) return VK_FALSE;
+    else if (result == gnTrue) return VK_TRUE;
     return VK_FALSE;
 }
 
-// zero fucking clue what this does but the guy who wrote vulkan-tutorial.com does
-VkResult CreateDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
-    auto func = (PFN_vkCreateDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
-    if (func != nullptr) {
-        return func(instance, pCreateInfo, pAllocator, pDebugMessenger);
-    } else {
+VkResult vk_createDebugUtilsMessengerEXT(VkInstance instance, const VkDebugUtilsMessengerCreateInfoEXT* pCreateInfo, const VkAllocationCallbacks* pAllocator, VkDebugUtilsMessengerEXT* pDebugMessenger) {
+    PFN_vkCreateDebugUtilsMessengerEXT vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance, "vkCreateDebugUtilsMessengerEXT");
+    if (vkCreateDebugUtilsMessengerEXT != nullptr)
+        return vkCreateDebugUtilsMessengerEXT(instance, pCreateInfo, pAllocator, pDebugMessenger);
+    else
         return VK_ERROR_EXTENSION_NOT_PRESENT;
-    }
 }
 
 void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& createInfo) {
@@ -33,25 +82,33 @@ void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& create
     createInfo.pfnUserCallback = vk_debuggerDebugCallback;
 }
 
-void DestroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
-    auto func = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
-    if (func != nullptr) {
-        func(instance, debugMessenger, pAllocator);
+void vk_destroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
+    PFN_vkDestroyDebugUtilsMessengerEXT vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT) vkGetInstanceProcAddr(instance, "vkDestroyDebugUtilsMessengerEXT");
+    if (vkDestroyDebugUtilsMessengerEXT != nullptr) {
+        vkDestroyDebugUtilsMessengerEXT(instance, debugMessenger, pAllocator);
     }
 }
 
-GN_EXPORT gnReturnCode gnCreateDebuggerFn(gnDebugger* debugger) {
-    if (debugger->debugger == nullptr) debugger->debugger = new gnPlatformDebugger();
+GN_EXPORT gnReturnCode gnCreateDebuggerFn(gnDebugger* debugger, gnInstance* instance, const gnDebuggerInfo_t info) {
+    debugger->debugger = new gnPlatformDebugger();
+
+    if (!checkValidationLayerSupport({"VK_LAYER_KHRONOS_validation"}))
+        return GN_FAILED_TO_CREATE_DEBUGGER;
 
     VkDebugUtilsMessengerCreateInfoEXT createInfo;
-    populateDebugMessengerCreateInfo(createInfo);
 
-    if (CreateDebugUtilsMessengerEXT(*debugger->debugger->instance, &createInfo, nullptr, &debugger->debugger->debugMessenger) != VK_SUCCESS) {
-        return GN_FAILED;
-    }
+    vk_userData_t* userData = (vk_userData_t*)malloc(sizeof(vk_userData_t));
+    userData->debuggerCallback = info.callback;
+    userData->userData = info.userData;
+
+    populateDebugMessengerCreateInfo(createInfo);
+    createInfo.pUserData = (void*)userData;
+
+    if (vk_createDebugUtilsMessengerEXT(instance->instance->vk_instance, &createInfo, nullptr, &debugger->debugger->debugMessenger) != VK_SUCCESS)
+        return GN_FAILED_TO_CREATE_DEBUGGER;
     return GN_SUCCESS;
 }
 
 GN_EXPORT void gnDestroyDebuggerFn(gnDebugger& debugger) {
-    DestroyDebugUtilsMessengerEXT(*debugger.debugger->instance, debugger.debugger->debugMessenger, nullptr);
+    vk_destroyDebugUtilsMessengerEXT(*debugger.debugger->instance, debugger.debugger->debugMessenger, nullptr);
 }

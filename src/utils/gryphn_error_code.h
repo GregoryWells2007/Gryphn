@@ -5,7 +5,8 @@ typedef enum gnReturnCode_t {
     GN_UNKNOWN_RENDERINGAPI,
     GN_UNSUPPORTED_RENDERING_API,
     GN_UNABLE_TO_LOAD_DYNAMIC_LIBARRY,
-    GN_FAILED_CREATE_INSTANCE
+    GN_FAILED_CREATE_INSTANCE,
+    GN_FAILED_TO_CREATE_DEBUGGER
 
     // GN_UNKNOWN_ERROR,
     // GN_UNKNOWN_FRAMEBUFFER_ATTACHMENT,
@@ -25,3 +26,14 @@ typedef enum gnReturnCode_t {
 } gnReturnCode;
 
 typedef gnReturnCode gnErrorCode;
+static const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
+    switch (returnCode) {
+    default: return "GN_FORGOT";
+    case GN_SUCCESS: return "GN_SUCCESS";
+    case GN_UNKNOWN_RENDERINGAPI: return "GN_UNKNOWN_RENDERINGAPI";
+    case GN_UNSUPPORTED_RENDERING_API: return "GN_UNSUPPORTED_RENDERING_API";
+    case GN_UNABLE_TO_LOAD_DYNAMIC_LIBARRY: return "GN_UNABLE_TO_LOAD_DYNAMIC_LIBARRY";
+    case GN_FAILED_CREATE_INSTANCE: return "GN_FAILED_CREATE_INSTANCE";
+    case GN_FAILED_TO_CREATE_DEBUGGER: return "GN_FAILED_TO_CREATE_DEBUGGER";
+    }
+}
