@@ -1,10 +1,16 @@
 #pragma once
-#include "core/instance/gryphn_instance.h"
 #include <vulkan/vulkan.h>
 #ifdef GN_PLATFORM_MACOS
-#include "vulkan_macos_bridge.h"
+#include <instance/vulkan_macos_bridge.h>
 #endif
 #include "vector"
+#include "core/debugger/gryphn_debugger.h"
+
+struct gnInstanceMessage {
+    gnMessageSeverity severity;
+    gnMessageType type;
+    gnMessageData data;
+};
 
 struct gnPlatformInstance {
     VkInstance vk_instance;
@@ -12,4 +18,5 @@ struct gnPlatformInstance {
     VkSurfaceKHR window_surface;
 
     std::vector<const char*> extensions;
+    std::vector<gnInstanceMessage> instanceMessages;
 };

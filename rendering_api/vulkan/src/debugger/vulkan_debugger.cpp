@@ -1,5 +1,6 @@
 #include "vulkan_debugger.h"
 #include "instance/vulkan_instance.h"
+#include "iostream"
 
 bool checkValidationLayerSupport(std::vector<std::string> layers_to_validate) {
     uint32_t layerCount;
@@ -79,7 +80,6 @@ void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT& create
     createInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
     createInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT;
     createInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
-    createInfo.pfnUserCallback = vk_debuggerDebugCallback;
 }
 
 void vk_destroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessengerEXT debugMessenger, const VkAllocationCallbacks* pAllocator) {
@@ -103,6 +103,16 @@ GN_EXPORT gnReturnCode gnCreateDebuggerFn(gnDebugger* debugger, gnInstance* inst
 
     populateDebugMessengerCreateInfo(createInfo);
     createInfo.pUserData = (void*)userData;
+    createInfo.pfnUserCallback = vk_debuggerDebugCallback;
+
+    for (int i = 0; i < instance->instance->instanceMessages.size(); i++) {
+        info.callback(
+            instance->instance->instanceMessages[i].severity,
+            instance->instance->instanceMessages[i].type,
+            instance->instance->instanceMessages[i].data,
+            info.userData
+        );
+    }
 
     if (vk_createDebugUtilsMessengerEXT(instance->instance->vk_instance, &createInfo, nullptr, &debugger->debugger->debugMessenger) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_DEBUGGER;
