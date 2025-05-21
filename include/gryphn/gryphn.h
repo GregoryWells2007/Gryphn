@@ -3,6 +3,7 @@
 #include <core/instance/init/gryphn_init.h>
 #include <core/instance/gryphn_instance.h>
 #include <core/debugger/gryphn_debugger.h>
+#include <core/output_device/gryphn_physical_output_device.h>
 
 // #pragma once
 
