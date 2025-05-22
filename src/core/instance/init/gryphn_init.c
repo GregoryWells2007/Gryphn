@@ -3,6 +3,7 @@
 #include <platform/gryphn_platform_include.h>
 #include "gryphn_dynamic_library.h"
 // #include <dlfcn.h>
+#include "stdio.h"
 
 gnBool gnIsAPISupported(gnRenderingAPI api) {
     int renderingAPICount = 0;
@@ -44,6 +45,28 @@ void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* funct
     gnLoadDLLFunction(lib, functions->_gnDeviceSupportsAPI, "gnDeviceSupportsAPIFn");
     gnLoadDLLFunction(lib, functions->_gnRegisterOutputDevice, "gnRegisterOutputDeviceFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyOutputDevice, "gnDestroyOutputDeviceFn");
+
+    #ifdef GN_PLATFORM_LINUX
+        #ifdef GN_WINDOW_X11
+        gnLoadDLLFunction(lib, functions->_gnCreateX11WindowSurface, "gnCreateX11WindowSurfaceFn");
+        #endif
+        #ifdef GN_WINDOW_WAYLAND
+        gnLoadDLLFunction(lib, functions->_gnCreateWaylandWindowSurface, "gnCreateWaylandWindowSurfaceFn");
+        #endif
+    #endif
+
+
+    #ifdef GN_PLATFORM_WIN32
+    gnLoadDLLFunction(lib, functions->_gnCreateWin32WindowSurface, "gnCreateWin32WindowSurfaceFn");
+    #endif
+
+    #ifdef GN_PLATFORM_MACOS
+    gnLoadDLLFunction(lib, functions->_gnCreateMacOSWindowSurface, "gnCreateMacOSWindowSurfaceFn");
+    #endif
+
+    gnLoadDLLFunction(lib, functions->_gnDestroyWindowSurface, "gnDestroyWindowSurfaceFn");
+
+    printf("_gnDestroyWindowSurface location: %p\n", functions->_gnDestroyWindowSurface);
 }
 
 void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFunctions_t* functions) {

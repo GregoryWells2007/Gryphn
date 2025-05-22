@@ -101,6 +101,5 @@ GN_EXPORT gnReturnCode gnCreateInstanceFn(gnInstance* instance, gnInstanceInfo i
 
 GN_EXPORT void gnDestroyInstanceFn(gnInstance& instance) {
     instance.valid = false;
-    vkDestroySurfaceKHR(instance.instance->vk_instance, instance.instance->window_surface, nullptr);
     vkDestroyInstance(instance.instance->vk_instance, nullptr);
 }

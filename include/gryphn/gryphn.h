@@ -4,6 +4,7 @@
 #include <core/instance/gryphn_instance.h>
 #include <core/debugger/gryphn_debugger.h>
 #include <core/output_device/gryphn_physical_output_device.h>
+#include <core/window_surface/gryphn_surface.h>
 
 // #pragma once
 

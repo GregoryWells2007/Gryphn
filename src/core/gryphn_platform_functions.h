@@ -5,6 +5,7 @@
 #include "debugger/gryphn_debugger.h"
 #include "output_device/gryphn_physical_output_device.h"
 #include "output_device/gryphn_output_device.h"
+#include "window_surface/gryphn_surface.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -18,6 +19,26 @@ typedef struct gnFunctions_t {
 
     gnReturnCode (*_gnRegisterOutputDevice)(gnOutputDevice* outputDevice, gnInstance* instance, const gnPhysicalDevice physicalDevice);
     void (*_gnDestroyOutputDevice)(gnOutputDevice* device);
+
+    #ifdef GN_PLATFORM_LINUX
+        #ifdef GN_WINDOW_X11
+            gnReturnCode (*_gnCreateX11WindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnX11WindowSurfaceInfo_t createInfo);
+        #endif
+        #ifdef GN_WINDOW_WAYLAND
+            gnReturnCode (*_gnCreateWaylandWindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
+        #endif
+    #endif
+
+
+    #ifdef GN_PLATFORM_WIN32
+        gnReturnCode (*_gnCreateWin32WindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnWin32WindowSurfaceInfo_t createInfo);
+    #endif
+
+    #ifdef GN_PLATFORM_MACOS
+        gnReturnCode (*_gnCreateMacOSWindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
+    #endif
+
+    void (*_gnDestroyWindowSurface)(struct gnWindowSurface_t* windowSurface);
 } gnFunctions;
 
 typedef struct gnDeviceFunctions_t {
