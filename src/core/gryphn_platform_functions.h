@@ -14,10 +14,9 @@ typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateDebugger)(gnDebugger* debugger, gnInstance* instance, const struct gnDebuggerInfo_t info);
     void (*_gnDestroyDebugger)(gnDebugger* debugger);
 
-    gnBool (*_gnDeviceSupportsAPI)(const gnPhysicalDevice device);
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstance* instance, uint32_t* count);
 
-    gnReturnCode (*_gnRegisterOutputDevice)(gnOutputDevice* outputDevice, gnInstance* instance, const gnPhysicalDevice physicalDevice);
+    gnReturnCode (*_gnCreateOutputDevoce)(gnOutputDevice* device, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo);
     void (*_gnDestroyOutputDevice)(gnOutputDevice* device);
 
     #ifdef GN_PLATFORM_LINUX

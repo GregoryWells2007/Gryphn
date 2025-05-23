@@ -42,8 +42,7 @@ void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* funct
     gnLoadDLLFunction(lib, functions->_gnCreateDebugger, "gnCreateDebuggerFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyDebugger, "gnDestroyDebuggerFn");
     gnLoadDLLFunction(lib, functions->_gnGetPhysicalDevices, "gnGetPhysicalDevicesFn");
-    gnLoadDLLFunction(lib, functions->_gnDeviceSupportsAPI, "gnDeviceSupportsAPIFn");
-    gnLoadDLLFunction(lib, functions->_gnRegisterOutputDevice, "gnRegisterOutputDeviceFn");
+    gnLoadDLLFunction(lib, functions->_gnCreateOutputDevoce, "gnCreateOutputDeviceFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyOutputDevice, "gnDestroyOutputDeviceFn");
 
     #ifdef GN_PLATFORM_LINUX

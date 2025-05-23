@@ -7,6 +7,10 @@ typedef struct gnPhysicalDeviceProperties_t {
     gnString name;
 } gnPhysicalDeviceProperties;
 
+typedef struct gnPhysicalDeviceFeatures_t {
+    // no freatures
+} gnPhysicalDeviceFeatures;
+
 typedef enum gnQueueTypeFlags_e {
     GN_QUEUE_GRAPHICS = 0x00000001,
     GN_QUEUE_COMPUTE = 0x00000002,
@@ -27,6 +31,7 @@ typedef struct gnPhysicalDeviceQueueProperties_t {
 typedef struct gnPhysicalDevice_t {
     struct gnPlatformPhysicalDevice_t* physicalDevice;
     struct gnPhysicalDeviceProperties_t properties;
+    struct gnPhysicalDeviceFeatures_t features;
     struct gnPhysicalDeviceQueueProperties_t queueProperties;
 
     gnInstance* instance;

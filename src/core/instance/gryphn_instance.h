@@ -5,6 +5,7 @@
 struct gnPlatformInstance_t;
 struct gnFunctions_t;
 struct gnDynamicLibrary_t;
+struct gnDebugger_t;
 
 typedef struct gnInstanceInfo_t {
     gnString  applicationName;
@@ -22,6 +23,8 @@ typedef struct gnInstance_t {
 
     struct gnFunctions_t* functions;
     struct gnDynamicLibrary_t* dynamicLib;
+
+    struct gnDebugger_t* debugger;
 } gnInstance;
 
 gnReturnCode gnCreateInstance(gnInstance* instance, struct gnInstanceInfo_t info);

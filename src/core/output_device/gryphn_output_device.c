@@ -3,12 +3,13 @@
 #include "core/gryphn_platform_functions.h"
 #include "core/instance/init/gryphn_init.h"
 
-gnReturnCode gnRegisterOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, const gnPhysicalDevice physicalDevice) {
+gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo) {
     outputDevice->deviceFunctions = malloc(sizeof(gnDeviceFunctions));
     gnLoadDeviceFunctions(instance->dynamicLib, outputDevice->deviceFunctions);
-    outputDevice->physicalDevice = (gnPhysicalDevice*)(&physicalDevice);
-    return instance->functions->_gnRegisterOutputDevice(outputDevice, instance, physicalDevice);
+    outputDevice->instance = instance;
+    // outputDevice->physicalDevice = (gnPhysicalDevice*)(&deviceInfo.physicalDevice);
+    return instance->functions->_gnCreateOutputDevoce(outputDevice, instance, deviceInfo);
 }
 void gnDestroyOutputDevice(gnOutputDevice* device) {
-    device->physicalDevice->instance->functions->_gnDestroyOutputDevice(device);
+    device->instance->functions->_gnDestroyOutputDevice(device);
 }

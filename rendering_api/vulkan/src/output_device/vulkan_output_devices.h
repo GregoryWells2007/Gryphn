@@ -4,7 +4,11 @@
 
 typedef struct gnPlatformOutputDevice_t {
     VkDevice device;
-    VkQueue presentQueue;
-    VkQueue graphicsQueue;
+
+    uint32_t queueCount;
+    VkQueue* queues;
+
+    // VkQueue presentQueue;
+    // VkQueue graphicsQueue;
     // VkCommandPool commandPool;
 } gnPlatformOutputDevice;

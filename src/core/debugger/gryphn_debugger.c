@@ -3,6 +3,9 @@
 #include "stdio.h"
 
 gnReturnCode gnCreateDebugger(gnDebugger* debugger, gnInstance* instance, const struct gnDebuggerInfo_t info) {
+    if (instance->debugger != NULL)
+        return GN_DEBUGGER_EXISTS;
+    debugger->info = info;
     debugger->instance = instance;
     return instance->functions->_gnCreateDebugger(debugger, instance, info);
 }

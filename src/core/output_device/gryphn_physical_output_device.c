@@ -8,6 +8,3 @@ gnPhysicalDevice* gnGetPhyscialDevices(gnInstance* instance, uint32_t* count) {
     }
     return devices;
 }
-gnBool gnDeviceSupportsAPI(const gnPhysicalDevice device) {
-    return device.instance->functions->_gnDeviceSupportsAPI(device);
-}
