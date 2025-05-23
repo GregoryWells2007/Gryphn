@@ -1,8 +1,6 @@
 #include "vulkan_physical_device.h"
 #include <instance/vulkan_instance.h>
-#include <presentation_queue/vulkan_queue_families.h>
 #include <output_device/vulkan_device_extensions.h>
-
 
 gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceCount) {
     vkEnumeratePhysicalDevices(instance->instance->vk_instance, deviceCount, NULL);
