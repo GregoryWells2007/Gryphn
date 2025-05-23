@@ -65,8 +65,6 @@ void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* funct
     #endif
 
     gnLoadDLLFunction(lib, functions->_gnDestroyWindowSurface, "gnDestroyWindowSurfaceFn");
-
-    printf("_gnDestroyWindowSurface location: %p\n", functions->_gnDestroyWindowSurface);
 }
 
 void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFunctions_t* functions) {

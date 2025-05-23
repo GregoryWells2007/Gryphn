@@ -1,8 +1,8 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "vector"
 
-const std::vector<const char*> deviceExtensions = {
+const uint32_t deviceExtensionCount = 2;
+static const char* deviceExtensions[2] = {
     VK_KHR_SWAPCHAIN_EXTENSION_NAME,
     "VK_KHR_portability_subset"
 };

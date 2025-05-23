@@ -12,46 +12,46 @@ GN_EXPORT gnReturnCode gnRegisterOutputDeviceFn(gnOutputDevice* outputDevice, gn
     if (outputDevice->outputDevice == nullptr) outputDevice->outputDevice = new gnPlatformOutputDevice();
 
     //instance.instance->window_surface,
-    QueueFamilyIndices indices = findQueueFamilies(physicalDevice.physicalDevice->device);
+    // QueueFamilyIndices indices = findQueueFamilies(physicalDevice.physicalDevice->device);
 
-    std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
+    // std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
     //indices.presentFamily.value()
-    std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value()};
+    // std::set<uint32_t> uniqueQueueFamilies = {indices.graphicsFamily.value()};
 
-    float queuePriority = 1.0f;
-    for (uint32_t queueFamily : uniqueQueueFamilies) {
-        VkDeviceQueueCreateInfo queueCreateInfo{};
-        queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
-        queueCreateInfo.queueFamilyIndex = queueFamily;
-        queueCreateInfo.queueCount = 1;
-        queueCreateInfo.pQueuePriorities = &queuePriority;
-        queueCreateInfos.push_back(queueCreateInfo);
-    }
+    // float queuePriority = 1.0f;
+    // for (uint32_t queueFamily : uniqueQueueFamilies) {
+    //     VkDeviceQueueCreateInfo queueCreateInfo{};
+    //     queueCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+    //     queueCreateInfo.queueFamilyIndex = queueFamily;
+    //     queueCreateInfo.queueCount = 1;
+    //     queueCreateInfo.pQueuePriorities = &queuePriority;
+    //     queueCreateInfos.push_back(queueCreateInfo);
+    // }
 
-    VkPhysicalDeviceFeatures deviceFeatures{};
-    deviceFeatures.samplerAnisotropy = VK_TRUE;
+    // VkPhysicalDeviceFeatures deviceFeatures{};
+    // deviceFeatures.samplerAnisotropy = VK_TRUE;
 
-    VkDeviceCreateInfo createInfo{};
-    createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
-    createInfo.pQueueCreateInfos = queueCreateInfos.data();
+    // VkDeviceCreateInfo createInfo{};
+    // createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
+    // createInfo.queueCreateInfoCount = static_cast<uint32_t>(queueCreateInfos.size());
+    // createInfo.pQueueCreateInfos = queueCreateInfos.data();
 
 
-    createInfo.pEnabledFeatures = &deviceFeatures;
+    // createInfo.pEnabledFeatures = &deviceFeatures;
 
-    createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
-    createInfo.ppEnabledExtensionNames = deviceExtensions.data();
+    // createInfo.enabledExtensionCount = static_cast<uint32_t>(deviceExtensions.size());
+    // createInfo.ppEnabledExtensionNames = deviceExtensions.data();
 
-    const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
+    // const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
 
-    createInfo.enabledLayerCount = 1;
-    createInfo.ppEnabledLayerNames = validation_layers;
+    // createInfo.enabledLayerCount = 1;
+    // createInfo.ppEnabledLayerNames = validation_layers;
 
-    if (vkCreateDevice(physicalDevice.physicalDevice->device, &createInfo, nullptr, &outputDevice->outputDevice->device) != VK_SUCCESS) {
-        return GN_FAILED_TO_CREATE_DEVICE;
-    }
+    // if (vkCreateDevice(physicalDevice.physicalDevice->device, &createInfo, nullptr, &outputDevice->outputDevice->device) != VK_SUCCESS) {
+    //     return GN_FAILED_TO_CREATE_DEVICE;
+    // }
 
-    vkGetDeviceQueue(outputDevice->outputDevice->device, indices.graphicsFamily.value(), 0, &outputDevice->outputDevice->graphicsQueue);
+    // vkGetDeviceQueue(outputDevice->outputDevice->device, indices.graphicsFamily.value(), 0, &outputDevice->outputDevice->graphicsQueue);
     // vkGetDeviceQueue(outputDevice->outputDevice->device, indices.presentFamily.value(), 0, &outputDevice->outputDevice->presentQueue);
     // outputDevice->physicalOutputDevice = const_cast<gnPhysicalOutputDevice*>(&physicalDevice);
 

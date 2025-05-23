@@ -1,11 +1,11 @@
 #pragma once
 #include <core/output_device/gryphn_physical_output_device.h>
 
-struct gnPlatformOutputDevice;
+struct gnPlatformOutputDevice_t;
 struct gnDeviceFunctions_t;
 
 typedef struct gnOutputDevice_t {
-    struct gnPlatformOutputDevice* outputDevice;
+    struct gnPlatformOutputDevice_t* outputDevice;
     struct gnDeviceFunctions_t* deviceFunctions;
     gnPhysicalDevice* physicalDevice;
 } gnOutputDevice;

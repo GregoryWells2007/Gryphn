@@ -1,19 +1,35 @@
 #pragma once
 #include "core/instance/gryphn_instance.h"
 
-struct gnPlatformPhysicalDevice;
+struct gnPlatformPhysicalDevice_t;
 
 typedef struct gnPhysicalDeviceProperties_t {
- // there are currently no properties
+    gnString name;
 } gnPhysicalDeviceProperties;
 
+typedef enum gnQueueTypeFlags_e {
+    GN_QUEUE_GRAPHICS = 0x00000001,
+    GN_QUEUE_COMPUTE = 0x00000002,
+    GN_QUEUE_TRANSFER = 0x00000004,
+    GN_QUEUE_SPARSE_BINDING = 0x00000008
+} gnQueueTypeFlags;
+
+typedef struct gnQueueProperties_t {
+    uint32_t queueCount;
+    enum gnQueueTypeFlags_e queueType;
+} gnQueueProperties;
+
+typedef struct gnPhysicalDeviceQueueProperties_t {
+    uint32_t queueCount;
+    struct gnQueueProperties_t* queueProperties;
+} gnPhysicalDeviceQueueProperties;
+
 typedef struct gnPhysicalDevice_t {
-    struct gnPlatformPhysicalDevice* physicalDevice;
-    gnString name;
+    struct gnPlatformPhysicalDevice_t* physicalDevice;
     struct gnPhysicalDeviceProperties_t properties;
+    struct gnPhysicalDeviceQueueProperties_t queueProperties;
 
     gnInstance* instance;
 } gnPhysicalDevice;
 
 gnPhysicalDevice* gnGetPhyscialDevices(gnInstance* instance, uint32_t* count);
-gnBool gnDeviceSupportsAPI(const gnPhysicalDevice device);
