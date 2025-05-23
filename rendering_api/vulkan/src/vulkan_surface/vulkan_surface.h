@@ -2,6 +2,6 @@
 #include <core/window_surface/gryphn_surface.h>
 #include <vulkan/vulkan.h>
 
-struct gnPlatformWindowSurface {
+typedef struct gnPlatformWindowSurface_t {
     VkSurfaceKHR surface;
-};
+} gnPlatformWindowSurface;

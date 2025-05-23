@@ -1,3 +1,4 @@
+#ifdef GN_PLATFORM_MACOS
 #include "vulkan_surface.h"
 #include "../instance/vulkan_instance.h"
 #include <AppKit/AppKit.h>
@@ -8,7 +9,6 @@
 #import <Metal/Metal.h>
 
 
-#ifdef GN_PLATFORM_MACOS
 #include "vulkan/vulkan_metal.h"
 GN_EXPORT gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
     NSWindow* window = (__bridge NSWindow*)createInfo.window;

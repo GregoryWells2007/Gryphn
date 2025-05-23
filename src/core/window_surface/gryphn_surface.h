@@ -2,10 +2,10 @@
 #include <core/instance/gryphn_instance.h>
 #include <platform/gryphn_platform_include.h>
 
-struct gnPlatformWindowSurface;
+struct gnPlatformWindowSurface_t;
 
 typedef struct gnWindowSurface_t {
-    struct gnPlatformWindowSurface* windowSurface;
+    struct gnPlatformWindowSurface_t* windowSurface;
     gnInstance* instance;
 } gnWindowSurface;
 void gnDestroyWindowSurface(struct gnWindowSurface_t* windowSurface);
