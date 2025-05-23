@@ -2,7 +2,7 @@
 #include <gryphn/gryphn_utils.h>
 #include "core/gryphn_rendering_api.h"
 
-struct gnPlatformInstance;
+struct gnPlatformInstance_t;
 struct gnFunctions_t;
 struct gnDynamicLibrary_t;
 
@@ -17,7 +17,7 @@ typedef struct gnInstanceInfo_t {
 } gnInstanceInfo;
 
 typedef struct gnInstance_t {
-    struct gnPlatformInstance* instance;
+    struct gnPlatformInstance_t* instance;
     gnBool valid;
 
     struct gnFunctions_t* functions;

@@ -4,7 +4,7 @@
 
 struct GLFWwindow;
 
-struct gnPlatformInstance {
+typedef struct gnPlatformInstance_t {
     NS::View* metalContentView;
     MTL::RenderPipelineState* framebufferRenderer, *testSquareRenderer;
-};
+} gnPlatformInstance;

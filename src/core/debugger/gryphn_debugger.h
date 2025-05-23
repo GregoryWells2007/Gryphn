@@ -3,7 +3,7 @@
 #include "utils/gryphn_error_code.h"
 #include "core/instance/gryphn_instance.h"
 
-struct gnPlatformDebugger;
+struct gnPlatformDebugger_t;
 
 typedef enum gnMessageSeverity_e {
     GN_MESSAGE_VERBOSE = 0x00000001,
@@ -45,7 +45,7 @@ typedef struct gnDebuggerInfo_t {
 } gnDebuggerInfo;
 
 typedef struct gnDebugger_t {
-    struct gnPlatformDebugger* debugger;
+    struct gnPlatformDebugger_t* debugger;
     gnInstance* instance;
 } gnDebugger;
 

@@ -1,6 +1,5 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "vector"
 #include "core/debugger/gryphn_debugger.h"
 
 struct gnInstanceMessage {
@@ -9,11 +8,14 @@ struct gnInstanceMessage {
     gnMessageData data;
 };
 
-struct gnPlatformInstance {
+typedef struct gnPlatformInstance_t {
     VkInstance vk_instance;
     VkApplicationInfo appInfo;
     // VkSurfaceKHR window_surface;
 
-    std::vector<const char*> extensions;
-    std::vector<gnInstanceMessage> instanceMessages;
-};
+    // uint16_t extensionCount;
+    // const char** extensions;
+
+    uint16_t instanceMessageCount;
+    struct gnInstanceMessage* instanceMessages;
+} gnPlatformInstance;
