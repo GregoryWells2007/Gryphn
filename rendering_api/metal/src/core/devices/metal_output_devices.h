@@ -10,6 +10,8 @@ struct gnPlatformPhysicalDevice_t {
 
 struct gnPlatformOutputDevice_t {
     id<MTLDevice> device;
-    // MTLCommandQueue* commandQueue;
     MTKView* contentView;
+
+    int queueCount;
+    id<MTLCommandQueue>* queues;
 } gnPlatformOutputDevice;
