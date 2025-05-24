@@ -1,14 +1,14 @@
-#pragma once
-#include "QuartzCore/CAMetalLayer.hpp"
-#include "core/output_device/gryphn_output_device.h"
+// #pragma once
+// #include "QuartzCore/CAMetalLayer.hpp"
+// #include "core/output_device/gryphn_output_device.h"
 
-struct gnPlatformPresentationQueue {
-    int currentDrawableIndex = 0;
-    gnOutputDevice* outputDevice;
-    CA::MetalLayer* layer;
+// struct gnPlatformPresentationQueue {
+//     int currentDrawableIndex = 0;
+//     gnOutputDevice* outputDevice;
+//     CA::MetalLayer* layer;
 
-    CA::MetalDrawable* currentDrawable;
-};
+//     CA::MetalDrawable* currentDrawable;
+// };
 
-struct gnPlatformPresentationQueue;
-gnOutputDevice* mltGetOutputDevice(gnPlatformPresentationQueue* presentaionQueue);
+// struct gnPlatformPresentationQueue;
+// gnOutputDevice* mltGetOutputDevice(gnPlatformPresentationQueue* presentaionQueue);
