@@ -2,15 +2,8 @@
 #include <output_device/vulkan_physical_device.h>
 #include <output_device/vulkan_output_devices.h>
 #include "vulkan_device_extensions.h"
-#include "debugger/vulkan_debugger.h"
 
 #include <stdio.h>
-// #include "presentation_queue/vulkan_queue_families.h"
-// #include "presentation_queue/vulkan_swapchain.h"
-// #include "vulkan_output_devices.h"
-// #include <instance/vulkan_instance.h>
-// #include "vulkan_physical_device.h"
-// #include <set>
 
 gnReturnCode gnCreateOutputDeviceFn(gnOutputDevice* outputDevice, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));

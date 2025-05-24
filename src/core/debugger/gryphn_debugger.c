@@ -7,6 +7,7 @@ gnReturnCode gnCreateDebugger(gnDebugger* debugger, gnInstance* instance, const 
         return GN_DEBUGGER_EXISTS;
     debugger->info = info;
     debugger->instance = instance;
+    instance->debugger = debugger;
     return instance->functions->_gnCreateDebugger(debugger, instance, info);
 }
 void gnDestroyDebugger(gnDebugger* debugger) {

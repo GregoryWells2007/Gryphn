@@ -2,6 +2,7 @@
 #include "core/instance/gryphn_instance.h"
 
 struct gnPlatformPhysicalDevice_t;
+struct gnWindowSurface_t;
 
 typedef struct gnPhysicalDeviceProperties_t {
     gnString name;
@@ -38,3 +39,4 @@ typedef struct gnPhysicalDevice_t {
 } gnPhysicalDevice;
 
 gnPhysicalDevice* gnGetPhyscialDevices(gnInstance* instance, uint32_t* count);
+gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface);

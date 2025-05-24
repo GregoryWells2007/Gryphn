@@ -1,6 +1,7 @@
 #include "vulkan_physical_device.h"
 #include <instance/vulkan_instance.h>
 #include <output_device/vulkan_device_extensions.h>
+#include <vulkan_surface/vulkan_surface.h>
 
 gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceCount) {
     vkEnumeratePhysicalDevices(instance->instance->vk_instance, deviceCount, NULL);
@@ -38,4 +39,12 @@ gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceC
     free(physicalDevices);
 
     return outputDevices;
+}
+
+gnBool gnQueueCanPresentToSurfaceFn(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface) {
+    VkBool32 supportsPresent = false;
+    vkGetPhysicalDeviceSurfaceSupportKHR(device.physicalDevice->device, queueIndex, windowSurface.windowSurface->surface, &supportsPresent);
+    if (supportsPresent)
+        return gnTrue;
+    return gnFalse;
 }

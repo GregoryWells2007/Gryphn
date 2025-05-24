@@ -15,9 +15,13 @@ typedef struct gnFunctions_t {
     void (*_gnDestroyDebugger)(gnDebugger* debugger);
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstance* instance, uint32_t* count);
+    gnBool (*_gnQueueCanPresentToSurface)(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface);
+
 
     gnReturnCode (*_gnCreateOutputDevoce)(gnOutputDevice* device, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo);
     void (*_gnDestroyOutputDevice)(gnOutputDevice* device);
+
+
 
     #ifdef GN_PLATFORM_LINUX
         #ifdef GN_WINDOW_X11
