@@ -10,7 +10,7 @@
 
 
 #include "vulkan/vulkan_metal.h"
-GN_EXPORT gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
+gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
     NSWindow* window = (__bridge NSWindow*)createInfo.window;
     NSView* view = [window contentView];
 
@@ -21,14 +21,14 @@ GN_EXPORT gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* wi
     [view setLayer:layer];
     [view setWantsLayer:YES];
 
-    windowSurface->windowSurface = new gnPlatformWindowSurface();
+    windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     VkMetalSurfaceCreateInfoEXT surfaceCreateInfo = {};
     surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;
-    surfaceCreateInfo.pNext = nullptr;
+    surfaceCreateInfo.pNext = NULL;
     surfaceCreateInfo.flags = 0;
     surfaceCreateInfo.pLayer = layer;
 
-    VkResult result = vkCreateMetalSurfaceEXT(instance->instance->vk_instance, &surfaceCreateInfo, nullptr, &windowSurface->windowSurface->surface);
+    VkResult result = vkCreateMetalSurfaceEXT(instance->instance->vk_instance, &surfaceCreateInfo, NULL, &windowSurface->windowSurface->surface);
     if (result != VK_SUCCESS)
         return GN_FAILED_TO_ATTACH_WINDOW;
     return GN_SUCCESS;
