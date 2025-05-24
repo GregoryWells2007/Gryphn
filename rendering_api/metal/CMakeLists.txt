@@ -26,7 +26,7 @@ target_link_libraries(GryphnMetalImpl
     "-framework CoreFoundation"
     "-framework Foundation"
     "-framework Metal"
-   "-framework QuartzCore"
+    "-framework QuartzCore"
 )
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/gryphn/rendering_apis)
