@@ -9,7 +9,7 @@ file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
 
 if (APPLE)
     file(GLOB_RECURSE METAL_FILES CONFIGURE_DEPENDS
-    "src/*.mm"
+    "src/*.m"
 )
 endif()
 
