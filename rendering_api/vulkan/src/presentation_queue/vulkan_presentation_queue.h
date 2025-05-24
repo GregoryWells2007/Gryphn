@@ -1,11 +1,12 @@
 #pragma once
-#include "vulkan_swapchain_support.h"
+#include "core/presentation_queue/gryphn_presentation_queue.h"
+#include <vulkan/vulkan.h>
 
-struct gnPlatformPresentationQueue {
+typedef struct gnPlatformPresentationQueue_t {
     VkSwapchainKHR swapChain;
-    VkDevice* device;
-    gnOutputDevice* outputDevice;
+    // VkDevice* device;
+    // gnOutputDevice* outputDevice;
 
-    vulkanSwapchainDetails swapchainDetails;
-    VkResult result;
-};
+    // vulkanSwapchainDetails swapchainDetails;
+    // VkResult result;
+} gnPlatformPresentationQueue;
