@@ -1,11 +1,15 @@
 #pragma once
 #include <gryphn/gryphn_utils.h>
-#include "gryphn_presentation_details.h"
 #include "core/output_device/gryphn_output_device.h"
-// #include "core/sync_objects/gryphn_sync_semaphore.h"
 #include "gryphn_present_queue_state.h"
+// #include "core/sync_objects/gryphn_sync_semaphore.h"
 // #include "core/textures/gryphn_texture.h"
 // #include "gryphn_device_presentation_details.h"
+
+typedef struct gnPresentationQueueInfo_t {
+    gnUInt ImageCount;
+    gnUInt2 ImageSize;
+} gnPresentationQueueInfo;
 
 struct gnPlatformPresentationQueue_t;
 
@@ -17,6 +21,8 @@ typedef struct gnPresentationQueue_t {
 } gnPresentationQueue;
 
 // gnTexture* gnGetPresentationQueueImage(gnPresentationQueue& presentationQueue, int index);
+
+gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo);
 
 // inline gnReturnCode (*gnCreatePresentationQueue)(gnPresentationQueue* presentationQueue, const gnOutputDevice& device, gnPresentationDetails& details);
 // inline void (*gnDestroyPresentationQueue)(gnPresentationQueue& queue);

@@ -44,6 +44,7 @@ typedef struct gnFunctions_t {
     void (*_gnDestroyWindowSurface)(struct gnWindowSurface_t* windowSurface);
 } gnFunctions;
 
+#include "core/presentation_queue/gryphn_presentation_queue.h"
 typedef struct gnDeviceFunctions_t {
-
+    gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo);
 } gnDeviceFunctions;
