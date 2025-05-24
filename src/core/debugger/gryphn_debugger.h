@@ -52,3 +52,5 @@ typedef struct gnDebugger_t {
 
 gnReturnCode gnCreateDebugger(gnDebugger* debugger, gnInstance* instance, const struct gnDebuggerInfo_t info);
 void gnDestroyDebugger(gnDebugger* debugger);
+
+void gnDebuggerSetErrorMessage(gnDebugger* debugger, gnMessageData data);
