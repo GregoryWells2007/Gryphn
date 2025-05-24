@@ -14,4 +14,6 @@ struct gnPlatformOutputDevice_t {
 
     int queueCount;
     id<MTLCommandQueue>* queues;
+
+    id<MTLRenderPipelineState> framebuffer;
 } gnPlatformOutputDevice;

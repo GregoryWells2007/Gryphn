@@ -4,5 +4,4 @@
 
 typedef struct gnPlatformInstance_t {
     NSView* metalContentView;
-    id<MTLRenderPipelineState> framebufferRenderer;
 } gnPlatformInstance;
