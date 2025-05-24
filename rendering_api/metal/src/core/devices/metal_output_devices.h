@@ -1,16 +1,15 @@
-// #pragma once
-// #include <Metal/Metal.hpp>
-// #include <MetalKit/MetalKit.hpp>
+#pragma once
+#include "core/instance/gryphn_instance.h"
+#include "core/output_device/gryphn_output_device.h"
+#include <Metal/Metal.h>
+#include <MetalKit/MetalKit.h>
 
-// struct gnPlatformPhysicalOutputDevice {
-//     MTL::Device* device;
-// };
-// struct gnInstance;
+struct gnPlatformPhysicalDevice_t {
+    id<MTLDevice> device;
+} gnPlatformPhysicalDevice;
 
-// struct gnPlatformOutputDevice {
-//     MTL::Device* device;
-//     MTL::CommandQueue* commandQueue;
-//     MTK::View* contentView;
-
-//     gnInstance* instance;
-// };
+struct gnPlatformOutputDevice_t {
+    id<MTLDevice> device;
+    // MTLCommandQueue* commandQueue;
+    MTKView* contentView;
+} gnPlatformOutputDevice;
