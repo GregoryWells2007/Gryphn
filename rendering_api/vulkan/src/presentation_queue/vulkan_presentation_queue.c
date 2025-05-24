@@ -6,7 +6,6 @@
 
 gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo) {
     vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface.windowSurface->surface);
-
     if (details.formatCount == 0) {
         gnDebuggerSetErrorMessage(device->instance->debugger,
           (gnMessageData){
@@ -15,7 +14,6 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
         );
         return GN_NO_SUPPORTED_FORMATS;
     }
-
     if (details.presentModeCount == 0) {
         gnDebuggerSetErrorMessage(device->instance->debugger,
           (gnMessageData){
@@ -24,6 +22,28 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
         );
         return GN_NO_SUPPORTED_PRESENT_MODES;
     }
+
+    int index = -1;
+    VkFormat convertedFormat = vkGryphnFormatToVulkanFormat(presentationInfo.format.format);
+    VkColorSpaceKHR convertedColorSpace = vkGryphnColorSpaceToVulkanColorSpace(presentationInfo.format.colorSpace);
+    for (int i = 0; i < details.formatCount; i++) {
+        if (details.formats[i].format == convertedFormat && details.formats[i].colorSpace == convertedColorSpace) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
+            .message = gnCreateString("Unsupported color format passed to Gryphn")
+        });
+        return GN_UNKNOWN_IMAGE_FORMAT;
+    }
+    VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
+    VkExtent2D extent = {
+        .width = presentationInfo.ImageSize.x,
+        .height = presentationInfo.ImageSize.y
+    };
 
     return GN_SUCCESS;
 }

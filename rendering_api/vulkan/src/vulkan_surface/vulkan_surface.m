@@ -1,5 +1,6 @@
 #ifdef GN_PLATFORM_MACOS
 #include "vulkan_surface.h"
+#include "core/window_surface/gryphn_surface_create_functions.h"
 #include "../instance/vulkan_instance.h"
 #include <AppKit/AppKit.h>
 #include <vulkan/vulkan_metal.h>

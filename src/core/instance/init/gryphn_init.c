@@ -65,7 +65,7 @@ void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* funct
     #endif
 
     gnLoadDLLFunction(lib, functions->_gnDestroyWindowSurface, "gnDestroyWindowSurfaceFn");
-    gnLoadDLLFunction(lib, functions->_gnGetSupportedSurfaceFormats, "gnGetSupportedSurfaceFormatsFn");
+    gnLoadDLLFunction(lib, functions->_gnGetSurfaceDetails, "gnGetSurfaceDetailsFn");
 }
 
 void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFunctions_t* functions) {

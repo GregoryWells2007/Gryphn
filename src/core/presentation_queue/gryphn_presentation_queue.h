@@ -1,12 +1,12 @@
 #pragma once
 #include <gryphn/gryphn_utils.h>
-#include "core/output_device/gryphn_output_device.h"
+#include <core/output_device/gryphn_output_device.h>
 #include <core/window_surface/gryphn_surface.h>
 #include <utils/types/gryphn_image_format.h>
 
 typedef struct gnPresentationQueueInfo_t {
-    gnUInt ImageCount;
-    gnUInt2 ImageSize;
+    uint32_t ImageCount;
+    struct gnUInt2_t ImageSize;
     struct gnWindowSurface_t surface;
     struct gnSurfaceFormat_t format;
 } gnPresentationQueueInfo;

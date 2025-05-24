@@ -1,6 +1,7 @@
 #pragma once
 
 typedef enum gnImageFormat_e {
+    GN_FORMAT_NONE,
     GN_FORMAT_BGRA8_SRGB
 } gnImageFormat;
 

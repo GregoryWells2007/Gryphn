@@ -1,7 +1,7 @@
 #pragma once
 #include "stdint.h"
 
-typedef struct gnVec2 {
+typedef struct gnVec2_t {
     union {
         struct { float a, b; };
         struct { float x, y; };
@@ -28,7 +28,7 @@ typedef struct gnVec2 {
 typedef gnVec2 gnFVec2;
 typedef gnVec2 gnFloat2;
 
-typedef struct gnUInt2 {
+typedef struct gnUInt2_t {
     union {
         struct { uint32_t a, b; };
         struct { uint32_t x, y; };
@@ -52,7 +52,7 @@ typedef struct gnUInt2 {
 #endif
 } gnUInt2;
 
-typedef struct gnInt2 {
+typedef struct gnInt2_t {
     union {
         struct { int a, b; };
         struct { int x, y; };

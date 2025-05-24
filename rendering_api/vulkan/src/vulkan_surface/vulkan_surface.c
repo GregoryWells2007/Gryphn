@@ -59,11 +59,8 @@ void gnDestroyWindowSurfaceFn(struct gnWindowSurface_t* windowSurface) {
     vkDestroySurfaceKHR(windowSurface->instance->instance->vk_instance, windowSurface->windowSurface->surface, NULL);
 }
 
-
-struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormatsFn(
-    struct gnWindowSurface_t* windowSurface,
-    struct gnPhysicalDevice_t device,
-    uint32_t* formatCount
+struct gnSurfaceFormat_t* vkGetSurfaceFormats(
+    struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device, uint32_t* formatCount
 ) {
     struct gnSurfaceFormat_t* formats = NULL;
 
@@ -87,4 +84,35 @@ struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormatsFn(
     }
 
     return formats;
+}
+
+struct gnSurfaceDetails_t gnGetSurfaceDetailsFn(
+    // struct gnWindowSurface_t* windowSurface,
+    // struct gnPhysicalDevice_t device,
+    // uint32_t* formatCount
+    struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device
+) {
+    struct gnSurfaceDetails_t surfaceDetails;
+    surfaceDetails.formats = vkGetSurfaceFormats(windowSurface, device, &surfaceDetails.formatCount);
+
+    VkSurfaceCapabilitiesKHR details;
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device.physicalDevice->device, windowSurface->windowSurface->surface, &details);
+
+    surfaceDetails.minImageCount = details.minImageCount;
+    surfaceDetails.maxImageCount = details.maxImageCount;
+
+    return surfaceDetails;
+}
+
+
+VkFormat vkGryphnFormatToVulkanFormat(gnImageFormat format) {
+    switch (format) {
+    case GN_FORMAT_BGRA8_SRGB: { return VK_FORMAT_B8G8R8A8_SRGB; }
+    default: return VK_FORMAT_UNDEFINED;
+    }
+}
+VkColorSpaceKHR vkGryphnColorSpaceToVulkanColorSpace(gnColorSpace colorSpace) {
+    switch (colorSpace) {
+    case GN_COLOR_SPACE_SRGB_NONLINEAR: { return VK_COLOR_SPACE_SRGB_NONLINEAR_KHR; }
+    }
 }

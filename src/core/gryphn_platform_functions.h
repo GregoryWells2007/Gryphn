@@ -6,6 +6,7 @@
 #include "output_device/gryphn_physical_output_device.h"
 #include "output_device/gryphn_output_device.h"
 #include "window_surface/gryphn_surface.h"
+#include "window_surface/gryphn_surface_create_functions.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -42,7 +43,7 @@ typedef struct gnFunctions_t {
     #endif
 
     void (*_gnDestroyWindowSurface)(struct gnWindowSurface_t* windowSurface);
-    struct gnSurfaceFormat_t* (*_gnGetSupportedSurfaceFormats)(struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device, uint32_t* formatCount);
+    struct gnSurfaceDetails_t (*_gnGetSurfaceDetails)(struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device);
 } gnFunctions;
 
 #include "core/presentation_queue/gryphn_presentation_queue.h"

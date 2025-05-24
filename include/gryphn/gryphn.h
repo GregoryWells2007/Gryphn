@@ -6,6 +6,7 @@
 #include <core/debugger/gryphn_debugger.h>
 #include <core/output_device/gryphn_physical_output_device.h>
 #include <core/window_surface/gryphn_surface.h>
+#include <core/window_surface/gryphn_surface_create_functions.h>
 #include <core/presentation_queue/gryphn_presentation_queue.h>
 
 // #pragma once

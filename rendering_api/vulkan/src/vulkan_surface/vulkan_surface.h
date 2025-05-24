@@ -5,3 +5,6 @@
 typedef struct gnPlatformWindowSurface_t {
     VkSurfaceKHR surface;
 } gnPlatformWindowSurface;
+
+VkFormat vkGryphnFormatToVulkanFormat(gnImageFormat format);
+VkColorSpaceKHR vkGryphnColorSpaceToVulkanColorSpace(gnColorSpace colorSpace);
