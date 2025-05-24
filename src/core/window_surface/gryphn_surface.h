@@ -1,14 +1,26 @@
 #pragma once
 #include <core/instance/gryphn_instance.h>
 #include <platform/gryphn_platform_include.h>
+#include <utils/types/gryphn_image_format.h>
+#include "core/output_device/gryphn_physical_output_device.h"
 
 struct gnPlatformWindowSurface_t;
+
+typedef struct gnSurfaceFormat_t {
+    gnImageFormat format;
+    gnColorSpace colorSpace;
+} gnSurfaceFormat;
 
 typedef struct gnWindowSurface_t {
     struct gnPlatformWindowSurface_t* windowSurface;
     gnInstance* instance;
 } gnWindowSurface;
 void gnDestroyWindowSurface(struct gnWindowSurface_t* windowSurface);
+struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(
+    struct gnWindowSurface_t* windowSurface,
+    struct gnPhysicalDevice_t device,
+    uint32_t* formatCount
+);
 
 #ifdef GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11

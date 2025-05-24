@@ -2,14 +2,13 @@
 #include <gryphn/gryphn_utils.h>
 #include "core/output_device/gryphn_output_device.h"
 #include <core/window_surface/gryphn_surface.h>
-// #include "core/sync_objects/gryphn_sync_semaphore.h"
-// #include "core/textures/gryphn_texture.h"
-// #include "gryphn_device_presentation_details.h"
+#include <utils/types/gryphn_image_format.h>
 
 typedef struct gnPresentationQueueInfo_t {
     gnUInt ImageCount;
     gnUInt2 ImageSize;
     struct gnWindowSurface_t surface;
+    struct gnSurfaceFormat_t format;
 } gnPresentationQueueInfo;
 
 struct gnPlatformPresentationQueue_t;

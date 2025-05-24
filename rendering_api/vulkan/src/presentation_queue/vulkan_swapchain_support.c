@@ -21,3 +21,15 @@ struct vkSwapchainSupportDetails_t vkGetSwapchainSupport(
 
     return details;
 }
+
+struct vkSwapchainDetails_t vkGetSwapchainDetails(
+    const struct vkSwapchainSupportDetails_t supportDetails
+) {
+    struct vkSwapchainDetails_t details;
+
+    for (int i = 0; i < supportDetails.formatCount; i++) {
+        // if (supportDetails.)
+    }
+
+    return details;
+}

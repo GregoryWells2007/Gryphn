@@ -11,7 +11,15 @@ typedef struct vkSwapchainSupportDetails_t {
     VkPresentModeKHR* presentModes;
 } vkSwapchainSupportDetails;
 
+typedef struct vkSwapchainDetails_t {
+    VkSurfaceFormatKHR surfaceFormat;
+} vkSwapchainDetails;
+
 struct vkSwapchainSupportDetails_t vkGetSwapchainSupport(
     const VkPhysicalDevice device,
     const VkSurfaceKHR surface
+);
+
+struct vkSwapchainDetails_t vkGetSwapchainDetails(
+    const struct vkSwapchainSupportDetails_t supportDetails
 );

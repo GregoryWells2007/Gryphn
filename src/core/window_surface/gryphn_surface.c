@@ -32,3 +32,11 @@
 void gnDestroyWindowSurface(struct gnWindowSurface_t *windowSurface) {
     windowSurface->instance->functions->_gnDestroyWindowSurface(windowSurface);
 }
+
+struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(
+    struct gnWindowSurface_t* windowSurface,
+    struct gnPhysicalDevice_t device,
+    uint32_t* formatCount
+) {
+    return windowSurface->instance->functions->_gnGetSupportedSurfaceFormats(windowSurface, device, formatCount);
+}

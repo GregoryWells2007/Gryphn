@@ -1,5 +1,7 @@
 #include <instance/vulkan_instance.h>
 #include "vulkan_surface.h"
+#include <output_device/vulkan_physical_device.h>
+#include <stdio.h>
 
 #ifdef GN_PLATFORM_LINUX
 #ifdef GN_WINDOW_X11
@@ -55,4 +57,34 @@ gnReturnCode gnCreateWin32WindowSurface(struct gnWindowSurface_t* windowSurface,
 
 void gnDestroyWindowSurfaceFn(struct gnWindowSurface_t* windowSurface) {
     vkDestroySurfaceKHR(windowSurface->instance->instance->vk_instance, windowSurface->windowSurface->surface, NULL);
+}
+
+
+struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormatsFn(
+    struct gnWindowSurface_t* windowSurface,
+    struct gnPhysicalDevice_t device,
+    uint32_t* formatCount
+) {
+    struct gnSurfaceFormat_t* formats = NULL;
+
+    vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice->device, windowSurface->windowSurface->surface, formatCount, NULL);
+    formats = malloc(sizeof(struct gnSurfaceFormat_t) * *formatCount);
+    VkSurfaceFormatKHR* vkFormats = malloc(sizeof(VkSurfaceFormatKHR) * *formatCount);;
+
+    if (*formatCount > 0) {
+        vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice->device, windowSurface->windowSurface->surface, formatCount, vkFormats);
+        for (int i = 0; i < *formatCount; i++) {
+            switch (vkFormats[i].format) {
+            case VK_FORMAT_B8G8R8A8_SRGB: { formats[i].format = GN_FORMAT_BGRA8_SRGB; break; }
+            default: break;
+            }
+
+            switch (vkFormats[i].colorSpace) {
+            case VK_COLOR_SPACE_SRGB_NONLINEAR_KHR: { formats[i].colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR; break; }
+            default: break;
+            }
+        }
+    }
+
+    return formats;
 }

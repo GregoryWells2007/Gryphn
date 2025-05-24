@@ -42,6 +42,7 @@ typedef struct gnFunctions_t {
     #endif
 
     void (*_gnDestroyWindowSurface)(struct gnWindowSurface_t* windowSurface);
+    struct gnSurfaceFormat_t* (*_gnGetSupportedSurfaceFormats)(struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device, uint32_t* formatCount);
 } gnFunctions;
 
 #include "core/presentation_queue/gryphn_presentation_queue.h"
