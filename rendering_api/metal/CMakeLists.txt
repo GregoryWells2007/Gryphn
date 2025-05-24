@@ -12,20 +12,21 @@ target_include_directories(GryphnMetalImpl PUBLIC
     ${CMAKE_SOURCE_DIR}/gryphn/include/
     ${CMAKE_SOURCE_DIR}/gryphn/src/
     ${CMAKE_SOURCE_DIR}/gryphn/src/
-    depends/metal-cpp/
     src/
     depends/SPIRV-Cross/
 )
 # target_link_options(GryphnMetalImpl PRIVATE -rdynamic)
 add_compile_definitions(GN_REVEAL_IMPL)
-add_subdirectory(depends/metal-cpp)
 add_subdirectory(depends/SPIRV-Cross)
 
-target_link_libraries(GryphnMetalImpl METAL_CPP spirv-cross-core spirv-cross-msl spirv-cross-cpp)
+target_link_libraries(GryphnMetalImpl spirv-cross-core spirv-cross-msl spirv-cross-cpp)
 
 target_link_libraries(GryphnMetalImpl
     "-framework IOKit"
     "-framework CoreFoundation"
+    "-framework Foundation"
+    "-framework Metal"
+   "-framework QuartzCore"
 )
 
 file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/gryphn/rendering_apis)
