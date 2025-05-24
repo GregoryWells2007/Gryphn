@@ -21,7 +21,7 @@ typedef struct gnOutputDevice_t {
     struct gnPlatformOutputDevice_t* outputDevice;
     struct gnDeviceFunctions_t* deviceFunctions;
     gnInstance* instance;
-    // gnPhysicalDevice* physicalDevice;
+    gnPhysicalDevice physicalDevice;
 } gnOutputDevice;
 
 gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo);

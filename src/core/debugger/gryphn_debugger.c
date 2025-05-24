@@ -13,12 +13,3 @@ gnReturnCode gnCreateDebugger(gnDebugger* debugger, gnInstance* instance, const 
 void gnDestroyDebugger(gnDebugger* debugger) {
     debugger->instance->functions->_gnDestroyDebugger(debugger);
 }
-
-void gnDebuggerSetErrorMessage(gnDebugger* debugger, gnMessageData data) {
-    debugger->info.callback(
-        GN_MESSAGE_ERROR,
-        GN_DEBUG_MESSAGE_VALIDATION,
-        data,
-        debugger->info.userData
-    );
-}

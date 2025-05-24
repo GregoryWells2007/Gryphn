@@ -1,24 +1,17 @@
-// #pragma once
-// #include "vulkan/vulkan.h"
-// #include "vulkan_swapchain.h"
-// #include "../output_device/vulkan_output_devices.h"
+#pragma once
+#include <vulkan/vulkan.h>
+#include <output_device/vulkan_output_devices.h>
 
-// struct vulkanSwapchainDetails {
-//     VkSurfaceFormatKHR surfaceFormat;
-//     VkPresentModeKHR presentMode;
-//     VkExtent2D extent;
+typedef struct vkSwapchainSupportDetails_t {
+    VkSurfaceCapabilitiesKHR capabilities;
+    uint32_t formatCount;
+    VkSurfaceFormatKHR* formats;
 
-//     SwapChainSupportDetails swapChainSupport;
-// };
+    uint32_t presentModeCount;
+    VkPresentModeKHR* presentModes;
+} vkSwapchainSupportDetails;
 
-// static vulkanSwapchainDetails vulkanGetSwapchainDetails(gnVec2 size, const VkSurfaceKHR& surface, const VkPhysicalDevice& physicalDevice) {
-//     SwapChainSupportDetails swapChainSupport = querySwapChainSupport(surface, physicalDevice);
-
-//     VkSurfaceFormatKHR surfaceFormat = chooseSwapSurfaceFormat(swapChainSupport.formats);
-//     VkPresentModeKHR presentMode = chooseSwapPresentMode(swapChainSupport.presentModes);
-//     VkExtent2D extent = chooseSwapExtent(size, swapChainSupport.capabilities);
-
-//     return {
-//         surfaceFormat, presentMode, extent, swapChainSupport
-//     };
-// }
+struct vkSwapchainSupportDetails_t vkGetSwapchainSupport(
+    const VkPhysicalDevice device,
+    const VkSurfaceKHR surface
+);

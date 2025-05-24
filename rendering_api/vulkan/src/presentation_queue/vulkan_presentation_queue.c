@@ -1,7 +1,31 @@
 #include "vulkan_presentation_queue.h"
+#include "vulkan_swapchain_support.h"
+#include <output_device/vulkan_physical_device.h>
+#include "vulkan_surface/vulkan_surface.h"
+#include "core/debugger/gryphn_debugger.h"
 
-gnReturnCode gnCreatePresentationQueueFn() {
+gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo) {
+    vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface.windowSurface->surface);
 
+    if (details.formatCount == 0) {
+        gnDebuggerSetErrorMessage(device->instance->debugger,
+          (gnMessageData){
+              .message = gnCreateString("Format count for presentation queue is zero")
+          }
+        );
+        return GN_NO_SUPPORTED_FORMATS;
+    }
+
+    if (details.presentModeCount == 0) {
+        gnDebuggerSetErrorMessage(device->instance->debugger,
+          (gnMessageData){
+              .message = gnCreateString("Present mode count for presentation queue is zero")
+          }
+        );
+        return GN_NO_SUPPORTED_PRESENT_MODES;
+    }
+
+    return GN_SUCCESS;
 }
 
 // #include "core/presentation_queue/gryphn_presentation_queue.h"

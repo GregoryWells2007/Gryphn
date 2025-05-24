@@ -7,7 +7,7 @@ gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* inst
     outputDevice->deviceFunctions = malloc(sizeof(gnDeviceFunctions));
     gnLoadDeviceFunctions(instance->dynamicLib, outputDevice->deviceFunctions);
     outputDevice->instance = instance;
-    // outputDevice->physicalDevice = (gnPhysicalDevice*)(&deviceInfo.physicalDevice);
+    outputDevice->physicalDevice = deviceInfo.physicalDevice;
     return instance->functions->_gnCreateOutputDevoce(outputDevice, instance, deviceInfo);
 }
 void gnDestroyOutputDevice(gnOutputDevice* device) {
