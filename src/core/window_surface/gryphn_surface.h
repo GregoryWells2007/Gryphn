@@ -15,7 +15,7 @@ typedef struct gnSurfaceDetails_t {
     uint32_t formatCount;
     struct gnSurfaceFormat_t* formats;
 
-    int minImageCount, maxImageCount;
+    uint32_t minImageCount, maxImageCount;
 } gnSufaceDetails;
 
 typedef struct gnWindowSurface_t {
@@ -24,12 +24,12 @@ typedef struct gnWindowSurface_t {
 } gnWindowSurface;
 void gnDestroyWindowSurface(struct gnWindowSurface_t* windowSurface);
 struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(
-    struct gnWindowSurface_t* windowSurface,
+    struct gnWindowSurface_t windowSurface,
     struct gnPhysicalDevice_t device,
     uint32_t* formatCount
 );
 gnBool gnIsSurfaceFormatSupported(
-    struct gnWindowSurface_t* windowSurface,
+    struct gnWindowSurface_t windowSurface,
     struct gnPhysicalDevice_t device,
     struct gnSurfaceFormat_t format
 );
@@ -37,9 +37,10 @@ gnBool gnIsSurfaceFormatSupported(
 // unless its not supported then it will give you the first supported surface format
 // at some point this function will attempt to give you the most simmilar surface format
 struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
-    struct gnWindowSurface_t* windowSurface,
+    struct gnWindowSurface_t windowSurface,
     struct gnPhysicalDevice_t device,
     struct gnSurfaceFormat_t format
 );
-int gnGetMinImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device);
-int gnGetMaxImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device);
+uint32_t gnGetMinImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device);
+uint32_t gnGetMaxImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device);
+uint32_t gnGetPreferredImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device);

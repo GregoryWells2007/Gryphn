@@ -6,17 +6,17 @@ void gnDestroyWindowSurface(struct gnWindowSurface_t *windowSurface) {
 }
 
 struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(
-    struct gnWindowSurface_t* windowSurface,
+    struct gnWindowSurface_t windowSurface,
     struct gnPhysicalDevice_t device,
     uint32_t* formatCount
 ) {
-    struct gnSurfaceDetails_t surfaceDetails = windowSurface->instance->functions->_gnGetSurfaceDetails(windowSurface, device);
+    struct gnSurfaceDetails_t surfaceDetails = windowSurface.instance->functions->_gnGetSurfaceDetails(&windowSurface, device);
     *formatCount = surfaceDetails.formatCount;
     return surfaceDetails.formats;
 }
 
 gnBool gnIsSurfaceFormatSupported(
-    struct gnWindowSurface_t* windowSurface,
+    struct gnWindowSurface_t windowSurface,
     struct gnPhysicalDevice_t device,
     struct gnSurfaceFormat_t format
 ) {
@@ -31,7 +31,7 @@ gnBool gnIsSurfaceFormatSupported(
 }
 
 struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
-    struct gnWindowSurface_t* windowSurface,
+    struct gnWindowSurface_t windowSurface,
     struct gnPhysicalDevice_t device,
     struct gnSurfaceFormat_t format
 ) {
@@ -53,11 +53,21 @@ struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
     return formats[0];
 }
 
-int gnGetMinImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device) {
+uint32_t gnGetMinImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device) {
     struct gnSurfaceDetails_t surfaceDetails = surface.instance->functions->_gnGetSurfaceDetails(&surface, device);
     return surfaceDetails.minImageCount;
 }
-int gnGetMaxImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device) {
+uint32_t gnGetMaxImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device) {
     struct gnSurfaceDetails_t surfaceDetails = surface.instance->functions->_gnGetSurfaceDetails(&surface, device);
     return surfaceDetails.maxImageCount;
+}
+
+uint32_t gnGetPreferredImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device) {
+    struct gnSurfaceDetails_t surfaceDetails = surface.instance->functions->_gnGetSurfaceDetails(&surface, device);
+
+    uint32_t imageCount = surfaceDetails.minImageCount;
+    if (surfaceDetails.maxImageCount > 0 && imageCount > surfaceDetails.maxImageCount) {
+        imageCount = surfaceDetails.maxImageCount;
+    }
+    return imageCount;
 }
