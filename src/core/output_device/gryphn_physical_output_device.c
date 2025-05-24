@@ -23,6 +23,23 @@ gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32
     return device.instance->functions->_gnQueueCanPresentToSurface(device, queueIndex, windowSurface);
 }
 
+gnBool gnHasGraphicsQueue(const struct gnPhysicalDevice_t device) {
+    for (int i = 0; i < device.queueProperties.queueCount; i++) {
+        if (device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) {
+            return gnTrue;
+        }
+    }
+    return gnFalse;
+}
+gnBool gnHasPresentQueue(const struct gnPhysicalDevice_t device, struct gnWindowSurface_t windowSurface) {
+    for (int i = 0; i < device.queueProperties.queueCount; i++) {
+        if (gnQueueCanPresentToSurface(device, i, windowSurface)) {
+            return gnTrue;
+        }
+    }
+    return gnFalse;
+}
+
 int gnGetGraphicsQueueIndex(const struct gnPhysicalDevice_t device) {
     for (int i = 0; i < device.queueProperties.queueCount; i++) {
         if (device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) {
