@@ -30,18 +30,25 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     }
 
     gnInstance* instance = (gnInstance*)pUserData;
-    instance->instance->instanceMessageCount++;
-    if (instance->instance->instanceMessageCount == 1) {
-        instance->instance->instanceMessages = malloc(sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
+
+    if (instance->debugger) {
+        instance->debugger->info.callback(
+          severity, type, data, instance->debugger->info.userData
+        );
+    } else {
+        instance->instance->instanceMessageCount++;
+        if (instance->instance->instanceMessageCount == 1) {
+            instance->instance->instanceMessages = malloc(sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
+        }
+        else {
+        instance->instance->instanceMessages = realloc(instance->instance->instanceMessages, sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
+        }
+            instance->instance->instanceMessages[instance->instance->instanceMessageCount - 1] = (struct gnInstanceMessage){
+                .data = data,
+                .severity = severity,
+                .type = type
+            };
     }
-    else {
-    instance->instance->instanceMessages = realloc(instance->instance->instanceMessages, sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
-    }
-        instance->instance->instanceMessages[instance->instance->instanceMessageCount - 1] = (struct gnInstanceMessage){
-            .data = data,
-            .severity = severity,
-            .type = type
-        };
 
     return VK_FALSE;
 }

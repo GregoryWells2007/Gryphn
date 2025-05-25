@@ -28,4 +28,6 @@ typedef struct gnInstance_t {
 } gnInstance;
 
 gnReturnCode gnCreateInstance(gnInstance* instance, struct gnInstanceInfo_t info);
+void gnInstanceAttachDebugger(gnInstance* istance, struct gnDebugger_t* debugger);
+void gnInstanceReleaseDebugger(gnInstance* instance);
 void gnDestroyInstance(gnInstance* instance);

@@ -4,7 +4,6 @@
 
 typedef struct gnPlatformDebugger_t {
     VkDebugUtilsMessengerEXT debugMessenger;
-    VkInstance* instance;
 } gnPlatformDebugger;
 
 #ifdef __cplusplus

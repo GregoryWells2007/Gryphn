@@ -1,15 +1,11 @@
 #include "gryphn_debugger.h"
-#include "core/gryphn_platform_functions.h"
+#include <core/gryphn_platform_functions.h>
 #include "stdio.h"
 
-gnReturnCode gnCreateDebugger(gnDebugger* debugger, gnInstance* instance, const struct gnDebuggerInfo_t info) {
-    if (instance->debugger != NULL)
-        return GN_DEBUGGER_EXISTS;
+gnReturnCode gnCreateDebugger(gnDebugger* debugger, const struct gnDebuggerInfo_t info) {
     debugger->info = info;
-    debugger->instance = instance;
-    instance->debugger = debugger;
-    return instance->functions->_gnCreateDebugger(debugger, instance, info);
+    return GN_SUCCESS;
 }
 void gnDestroyDebugger(gnDebugger* debugger) {
-    debugger->instance->functions->_gnDestroyDebugger(debugger);
+    // debugger->instance->functions->_gnDestroyDebugger(debugger);
 }

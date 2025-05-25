@@ -50,7 +50,7 @@ typedef struct gnDebugger_t {
     gnInstance* instance;
 } gnDebugger;
 
-gnReturnCode gnCreateDebugger(gnDebugger* debugger, gnInstance* instance, const struct gnDebuggerInfo_t info);
+gnReturnCode gnCreateDebugger(gnDebugger* debugger, const struct gnDebuggerInfo_t info);
 void gnDestroyDebugger(gnDebugger* debugger);
 
 static void gnDebuggerSetErrorMessage(gnDebugger* debugger, gnMessageData data) {

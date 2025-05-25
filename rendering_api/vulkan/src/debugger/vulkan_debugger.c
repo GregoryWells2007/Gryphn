@@ -114,6 +114,9 @@ gnReturnCode gnCreateDebuggerFn(gnDebugger* debugger, gnInstance* instance, cons
         }
     }
 
+    instance->instance->instanceMessageCount = 0;
+    free(instance->instance->instanceMessages);
+
     const char* layers[] = {
         "VK_LAYER_KHRONOS_validation"
     };
@@ -154,5 +157,5 @@ gnReturnCode gnCreateDebuggerFn(gnDebugger* debugger, gnInstance* instance, cons
 }
 
 void gnDestroyDebuggerFn(gnDebugger* debugger) {
-    vk_destroyDebugUtilsMessengerEXT(*debugger->debugger->instance, debugger->debugger->debugMessenger, NULL);
+    vk_destroyDebugUtilsMessengerEXT(debugger->instance->instance->vk_instance, debugger->debugger->debugMessenger, NULL);
 }
