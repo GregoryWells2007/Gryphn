@@ -49,4 +49,5 @@ typedef struct gnFunctions_t {
 #include "core/presentation_queue/gryphn_presentation_queue.h"
 typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo);
+    void (*_gnDestroyPresentationQueue)(gnPresentationQueue *presentationQueue);
 } gnDeviceFunctions;

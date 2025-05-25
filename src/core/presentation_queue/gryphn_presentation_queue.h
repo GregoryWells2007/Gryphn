@@ -9,27 +9,18 @@ typedef struct gnPresentationQueueInfo_t {
     struct gnUInt2_t ImageSize;
     struct gnWindowSurface_t surface;
     struct gnSurfaceFormat_t format;
+    enum gnImageSharingMode_e imageSharingMode;
+    uint32_t queueFamilyCount;
+    uint32_t* queueFamilies;
 } gnPresentationQueueInfo;
 
 struct gnPlatformPresentationQueue_t;
 
 typedef struct gnPresentationQueue_t {
-    struct gnPlatformPresentationQueue* presentationQueue;
+    struct gnPlatformPresentationQueue_t* presentationQueue;
+    struct gnOutputDevice_t* outputDevice;
     gnBool valid;
-    // uint32_t textureCount;
-    // gnTexture* texturs;
 } gnPresentationQueue;
 
-// gnTexture* gnGetPresentationQueueImage(gnPresentationQueue& presentationQueue, int index);
-
-gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo);
-
-// inline gnReturnCode (*gnCreatePresentationQueue)(gnPresentationQueue* presentationQueue, const gnOutputDevice& device, gnPresentationDetails& details);
-// inline void (*gnDestroyPresentationQueue)(gnPresentationQueue& queue);
-// inline gnImageFormat (*_gnPresentationQueueGetImageFormat)(gnPresentationQueue& presentationQueue);
-// inline gnImageFormat gnPresentationQueueGetImageFormat(gnPresentationQueue& presentationQueue) {
-    // std::cout << "gnPresentationQueueGetImageFormat should lowkey become supported\n";
-    // return _gnPresentationQueueGetImageFormat(presentationQueue);
-// }
-// inline gnPresentationQueueState (*gnPresentationQueueGetState)(gnPresentationQueue& presentationQueue);
-// inline gnReturnCode (*gnPresentationQueueGetNextImageAsync)(gnPresentationQueue& presentationQueue, const gnSyncSemaphore& semaphore, gnUInt* imageIndex);
+gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo);
+void gnDestroyPresentationQueue(gnPresentationQueue* presentationQueue);

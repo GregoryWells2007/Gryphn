@@ -14,12 +14,13 @@ typedef struct gnOutputDeviceInfo_t {
     uint32_t queueInfoCount;
     struct gnDeviceQueueInfo_t* queueInfos;
     struct gnPhysicalDeviceFeatures_t enabledFeatures;
-    const gnPhysicalDevice physicalDevice;
+    struct gnPhysicalDevice_t physicalDevice;
 } gnOutputDeviceInfo;
 
 typedef struct gnOutputDevice_t {
     struct gnPlatformOutputDevice_t* outputDevice;
     struct gnDeviceFunctions_t* deviceFunctions;
+    struct gnOutputDeviceInfo_t deviceInfo;
     gnInstance* instance;
     gnPhysicalDevice physicalDevice;
 } gnOutputDevice;

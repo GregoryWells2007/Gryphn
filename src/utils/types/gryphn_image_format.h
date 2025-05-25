@@ -8,3 +8,7 @@ typedef enum gnImageFormat_e {
 typedef enum gnColorSpace_e {
     GN_COLOR_SPACE_SRGB_NONLINEAR
 } gnColorSpace;
+
+typedef enum gnImageSharingMode_e {
+    GN_SHARING_MODE_EXCLUSIVE, GN_SHARING_MODE_CONCURRENT
+} gnImageSharingMode;
