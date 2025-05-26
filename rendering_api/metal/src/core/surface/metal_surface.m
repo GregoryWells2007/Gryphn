@@ -21,3 +21,16 @@ gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurfac
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     return GN_SUCCESS;
 }
+
+MTLPixelFormat mtlGryphnFormatToVulkanFormat(gnImageFormat format) {
+    switch (format) {
+    case GN_FORMAT_BGRA8_SRGB: { return MTLPixelFormatBGRA8Unorm_sRGB; }
+    default: return MTLPixelFormatInvalid;
+    }
+}
+
+CGColorSpaceRef mtlGryphnColorSpaceToVulkanColorSpace(gnColorSpace colorSpace) {
+    switch (colorSpace) {
+    case GN_COLOR_SPACE_SRGB_NONLINEAR: { return CGColorSpaceCreateWithName(kCGColorSpaceSRGB); }
+    }
+}
