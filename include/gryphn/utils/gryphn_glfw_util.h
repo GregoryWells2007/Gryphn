@@ -6,7 +6,7 @@
 #error "Must include glfw before using this file"
 #endif
 #ifndef _glfw3_native_h_
-#error "Must include glfwnative before using this file"
+#error "Must include glfw native before using this file"
 #endif
 
 #ifdef GN_PLATFORM_MACOS
