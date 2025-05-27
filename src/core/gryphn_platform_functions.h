@@ -53,5 +53,5 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnDestroyPresentationQueue)(gnPresentationQueue *presentationQueue);
 
     gnReturnCode (*_gnCreateShaderModule)(struct gnShaderModule_t* module, struct gnOutputDevice_t* device, struct gnShaderModuleInfo_t shaderModuleInfo);
-    void (*_gnDestroyShaderModule)(struct gnShaderModuleInfo_t* module);
+    void (*_gnDestroyShaderModule)(struct gnShaderModule_t* module);
 } gnDeviceFunctions;

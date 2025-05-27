@@ -9,7 +9,7 @@ typedef enum gnShaderModuleStage_e {
 
 typedef struct gnShaderModuleInfo_t {
     enum gnShaderModuleStage_e stage;
-    unsigned char* code;
+    uint32_t* code;
     uint32_t size;
     gnString entryPoint;
 } gnShaderModuleInfo;
@@ -22,3 +22,4 @@ typedef struct gnShaderModule_t {
 } gnShaderModule;
 
 gnReturnCode gnCreateShaderModule(struct gnShaderModule_t* module, struct gnOutputDevice_t* device, struct gnShaderModuleInfo_t shaderModuleInfo);
+void gnDestroyShaderModule(struct gnShaderModule_t* module);

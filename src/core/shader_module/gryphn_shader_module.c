@@ -5,3 +5,7 @@ gnReturnCode gnCreateShaderModule(struct gnShaderModule_t* module, struct gnOutp
     module->device = device;
     return device->deviceFunctions->_gnCreateShaderModule(module, device, shaderModuleInfo);
 }
+
+void gnDestroyShaderModule(struct gnShaderModule_t* module) {
+    module->device->deviceFunctions->_gnDestroyShaderModule(module);
+}
