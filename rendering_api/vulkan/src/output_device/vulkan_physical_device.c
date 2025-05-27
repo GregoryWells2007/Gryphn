@@ -19,6 +19,14 @@ gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceC
         VkPhysicalDeviceProperties deviceProperties;
         vkGetPhysicalDeviceProperties(physicalDevices[i], &deviceProperties);
         outputDevices[i].properties.name = gnCreateString(deviceProperties.deviceName);
+        switch(deviceProperties.deviceType) {
+        case VK_PHYSICAL_DEVICE_TYPE_OTHER: outputDevices[i].properties.deviceType = GN_EXTERNAL_DEVICE;
+        case VK_PHYSICAL_DEVICE_TYPE_INTEGRATED_GPU: outputDevices[i].properties.deviceType = GN_INTEGRATED_DEVICE;
+        case VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU: outputDevices[i].properties.deviceType = GN_DEDICATED_DEVICE;
+        case VK_PHYSICAL_DEVICE_TYPE_VIRTUAL_GPU: outputDevices[i].properties.deviceType = GN_INTEGRATED_DEVICE;
+        case VK_PHYSICAL_DEVICE_TYPE_CPU: outputDevices[i].properties.deviceType = GN_INTEGRATED_DEVICE;
+        case VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM: outputDevices[i].properties.deviceType = GN_INTEGRATED_DEVICE;
+        }
 
         vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &outputDevices[i].queueProperties.queueCount, NULL);
 

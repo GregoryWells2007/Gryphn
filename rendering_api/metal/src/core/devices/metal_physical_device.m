@@ -11,9 +11,16 @@ gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceC
         devicesList[i].physicalDevice = malloc(sizeof(gnPlatformPhysicalDevice));
         devicesList[i].physicalDevice->device = [devices objectAtIndex:0];
 
+
         id<MTLDevice> device = [devices objectAtIndex:0];
         devicesList[i].properties.name = gnCreateString([[device name] cStringUsingEncoding:NSUTF8StringEncoding]);
-
+        MTLDeviceLocation deviceLocation = device.locationNumber;
+        if (deviceLocation == MTLDeviceLocationBuiltIn)
+            devicesList[i].properties.deviceType = GN_INTEGRATED_DEVICE;
+        else if (deviceLocation == MTLDeviceLocationSlot)
+            devicesList[i].properties.deviceType = GN_DEDICATED_DEVICE;
+        else if (deviceLocation == MTLDeviceLocationExternal)
+            devicesList[i].properties.deviceType = GN_EXTERNAL_DEVICE;
 
         // below I am going to fake that there is one queue that can support graphics, compute, and transfer queues
         devicesList[i].queueProperties.queueProperties = malloc(sizeof(gnQueueProperties));

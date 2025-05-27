@@ -4,12 +4,17 @@
 struct gnPlatformPhysicalDevice_t;
 struct gnWindowSurface_t;
 
+typedef enum gnDeviceType_e {
+    GN_DEDICATED_DEVICE, GN_INTEGRATED_DEVICE, GN_EXTERNAL_DEVICE
+} gnDeviceType;
+
 typedef struct gnPhysicalDeviceProperties_t {
     gnString name;
+    gnDeviceType deviceType;
 } gnPhysicalDeviceProperties;
 
 typedef struct gnPhysicalDeviceFeatures_t {
-    // no freatures
+
 } gnPhysicalDeviceFeatures;
 
 typedef enum gnQueueTypeFlags_e {
