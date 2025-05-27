@@ -43,15 +43,15 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     }
     VkPresentModeKHR presentMode = VK_PRESENT_MODE_FIFO_KHR;
     VkExtent2D extent = {
-        .width = presentationInfo.ImageSize.x,
-        .height = presentationInfo.ImageSize.y
+        .width = presentationInfo.imageSize.x,
+        .height = presentationInfo.imageSize.y
     };
 
     VkSwapchainCreateInfoKHR createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     createInfo.surface = presentationInfo.surface.windowSurface->surface;
 
-    createInfo.minImageCount = presentationInfo.ImageCount;
+    createInfo.minImageCount = presentationInfo.minImageCount;
     createInfo.imageFormat = details.formats[index].format;
     createInfo.imageColorSpace = details.formats[index].colorSpace;
     createInfo.imageExtent = extent;

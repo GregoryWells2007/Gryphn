@@ -5,8 +5,8 @@
 #include <utils/types/gryphn_image_format.h>
 
 typedef struct gnPresentationQueueInfo_t {
-    uint32_t ImageCount;
-    struct gnUInt2_t ImageSize;
+    uint32_t minImageCount;
+    struct gnUInt2_t imageSize;
     struct gnWindowSurface_t surface;
     struct gnSurfaceFormat_t format;
     enum gnImageSharingMode_e imageSharingMode;
@@ -20,6 +20,7 @@ typedef struct gnPresentationQueue_t {
     struct gnPlatformPresentationQueue_t* presentationQueue;
     struct gnOutputDevice_t* outputDevice;
     gnBool valid;
+    int imageCount;
 } gnPresentationQueue;
 
 gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo);
