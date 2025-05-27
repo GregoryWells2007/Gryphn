@@ -6,4 +6,5 @@ typedef struct gnPlatformPresentationQueue_t {
     VkSwapchainKHR swapChain;
 
     VkImage* swapChainImages;
+    VkImageView* swapChainImageViews;
 } gnPlatformPresentationQueue;
