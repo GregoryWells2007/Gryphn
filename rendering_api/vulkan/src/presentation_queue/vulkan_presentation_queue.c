@@ -81,6 +81,8 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
 
     VkImageViewCreateInfo imageViewCreateInfo = {};
     imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+    imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    imageViewCreateInfo.format = convertedFormat;
     imageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     imageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     imageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -93,15 +95,16 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
 
     for (int i = 0; i < presentationQueue->imageCount; i++) {
         imageViewCreateInfo.image = presentationQueue->presentationQueue->swapChainImages[i];
-        if (vkCreateImageView(device, &imageViewCreateInfo, NULL, &presentationQueue->presentationQueue->swapChainImageViews[i]) != VK_SUCCESS) {
+        if (vkCreateImageView(device->outputDevice->device, &imageViewCreateInfo, NULL, &presentationQueue->presentationQueue->swapChainImageViews[i]) != VK_SUCCESS) {
             return GN_FAILED_TO_CREATE_IMAGE_VIEW;
         }
-
     }
 
     return GN_SUCCESS;
 }
 
 void gnDestroyPresentationQueueFn(gnPresentationQueue* queue) {
+    for (int i = 0; i < queue->imageCount; i++)
+        vkDestroyImageView(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChainImageViews[i], NULL);
     vkDestroySwapchainKHR(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChain, NULL);
 }
