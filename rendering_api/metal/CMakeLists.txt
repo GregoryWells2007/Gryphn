@@ -24,6 +24,7 @@ target_link_libraries(GryphnMetalImpl spirv-cross-core spirv-cross-msl spirv-cro
 target_link_libraries(GryphnMetalImpl
     "-framework IOKit"
     "-framework CoreFoundation"
+    "-framework CoreGraphics"
     "-framework Foundation"
     "-framework Metal"
     "-framework QuartzCore"

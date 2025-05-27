@@ -6,6 +6,7 @@
 #import <QuartzCore/CAMetalLayer.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Metal/Metal.h>
+#import <CoreGraphics/CoreGraphics.h>
 
 gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
     NSWindow* window = (__bridge NSWindow*)createInfo.window;
@@ -20,6 +21,20 @@ gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurfac
 
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     return GN_SUCCESS;
+}
+
+struct gnSurfaceDetails_t gnGetSurfaceDetailsFn(
+    // struct gnWindowSurface_t* windowSurface,
+    // struct gnPhysicalDevice_t device,
+    // uint32_t* formatCount
+    struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device
+) {
+    struct gnSurfaceDetails_t surfaceDetails;
+    surfaceDetails.formatCount = 1;
+    surfaceDetails.formats = (struct gnSurfaceFormat_t[1]){ { GN_FORMAT_BGRA8_SRGB, GN_COLOR_SPACE_SRGB_NONLINEAR } };
+    surfaceDetails.minImageCount = 2;
+    surfaceDetails.maxImageCount = 3;
+    return surfaceDetails;
 }
 
 MTLPixelFormat mtlGryphnFormatToVulkanFormat(gnImageFormat format) {
