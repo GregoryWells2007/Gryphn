@@ -4,9 +4,6 @@
 
 typedef struct gnPlatformPresentationQueue_t {
     VkSwapchainKHR swapChain;
-    // VkDevice* device;
-    // gnOutputDevice* outputDevice;
 
-    // vulkanSwapchainDetails swapchainDetails;
-    // VkResult result;
+    VkImage* swapChainImages;
 } gnPlatformPresentationQueue;

@@ -20,7 +20,7 @@ typedef struct gnPresentationQueue_t {
     struct gnPlatformPresentationQueue_t* presentationQueue;
     struct gnOutputDevice_t* outputDevice;
     gnBool valid;
-    int imageCount;
+    uint32_t imageCount;
 } gnPresentationQueue;
 
 gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo);

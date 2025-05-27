@@ -74,6 +74,10 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
         return GN_FAILED_TO_CREATE_PRESENTATION_QUEUE;
     }
 
+    vkGetSwapchainImagesKHR(device->outputDevice->device, presentationQueue->presentationQueue->swapChain, &presentationQueue->imageCount, NULL);
+    presentationQueue->presentationQueue->swapChainImages = malloc(sizeof(VkImage) * presentationQueue->imageCount);
+    vkGetSwapchainImagesKHR(device->outputDevice->device, presentationQueue->presentationQueue->swapChain, &presentationQueue->imageCount, presentationQueue->presentationQueue->swapChainImages);
+
     return GN_SUCCESS;
 }
 
