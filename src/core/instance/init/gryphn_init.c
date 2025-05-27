@@ -71,4 +71,6 @@ void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* funct
 void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFunctions_t* functions) {
     gnLoadDLLFunction(lib, functions->_gnCreatePresentationQueue, "gnCreatePresentationQueueFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyPresentationQueue, "gnDestroyPresentationQueueFn");
+    gnLoadDLLFunction(lib, functions->_gnCreateShaderModule, "gnCreateShaderModuleFn");
+    gnLoadDLLFunction(lib, functions->_gnDestroyShaderModule, "gnDestroyShaderModuleFn");
 }
