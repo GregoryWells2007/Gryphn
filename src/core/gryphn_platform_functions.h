@@ -9,6 +9,7 @@
 #include "window_surface/gryphn_surface_create_functions.h"
 #include "shader_module/gryphn_shader_module.h"
 #include "pipelines/graphics_pipeline/gryphn_graphics_pipeline.h"
+#include "renderpass/gryphn_render_pass_descriptor.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -55,6 +56,9 @@ typedef struct gnDeviceFunctions_t {
 
     gnReturnCode (*_gnCreateShaderModule)(struct gnShaderModule_t* module, struct gnOutputDevice_t* device, struct gnShaderModuleInfo_t shaderModuleInfo);
     void (*_gnDestroyShaderModule)(struct gnShaderModule_t* module);
+
+    gnReturnCode (*_gnCreateRenderPassDescriptor)(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, struct gnRenderPassDescriptorInfo_t info);
+    void (*_gnDestroyRenderPassDescriptor)(struct gnRenderPassDescriptor_t* renderPass);
 
     gnReturnCode (*_gnCreateGraphicsPipeline)(struct gnGraphicsPipeline_t* pipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t pipelineInfo);
     void (*_gnDestroyGraphicsPipeline)(struct gnGraphicsPipeline_t* pipeline);

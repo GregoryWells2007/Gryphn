@@ -73,6 +73,8 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnDestroyPresentationQueue, "gnDestroyPresentationQueueFn");
     gnLoadDLLFunction(lib, functions->_gnCreateShaderModule, "gnCreateShaderModuleFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyShaderModule, "gnDestroyShaderModuleFn");
+    gnLoadDLLFunction(lib, functions->_gnCreateRenderPassDescriptor, "gnCreateRenderPassDescriptorFn");
+    gnLoadDLLFunction(lib, functions->_gnDestroyRenderPassDescriptor, "gnDestroyRenderPassDescriptorFn");
     gnLoadDLLFunction(lib, functions->_gnCreateGraphicsPipeline, "gnCreateGraphicsPipelineFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyGraphicsPipeline, "gnDestroyGraphicsPipelineFn");
 }

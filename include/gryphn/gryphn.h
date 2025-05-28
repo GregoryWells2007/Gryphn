@@ -10,3 +10,4 @@
 #include <core/presentation_queue/gryphn_presentation_queue.h>
 #include <core/shader_module/gryphn_shader_module.h>
 #include <core/pipelines/graphics_pipeline/gryphn_graphics_pipeline.h>
+#include <core/renderpass/gryphn_render_pass_descriptor.h>
