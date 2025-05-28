@@ -1,4 +1,6 @@
 #include "vulkan_graphics_pipeline.h"
+#include "core/debugger/gryphn_debugger.h"
+#include "output_device/vulkan_output_devices.h"
 
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e state) {
     switch (state) {
@@ -146,10 +148,32 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         .blendConstants[3] = 0.0f
     };
 
+    if (info.uniformLayout == NULL) {
+        VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
+            .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+            .setLayoutCount = 0,
+            pipelineLayoutInfo.pSetLayouts = NULL,
+            pipelineLayoutInfo.pushConstantRangeCount = 0,
+            pipelineLayoutInfo.pPushConstantRanges = NULL
+        };
+
+        if (vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout) != VK_SUCCESS) {
+            return GN_FAILED_TO_CREATE_UNIFORM_LAYOUT;
+        }
+
+        graphicsPipeline->graphicsPipeline->createdPipelineLayout = gnTrue;
+    } else {
+        graphicsPipeline->graphicsPipeline->createdPipelineLayout = gnFalse;
+        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
+            .message = gnCreateString("Graphics pipelines can not currently accept uniform layouts")
+        });
+    }
+
     free(dynamicStates);
     return GN_SUCCESS;
 }
 
 void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) {
-
+    if (graphicsPipeline->graphicsPipeline->createdPipelineLayout)
+        vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
 }

@@ -1,5 +1,6 @@
 #pragma once
 #include <core/output_device/gryphn_output_device.h>
+#include <core/pipelines/gryphn_uniform_layout.h>
 
 typedef enum gnDynamicState_e {
     GN_DYNAMIC_VIEWPORT,
@@ -76,6 +77,8 @@ typedef struct gnGraphicsPipelineInfo_t {
     enum gnFillMode_e fillMode;
     struct gnCullMode_t cullMode;
     struct gnColorBlending_t colorBlending;
+
+    struct gnUniformLayout_t* uniformLayout;
 } gnGraphicsPipelineInfo;
 
 struct gnPlatformGraphicsPipeline_t;
