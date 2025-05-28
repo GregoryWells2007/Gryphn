@@ -87,9 +87,6 @@ struct gnSurfaceFormat_t* vkGetSurfaceFormats(
 }
 
 struct gnSurfaceDetails_t gnGetSurfaceDetailsFn(
-    // struct gnWindowSurface_t* windowSurface,
-    // struct gnPhysicalDevice_t device,
-    // uint32_t* formatCount
     struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device
 ) {
     struct gnSurfaceDetails_t surfaceDetails;
