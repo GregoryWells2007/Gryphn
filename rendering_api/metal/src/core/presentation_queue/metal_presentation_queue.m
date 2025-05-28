@@ -40,3 +40,10 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
 
     return GN_SUCCESS;
 }
+
+void gnDestroyPresentationQueueFn(gnPresentationQueue *presentationQueue) {
+    for (int i = 0; i < presentationQueue->imageCount; i++) {
+        [presentationQueue->presentationQueue->textures[i] release];
+    }
+    free(presentationQueue->presentationQueue);
+}

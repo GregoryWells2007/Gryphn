@@ -23,6 +23,7 @@ gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceC
             devicesList[i].properties.deviceType = GN_EXTERNAL_DEVICE;
 
         // below I am going to fake that there is one queue that can support graphics, compute, and transfer queues
+        devicesList[i].queueProperties.queueCount = 1;
         devicesList[i].queueProperties.queueProperties = malloc(sizeof(gnQueueProperties));
         devicesList[i].queueProperties.queueProperties[0] = (gnQueueProperties){
             .queueCount = 1,

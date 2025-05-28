@@ -23,6 +23,10 @@ gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurfac
     return GN_SUCCESS;
 }
 
+void gnDestroyWindowSurfaceFn(struct gnWindowSurface_t *windowSurface) {
+    free(windowSurface->windowSurface);
+}
+
 struct gnSurfaceDetails_t gnGetSurfaceDetailsFn(
     // struct gnWindowSurface_t* windowSurface,
     // struct gnPhysicalDevice_t device,
