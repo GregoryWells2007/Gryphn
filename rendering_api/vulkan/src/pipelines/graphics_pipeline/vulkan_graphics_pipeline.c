@@ -1,10 +1,12 @@
 #include "vulkan_graphics_pipeline.h"
 #include "core/debugger/gryphn_debugger.h"
 #include "output_device/vulkan_output_devices.h"
+#include "shader_module/vulkan_shader_module.h"
+#include "renderpass/vulkan_render_pass_descriptor.h"
 
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e state) {
     switch (state) {
-    case GN_DYNAMIC_VIEWPORT: return VK_DYNAMIC_STATE_SCISSOR;
+    case GN_DYNAMIC_VIEWPORT: return VK_DYNAMIC_STATE_VIEWPORT;
     case GN_DYNAMIC_SCISSOR: return VK_DYNAMIC_STATE_SCISSOR;
 
     case GN_DYNAMIC_STATE_MAX: return VK_DYNAMIC_STATE_MAX_ENUM;
@@ -169,6 +171,34 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         });
     }
 
+    VkPipelineShaderStageCreateInfo* modules = malloc(sizeof(VkPipelineShaderStageCreateInfo) * info.shaderModuleCount);
+    for (int i = 0; i < info.shaderModuleCount; i++) {
+        modules[i] = info.shaderModules[i].shaderModule->shaderStageInfo;
+    }
+
+    VkGraphicsPipelineCreateInfo pipelineInfo = {
+        .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
+        .stageCount = info.shaderModuleCount,
+        .pStages = modules,
+        .pVertexInputState = &graphicsPipeline->graphicsPipeline->vertexInfo,
+        .pInputAssemblyState = &graphicsPipeline->graphicsPipeline->inputAssembly,
+        .pViewportState = &graphicsPipeline->graphicsPipeline->viewportState,
+        .pRasterizationState = &graphicsPipeline->graphicsPipeline->rasterizer,
+        .pMultisampleState = &multisampling,
+        .pDepthStencilState = NULL,
+        .pColorBlendState = &graphicsPipeline->graphicsPipeline->colorBlending,
+        .pDynamicState = &graphicsPipeline->graphicsPipeline->dynamicState,
+        .layout = graphicsPipeline->graphicsPipeline->pipelineLayout,
+        .renderPass = info.renderPassDescriptor->renderPassDescriptor->renderPass,
+        .subpass = info.subpassIndex,
+        .basePipelineHandle = VK_NULL_HANDLE,
+        .basePipelineIndex = -1
+    };
+
+    if (vkCreateGraphicsPipelines(device->outputDevice->device, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &graphicsPipeline->graphicsPipeline->graphicsPipeline) != VK_SUCCESS) {
+        return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
+    }
+
     free(dynamicStates);
     return GN_SUCCESS;
 }
@@ -176,4 +206,5 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
 void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) {
     if (graphicsPipeline->graphicsPipeline->createdPipelineLayout)
         vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
+    vkDestroyPipeline(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->graphicsPipeline, NULL);
 }

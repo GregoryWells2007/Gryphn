@@ -1,6 +1,8 @@
 #pragma once
 #include <core/output_device/gryphn_output_device.h>
 #include <core/pipelines/gryphn_uniform_layout.h>
+#include <core/renderpass/gryphn_render_pass_descriptor.h>
+#include <core/shader_module/gryphn_shader_module.h>
 
 typedef enum gnDynamicState_e {
     GN_DYNAMIC_VIEWPORT,
@@ -79,6 +81,12 @@ typedef struct gnGraphicsPipelineInfo_t {
     struct gnColorBlending_t colorBlending;
 
     struct gnUniformLayout_t* uniformLayout;
+
+    uint32_t subpassIndex;
+    struct gnRenderPassDescriptor_t* renderPassDescriptor;
+
+    uint32_t shaderModuleCount;
+    struct gnShaderModule_t* shaderModules;
 } gnGraphicsPipelineInfo;
 
 struct gnPlatformGraphicsPipeline_t;

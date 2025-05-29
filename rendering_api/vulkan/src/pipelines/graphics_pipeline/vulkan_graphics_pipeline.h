@@ -17,4 +17,7 @@ typedef struct gnPlatformGraphicsPipeline_t {
 
     gnBool createdPipelineLayout;
     VkPipelineLayout pipelineLayout;
+
+
+    VkPipeline graphicsPipeline;
 } gnPlatformGraphicsPipeline;
