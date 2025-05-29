@@ -26,7 +26,8 @@ typedef enum gnReturnCode_t {
     GN_UNSUPPORTED_SHADER_MODULE,
     GN_UNKNOWN_SUBPASS,
     GN_FAILED_TO_CREATE_FRAMEBUFFER,
-    GN_DIVERGENT_RENDERPASS
+    GN_DIVERGENT_RENDERPASS,
+    GN_FAILED_TO_CREATE_COMMAND_POOL
 } gnReturnCode;
 
 typedef gnReturnCode gnErrorCode;
@@ -58,5 +59,6 @@ static const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
     case GN_UNKNOWN_SUBPASS: return "GN_UNKNOWN_SUBPASS";
     case GN_FAILED_TO_CREATE_FRAMEBUFFER: return "GN_FAILED_TO_CREATE_FRAMEBUFFER";
     case GN_DIVERGENT_RENDERPASS: return "GN_DIVERGENT_RENDERPASS";
+    case GN_FAILED_TO_CREATE_COMMAND_POOL: return "GN_FAILED_TO_CREATE_COMMAND_POOL";
     }
 }

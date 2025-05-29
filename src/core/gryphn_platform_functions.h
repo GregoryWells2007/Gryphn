@@ -11,6 +11,7 @@
 #include "renderpass/gryphn_render_pass_descriptor.h"
 #include "pipelines/graphics_pipeline/gryphn_graphics_pipeline.h"
 #include "framebuffer/gryphn_framebuffer.h"
+#include "command/command_pool/gryphn_command_pool.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -66,4 +67,7 @@ typedef struct gnDeviceFunctions_t {
 
     gnReturnCode (*_gnCreateFramebuffer)(struct gnFramebuffer_t* framebuffer, struct gnOutputDevice_t* device, struct gnFramebufferInfo_t framebufferInfo);
     void (*_gnDestroyFramebuffer)(struct gnFramebuffer_t* framebuffer);
+
+    gnReturnCode (*_gnCreateCommandPool)(struct gnCommandPool_t* commandPool, struct gnOutputDevice_t* device, struct gnCommandPoolInfo_t info);
+    void (*_gnDestroyCommandPool)(struct gnCommandPool_t* commandPool);
 } gnDeviceFunctions;
