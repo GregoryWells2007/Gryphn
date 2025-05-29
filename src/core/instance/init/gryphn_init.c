@@ -77,4 +77,6 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnDestroyRenderPassDescriptor, "gnDestroyRenderPassDescriptorFn");
     gnLoadDLLFunction(lib, functions->_gnCreateGraphicsPipeline, "gnCreateGraphicsPipelineFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyGraphicsPipeline, "gnDestroyGraphicsPipelineFn");
+    gnLoadDLLFunction(lib, functions->_gnCreateFramebuffer, "gnCreateFramebufferFn");
+    gnLoadDLLFunction(lib, functions->_gnDestroyFramebuffer, "gnDestroyFramebufferFn");
 }
