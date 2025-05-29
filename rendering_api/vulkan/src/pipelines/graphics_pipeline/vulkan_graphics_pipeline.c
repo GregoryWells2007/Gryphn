@@ -207,4 +207,6 @@ void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) 
     if (graphicsPipeline->graphicsPipeline->createdPipelineLayout)
         vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
     vkDestroyPipeline(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->graphicsPipeline, NULL);
+
+    free(graphicsPipeline->graphicsPipeline);
 }

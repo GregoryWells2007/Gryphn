@@ -23,8 +23,20 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
 
-    for (int i = 0; i < info.renderPassDescriptor->info.attachmentCount; i++) {
-        [descriptor.colorAttachments objectAtIndexedSubscript:i].pixelFormat = mtlGryphnFormatToVulkanFormat(info.renderPassDescriptor->info.attachmentInfos[i].format);
+    if (info.subpassIndex >= info.renderPassDescriptor->info.subpassCount) {
+        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
+            .message = gnCreateString("Subpass index is larger then the subpass count in render pass descriptor")
+        });
+        return GN_UNKNOWN_SUBPASS;
+    }
+
+    struct gnSubpassInfo_t subpass = info.renderPassDescriptor->info.subpassInfos[info.subpassIndex];
+
+    for (uint32_t i = 0; i < subpass.colorAttachmentCount; i++) {
+        gnSubpassAttachmentInfo subpassAtt = subpass.colorAttachments[i];
+
+        gnRenderPassAttachmentInfo attInfo = info.renderPassDescriptor->info.attachmentInfos[subpassAtt.index];
+        descriptor.colorAttachments[i].pixelFormat = mtlGryphnFormatToVulkanFormat(attInfo.format);
         if (info.colorBlending.enable == gnTrue) {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = YES;
             [descriptor.colorAttachments objectAtIndexedSubscript:i].rgbBlendOperation = vkGryphnBlendOperation(info.colorBlending.colorBlendOperation);
