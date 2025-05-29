@@ -13,3 +13,4 @@
 #include <core/renderpass/gryphn_render_pass_descriptor.h>
 #include <core/framebuffer/gryphn_framebuffer.h>
 #include <core/textures/gryphn_texture.h>
+#include <core/command/command_pool/gryphn_command_pool.h>

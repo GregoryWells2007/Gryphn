@@ -4,8 +4,14 @@
 #include "core/instance/init/gryphn_init.h"
 
 gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo) {
-    outputDevice->deviceFunctions = malloc(sizeof(gnDeviceFunctions));
-    gnLoadDeviceFunctions(instance->dynamicLib, outputDevice->deviceFunctions);
+    if (instance->loadDeviceFunctions == gnFalse) {
+        instance->deviceFunctions = malloc(sizeof(struct gnDeviceFunctions_t));
+        gnLoadDeviceFunctions(instance->dynamicLib, instance->deviceFunctions);
+        instance->loadDeviceFunctions = gnTrue;
+    }
+
+    outputDevice->deviceFunctions = instance->deviceFunctions;
+
     outputDevice->instance = instance;
     outputDevice->physicalDevice = deviceInfo.physicalDevice;
     outputDevice->deviceInfo = deviceInfo;

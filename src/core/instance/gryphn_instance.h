@@ -19,9 +19,10 @@ typedef struct gnInstanceInfo_t {
 
 typedef struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
-    gnBool valid;
+    gnBool valid, loadDeviceFunctions;
 
     struct gnFunctions_t* functions;
+    struct gnDeviceFunctions_t* deviceFunctions;
     struct gnDynamicLibrary_t* dynamicLib;
 
     struct gnDebugger_t* debugger;

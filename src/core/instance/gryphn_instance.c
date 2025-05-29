@@ -5,6 +5,7 @@
 
 gnReturnCode gnCreateInstance(gnInstance* instance, struct gnInstanceInfo_t info) {
     if (!gnIsAPISupported(info.renderingAPI)) return GN_UNSUPPORTED_RENDERING_API;
+    instance->loadDeviceFunctions = gnFalse;
     instance->debugger = NULL;
     instance->dynamicLib = gnLoadRenderingDLL(info.renderingAPI);
     if (instance->dynamicLib == NULL) return GN_UNABLE_TO_LOAD_DYNAMIC_LIBARRY;
