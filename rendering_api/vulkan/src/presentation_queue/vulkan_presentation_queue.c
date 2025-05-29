@@ -3,6 +3,7 @@
 #include <output_device/vulkan_physical_device.h>
 #include "vulkan_surface/vulkan_surface.h"
 #include "core/debugger/gryphn_debugger.h"
+#include "textures/vulkan_texture.h"
 
 gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
@@ -93,11 +94,16 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
     imageViewCreateInfo.subresourceRange.layerCount = 1;
 
+    presentationQueue->images = malloc(sizeof(gnTexture) * presentationQueue->imageCount);
     for (int i = 0; i < presentationQueue->imageCount; i++) {
+        presentationQueue->images[i].texture = malloc(sizeof(gnPlatformTexture));
         imageViewCreateInfo.image = presentationQueue->presentationQueue->swapChainImages[i];
         if (vkCreateImageView(device->outputDevice->device, &imageViewCreateInfo, NULL, &presentationQueue->presentationQueue->swapChainImageViews[i]) != VK_SUCCESS) {
             return GN_FAILED_TO_CREATE_IMAGE_VIEW;
         }
+
+        presentationQueue->images[i].texture->image = presentationQueue->presentationQueue->swapChainImages[i];
+        presentationQueue->images[i].texture->imageView = presentationQueue->presentationQueue->swapChainImageViews[i];
     }
 
     return GN_SUCCESS;

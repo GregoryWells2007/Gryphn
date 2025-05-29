@@ -2,6 +2,7 @@
 #include "core/surface/metal_surface.h"
 #include "core/devices/metal_output_devices.h"
 #include "core/debugger/gryphn_debugger.h"
+#include "core/texture/metal_texture.h"
 
 gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo) {
     if (presentationInfo.minImageCount > 3) {
@@ -33,9 +34,12 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     textureDescriptor.usage = MTLTextureUsageRenderTarget;
     textureDescriptor.textureType  = MTLTextureType2D;
 
-
+    presentationQueue->imageCount = presentationInfo.minImageCount;
+    presentationQueue->images = malloc(sizeof(gnTexture) * presentationInfo.minImageCount);
     for (int i = 0; i < presentationInfo.minImageCount; i++) {
         presentationQueue->presentationQueue->textures[i] = [device->outputDevice->device newTextureWithDescriptor:textureDescriptor];
+        presentationQueue->images[i].texture = malloc(sizeof(gnPlatformTexture));
+        presentationQueue->images[i].texture->texture = presentationQueue->presentationQueue->textures[i];
     }
 
     return GN_SUCCESS;
