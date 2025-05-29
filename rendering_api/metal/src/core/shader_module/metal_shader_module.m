@@ -83,5 +83,5 @@ gnReturnCode gnCreateShaderModuleFn(struct gnShaderModule_t *module, struct gnOu
 }
 
 void gnDestroyShaderModuleFn(struct gnShaderModule_t* module) {
-
+    free(module->shaderModule);
 }

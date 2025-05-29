@@ -95,6 +95,7 @@ void gnDestroyOutputDeviceFn(gnOutputDevice* device) {
         [device->outputDevice->queues[i] release];
     }
     [device->outputDevice->device release];
+    free(device->outputDevice);
 }
 
 // struct mtlFramebufferVertex {
