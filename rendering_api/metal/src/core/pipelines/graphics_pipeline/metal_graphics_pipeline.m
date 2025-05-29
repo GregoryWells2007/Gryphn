@@ -1,0 +1,68 @@
+#include "metal_graphics_pipeline.h"
+#include "core/devices/metal_output_devices.h"
+#include "core/debugger/gryphn_debugger.h"
+#include "core/shader_module/metal_shader_module.h"
+#include "core/surface/metal_surface.h"
+
+MTLBlendFactor vkGryphnBlendFactor(enum gnBlendFactor_e factor) {
+    switch (factor) {
+    case GN_BLEND_FACTOR_ZERO: return MTLBlendFactorZero;
+    case GN_BLEND_FACTOR_ONE: return MTLBlendFactorOne;
+    case GN_BLEND_FACTOR_SRC_ALPHA: return MTLBlendFactorSourceAlpha;
+    case GN_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA: return MTLBlendFactorOneMinusSourceAlpha;
+    }
+}
+
+MTLBlendOperation vkGryphnBlendOperation(enum gnBlendOperation_e operation) {
+    switch(operation) {
+    case GN_OPERATION_ADD: return MTLBlendOperationAdd;
+    }
+}
+
+gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t info) {
+    graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
+    MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
+
+    for (int i = 0; i < info.renderPassDescriptor->info.attachmentCount; i++) {
+        [descriptor.colorAttachments objectAtIndexedSubscript:i].pixelFormat = mtlGryphnFormatToVulkanFormat(info.renderPassDescriptor->info.attachmentInfos[i].format);
+        if (info.colorBlending.enable == gnTrue) {
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = YES;
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].rgbBlendOperation = vkGryphnBlendOperation(info.colorBlending.colorBlendOperation);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].alphaBlendOperation = vkGryphnBlendOperation(info.colorBlending.alphaBlendOperation);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].sourceRGBBlendFactor = vkGryphnBlendFactor(info.colorBlending.sourceColorBlendFactor);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].sourceAlphaBlendFactor = vkGryphnBlendFactor(info.colorBlending.sourceAlphaBlendFactor);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].destinationRGBBlendFactor = vkGryphnBlendFactor(info.colorBlending.destinationColorBlendFactor);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].destinationAlphaBlendFactor = vkGryphnBlendFactor(info.colorBlending.destinationAlphaBlendFactor);
+        } else {
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = FALSE;
+        }
+    }
+
+    for (int i = 0; i < info.shaderModuleCount; i++) {
+        if (info.shaderModules[i].info.stage == GN_VERTEX_SHADER_MODULE) {
+            [descriptor setVertexFunction:info.shaderModules[i].shaderModule->function];
+        } else if (info.shaderModules[i].info.stage == GN_FRAGMENT_SHADER_MODULE) {
+            [descriptor setFragmentFunction:info.shaderModules[i].shaderModule->function];
+        } else {
+            return GN_UNSUPPORTED_SHADER_MODULE;
+        }
+    }
+
+
+    NSError* error = nil;
+    graphicsPipeline->graphicsPipeline->graphicsPipeline = [device->outputDevice->device newRenderPipelineStateWithDescriptor:descriptor error:&error];
+    if (graphicsPipeline->graphicsPipeline->graphicsPipeline == nil) {
+        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
+            .message = gnCombineStrings(gnCreateString("Failed to create metal render pipeline descriptor "), error.localizedDescription.UTF8String)
+        });
+        return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
+    }
+    [descriptor release];
+    [error release];
+    return GN_SUCCESS;
+}
+
+void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) {
+    [graphicsPipeline->graphicsPipeline->graphicsPipeline release];
+    free(graphicsPipeline->graphicsPipeline);
+}

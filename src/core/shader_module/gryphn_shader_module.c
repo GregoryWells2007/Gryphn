@@ -3,6 +3,7 @@
 
 gnReturnCode gnCreateShaderModule(struct gnShaderModule_t* module, struct gnOutputDevice_t* device, struct gnShaderModuleInfo_t shaderModuleInfo) {
     module->device = device;
+    module->info = shaderModuleInfo;
     return device->deviceFunctions->_gnCreateShaderModule(module, device, shaderModuleInfo);
 }
 

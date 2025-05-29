@@ -3,6 +3,7 @@
 
 gnReturnCode gnCreateRenderPassDescriptor(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, struct gnRenderPassDescriptorInfo_t info) {
     renderPass->device = device;
+    renderPass->info = info;
     return device->deviceFunctions->_gnCreateRenderPassDescriptor(renderPass, device, info);
 }
 

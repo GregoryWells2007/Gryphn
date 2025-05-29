@@ -18,6 +18,7 @@ struct gnPlatformShaderModule_t;
 
 typedef struct gnShaderModule_t {
     struct gnPlatformShaderModule_t* shaderModule;
+    struct gnShaderModuleInfo_t info;
     struct gnOutputDevice_t* device;
 } gnShaderModule;
 

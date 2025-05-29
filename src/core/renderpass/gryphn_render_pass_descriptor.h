@@ -45,6 +45,7 @@ struct gnPlatformRenderPassDescriptor_t;
 
 typedef struct gnRenderPassDescriptor_t {
     struct gnPlatformRenderPassDescriptor_t* renderPassDescriptor;
+    struct gnRenderPassDescriptorInfo_t info;
     struct gnOutputDevice_t* device;
 } gnRenderPassDescriptor;
 
