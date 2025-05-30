@@ -1,3 +1,15 @@
+typedef struct gnClearValue {
+    union {
+      struct {
+          float r, g, b, a;
+      };
+
+      struct {
+          float red, green, blue, alpha;
+      };
+    };
+} gnClearValue;
+
 #pragma once
 typedef struct gnColor {
     union {

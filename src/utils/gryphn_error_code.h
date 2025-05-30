@@ -27,13 +27,15 @@ typedef enum gnReturnCode_t {
     GN_UNKNOWN_SUBPASS,
     GN_FAILED_TO_CREATE_FRAMEBUFFER,
     GN_DIVERGENT_RENDERPASS,
-    GN_FAILED_TO_CREATE_COMMAND_POOL
+    GN_FAILED_TO_CREATE_COMMAND_POOL,
+    GN_FAILED_TO_BEGIN_RECORDING,
+    GN_FAIELD_TO_END_RECORDING,
+    GN_FAILED_TO_ALLOCATE_COMMAND_BUFFERS
 } gnReturnCode;
 
 typedef gnReturnCode gnErrorCode;
-const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
+static const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
     switch (returnCode) {
-    default: return "GN_FORGOT";
     case GN_SUCCESS: return "GN_SUCCESS";
     case GN_UNKNOWN_RENDERINGAPI: return "GN_UNKNOWN_RENDERINGAPI";
     case GN_UNSUPPORTED_RENDERING_API: return "GN_UNSUPPORTED_RENDERING_API";
@@ -41,6 +43,7 @@ const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
     case GN_FAILED_CREATE_INSTANCE: return "GN_FAILED_CREATE_INSTANCE";
     case GN_FAILED_TO_CREATE_DEBUGGER: return "GN_FAILED_TO_CREATE_DEBUGGER";
     case GN_FAILED_TO_CREATE_DEVICE: return "GN_FAILED_TO_CREATE_DEVICE";
+    case GN_FAILED_TO_ATTACH_WINDOW: return "GN_FAILED_TO_ATTACH_WINDOW";
     case GN_INVALID_INSTANCE: return "GN_INVALID_INSTANCE";
     case GN_DEBUGGER_EXISTS: return "GN_DEBUGGER_EXISTS";
     case GN_NO_SUPPORTED_FORMATS: return "GN_NO_SUPPORTED_FORMATS";
@@ -60,5 +63,8 @@ const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
     case GN_FAILED_TO_CREATE_FRAMEBUFFER: return "GN_FAILED_TO_CREATE_FRAMEBUFFER";
     case GN_DIVERGENT_RENDERPASS: return "GN_DIVERGENT_RENDERPASS";
     case GN_FAILED_TO_CREATE_COMMAND_POOL: return "GN_FAILED_TO_CREATE_COMMAND_POOL";
+    case GN_FAILED_TO_BEGIN_RECORDING: return "GN_FAILED_TO_BEGIN_RECORDING";
+    case GN_FAIELD_TO_END_RECORDING: return "GN_FAIELD_TO_END_RECORDING";
+    case GN_FAILED_TO_ALLOCATE_COMMAND_BUFFERS: return "GN_FAILED_TO_ALLOCATE_COMMAND_BUFFERS";
     }
 }

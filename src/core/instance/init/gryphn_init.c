@@ -82,3 +82,13 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnCreateCommandPool, "gnCreateCommandPoolFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyCommandPool, "gnDestroyCommandPoolFn");
 }
+
+void gnLoadCommandFunctions(struct gnDynamicLibrary_t* lib, struct gnCommandFunctions_t* functions) {
+    gnLoadDLLFunction(lib, functions->_gnCommandPoolAllocateCommandBuffers, "gnCommandPoolAllocateCommandBuffersFn");
+    gnLoadDLLFunction(lib, functions->_gnBeginCommandBuffer, "gnBeginCommandBufferFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandBeginRenderPass, "gnCommandBeginRenderPassFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandEndRenderPass, "gnCommandEndRenderPassFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandSetViewport, "gnCommandSetViewportFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandSetScissor, "gnCommandSetScissorFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandDraw, "gnCommandDraw");
+}

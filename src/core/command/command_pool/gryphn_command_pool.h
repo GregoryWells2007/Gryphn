@@ -8,6 +8,7 @@ typedef struct gnCommandPoolInfo_t {
 
 typedef struct gnCommandPool_t {
     struct gnPlatformCommandPool_t* commandPool;
+    struct gnCommandFunctions_t* commandFunctions;
     struct gnOutputDevice_t* device;
 } gnCommandPool;
 

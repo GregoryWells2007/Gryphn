@@ -13,6 +13,7 @@
 #include "framebuffer/gryphn_framebuffer.h"
 #include "command/command_pool/gryphn_command_pool.h"
 #include "command/command_buffer/gryphn_command_buffer.h"
+#include "renderpass/gryphn_render_pass.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -75,4 +76,15 @@ typedef struct gnDeviceFunctions_t {
 
 typedef struct gnCommandFunctions_t {
     gnReturnCode (*_gnCommandPoolAllocateCommandBuffers)(struct gnCommandBuffer_t* commandBuffers, uint32_t count, struct gnCommandPool_t* pool);
+    gnReturnCode (*_gnBeginCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
+    gnReturnCode (*_gnEndCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
+
+    void (*_gnCommandBeginRenderPass)(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo);
+    void (*_gnCommandEndRenderPass)(struct gnCommandBuffer_t* buffer);
+
+    void (*_gnCommandBindGraphicsPipeline)(struct gnCommandBuffer_t* buffer, struct gnGraphicsPipeline_t* graphicsPipeline);
+    void (*_gnCommandSetViewport)(struct gnCommandBuffer_t* buffer, struct gnViewport_t viewport);
+    void (*_gnCommandSetScissor)(struct gnCommandBuffer_t* buffer, struct gnScissor_t scissor);
+
+    void (*_gnCommandDraw)(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
 } gnCommandFunctions;
