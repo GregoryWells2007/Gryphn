@@ -31,7 +31,7 @@ typedef enum gnReturnCode_t {
 } gnReturnCode;
 
 typedef gnReturnCode gnErrorCode;
-static const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
+const char* gnErrorCodeToCString(enum gnReturnCode_t returnCode) {
     switch (returnCode) {
     default: return "GN_FORGOT";
     case GN_SUCCESS: return "GN_SUCCESS";

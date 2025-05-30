@@ -14,3 +14,5 @@
 #include <core/framebuffer/gryphn_framebuffer.h>
 #include <core/textures/gryphn_texture.h>
 #include <core/command/command_pool/gryphn_command_pool.h>
+#include <core/command/command_buffer/gryphn_command_buffer.h>
+#include <core/renderpass/gryphn_render_pass.h>

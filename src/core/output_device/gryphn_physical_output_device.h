@@ -14,7 +14,7 @@ typedef struct gnPhysicalDeviceProperties_t {
 } gnPhysicalDeviceProperties;
 
 typedef struct gnPhysicalDeviceFeatures_t {
-
+    gnBool supportsGeometryShader;
 } gnPhysicalDeviceFeatures;
 
 typedef enum gnQueueTypeFlags_e {

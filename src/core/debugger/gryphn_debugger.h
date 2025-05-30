@@ -53,7 +53,7 @@ typedef struct gnDebugger_t {
 gnReturnCode gnCreateDebugger(gnDebugger* debugger, const struct gnDebuggerInfo_t info);
 void gnDestroyDebugger(gnDebugger* debugger);
 
-static void gnDebuggerSetErrorMessage(gnDebugger* debugger, gnMessageData data) {
+void gnDebuggerSetErrorMessage(gnDebugger* debugger, gnMessageData data) {
     debugger->info.callback(
         GN_MESSAGE_ERROR,
         GN_DEBUG_MESSAGE_VALIDATION,

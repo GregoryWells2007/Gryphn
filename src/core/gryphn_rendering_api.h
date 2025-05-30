@@ -11,7 +11,7 @@ typedef enum gnRenderingAPI_t {
     GN_RENDERINGAPI_METAL
 } gnRenderingAPI;
 
-static gnString gnRenderingAPIName(gnRenderingAPI api) {
+gnString gnRenderingAPIName(gnRenderingAPI api) {
     switch (api) {
         case GN_RENDERINGAPI_NONE: return gnCreateString("GN_RENDERINGAPI_NONE");
         case GN_RENDERINGAPI_SOFTWARE: return gnCreateString("GN_RENDERINGAPI_SOFTWARE");

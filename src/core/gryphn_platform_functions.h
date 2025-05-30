@@ -12,6 +12,7 @@
 #include "pipelines/graphics_pipeline/gryphn_graphics_pipeline.h"
 #include "framebuffer/gryphn_framebuffer.h"
 #include "command/command_pool/gryphn_command_pool.h"
+#include "command/command_buffer/gryphn_command_buffer.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -71,3 +72,7 @@ typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnCreateCommandPool)(struct gnCommandPool_t* commandPool, struct gnOutputDevice_t* device, struct gnCommandPoolInfo_t info);
     void (*_gnDestroyCommandPool)(struct gnCommandPool_t* commandPool);
 } gnDeviceFunctions;
+
+typedef struct gnCommandFunctions_t {
+    gnReturnCode (*_gnCommandPoolAllocateCommandBuffers)(struct gnCommandBuffer_t* commandBuffers, uint32_t count, struct gnCommandPool_t* pool);
+} gnCommandFunctions;
