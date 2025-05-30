@@ -65,10 +65,10 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDevice* outputDevice, gnInstance* in
 }
 
 void gnWaitForDeviceFn(const gnOutputDevice* device) {
-    // vkDeviceWaitIdle(device->outputDevice->device);
+    vkDeviceWaitIdle(device->outputDevice->device);
 }
 
 void gnDestroyOutputDeviceFn(gnOutputDevice* device) {
-    // vkDestroyCommandPool(device.outputDevice->device, device.outputDevice->commandPool, nullptr);
     vkDestroyDevice(device->outputDevice->device, NULL);
+    free(device->outputDevice);
 }

@@ -26,6 +26,5 @@ typedef struct gnOutputDevice_t {
 } gnOutputDevice;
 
 gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo);
+void gnWaitForDevice(gnOutputDevice* device);
 void gnDestroyOutputDevice(gnOutputDevice* device);
-
-// inline void (*gnWaitForDevice)(const gnOutputDevice& device);

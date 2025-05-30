@@ -22,10 +22,10 @@ void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, struct gnRende
         .framebuffer = passInfo.framebuffer->framebuffer->framebuffer,
         .renderArea = {
             .extent = { passInfo.size.x, passInfo.size.y },
-            .offset = { passInfo.offset.x, passInfo.offset.x }
+            .offset = { passInfo.offset.x, passInfo.offset.y }
         },
         .clearValueCount = passInfo.clearValueCount,
-        .pClearValues = values
+        .pClearValues = values,
     };
 
     vkCmdBeginRenderPass(buffer->commandBuffer->buffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -39,9 +39,9 @@ void gnCommandBindGraphicsPipelineFn(struct gnCommandBuffer_t* buffer, struct gn
 void gnCommandSetViewportFn(struct gnCommandBuffer_t* buffer, struct gnViewport_t viewport) {
     VkViewport vkViewport = {
         .x = viewport.position.x,
-        .y = viewport.position.y,
+        .y = viewport.size.y,
         .width = viewport.size.x,
-        .height = viewport.size.y,
+        .height = -viewport.size.y,
         .minDepth = viewport.minDepth,
         .maxDepth = viewport.maxDepth
     };

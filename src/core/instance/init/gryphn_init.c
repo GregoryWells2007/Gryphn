@@ -91,6 +91,7 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnDestroyFence, "gnDestroyFenceFn");
     gnLoadDLLFunction(lib, functions->_gnSubmit, "gnSubmitFn");
     gnLoadDLLFunction(lib, functions->_gnPresent, "gnPresentFn");
+    gnLoadDLLFunction(lib, functions->_gnWaitForDevice, "gnWaitForDeviceFn");
 }
 
 void gnLoadCommandFunctions(struct gnDynamicLibrary_t* lib, struct gnCommandFunctions_t* functions) {

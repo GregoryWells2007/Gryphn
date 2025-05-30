@@ -89,6 +89,8 @@ typedef struct gnDeviceFunctions_t {
 
     gnReturnCode (*_gnSubmit)(struct gnOutputDevice_t* device, struct gnSubmitInfo_t submit);
     gnReturnCode (*_gnPresent)(struct gnOutputDevice_t* device, struct gnPresentInfo_t info);
+
+    void (*_gnWaitForDevice)(struct gnOutputDevice_t* device);
 } gnDeviceFunctions;
 
 typedef struct gnCommandFunctions_t {

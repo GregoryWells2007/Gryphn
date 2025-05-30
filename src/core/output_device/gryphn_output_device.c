@@ -17,6 +17,9 @@ gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* inst
     outputDevice->deviceInfo = deviceInfo;
     return instance->functions->_gnCreateOutputDevoce(outputDevice, instance, deviceInfo);
 }
+void gnWaitForDevice(gnOutputDevice *device) {
+    device->deviceFunctions->_gnWaitForDevice(device);
+}
 void gnDestroyOutputDevice(gnOutputDevice* device) {
     device->instance->functions->_gnDestroyOutputDevice(device);
 }

@@ -113,7 +113,7 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         .sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO,
         .polygonMode = vkGryphnPolygonMode(info.fillMode),
         .lineWidth = 1.0f,
-        .frontFace = ( info.cullMode.direction == GN_DIRECTION_CLOCK_WISE ) ? VK_FRONT_FACE_CLOCKWISE : VK_FRONT_FACE_COUNTER_CLOCKWISE,
+        .frontFace = ( info.cullMode.direction == GN_DIRECTION_CLOCK_WISE ) ? VK_FRONT_FACE_COUNTER_CLOCKWISE : VK_FRONT_FACE_CLOCKWISE,
         .cullMode = vkGryphnCullMode(info.cullMode.face),
         .depthBiasEnable = VK_FALSE,
         .depthBiasConstantFactor = 0.0f,
