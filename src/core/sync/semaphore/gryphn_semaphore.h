@@ -3,6 +3,7 @@
 
 typedef struct gnSemaphore_t {
     struct gnPlatformSemaphore_t* semaphore;
+    struct gnOutputDevice_t* device;
 } gnSemaphore;
 
 gnReturnCode gnCreateSemaphore(struct gnSemaphore_t* semaphore, struct gnOutputDevice_t* device);

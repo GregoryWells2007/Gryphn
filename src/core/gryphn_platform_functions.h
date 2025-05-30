@@ -14,6 +14,8 @@
 #include "command/command_pool/gryphn_command_pool.h"
 #include "command/command_buffer/gryphn_command_buffer.h"
 #include "renderpass/gryphn_render_pass.h"
+#include "sync/fence/gryphn_fence.h"
+#include "sync/semaphore/gryphn_semaphore.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -72,6 +74,15 @@ typedef struct gnDeviceFunctions_t {
 
     gnReturnCode (*_gnCreateCommandPool)(struct gnCommandPool_t* commandPool, struct gnOutputDevice_t* device, struct gnCommandPoolInfo_t info);
     void (*_gnDestroyCommandPool)(struct gnCommandPool_t* commandPool);
+
+    gnReturnCode (*_gnCreateSemaphore)(struct gnSemaphore_t* semaphore, struct gnOutputDevice_t* device);
+    void (*_gnDestroySemaphore)(struct gnSemaphore_t* semaphore);
+
+    gnReturnCode (*_gnCreateFence)(struct gnFence_t* fence, struct gnOutputDevice_t* device);
+    void (*_gnSignalFence)(struct gnFence_t* fence);
+    void (*_gnWaitForFence)(struct gnFence_t* fence, uint64_t timeout);
+    void (*_gnResetFence)(struct gnFence_t* fence);
+    void (*_gnDestroyFence)(struct gnFence_t* fence);
 } gnDeviceFunctions;
 
 typedef struct gnCommandFunctions_t {

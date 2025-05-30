@@ -4,6 +4,8 @@
 
 typedef struct gnFence_t {
     struct gnPlatformFence_t* fence;
+    struct gnOutputDevice_t* device;
+    gnBool signaled;
 } gnFence;
 
 gnReturnCode gnCreateFence(struct gnFence_t* fence, struct gnOutputDevice_t* device);
