@@ -17,6 +17,7 @@
 #include "sync/fence/gryphn_fence.h"
 #include "sync/semaphore/gryphn_semaphore.h"
 #include "core/submit/gryphn_submit.h"
+#include "core/present/gryphn_present.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -87,6 +88,7 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnDestroyFence)(struct gnFence_t* fence);
 
     gnReturnCode (*_gnSubmit)(struct gnOutputDevice_t* device, struct gnSubmitInfo_t submit);
+    gnReturnCode (*_gnPresent)(struct gnOutputDevice_t* device, struct gnPresentInfo_t info);
 } gnDeviceFunctions;
 
 typedef struct gnCommandFunctions_t {
