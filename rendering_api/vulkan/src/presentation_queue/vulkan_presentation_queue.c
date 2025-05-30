@@ -4,6 +4,7 @@
 #include "vulkan_surface/vulkan_surface.h"
 #include "core/debugger/gryphn_debugger.h"
 #include "textures/vulkan_texture.h"
+#include "sync/semaphore/vulkan_semaphore.h"
 
 gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
@@ -107,6 +108,13 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     }
 
     return GN_SUCCESS;
+}
+
+void gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
+    vkAcquireNextImageKHR(
+        presentationQueue->outputDevice->outputDevice->device,
+        presentationQueue->presentationQueue->swapChain,
+        timeout, semaphore->semaphore->semaphore, VK_NULL_HANDLE, imageIndex);
 }
 
 void gnDestroyPresentationQueueFn(gnPresentationQueue* queue) {

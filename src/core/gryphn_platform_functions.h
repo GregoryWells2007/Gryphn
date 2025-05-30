@@ -58,6 +58,7 @@ typedef struct gnFunctions_t {
 #include "core/presentation_queue/gryphn_presentation_queue.h"
 typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo);
+    void (*_gnPresentationQueueGetImage)(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
     void (*_gnDestroyPresentationQueue)(gnPresentationQueue *presentationQueue);
 
     gnReturnCode (*_gnCreateShaderModule)(struct gnShaderModule_t* module, struct gnOutputDevice_t* device, struct gnShaderModuleInfo_t shaderModuleInfo);
@@ -88,6 +89,7 @@ typedef struct gnDeviceFunctions_t {
 typedef struct gnCommandFunctions_t {
     gnReturnCode (*_gnCommandPoolAllocateCommandBuffers)(struct gnCommandBuffer_t* commandBuffers, uint32_t count, struct gnCommandPool_t* pool);
     gnReturnCode (*_gnBeginCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
+    void (*_gnResetCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
     gnReturnCode (*_gnEndCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
 
     void (*_gnCommandBeginRenderPass)(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo);

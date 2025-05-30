@@ -3,6 +3,7 @@
 #include <core/output_device/gryphn_output_device.h>
 #include <core/window_surface/gryphn_surface.h>
 #include <utils/types/gryphn_image_format.h>
+#include <core/sync/semaphore/gryphn_semaphore.h>
 
 typedef struct gnPresentationQueueInfo_t {
     uint32_t minImageCount;
@@ -25,4 +26,5 @@ typedef struct gnPresentationQueue_t {
 } gnPresentationQueue;
 
 gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo);
+void gnPresentationQueueGetImage(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
 void gnDestroyPresentationQueue(gnPresentationQueue* presentationQueue);

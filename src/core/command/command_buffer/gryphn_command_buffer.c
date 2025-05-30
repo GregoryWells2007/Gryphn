@@ -9,6 +9,10 @@ gnReturnCode gnCommandPoolAllocateCommandBuffers(struct gnCommandBuffer_t* buffe
     return commandPool->commandFunctions->_gnCommandPoolAllocateCommandBuffers(buffers, count, commandPool);
 }
 
+void gnResetCommandBuffer(struct gnCommandBuffer_t* commandBuffer) {
+    commandBuffer->commandPool->commandFunctions->_gnResetCommandBuffer(commandBuffer);
+}
+
 gnReturnCode gnBeginCommandBuffer(struct gnCommandBuffer_t* commandBuffer) {
     return commandBuffer->commandPool->commandFunctions->_gnBeginCommandBuffer(commandBuffer);
 }

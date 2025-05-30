@@ -23,6 +23,11 @@ gnReturnCode gnCommandPoolAllocateCommandBuffersFn(struct gnCommandBuffer_t* com
     return GN_SUCCESS;
 }
 
+void gnResetCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
+    vkResetCommandBuffer(commandBuffer->commandBuffer->buffer, 0);
+}
+
+
 gnReturnCode gnBeginCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
     VkCommandBufferBeginInfo beginInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO

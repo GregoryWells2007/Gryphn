@@ -70,6 +70,7 @@ void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* funct
 
 void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFunctions_t* functions) {
     gnLoadDLLFunction(lib, functions->_gnCreatePresentationQueue, "gnCreatePresentationQueueFn");
+    gnLoadDLLFunction(lib, functions->_gnPresentationQueueGetImage, "gnPresentationQueueGetImageFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyPresentationQueue, "gnDestroyPresentationQueueFn");
     gnLoadDLLFunction(lib, functions->_gnCreateShaderModule, "gnCreateShaderModuleFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyShaderModule, "gnDestroyShaderModuleFn");
@@ -93,9 +94,12 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
 void gnLoadCommandFunctions(struct gnDynamicLibrary_t* lib, struct gnCommandFunctions_t* functions) {
     gnLoadDLLFunction(lib, functions->_gnCommandPoolAllocateCommandBuffers, "gnCommandPoolAllocateCommandBuffersFn");
     gnLoadDLLFunction(lib, functions->_gnBeginCommandBuffer, "gnBeginCommandBufferFn");
+    gnLoadDLLFunction(lib, functions->_gnResetCommandBuffer, "gnResetCommandBufferFn");
+    gnLoadDLLFunction(lib, functions->_gnEndCommandBuffer, "gnEndCommandBufferFn");
     gnLoadDLLFunction(lib, functions->_gnCommandBeginRenderPass, "gnCommandBeginRenderPassFn");
     gnLoadDLLFunction(lib, functions->_gnCommandEndRenderPass, "gnCommandEndRenderPassFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandBindGraphicsPipeline, "gnCommandBindGraphicsPipelineFn");
     gnLoadDLLFunction(lib, functions->_gnCommandSetViewport, "gnCommandSetViewportFn");
     gnLoadDLLFunction(lib, functions->_gnCommandSetScissor, "gnCommandSetScissorFn");
-    gnLoadDLLFunction(lib, functions->_gnCommandDraw, "gnCommandDraw");
+    gnLoadDLLFunction(lib, functions->_gnCommandDraw, "gnCommandDrawFn");
 }

@@ -8,5 +8,6 @@ typedef struct gnCommandBuffer_t {
 
 gnReturnCode gnCommandPoolAllocateCommandBuffers(struct gnCommandBuffer_t* buffers, uint32_t count, struct gnCommandPool_t* commandPool);
 
+void gnResetCommandBuffer(struct gnCommandBuffer_t* commandBuffer);
 gnReturnCode gnBeginCommandBuffer(struct gnCommandBuffer_t* commandBuffer);
 gnReturnCode gnEndCommandBuffer(struct gnCommandBuffer_t* commandBuffer);
