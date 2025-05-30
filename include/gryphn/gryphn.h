@@ -19,3 +19,4 @@
 #include <core/renderpass/gryphn_render_pass.h>
 #include <core/sync/semaphore/gryphn_semaphore.h>
 #include <core/sync/fence/gryphn_fence.h>
+#include <core/submit/gryphn_submit.h>

@@ -57,12 +57,26 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
         subpasses[i].pColorAttachments = colorAttachments;
     }
 
+    VkSubpassDependency* dependencies = malloc(sizeof(VkSubpassDependency) * info.dependencyCount);
+    for (int i = 0; i < info.dependencyCount; i++) {
+        dependencies[i] = (VkSubpassDependency) {
+            .srcSubpass = (info.dependencies[i].source == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].source,
+            .dstSubpass = (info.dependencies[i].destination == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].destination,
+            .srcStageMask = info.dependencies[i].soruceStageMask,
+            .srcAccessMask = info.dependencies[i].sourceAccessMask,
+            .dstStageMask = info.dependencies[i].destinationStageMask,
+            .dstAccessMask = info.dependencies[i].destinationAccessMask
+        };
+    }
+
     VkRenderPassCreateInfo renderPassInfo = (VkRenderPassCreateInfo){
         .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
         .attachmentCount = info.attachmentCount,
         .pAttachments = attachments,
         .subpassCount = info.subpassCount,
-        .pSubpasses = subpasses
+        .pSubpasses = subpasses,
+        .dependencyCount = info.dependencyCount,
+        .pDependencies = dependencies
     };
 
     if (vkCreateRenderPass(device->outputDevice->device, &renderPassInfo, NULL, &renderPass->renderPassDescriptor->renderPass) != VK_SUCCESS) {

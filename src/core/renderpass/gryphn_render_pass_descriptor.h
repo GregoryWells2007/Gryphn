@@ -3,6 +3,14 @@
 #include "stdint.h"
 #include "core/output_device/gryphn_output_device.h"
 
+typedef enum gnRenderPassStage_e {
+    GN_COLOR_ATTACHMENT_OUTPUT = 0x00000400
+} gnRenderPassStage; // I stole these from vulkan to make that conversion easier
+
+typedef enum gnRenderPassAccess_e {
+    GN_COLOR_ATTACHMENT_WRITE = 0x00000100
+} gnRenderPassAccess;
+
 typedef enum gnLoadOperation_e {
     GN_LOAD_OPERATION_LOAD, GN_LOAD_OPERATION_CLEAR, GN_LOAD_OPERATION_DONT_CARE
 } gnLoadOperation;
@@ -33,12 +41,27 @@ typedef struct gnSubpassInfo_t {
     struct gnSubpassAttachmentInfo_t* colorAttachments;
 } gnSubpassInfo;
 
+#define GN_SUBPASS_EXTERNAL -1
+
+typedef struct gnSubpassDependencyInfo_t {
+    int source, destination;
+
+    enum gnRenderPassStage_e soruceStageMask;
+    enum gnRenderPassAccess_e sourceAccessMask;
+
+    enum gnRenderPassStage_e destinationStageMask;
+    enum gnRenderPassAccess_e destinationAccessMask;
+} gnSubpassDependencyInfo;
+
 typedef struct gnRenderPassDescriptorInfo_t {
     uint32_t attachmentCount;
     struct gnRenderPassAttachmentInfo_t* attachmentInfos;
 
     uint32_t subpassCount;
     struct gnSubpassInfo_t* subpassInfos;
+
+    uint32_t dependencyCount;
+    struct gnSubpassDependencyInfo_t* dependencies;
 } gnRenderPassDescriptorInfo;
 
 struct gnPlatformRenderPassDescriptor_t;

@@ -16,6 +16,7 @@
 #include "renderpass/gryphn_render_pass.h"
 #include "sync/fence/gryphn_fence.h"
 #include "sync/semaphore/gryphn_semaphore.h"
+#include "core/submit/gryphn_submit.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstance* instance, struct gnInstanceInfo_t info);
@@ -84,6 +85,8 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnWaitForFence)(struct gnFence_t* fence, uint64_t timeout);
     void (*_gnResetFence)(struct gnFence_t* fence);
     void (*_gnDestroyFence)(struct gnFence_t* fence);
+
+    gnReturnCode (*_gnSubmit)(struct gnOutputDevice_t* device, struct gnSubmitInfo_t submit);
 } gnDeviceFunctions;
 
 typedef struct gnCommandFunctions_t {
