@@ -38,6 +38,7 @@ gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct g
     [framebuffer->framebuffer->framebuffer setRenderTargetWidth:info.size.x];
     [framebuffer->framebuffer->framebuffer setRenderTargetHeight:info.size.y];
 
+    int colorAttachment = 0;
     for (int i = 0; i < info.renderPassDescriptor->info.attachmentCount; i++) {
         gnBool wasDepthStencil = gnFalse;
         if (isDepthFormat(info.renderPassDescriptor->info.attachmentInfos[i].format)) {
@@ -54,7 +55,7 @@ gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct g
         }
 
         if(!wasDepthStencil) {
-            MTLRenderPassColorAttachmentDescriptor* color = framebuffer->framebuffer->framebuffer.colorAttachments[i];
+            MTLRenderPassColorAttachmentDescriptor* color = framebuffer->framebuffer->framebuffer.colorAttachments[colorAttachment];
             color.texture = info.attachments[i].texture->texture;
 
             color.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[i].loadOperation);
@@ -62,6 +63,8 @@ gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct g
 
             if (color.loadAction == MTLLoadActionClear)
                 color.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
+
+            colorAttachment++;
         }
     }
 

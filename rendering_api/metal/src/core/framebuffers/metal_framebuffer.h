@@ -6,3 +6,6 @@
 typedef struct gnPlatformFramebuffer_t {
     MTLRenderPassDescriptor* framebuffer;
 } gnPlatformFramebuffer;
+
+gnBool isDepthFormat(gnImageFormat format);
+gnBool isStencilFormat(gnImageFormat format);

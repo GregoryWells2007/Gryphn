@@ -94,6 +94,7 @@ struct gnPlatformGraphicsPipeline_t;
 typedef struct gnGraphicsPipeline_t {
     struct gnPlatformGraphicsPipeline_t* graphicsPipeline;
     struct gnOutputDevice_t* device;
+    struct gnGraphicsPipelineInfo_t info;
 } gnGraphicsPipeline;
 
 gnReturnCode gnCreateGraphicsPipeline(struct gnGraphicsPipeline_t* graphicsPipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t info);
