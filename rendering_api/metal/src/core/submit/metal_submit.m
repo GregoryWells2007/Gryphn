@@ -12,6 +12,7 @@ gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t i
 
     __block gnSemaphore* semsToSignal = info.signalSemaphores;
     __block int semsToSignalCount = info.signalCount;
+    __block gnFence* fenceToSignal = info.fence;
 
     for (int i = 0; i < info.commandBufferCount; i++) {
         id<MTLCommandBuffer> commandBuffer = info.commandBuffers[i].commandBuffer->commandBuffer;
@@ -20,6 +21,7 @@ gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t i
                 semsToSignal[c].semaphore->eventTriggered = gnTrue;
             }
         }];
+        fenceToSignal->signaled = gnTrue;
 
         [commandBuffer commit];
     }
