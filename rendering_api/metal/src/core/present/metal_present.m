@@ -5,6 +5,7 @@
 #include "core/sync/semaphore/metal_semaphore.h"
 #include "core/presentation_queue/metal_presentation_queue.h"
 #include "core/debugger/gryphn_debugger.h"
+#include "core/texture/metal_texture.h"
 #import <QuartzCore/CAMetalLayer.h>
 
 gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t info) {
@@ -24,6 +25,20 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
     passDesc.colorAttachments[0].clearColor = MTLClearColorMake(1.0f, 0, 0, 1.0f);
     id<MTLRenderCommandEncoder> render = [commandBuffer renderCommandEncoderWithDescriptor:passDesc];
     [render endEncoding];
+
+    id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
+
+    [blit copyFromTexture:info.presentationQueues[0].images[info.imageIndices[0]].texture->texture
+              sourceSlice:0
+              sourceLevel:0
+             sourceOrigin:(MTLOrigin){0, 0, 0}
+               sourceSize:(MTLSize){info.presentationQueues[0].info.imageSize.x, info.presentationQueues[0].info.imageSize.y, 1}
+               toTexture:drawable.texture
+        destinationSlice:0
+        destinationLevel:0
+       destinationOrigin:(MTLOrigin){0, 0, 0}];
+
+    [blit endEncoding];
 
     [commandBuffer presentDrawable:drawable];
     [commandBuffer commit];
