@@ -3,6 +3,7 @@
 #include "core/devices/metal_output_devices.h"
 #include "core/debugger/gryphn_debugger.h"
 #include "core/texture/metal_texture.h"
+#include "core/sync/semaphore/metal_semaphore.h"
 
 gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo) {
     if (presentationInfo.minImageCount > 3) {
@@ -43,6 +44,14 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     }
 
     return GN_SUCCESS;
+}
+
+void gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
+    semaphore->semaphore->eventTriggered = gnFalse;
+    *imageIndex = presentationQueue->presentationQueue->currentImage;
+    presentationQueue->presentationQueue->currentImage++;
+    presentationQueue->presentationQueue->currentImage %= presentationQueue->imageCount;
+    semaphore->semaphore->eventTriggered = gnTrue;
 }
 
 void gnDestroyPresentationQueueFn(gnPresentationQueue *presentationQueue) {

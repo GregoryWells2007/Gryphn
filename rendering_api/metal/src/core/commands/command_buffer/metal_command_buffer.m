@@ -5,17 +5,20 @@
 gnReturnCode gnCommandPoolAllocateCommandBuffersFn(struct gnCommandBuffer_t* commandBuffers, uint32_t count, struct gnCommandPool_t* pool) {
     for (int i = 0; i < count; i++) {
         commandBuffers[i].commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
-        commandBuffers[i].commandBuffer->commandBuffer = [pool->commandPool->commandQueue commandBuffer];
     }
 
     return GN_SUCCESS;
 }
-
-gnReturnCode gnBeginCommandBuffer(struct gnCommandBuffer_t* commandBuffer) {
+void gnResetCommandBufferFn(struct gnCommandBuffer_t *commandBuffer) {
+    // do nothing
+}
+gnReturnCode gnBeginCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
     commandBuffer->commandBuffer->boundGraphcisPipeline = NULL;
+    commandBuffer->commandBuffer->commandBuffer = [commandBuffer->commandPool->commandPool->commandQueue commandBuffer];
     return GN_SUCCESS;
 }
 
-gnReturnCode gnEndCommandBuffer(struct gnCommandBuffer_t* commandBuffer) {
+gnReturnCode gnEndCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
+    // [commandBuffer->commandBuffer->commandBuffer commit];
     return GN_SUCCESS;
 }

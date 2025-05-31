@@ -3,6 +3,7 @@
 
 gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo){
     presentationQueue->outputDevice = device;
+    presentationQueue->info = presentationInfo;
     return device->deviceFunctions->_gnCreatePresentationQueue(presentationQueue, device, presentationInfo);
 }
 

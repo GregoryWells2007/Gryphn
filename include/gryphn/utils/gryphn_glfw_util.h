@@ -21,4 +21,11 @@ gnReturnCode gnCreateGLFWWindowSurface(struct gnWindowSurface_t* windowSurface, 
     return gnCreateMacOSWindowSurface(windowSurface, instance, surfaceCreateInfo);
 }
 
+// gnReturnCode gnCreateGLFWWindowSurface(struct gnWindowSurface_t* windowSurface, struct gnInstance_t* instance, GLFWwindow* window) {
+//     gnMetalWindowSurfaceInfo surfaceCreateInfo = {
+//         .layer = (CAMetalLayer*)glfwGetCocoaWindow(window).contentView.layer;
+//     };
+//     return gnCreateMetalWindowSurface(windowSurface, instance, surfaceCreateInfo);
+// }
+
 #endif

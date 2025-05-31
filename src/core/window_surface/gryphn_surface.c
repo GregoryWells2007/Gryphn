@@ -65,7 +65,7 @@ uint32_t gnGetMaxImageCount(struct gnWindowSurface_t surface, struct gnPhysicalD
 uint32_t gnGetPreferredImageCount(struct gnWindowSurface_t surface, struct gnPhysicalDevice_t device) {
     struct gnSurfaceDetails_t surfaceDetails = surface.instance->functions->_gnGetSurfaceDetails(&surface, device);
 
-    uint32_t imageCount = surfaceDetails.minImageCount;
+    uint32_t imageCount = surfaceDetails.minImageCount + 1;
     if (surfaceDetails.maxImageCount > 0 && imageCount > surfaceDetails.maxImageCount) {
         imageCount = surfaceDetails.maxImageCount;
     }

@@ -15,11 +15,14 @@ gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurfac
     CAMetalLayer* layer = [CAMetalLayer layer];
     [layer setContentsScale:[window backingScaleFactor]];
     [layer setFramebufferOnly:YES];
+    [layer setPixelFormat:MTLPixelFormatBGRA8Unorm_sRGB];
+    [layer setFrame:view.bounds];
 
     [view setLayer:layer];
     [view setWantsLayer:YES];
 
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
+    windowSurface->windowSurface->layer = layer;
     return GN_SUCCESS;
 }
 
@@ -28,9 +31,6 @@ void gnDestroyWindowSurfaceFn(struct gnWindowSurface_t *windowSurface) {
 }
 
 struct gnSurfaceDetails_t gnGetSurfaceDetailsFn(
-    // struct gnWindowSurface_t* windowSurface,
-    // struct gnPhysicalDevice_t device,
-    // uint32_t* formatCount
     struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device
 ) {
     struct gnSurfaceDetails_t surfaceDetails;
