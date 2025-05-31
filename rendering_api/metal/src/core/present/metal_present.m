@@ -42,7 +42,7 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
 
     [commandBuffer presentDrawable:drawable];
     [commandBuffer commit];
-
+    device->outputDevice->executingCommandBuffer = commandBuffer;
 
     return GN_SUCCESS;
 }

@@ -17,6 +17,10 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDevice* outputDevice, gnInstance* in
     return GN_SUCCESS;
 }
 
+void gnWaitForDeviceFn(gnOutputDevice *device) {
+    [device->outputDevice->executingCommandBuffer waitUntilCompleted];
+}
+
 void gnDestroyOutputDeviceFn(gnOutputDevice* device) {
     for (int i = 0; i < device->outputDevice->queueCount; i++) {
         [device->outputDevice->queues[i] release];
