@@ -32,7 +32,7 @@
 
 #ifdef GN_PLATFORM_MACOS
     typedef struct gnMacOSWindowSurfaceInfo_t {
-        NSWindow* window;
+        CAMetalLayer* layer;
     } gnMacOSWindowSurfaceInfo;
 
     gnReturnCode gnCreateMacOSWindowSurface(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo);

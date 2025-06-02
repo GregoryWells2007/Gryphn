@@ -27,5 +27,5 @@ typedef struct gnPresentationQueue_t {
 } gnPresentationQueue;
 
 gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo);
-void gnPresentationQueueGetImage(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
+gnReturnCode gnPresentationQueueGetImage(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
 void gnDestroyPresentationQueue(gnPresentationQueue* presentationQueue);

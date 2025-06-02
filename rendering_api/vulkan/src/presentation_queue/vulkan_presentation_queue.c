@@ -110,11 +110,16 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     return GN_SUCCESS;
 }
 
-void gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
-    vkAcquireNextImageKHR(
+gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
+    VkResult result = vkAcquireNextImageKHR(
         presentationQueue->outputDevice->outputDevice->device,
         presentationQueue->presentationQueue->swapChain,
         timeout, semaphore->semaphore->semaphore, VK_NULL_HANDLE, imageIndex);
+
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
+    if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
+
+    return GN_SUCCESS;
 }
 
 void gnDestroyPresentationQueueFn(gnPresentationQueue* queue) {

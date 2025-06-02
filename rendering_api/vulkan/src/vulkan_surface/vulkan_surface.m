@@ -12,22 +12,12 @@
 
 #include "vulkan/vulkan_metal.h"
 gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
-    NSWindow* window = (__bridge NSWindow*)createInfo.window;
-    NSView* view = [window contentView];
-
-    CAMetalLayer* layer = [CAMetalLayer layer];
-    [layer setContentsScale:[window backingScaleFactor]];
-    [layer setFramebufferOnly:YES];
-
-    [view setLayer:layer];
-    [view setWantsLayer:YES];
-
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     VkMetalSurfaceCreateInfoEXT surfaceCreateInfo = {};
     surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;
     surfaceCreateInfo.pNext = NULL;
     surfaceCreateInfo.flags = 0;
-    surfaceCreateInfo.pLayer = layer;
+    surfaceCreateInfo.pLayer = createInfo.layer;
 
     VkResult result = vkCreateMetalSurfaceEXT(instance->instance->vk_instance, &surfaceCreateInfo, NULL, &windowSurface->windowSurface->surface);
     if (result != VK_SUCCESS)

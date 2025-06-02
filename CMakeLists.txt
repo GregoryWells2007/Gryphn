@@ -5,7 +5,13 @@ file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
     "src/*.cpp" "src/*.hpp"
     "src/*.c" "src/*.h"
 )
-add_library(Gryphn ${SOURCE_FILES})
+if(APPLE)
+
+file(GLOB_RECURSE METAL_FILES CONFIGURE_DEPENDS
+    "src/*.m")
+
+endif()
+add_library(Gryphn ${SOURCE_FILES} ${METAL_FILES})
 target_include_directories(Gryphn PUBLIC ${CMAKE_SOURCE_DIR}/gryphn/src/)
 target_include_directories(Gryphn PUBLIC ${CMAKE_SOURCE_DIR}/gryphn/include/)
 add_compile_definitions(GN_REVEAL_IMPL)
@@ -19,6 +25,16 @@ if(APPLE)
     add_compile_definitions(GN_PLATFORM_MACOS)
     add_subdirectory(rendering_api/metal/)
     add_subdirectory(rendering_api/vulkan/)
+
+    target_link_libraries(Gryphn
+        "-framework IOKit"
+        "-framework CoreFoundation"
+        "-framework CoreGraphics"
+        "-framework AppKit"
+        "-framework Metal"
+        "-framework QuartzCore"
+        "-framework MetalKit"
+    )
 endif()
 if(UNIX AND NOT APPLE)
     add_compile_definitions(GN_PLATFORM_LINUX)

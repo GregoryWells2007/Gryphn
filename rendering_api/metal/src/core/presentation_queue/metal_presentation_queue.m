@@ -46,12 +46,13 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     return GN_SUCCESS;
 }
 
-void gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
+gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
     semaphore->semaphore->eventTriggered = gnFalse;
     *imageIndex = presentationQueue->presentationQueue->currentImage;
     presentationQueue->presentationQueue->currentImage++;
     presentationQueue->presentationQueue->currentImage %= presentationQueue->imageCount;
     semaphore->semaphore->eventTriggered = gnTrue;
+    return GN_SUCCESS;
 }
 
 void gnDestroyPresentationQueueFn(gnPresentationQueue *presentationQueue) {

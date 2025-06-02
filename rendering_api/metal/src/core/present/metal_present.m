@@ -15,6 +15,9 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
 
     info.presentationQueues->info.surface.windowSurface->layer.device = device->outputDevice->device;
     id<CAMetalDrawable> drawable = [info.presentationQueues->info.surface.windowSurface->layer nextDrawable];
+    if (drawable == nil) {
+        return GN_FAILED_TO_CREATE_FRAMEBUFFER;
+    }
 
     id<MTLCommandBuffer> commandBuffer = [device->outputDevice->queues[info.queueIndex] commandBuffer];
 
@@ -42,6 +45,7 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
 
     [commandBuffer presentDrawable:drawable];
     [commandBuffer commit];
+    [commandBuffer waitUntilScheduled];
     device->outputDevice->executingCommandBuffer = commandBuffer;
 
     return GN_SUCCESS;

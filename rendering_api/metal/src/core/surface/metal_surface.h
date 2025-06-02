@@ -2,7 +2,7 @@
 #include "core/window_surface/gryphn_surface.h"
 #import <QuartzCore/QuartzCore.h>
 
-typedef struct gnPlatformWindowSurface_t{
+typedef struct gnPlatformWindowSurface_t {
     CAMetalLayer* layer;
 } gnPlatformWindowSurface;
 

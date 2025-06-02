@@ -9,20 +9,8 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
-    NSWindow* window = (__bridge NSWindow*)createInfo.window;
-    NSView* view = [window contentView];
-
-    CAMetalLayer* layer = [CAMetalLayer layer];
-    [layer setContentsScale:[window backingScaleFactor]];
-    [layer setFramebufferOnly:YES];
-    [layer setPixelFormat:MTLPixelFormatBGRA8Unorm_sRGB];
-    [layer setFrame:view.bounds];
-
-    [view setLayer:layer];
-    [view setWantsLayer:YES];
-
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
-    windowSurface->windowSurface->layer = layer;
+    windowSurface->windowSurface->layer = createInfo.layer;
     return GN_SUCCESS;
 }
 
