@@ -90,7 +90,7 @@ void vk_destroyDebugUtilsMessengerEXT(VkInstance instance, VkDebugUtilsMessenger
     }
 }
 
-gnReturnCode gnCreateDebuggerFn(gnDebugger* debugger, gnInstanceHandle instance, const struct gnDebuggerInfo_t info) {
+gnReturnCode gnCreateDebuggerFn(gnDebuggerHandle debugger, gnInstanceHandle instance, const struct gnDebuggerInfo_t info) {
     debugger->debugger = malloc(sizeof(gnPlatformDebugger));
 
     if (instance->valid == gnFalse) {
@@ -156,6 +156,6 @@ gnReturnCode gnCreateDebuggerFn(gnDebugger* debugger, gnInstanceHandle instance,
     return GN_SUCCESS;
 }
 
-void gnDestroyDebuggerFn(gnDebugger* debugger) {
+void gnDestroyDebuggerFn(gnDebuggerHandle debugger) {
     vk_destroyDebugUtilsMessengerEXT(debugger->instance->instance->vk_instance, debugger->debugger->debugMessenger, NULL);
 }

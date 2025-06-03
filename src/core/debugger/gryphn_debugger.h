@@ -44,16 +44,23 @@ typedef struct gnDebuggerInfo_t {
     void* userData;
 } gnDebuggerInfo;
 
-typedef struct gnDebugger_t {
+#ifdef GN_REVEAL_IMPL
+struct gnDebugger_t {
     struct gnPlatformDebugger_t* debugger;
     struct gnDebuggerInfo_t info;
     gnInstanceHandle instance;
-} gnDebugger;
+};
+#endif
+typedef struct gnDebugger_t* gnDebuggerHandle;
+typedef gnDebuggerHandle gnDebugger;
 
-gnReturnCode gnCreateDebugger(gnDebugger* debugger, const struct gnDebuggerInfo_t info);
-void gnDestroyDebugger(gnDebugger* debugger);
+gnReturnCode gnCreateDebugger(gnDebuggerHandle* debugger, const struct gnDebuggerInfo_t info);
+void gnDestroyDebugger(gnDebuggerHandle debugger);
 
-static void gnDebuggerSetErrorMessage(gnDebugger* debugger, gnMessageData data) {
+#ifdef GN_REVEAL_IMPL
+static void gnDebuggerSetErrorMessage(gnDebuggerHandle debugger, gnMessageData data) {
+    if (debugger == NULL) return;
+
     debugger->info.callback(
         GN_MESSAGE_ERROR,
         GN_DEBUG_MESSAGE_VALIDATION,
@@ -61,3 +68,4 @@ static void gnDebuggerSetErrorMessage(gnDebugger* debugger, gnMessageData data) 
         debugger->info.userData
     );
 }
+#endif

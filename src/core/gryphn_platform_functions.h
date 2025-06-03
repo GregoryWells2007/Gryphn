@@ -23,8 +23,8 @@ typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, struct gnInstanceInfo_t info);
     void (*_gnDestroyInstance)(gnInstanceHandle instance);
 
-    gnReturnCode (*_gnCreateDebugger)(gnDebugger* debugger, gnInstanceHandle instance, const struct gnDebuggerInfo_t info);
-    void (*_gnDestroyDebugger)(gnDebugger* debugger);
+    gnReturnCode (*_gnCreateDebugger)(gnDebuggerHandle debugger, gnInstanceHandle instance, const struct gnDebuggerInfo_t info);
+    void (*_gnDestroyDebugger)(gnDebuggerHandle debugger);
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
     gnBool (*_gnQueueCanPresentToSurface)(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface);

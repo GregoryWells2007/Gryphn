@@ -5,7 +5,7 @@
 struct gnPlatformInstance_t;
 struct gnFunctions_t;
 struct gnDynamicLibrary_t;
-struct gnDebugger_t;
+typedef struct gnDebugger_t* gnDebuggerHandle;
 
 typedef struct gnInstanceInfo_t {
     gnString  applicationName;
@@ -17,6 +17,7 @@ typedef struct gnInstanceInfo_t {
     gnRenderingAPI renderingAPI;
 } gnInstanceInfo;
 
+#ifdef GN_REVEAL_IMPL
 struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnBool valid,
@@ -29,12 +30,13 @@ struct gnInstance_t {
     struct gnDeviceFunctions_t* deviceFunctions;
     struct gnCommandFunctions_t* commandFunctions;
 
-    struct gnDebugger_t* debugger;
-} gnInstance_t;
-
+    gnDebuggerHandle debugger;
+};
+#endif
 typedef struct gnInstance_t* gnInstanceHandle;
+typedef struct gnInstance_t* gnInstance;
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, struct gnInstanceInfo_t info);
-void gnInstanceAttachDebugger(gnInstanceHandle istance, struct gnDebugger_t* debugger);
+void gnInstanceAttachDebugger(gnInstanceHandle istance, gnDebuggerHandle debugger);
 void gnInstanceReleaseDebugger(gnInstanceHandle instance);
 void gnDestroyInstance(gnInstanceHandle instance);

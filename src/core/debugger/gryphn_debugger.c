@@ -2,10 +2,11 @@
 #include <core/gryphn_platform_functions.h>
 #include "stdio.h"
 
-gnReturnCode gnCreateDebugger(gnDebugger* debugger, const struct gnDebuggerInfo_t info) {
-    debugger->info = info;
+gnReturnCode gnCreateDebugger(gnDebuggerHandle* debugger, const struct gnDebuggerInfo_t info) {
+    *debugger = malloc(sizeof(struct gnDebugger_t));
+    (*debugger)->info = info;
     return GN_SUCCESS;
 }
-void gnDestroyDebugger(gnDebugger* debugger) {
-    // debugger->instance->functions->_gnDestroyDebugger(debugger);
+void gnDestroyDebugger(gnDebuggerHandle debugger) {
+    free(debugger);
 }

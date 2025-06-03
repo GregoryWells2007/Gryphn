@@ -2,6 +2,7 @@
 #include "init/gryphn_init.h"
 #include <core/gryphn_platform_functions.h>
 #include "core/debugger/gryphn_debugger.h"
+#include "core/instance/gryphn_instance.h"
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, struct gnInstanceInfo_t info) {
     *instanceHandlePtr = malloc(sizeof(struct gnInstance_t));
@@ -42,4 +43,5 @@ void gnDestroyInstance(gnInstanceHandle instance) {
 
 void gnInstanceReleaseDebugger(gnInstanceHandle instance) {
     instance->debugger = NULL;
+    free(instance);
 }
