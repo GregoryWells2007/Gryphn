@@ -48,10 +48,31 @@ void gnWindowSetMTKView(NSWindow* window, MTKView* view) {
     [window setContentView:view];
 }
 
-CAMetalLayer* gnGetCAMetalLayer(NSWindow* window) {
-    MTKView* view = window.contentView;
-    return (CAMetalLayer*)view.layer;
+CAMetalLayer* gnCreateCAMetalLayer(NSWindow* window) {
+    CAMetalLayer* layer = [CAMetalLayer layer];
+    layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+    layer.frame = window.contentView.layer.bounds;
+    window.contentView.wantsLayer = YES;
+    window.contentView.layer = layer;
+    return layer;
 }
+
+CAMetalLayer* gnGetCAMetalLayer(NSWindow* window) {
+    return (CAMetalLayer*)window.contentView.layer;
+}
+
+void gnAttachMetalLayer(NSWindow* window, CAMetalLayer* layer) {
+    // CGSize newSize = window.contentView.bounds.size;
+    // CGFloat scale = window.contentView.window.backingScaleFactor;
+    // layer.drawableSize = CGSizeMake(newSize.width * scale, newSize.height * scale);
+    // CAMetalLayer* layer = [CAMetalLayer layer];
+    // layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
+    // layer.frame = window.contentView.layer.bounds;
+    // window.contentView.wantsLayer = YES;
+    // window.contentView.layer = layer;
+    layer.drawableSize = CGSizeMake(window.frame.size.width, window.frame.size.height);
+}
+
 
 /*
 CAMetalLayer* gnCreateMetalLayer(NSWindow* window) {

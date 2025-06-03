@@ -12,9 +12,11 @@ typedef void CAMetalLayer;
 typedef void MTKView;
 #endif
 
-MTKView* gnCreateMTKView(NSWindow* window);
-void gnWindowSetMTKView(NSWindow* window, MTKView* view);
+// MTKView* gnCreateMTKView(NSWindow* window);
+// void gnWindowSetMTKView(NSWindow* window, MTKView* view);
+CAMetalLayer* gnCreateCAMetalLayer(NSWindow* window);
 CAMetalLayer* gnGetCAMetalLayer(NSWindow* window);
+void gnAttachMetalLayer(NSWindow* window, CAMetalLayer* layer);
 
 // CAMetalLayer* gnCreateMetalLayer(NSWindow* window);
 // void gnAttachMetalLayer(NSWindow* window, CAMetalLayer* layer);
