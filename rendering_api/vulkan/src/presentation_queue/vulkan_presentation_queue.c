@@ -5,8 +5,9 @@
 #include "core/debugger/gryphn_debugger.h"
 #include "textures/vulkan_texture.h"
 #include "sync/semaphore/vulkan_semaphore.h"
+#include "stdio.h"
 
-gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDeviceHandle device, struct gnPresentationQueueInfo_t presentationInfo) {
+gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, struct gnPresentationQueueInfo_t presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
     vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface->windowSurface->surface);
@@ -95,22 +96,23 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
     imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
     imageViewCreateInfo.subresourceRange.layerCount = 1;
 
-    presentationQueue->images = malloc(sizeof(gnTexture) * presentationQueue->imageCount);
+    presentationQueue->images = malloc(sizeof(gnTextureHandle) * presentationQueue->imageCount);
     for (int i = 0; i < presentationQueue->imageCount; i++) {
-        presentationQueue->images[i].texture = malloc(sizeof(gnPlatformTexture));
+        presentationQueue->images[i] = malloc(sizeof(struct gnTexture_t));
+        presentationQueue->images[i]->texture = malloc(sizeof(gnPlatformTexture));
         imageViewCreateInfo.image = presentationQueue->presentationQueue->swapChainImages[i];
         if (vkCreateImageView(device->outputDevice->device, &imageViewCreateInfo, NULL, &presentationQueue->presentationQueue->swapChainImageViews[i]) != VK_SUCCESS) {
             return GN_FAILED_TO_CREATE_IMAGE_VIEW;
         }
 
-        presentationQueue->images[i].texture->image = presentationQueue->presentationQueue->swapChainImages[i];
-        presentationQueue->images[i].texture->imageView = presentationQueue->presentationQueue->swapChainImageViews[i];
+        presentationQueue->images[i]->texture->image = presentationQueue->presentationQueue->swapChainImages[i];
+        presentationQueue->images[i]->texture->imageView = presentationQueue->presentationQueue->swapChainImageViews[i];
     }
 
     return GN_SUCCESS;
 }
 
-gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
+gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueueHandle presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
     VkResult result = vkAcquireNextImageKHR(
         presentationQueue->outputDevice->outputDevice->device,
         presentationQueue->presentationQueue->swapChain,
@@ -122,7 +124,7 @@ gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueue* presentationQueu
     return GN_SUCCESS;
 }
 
-void gnDestroyPresentationQueueFn(gnPresentationQueue* queue) {
+void gnDestroyPresentationQueueFn(gnPresentationQueueHandle queue) {
     for (int i = 0; i < queue->imageCount; i++)
         vkDestroyImageView(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChainImageViews[i], NULL);
     vkDestroySwapchainKHR(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChain, NULL);

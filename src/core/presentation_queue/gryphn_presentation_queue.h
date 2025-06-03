@@ -4,6 +4,7 @@
 #include <core/window_surface/gryphn_surface.h>
 #include <utils/types/gryphn_image_format.h>
 #include <core/sync/semaphore/gryphn_semaphore.h>
+#include "core/gryphn_handles.h"
 
 typedef struct gnPresentationQueueInfo_t {
     uint32_t minImageCount;
@@ -17,15 +18,19 @@ typedef struct gnPresentationQueueInfo_t {
 
 struct gnPlatformPresentationQueue_t;
 
-typedef struct gnPresentationQueue_t {
+#ifdef GN_REVEAL_IMPL
+struct gnPresentationQueue_t {
     struct gnPlatformPresentationQueue_t* presentationQueue;
-    struct gnOutputDevice_t* outputDevice;
+    gnOutputDeviceHandle outputDevice;
     gnBool valid;
     uint32_t imageCount;
-    struct gnTexture_t* images;
+    gnTextureHandle* images;
     struct gnPresentationQueueInfo_t info;
-} gnPresentationQueue;
+};
+#endif
 
-gnReturnCode gnCreatePresentationQueue(gnPresentationQueue* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo);
-gnReturnCode gnPresentationQueueGetImage(gnPresentationQueue* presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
-void gnDestroyPresentationQueue(gnPresentationQueue* presentationQueue);
+gnReturnCode gnCreatePresentationQueue(gnPresentationQueueHandle* presentationQueue, struct gnOutputDevice_t* device, struct gnPresentationQueueInfo_t presentationInfo);
+gnReturnCode gnPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
+uint32_t gnGetPresentationQueueImageCount(gnPresentationQueueHandle presentationQueue);
+gnTextureHandle gnGetPresentationQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t index);
+void gnDestroyPresentationQueue(gnPresentationQueueHandle presentationQueue);

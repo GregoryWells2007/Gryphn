@@ -56,7 +56,7 @@ gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct g
 
         if(!wasDepthStencil) {
             MTLRenderPassColorAttachmentDescriptor* color = framebuffer->framebuffer->framebuffer.colorAttachments[colorAttachment];
-            color.texture = info.attachments[i].texture->texture;
+            color.texture = info.attachments[i]->texture->texture;
 
             color.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[i].loadOperation);
             color.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[i].storeOperation);

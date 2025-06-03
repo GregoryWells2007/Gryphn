@@ -13,8 +13,9 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
         while (!info.waitSemaphores[i].semaphore->eventTriggered) {}
     }
 
-    info.presentationQueues->info.surface->windowSurface->layer.device = device->outputDevice->device;
-    id<CAMetalDrawable> drawable = [info.presentationQueues->info.surface->windowSurface->layer nextDrawable];
+    for (int i =0 ; i < info.presentationQueueCount; i++) {
+    info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
+    id<CAMetalDrawable> drawable = [info.presentationQueues[i]->info.surface->windowSurface->layer nextDrawable];
     if (drawable == nil) {
         return GN_FAILED_TO_CREATE_FRAMEBUFFER;
     }
@@ -29,30 +30,30 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
     id<MTLRenderCommandEncoder> render = [commandBuffer renderCommandEncoderWithDescriptor:passDesc];
     [render endEncoding];
 
-    id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
+        id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
 
-    for (int i =0 ; i < info.presentationQueueCount; i++) {
-        [blit copyFromTexture:info.presentationQueues[i].images[info.imageIndices[i]].texture->texture
+        [blit copyFromTexture:info.presentationQueues[i]->images[info.imageIndices[i]]->texture->texture
                 sourceSlice:0
                 sourceLevel:0
                 sourceOrigin:(MTLOrigin){0, 0, 0}
-                sourceSize:(MTLSize){info.presentationQueues[i].info.imageSize.x, info.presentationQueues[i].info.imageSize.y, 1}
+                sourceSize:(MTLSize){info.presentationQueues[i]->info.imageSize.x, info.presentationQueues[i]->info.imageSize.y, 1}
                 toTexture:drawable.texture
             destinationSlice:0
             destinationLevel:0
         destinationOrigin:(MTLOrigin){0, 0, 0}];
+
+        [blit endEncoding];
+
+        [commandBuffer presentDrawable:drawable];
+        [commandBuffer commit];
+        device->outputDevice->executingCommandBuffer = commandBuffer;
     }
 
-    [blit endEncoding];
-
-    [commandBuffer presentDrawable:drawable];
-    [commandBuffer commit];
-    [commandBuffer waitUntilScheduled];
-    device->outputDevice->executingCommandBuffer = commandBuffer;
+    [device->outputDevice->executingCommandBuffer waitUntilScheduled];
 
     for (int  i = 0; i < info.presentationQueueCount; i++) {
-        if (info.presentationQueues[i].info.imageSize.x != info.presentationQueues[i].info.surface->windowSurface->layer.drawableSize.width ||
-            info.presentationQueues[i].info.imageSize.y != info.presentationQueues[i].info.surface->windowSurface->layer.drawableSize.height) {
+        if (info.presentationQueues[i]->info.imageSize.x != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.width ||
+            info.presentationQueues[i]->info.imageSize.y != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.height) {
                 return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
             }
     }

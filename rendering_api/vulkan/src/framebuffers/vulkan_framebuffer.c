@@ -8,7 +8,7 @@ gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct g
 
     VkImageView* attachments = malloc(sizeof(VkImageView) * info.attachmentCount);
     for (int i = 0; i < info.attachmentCount; i++)
-        attachments[i] = info.attachments[i].texture->imageView;
+        attachments[i] = info.attachments[i]->texture->imageView;
 
     VkFramebufferCreateInfo framebufferInfo = {
         .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,

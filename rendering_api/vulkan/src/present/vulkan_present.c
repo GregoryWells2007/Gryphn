@@ -10,7 +10,7 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
     for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i].semaphore->semaphore;
 
     VkSwapchainKHR* swapchains = malloc(sizeof(VkSwapchainKHR) * info.presentationQueueCount);
-    for (int i = 0; i < info.presentationQueueCount; i++) swapchains[i] = info.presentationQueues[i].presentationQueue->swapChain;
+    for (int i = 0; i < info.presentationQueueCount; i++) swapchains[i] = info.presentationQueues[i]->presentationQueue->swapChain;
 
     VkPresentInfoKHR presentInfo = {
         .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,

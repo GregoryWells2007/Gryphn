@@ -1,7 +1,7 @@
 #pragma once
 
-struct gnPlatformTexture_t;
-
-typedef struct gnTexture_t {
+#ifdef GN_REVEAL_IMPL
+struct gnTexture_t {
     struct gnPlatformTexture_t* texture;
-} gnTexture;
+};
+#endif

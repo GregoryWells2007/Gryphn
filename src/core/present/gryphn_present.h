@@ -6,7 +6,7 @@ typedef struct gnPresentInfo_t {
     uint32_t waitCount;
     struct gnSemaphore_t* waitSemaphores;
     uint32_t presentationQueueCount;
-    struct gnPresentationQueue_t* presentationQueues;
+    gnPresentationQueueHandle* presentationQueues;
     uint32_t* imageIndices;
     uint32_t queueIndex;
 } gnPresentInfo;
