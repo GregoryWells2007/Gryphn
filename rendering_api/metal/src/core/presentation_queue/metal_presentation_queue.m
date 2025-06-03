@@ -5,7 +5,7 @@
 #include "core/texture/metal_texture.h"
 #include "core/sync/semaphore/metal_semaphore.h"
 
-gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDevice* device, struct gnPresentationQueueInfo_t presentationInfo) {
+gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDeviceHandle device, struct gnPresentationQueueInfo_t presentationInfo) {
     if (presentationInfo.minImageCount > 3) {
         gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
             .message = gnCreateString("On Metal you cannot have more than 3 images in a presentation queue")

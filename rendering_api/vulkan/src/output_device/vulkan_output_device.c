@@ -5,7 +5,7 @@
 
 #include <stdio.h>
 
-gnReturnCode gnCreateOutputDeviceFn(gnOutputDevice* outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
+gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
 
     VkDeviceQueueCreateInfo* queueCreateInfos = malloc(sizeof(VkDeviceQueueCreateInfo) * deviceInfo.queueInfoCount);
@@ -64,11 +64,11 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDevice* outputDevice, gnInstanceHand
     return GN_SUCCESS;
 }
 
-void gnWaitForDeviceFn(const gnOutputDevice* device) {
+void gnWaitForDeviceFn(const gnOutputDeviceHandle device) {
     vkDeviceWaitIdle(device->outputDevice->device);
 }
 
-void gnDestroyOutputDeviceFn(gnOutputDevice* device) {
+void gnDestroyOutputDeviceFn(gnOutputDeviceHandle device) {
     vkDestroyDevice(device->outputDevice->device, NULL);
     free(device->outputDevice);
 }

@@ -17,14 +17,18 @@ typedef struct gnOutputDeviceInfo_t {
     struct gnPhysicalDevice_t physicalDevice;
 } gnOutputDeviceInfo;
 
-typedef struct gnOutputDevice_t {
+#ifdef GN_REVEAL_IMPL
+struct gnOutputDevice_t {
     struct gnPlatformOutputDevice_t* outputDevice;
     struct gnDeviceFunctions_t* deviceFunctions;
     struct gnOutputDeviceInfo_t deviceInfo;
     gnInstanceHandle instance;
     gnPhysicalDevice physicalDevice;
-} gnOutputDevice;
+};
+#endif
+typedef struct gnOutputDevice_t* gnOutputDeviceHandle;
+typedef gnOutputDeviceHandle gnOutputDevice;
 
-gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
-void gnWaitForDevice(gnOutputDevice* device);
-void gnDestroyOutputDevice(gnOutputDevice* device);
+gnReturnCode gnCreateOutputDevice(gnOutputDeviceHandle* outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
+void gnWaitForDevice(gnOutputDeviceHandle device);
+void gnDestroyOutputDevice(gnOutputDeviceHandle device);
