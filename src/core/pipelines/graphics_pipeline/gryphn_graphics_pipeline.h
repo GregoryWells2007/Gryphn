@@ -3,6 +3,7 @@
 #include <core/pipelines/gryphn_uniform_layout.h>
 #include <core/renderpass/gryphn_render_pass_descriptor.h>
 #include <core/shader_module/gryphn_shader_module.h>
+#include "utils/math/gryphn_vec2.h"
 
 typedef enum gnDynamicState_e {
     GN_DYNAMIC_VIEWPORT,

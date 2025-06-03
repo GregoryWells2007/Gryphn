@@ -1,6 +1,5 @@
 #include "gryphn_physical_output_device.h"
 #include "core/gryphn_platform_functions.h"
-#include "core/window_surface/gryphn_surface.h"
 #include "stdio.h"
 
 gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {
@@ -11,7 +10,7 @@ gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* coun
     return devices;
 }
 
-gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface) {
+gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
     if (queueIndex >= device.queueProperties.queueCount) {
         gnDebuggerSetErrorMessage(device.instance->debugger,
             (gnMessageData){
@@ -31,7 +30,7 @@ gnBool gnHasGraphicsQueue(const struct gnPhysicalDevice_t device) {
     }
     return gnFalse;
 }
-gnBool gnHasPresentQueue(const struct gnPhysicalDevice_t device, struct gnWindowSurface_t windowSurface) {
+gnBool gnHasPresentQueue(const struct gnPhysicalDevice_t device, gnWindowSurfaceHandle windowSurface) {
     for (int i = 0; i < device.queueProperties.queueCount; i++) {
         if (gnQueueCanPresentToSurface(device, i, windowSurface)) {
             return gnTrue;
@@ -54,7 +53,7 @@ int gnGetGraphicsQueueIndex(const struct gnPhysicalDevice_t device) {
     );
     return -1;
 }
-int gnGetPresentQueueIndex(const struct gnPhysicalDevice_t device, struct gnWindowSurface_t windowSurface) {
+int gnGetPresentQueueIndex(const struct gnPhysicalDevice_t device, gnWindowSurfaceHandle windowSurface) {
     for (int i = 0; i < device.queueProperties.queueCount; i++) {
         if (gnQueueCanPresentToSurface(device, i, windowSurface)) {
             return i;

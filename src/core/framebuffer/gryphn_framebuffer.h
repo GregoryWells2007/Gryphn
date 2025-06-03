@@ -1,6 +1,7 @@
 #pragma once
 #include "core/renderpass/gryphn_render_pass_descriptor.h"
 #include "core/textures/gryphn_texture.h"
+#include "utils/math/gryphn_vec2.h"
 
 typedef struct gnFramebufferInfo_t {
     struct gnRenderPassDescriptor_t* renderPassDescriptor;

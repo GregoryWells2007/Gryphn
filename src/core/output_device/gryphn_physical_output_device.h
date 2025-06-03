@@ -1,8 +1,8 @@
 #pragma once
-#include "core/instance/gryphn_instance.h"
+#include "utils/strings/gryphn_string.h"
+#include "core/gryphn_handles.h"
 
 struct gnPlatformPhysicalDevice_t;
-struct gnWindowSurface_t;
 
 typedef enum gnDeviceType_e {
     GN_DEDICATED_DEVICE, GN_INTEGRATED_DEVICE, GN_EXTERNAL_DEVICE
@@ -44,10 +44,10 @@ typedef struct gnPhysicalDevice_t {
 } gnPhysicalDevice;
 
 gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count);
-gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface);
+gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface);
 
 gnBool gnHasGraphicsQueue(const struct gnPhysicalDevice_t device);
-gnBool gnHasPresentQueue(const struct gnPhysicalDevice_t device, struct gnWindowSurface_t windowSurface);
+gnBool gnHasPresentQueue(const struct gnPhysicalDevice_t device, gnWindowSurfaceHandle windowSurface);
 
 int gnGetGraphicsQueueIndex(const struct gnPhysicalDevice_t device);
-int gnGetPresentQueueIndex(const struct gnPhysicalDevice_t device, struct gnWindowSurface_t windowSurface);
+int gnGetPresentQueueIndex(const struct gnPhysicalDevice_t device, gnWindowSurfaceHandle windowSurface);

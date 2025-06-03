@@ -49,9 +49,9 @@ gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstanceHandle instance, uint32_t* de
     return outputDevices;
 }
 
-gnBool gnQueueCanPresentToSurfaceFn(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface) {
+gnBool gnQueueCanPresentToSurfaceFn(const struct gnPhysicalDevice_t device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
     VkBool32 supportsPresent = false;
-    vkGetPhysicalDeviceSurfaceSupportKHR(device.physicalDevice->device, queueIndex, windowSurface.windowSurface->surface, &supportsPresent);
+    vkGetPhysicalDeviceSurfaceSupportKHR(device.physicalDevice->device, queueIndex, windowSurface->windowSurface->surface, &supportsPresent);
     if (supportsPresent)
         return gnTrue;
     return gnFalse;

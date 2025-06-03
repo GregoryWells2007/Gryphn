@@ -1,5 +1,7 @@
 #pragma once
-#include "gryphn_surface.h"
+#include <platform/gryphn_platform_include.h>
+#include "core/gryphn_handles.h"
+#include "utils/gryphn_error_code.h"
 
 #ifdef GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11
@@ -8,7 +10,7 @@
             Window* window;
         } gnX11WindowSurfaceCreateInfo;
 
-        gnReturnCode gnCreateX11WindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo);
+        gnReturnCode gnCreateX11WindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo);
     #endif
     #ifdef GN_WINDOW_WAYLAND
         typedef struct gnWaylandWindowSurfaceInfo_t {
@@ -16,7 +18,7 @@
             wl_surface* surface;
         } gnWaylandWindowSurfaceInfo;
 
-        gnReturnCode gnCreateWaylandWindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
+        gnReturnCode gnCreateWaylandWindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
     #endif
 #endif
 
@@ -27,7 +29,7 @@
         HINSTANCE* instance;
     } gnWin32WindowSurfaceInfo;
 
-    gnReturnCode gnCreateWin32WindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnWin32WindowSurfaceInfo_t createInfo);
+    gnReturnCode gnCreateWin32WindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnWin32WindowSurfaceInfo_t createInfo);
 #endif
 
 #ifdef GN_PLATFORM_MACOS
@@ -35,5 +37,5 @@
         CAMetalLayer* layer;
     } gnMacOSWindowSurfaceInfo;
 
-    gnReturnCode gnCreateMacOSWindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
+    gnReturnCode gnCreateMacOSWindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
 #endif

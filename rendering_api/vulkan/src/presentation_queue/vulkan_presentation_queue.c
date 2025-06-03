@@ -9,7 +9,7 @@
 gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue, const gnOutputDeviceHandle device, struct gnPresentationQueueInfo_t presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
-    vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface.windowSurface->surface);
+    vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface->windowSurface->surface);
     if (details.formatCount == 0) {
         gnDebuggerSetErrorMessage(device->instance->debugger,
           (gnMessageData){
@@ -51,7 +51,7 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueue* presentationQueue,
 
     VkSwapchainCreateInfoKHR createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.surface = presentationInfo.surface.windowSurface->surface;
+    createInfo.surface = presentationInfo.surface->windowSurface->surface;
 
     createInfo.minImageCount = presentationInfo.minImageCount;
     createInfo.imageFormat = details.formats[index].format;

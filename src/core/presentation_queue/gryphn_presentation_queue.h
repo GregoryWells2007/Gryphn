@@ -8,7 +8,7 @@
 typedef struct gnPresentationQueueInfo_t {
     uint32_t minImageCount;
     struct gnUInt2_t imageSize;
-    struct gnWindowSurface_t surface;
+    gnWindowSurfaceHandle surface;
     struct gnSurfaceFormat_t format;
     enum gnImageSharingMode_e imageSharingMode;
     uint32_t queueFamilyCount;

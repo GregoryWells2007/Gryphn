@@ -1,5 +1,6 @@
 #pragma once
 #include <core/output_device/gryphn_physical_output_device.h>
+#include <utils/gryphn_error_code.h>
 
 struct gnPlatformOutputDevice_t;
 struct gnDeviceFunctions_t;

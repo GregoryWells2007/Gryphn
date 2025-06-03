@@ -51,8 +51,6 @@ struct gnDebugger_t {
     gnInstanceHandle instance;
 };
 #endif
-typedef struct gnDebugger_t* gnDebuggerHandle;
-typedef gnDebuggerHandle gnDebugger;
 
 gnReturnCode gnCreateDebugger(gnDebuggerHandle* debugger, const struct gnDebuggerInfo_t info);
 void gnDestroyDebugger(gnDebuggerHandle debugger);

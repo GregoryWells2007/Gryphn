@@ -2,6 +2,7 @@
 #include <output_device/vulkan_physical_device.h>
 #include <output_device/vulkan_output_devices.h>
 #include "vulkan_device_extensions.h"
+#include "core/instance/gryphn_instance.h"
 
 #include <stdio.h>
 

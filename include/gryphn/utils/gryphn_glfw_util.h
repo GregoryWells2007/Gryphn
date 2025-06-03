@@ -14,7 +14,7 @@
 #error "Must define GLFW_EXPOSE_NATIVE_COCOA on macos"
 #endif
 
-static gnReturnCode gnCreateGLFWWindowSurface(struct gnWindowSurface_t* windowSurface, struct gnInstance_t* instance, GLFWwindow* window) {
+static gnReturnCode gnCreateGLFWWindowSurface(gnWindowSurfaceHandle* windowSurface, struct gnInstance_t* instance, GLFWwindow* window) {
     gnMacOSWindowSurfaceInfo surfaceCreateInfo = {
         .layer = gnCreateCAMetalLayer(glfwGetCocoaWindow(window))
     };

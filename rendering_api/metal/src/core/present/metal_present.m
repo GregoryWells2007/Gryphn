@@ -13,8 +13,8 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
         while (!info.waitSemaphores[i].semaphore->eventTriggered) {}
     }
 
-    info.presentationQueues->info.surface.windowSurface->layer.device = device->outputDevice->device;
-    id<CAMetalDrawable> drawable = [info.presentationQueues->info.surface.windowSurface->layer nextDrawable];
+    info.presentationQueues->info.surface->windowSurface->layer.device = device->outputDevice->device;
+    id<CAMetalDrawable> drawable = [info.presentationQueues->info.surface->windowSurface->layer nextDrawable];
     if (drawable == nil) {
         return GN_FAILED_TO_CREATE_FRAMEBUFFER;
     }
@@ -51,8 +51,8 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
     device->outputDevice->executingCommandBuffer = commandBuffer;
 
     for (int  i = 0; i < info.presentationQueueCount; i++) {
-        if (info.presentationQueues[i].info.imageSize.x != info.presentationQueues[i].info.surface.windowSurface->layer.drawableSize.width ||
-            info.presentationQueues[i].info.imageSize.y != info.presentationQueues[i].info.surface.windowSurface->layer.drawableSize.height) {
+        if (info.presentationQueues[i].info.imageSize.x != info.presentationQueues[i].info.surface->windowSurface->layer.drawableSize.width ||
+            info.presentationQueues[i].info.imageSize.y != info.presentationQueues[i].info.surface->windowSurface->layer.drawableSize.height) {
                 return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
             }
     }

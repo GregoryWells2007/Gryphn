@@ -27,7 +27,7 @@ typedef struct gnFunctions_t {
     void (*_gnDestroyDebugger)(gnDebuggerHandle debugger);
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
-    gnBool (*_gnQueueCanPresentToSurface)(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface);
+    gnBool (*_gnQueueCanPresentToSurface)(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
 
 
     gnReturnCode (*_gnCreateOutputDevoce)(gnOutputDeviceHandle device, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
@@ -37,24 +37,24 @@ typedef struct gnFunctions_t {
 
     #ifdef GN_PLATFORM_LINUX
         #ifdef GN_WINDOW_X11
-            gnReturnCode (*_gnCreateX11WindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo);
+            gnReturnCode (*_gnCreateX11WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo);
         #endif
         #ifdef GN_WINDOW_WAYLAND
-            gnReturnCode (*_gnCreateWaylandWindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
+            gnReturnCode (*_gnCreateWaylandWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
         #endif
     #endif
 
 
     #ifdef GN_PLATFORM_WIN32
-        gnReturnCode (*_gnCreateWin32WindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnWin32WindowSurfaceInfo_t createInfo);
+        gnReturnCode (*_gnCreateWin32WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnWin32WindowSurfaceInfo_t createInfo);
     #endif
 
     #ifdef GN_PLATFORM_MACOS
-        gnReturnCode (*_gnCreateMacOSWindowSurface)(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
+        gnReturnCode (*_gnCreateMacOSWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
     #endif
 
-    void (*_gnDestroyWindowSurface)(struct gnWindowSurface_t* windowSurface);
-    struct gnSurfaceDetails_t (*_gnGetSurfaceDetails)(struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device);
+    void (*_gnDestroyWindowSurface)(gnWindowSurfaceHandle windowSurface);
+    struct gnSurfaceDetails_t (*_gnGetSurfaceDetails)(gnWindowSurfaceHandle windowSurface, struct gnPhysicalDevice_t device);
 } gnFunctions;
 
 #include "core/presentation_queue/gryphn_presentation_queue.h"

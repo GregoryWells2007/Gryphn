@@ -1,11 +1,11 @@
 #pragma once
 #include <gryphn/gryphn_utils.h>
 #include "core/gryphn_rendering_api.h"
+#include "core/gryphn_handles.h"
 
 struct gnPlatformInstance_t;
 struct gnFunctions_t;
 struct gnDynamicLibrary_t;
-typedef struct gnDebugger_t* gnDebuggerHandle;
 
 typedef struct gnInstanceInfo_t {
     gnString  applicationName;
@@ -33,8 +33,6 @@ struct gnInstance_t {
     gnDebuggerHandle debugger;
 };
 #endif
-typedef struct gnInstance_t* gnInstanceHandle;
-typedef struct gnInstance_t* gnInstance;
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, struct gnInstanceInfo_t info);
 void gnInstanceAttachDebugger(gnInstanceHandle istance, gnDebuggerHandle debugger);

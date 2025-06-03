@@ -1,6 +1,7 @@
 #pragma once
 #include "stdint.h"
 #include <core/output_device/gryphn_output_device.h>
+#include <utils/gryphn_error_code.h>
 
 typedef struct gnCommandPoolInfo_t {
     uint32_t queueIndex;
