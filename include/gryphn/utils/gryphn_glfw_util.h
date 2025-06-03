@@ -15,12 +15,8 @@
 #endif
 
 static gnReturnCode gnCreateGLFWWindowSurface(struct gnWindowSurface_t* windowSurface, struct gnInstance_t* instance, GLFWwindow* window) {
-    MTKView* view = gnCreateMTKView(glfwGetCocoaWindow(window));
-    gnWindowSetMTKView(glfwGetCocoaWindow(window), view);
-    CAMetalLayer* layer = gnGetCAMetalLayer(glfwGetCocoaWindow(window));
-
     gnMacOSWindowSurfaceInfo surfaceCreateInfo = {
-        .layer = layer
+        .layer = gnCreateCAMetalLayer(glfwGetCocoaWindow(window))
     };
 
     return gnCreateMacOSWindowSurface(windowSurface, instance, surfaceCreateInfo);

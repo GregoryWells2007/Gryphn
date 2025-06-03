@@ -31,15 +31,17 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
 
     id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
 
-    [blit copyFromTexture:info.presentationQueues[0].images[info.imageIndices[0]].texture->texture
-              sourceSlice:0
-              sourceLevel:0
-             sourceOrigin:(MTLOrigin){0, 0, 0}
-               sourceSize:(MTLSize){info.presentationQueues[0].info.imageSize.x, info.presentationQueues[0].info.imageSize.y, 1}
-               toTexture:drawable.texture
-        destinationSlice:0
-        destinationLevel:0
-       destinationOrigin:(MTLOrigin){0, 0, 0}];
+    for (int i =0 ; i < info.presentationQueueCount; i++) {
+        [blit copyFromTexture:info.presentationQueues[i].images[info.imageIndices[i]].texture->texture
+                sourceSlice:0
+                sourceLevel:0
+                sourceOrigin:(MTLOrigin){0, 0, 0}
+                sourceSize:(MTLSize){info.presentationQueues[i].info.imageSize.x, info.presentationQueues[i].info.imageSize.y, 1}
+                toTexture:drawable.texture
+            destinationSlice:0
+            destinationLevel:0
+        destinationOrigin:(MTLOrigin){0, 0, 0}];
+    }
 
     [blit endEncoding];
 
@@ -47,6 +49,13 @@ gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t
     [commandBuffer commit];
     [commandBuffer waitUntilScheduled];
     device->outputDevice->executingCommandBuffer = commandBuffer;
+
+    for (int  i = 0; i < info.presentationQueueCount; i++) {
+        if (info.presentationQueues[i].info.imageSize.x != info.presentationQueues[i].info.surface.windowSurface->layer.drawableSize.width ||
+            info.presentationQueues[i].info.imageSize.y != info.presentationQueues[i].info.surface.windowSurface->layer.drawableSize.height) {
+                return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
+            }
+    }
 
     return GN_SUCCESS;
 }
