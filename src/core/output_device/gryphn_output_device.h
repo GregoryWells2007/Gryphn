@@ -21,10 +21,10 @@ typedef struct gnOutputDevice_t {
     struct gnPlatformOutputDevice_t* outputDevice;
     struct gnDeviceFunctions_t* deviceFunctions;
     struct gnOutputDeviceInfo_t deviceInfo;
-    gnInstance* instance;
+    gnInstanceHandle instance;
     gnPhysicalDevice physicalDevice;
 } gnOutputDevice;
 
-gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo);
+gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
 void gnWaitForDevice(gnOutputDevice* device);
 void gnDestroyOutputDevice(gnOutputDevice* device);

@@ -8,7 +8,7 @@
 #import <Metal/Metal.h>
 #import <CoreGraphics/CoreGraphics.h>
 
-gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
+gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     windowSurface->windowSurface->layer = createInfo.layer;
     return GN_SUCCESS;

@@ -8,7 +8,7 @@
             Window* window;
         } gnX11WindowSurfaceCreateInfo;
 
-        gnReturnCode gnCreateX11WindowSurface(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnX11WindowSurfaceInfo_t createInfo);
+        gnReturnCode gnCreateX11WindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo);
     #endif
     #ifdef GN_WINDOW_WAYLAND
         typedef struct gnWaylandWindowSurfaceInfo_t {
@@ -16,7 +16,7 @@
             wl_surface* surface;
         } gnWaylandWindowSurfaceInfo;
 
-        gnReturnCode gnCreateWaylandWindowSurface(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
+        gnReturnCode gnCreateWaylandWindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
     #endif
 #endif
 
@@ -27,7 +27,7 @@
         HINSTANCE* instance;
     } gnWin32WindowSurfaceInfo;
 
-    gnReturnCode gnCreateWin32WindowSurface(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnWin32WindowSurfaceInfo_t createInfo);
+    gnReturnCode gnCreateWin32WindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnWin32WindowSurfaceInfo_t createInfo);
 #endif
 
 #ifdef GN_PLATFORM_MACOS
@@ -35,5 +35,5 @@
         CAMetalLayer* layer;
     } gnMacOSWindowSurfaceInfo;
 
-    gnReturnCode gnCreateMacOSWindowSurface(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
+    gnReturnCode gnCreateMacOSWindowSurface(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
 #endif

@@ -17,7 +17,7 @@ typedef struct gnInstanceInfo_t {
     gnRenderingAPI renderingAPI;
 } gnInstanceInfo;
 
-typedef struct gnInstance_t {
+struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnBool valid,
         loadDeviceFunctions,
@@ -30,9 +30,11 @@ typedef struct gnInstance_t {
     struct gnCommandFunctions_t* commandFunctions;
 
     struct gnDebugger_t* debugger;
-} gnInstance;
+} gnInstance_t;
 
-gnReturnCode gnCreateInstance(gnInstance* instance, struct gnInstanceInfo_t info);
-void gnInstanceAttachDebugger(gnInstance* istance, struct gnDebugger_t* debugger);
-void gnInstanceReleaseDebugger(gnInstance* instance);
-void gnDestroyInstance(gnInstance* instance);
+typedef struct gnInstance_t* gnInstanceHandle;
+
+gnReturnCode gnCreateInstance(gnInstanceHandle* instance, struct gnInstanceInfo_t info);
+void gnInstanceAttachDebugger(gnInstanceHandle istance, struct gnDebugger_t* debugger);
+void gnInstanceReleaseDebugger(gnInstanceHandle instance);
+void gnDestroyInstance(gnInstanceHandle instance);

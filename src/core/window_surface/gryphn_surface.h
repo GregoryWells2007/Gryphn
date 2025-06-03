@@ -20,7 +20,7 @@ typedef struct gnSurfaceDetails_t {
 
 typedef struct gnWindowSurface_t {
     struct gnPlatformWindowSurface_t* windowSurface;
-    gnInstance* instance;
+    gnInstanceHandle instance;
 } gnWindowSurface;
 void gnDestroyWindowSurface(struct gnWindowSurface_t* windowSurface);
 struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(

@@ -3,7 +3,7 @@
 #include "metal_output_devices.h"
 #include "core/window_surface/gryphn_surface.h"
 
-gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceCount) {
+gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstanceHandle instance, uint32_t* deviceCount) {
     NSArray *devices = MTLCopyAllDevices();
     *deviceCount = [devices count];
     gnPhysicalDevice* devicesList = (gnPhysicalDevice*)malloc(sizeof(gnPhysicalDevice) * *deviceCount);

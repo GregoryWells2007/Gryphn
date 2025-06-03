@@ -11,7 +11,7 @@
 
 
 #include "vulkan/vulkan_metal.h"
-gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstance* instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
+gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     VkMetalSurfaceCreateInfoEXT surfaceCreateInfo = {};
     surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;

@@ -47,7 +47,7 @@ typedef struct gnDebuggerInfo_t {
 typedef struct gnDebugger_t {
     struct gnPlatformDebugger_t* debugger;
     struct gnDebuggerInfo_t info;
-    gnInstance* instance;
+    gnInstanceHandle instance;
 } gnDebugger;
 
 gnReturnCode gnCreateDebugger(gnDebugger* debugger, const struct gnDebuggerInfo_t info);

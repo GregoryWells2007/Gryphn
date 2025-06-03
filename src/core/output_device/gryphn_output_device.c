@@ -3,7 +3,7 @@
 #include "core/gryphn_platform_functions.h"
 #include "core/instance/init/gryphn_init.h"
 
-gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstance* instance, struct gnOutputDeviceInfo_t deviceInfo) {
+gnReturnCode gnCreateOutputDevice(gnOutputDevice* outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
     if (instance->loadDeviceFunctions == gnFalse) {
         instance->deviceFunctions = malloc(sizeof(struct gnDeviceFunctions_t));
         gnLoadDeviceFunctions(instance->dynamicLib, instance->deviceFunctions);

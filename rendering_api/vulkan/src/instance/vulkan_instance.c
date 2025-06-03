@@ -29,7 +29,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: type = GN_DEBUG_MESSAGE_PERFORMANCE; break;
     }
 
-    gnInstance* instance = (gnInstance*)pUserData;
+    gnInstanceHandle instance = (gnInstanceHandle)pUserData;
 
     if (instance->debugger) {
         instance->debugger->info.callback(
@@ -53,7 +53,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_FALSE;
 }
 
-gnReturnCode gnCreateInstanceFn(gnInstance* instance, gnInstanceInfo instanceInfo) {
+gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
     #ifdef GN_PLATFORM_LINUX
@@ -127,7 +127,7 @@ gnReturnCode gnCreateInstanceFn(gnInstance* instance, gnInstanceInfo instanceInf
     return GN_SUCCESS;
 }
 
-void gnDestroyInstanceFn(gnInstance* instance) {
+void gnDestroyInstanceFn(gnInstanceHandle instance) {
     instance->valid = gnFalse;
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

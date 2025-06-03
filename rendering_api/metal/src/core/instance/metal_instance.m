@@ -4,11 +4,11 @@
 // #include "bridge/metal_bridge.h"
 
 
-gnReturnCode gnCreateInstanceFn(gnInstance* instance, gnInstanceInfo instanceInfo) {
+gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
     if (instance->instance == NULL) instance->instance = malloc(sizeof(gnPlatformInstance));
     return GN_SUCCESS;
 }
 
-void gnDestroyInstanceFn(gnInstance* instance) {
+void gnDestroyInstanceFn(gnInstanceHandle instance) {
     free(instance->instance);
 }

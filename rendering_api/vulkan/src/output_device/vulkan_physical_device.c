@@ -3,7 +3,7 @@
 #include <output_device/vulkan_device_extensions.h>
 #include <vulkan_surface/vulkan_surface.h>
 
-gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstance* instance, uint32_t* deviceCount) {
+gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstanceHandle instance, uint32_t* deviceCount) {
     vkEnumeratePhysicalDevices(instance->instance->vk_instance, deviceCount, NULL);
     if (deviceCount == 0)
         return NULL;

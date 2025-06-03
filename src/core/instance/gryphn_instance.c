@@ -3,7 +3,10 @@
 #include <core/gryphn_platform_functions.h>
 #include "core/debugger/gryphn_debugger.h"
 
-gnReturnCode gnCreateInstance(gnInstance* instance, struct gnInstanceInfo_t info) {
+gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, struct gnInstanceInfo_t info) {
+    *instanceHandlePtr = malloc(sizeof(struct gnInstance_t));
+    gnInstanceHandle instance = *instanceHandlePtr;
+
     if (!gnIsAPISupported(info.renderingAPI)) return GN_UNSUPPORTED_RENDERING_API;
     instance->loadDeviceFunctions = gnFalse;
     instance->debugger = NULL;
@@ -13,8 +16,7 @@ gnReturnCode gnCreateInstance(gnInstance* instance, struct gnInstanceInfo_t info
     gnLoadFunctions(instance->dynamicLib, instance->functions);
     return instance->functions->_gnCreateInstance(instance, info);
 }
-
-void gnInstanceAttachDebugger(gnInstance *instance, struct gnDebugger_t *debugger) {
+void gnInstanceAttachDebugger(gnInstanceHandle instance, struct gnDebugger_t *debugger) {
     if (instance->debugger != NULL) {
         gnDebuggerSetErrorMessage(debugger, (gnMessageData){
             .message = gnCreateString("Debugger already attached to instance")
@@ -31,13 +33,13 @@ void gnInstanceAttachDebugger(gnInstance *instance, struct gnDebugger_t *debugge
 }
 
 #include "stdio.h"
-void gnDestroyInstance(gnInstance* instance) {
+void gnDestroyInstance(gnInstanceHandle instance) {
     if (instance->debugger) {
         instance->functions->_gnDestroyDebugger(instance->debugger);
     }
     instance->functions->_gnDestroyInstance(instance);
 }
 
-void gnInstanceReleaseDebugger(gnInstance* instance) {
+void gnInstanceReleaseDebugger(gnInstanceHandle instance) {
     instance->debugger = NULL;
 }

@@ -3,7 +3,7 @@
 #include "core/window_surface/gryphn_surface.h"
 #include "stdio.h"
 
-gnPhysicalDevice* gnGetPhyscialDevices(gnInstance* instance, uint32_t* count) {
+gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {
     gnPhysicalDevice* devices = instance->functions->_gnGetPhysicalDevices(instance, count);
     for (int i = 0; i < *count; i++) {
         devices[i].instance = instance;

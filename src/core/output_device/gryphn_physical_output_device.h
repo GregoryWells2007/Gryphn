@@ -40,10 +40,10 @@ typedef struct gnPhysicalDevice_t {
     struct gnPhysicalDeviceFeatures_t features;
     struct gnPhysicalDeviceQueueProperties_t queueProperties;
 
-    gnInstance* instance;
+    gnInstanceHandle instance;
 } gnPhysicalDevice;
 
-gnPhysicalDevice* gnGetPhyscialDevices(gnInstance* instance, uint32_t* count);
+gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count);
 gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface);
 
 gnBool gnHasGraphicsQueue(const struct gnPhysicalDevice_t device);
