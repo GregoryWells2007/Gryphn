@@ -173,7 +173,7 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
 
     VkPipelineShaderStageCreateInfo* modules = malloc(sizeof(VkPipelineShaderStageCreateInfo) * info.shaderModuleCount);
     for (int i = 0; i < info.shaderModuleCount; i++) {
-        modules[i] = info.shaderModules[i].shaderModule->shaderStageInfo;
+        modules[i] = info.shaderModules[i]->shaderModule->shaderStageInfo;
     }
 
     VkGraphicsPipelineCreateInfo pipelineInfo = {

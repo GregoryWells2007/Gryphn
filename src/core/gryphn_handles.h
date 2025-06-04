@@ -11,3 +11,5 @@ GN_HANDLE(gnPresentationQueue);
 GN_HANDLE(gnTexture);
 GN_HANDLE(gnRenderPassDescriptor);
 GN_HANDLE(gnOutputDevice);
+GN_HANDLE(gnShaderModule);
+GN_HANDLE(gnGraphicsPipeline);

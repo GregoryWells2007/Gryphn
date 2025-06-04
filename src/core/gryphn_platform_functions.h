@@ -63,14 +63,14 @@ typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnPresentationQueueGetImage)(gnPresentationQueueHandle presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
     void (*_gnDestroyPresentationQueue)(gnPresentationQueueHandle presentationQueue);
 
-    gnReturnCode (*_gnCreateShaderModule)(struct gnShaderModule_t* module, gnOutputDeviceHandle device, struct gnShaderModuleInfo_t shaderModuleInfo);
-    void (*_gnDestroyShaderModule)(struct gnShaderModule_t* module);
+    gnReturnCode (*_gnCreateShaderModule)(gnShaderModuleHandle module, gnOutputDeviceHandle device, struct gnShaderModuleInfo_t shaderModuleInfo);
+    void (*_gnDestroyShaderModule)(gnShaderModuleHandle module);
 
     gnReturnCode (*_gnCreateRenderPassDescriptor)(gnRenderPassDescriptorHandle renderPass, gnOutputDeviceHandle device, struct gnRenderPassDescriptorInfo_t info);
     void (*_gnDestroyRenderPassDescriptor)(gnRenderPassDescriptorHandle renderPass);
 
-    gnReturnCode (*_gnCreateGraphicsPipeline)(struct gnGraphicsPipeline_t* pipeline, gnOutputDeviceHandle device, struct gnGraphicsPipelineInfo_t pipelineInfo);
-    void (*_gnDestroyGraphicsPipeline)(struct gnGraphicsPipeline_t* pipeline);
+    gnReturnCode (*_gnCreateGraphicsPipeline)(gnGraphicsPipelineHandle pipeline, gnOutputDeviceHandle device, struct gnGraphicsPipelineInfo_t pipelineInfo);
+    void (*_gnDestroyGraphicsPipeline)(gnGraphicsPipelineHandle pipeline);
 
     gnReturnCode (*_gnCreateFramebuffer)(struct gnFramebuffer_t* framebuffer, gnOutputDeviceHandle device, struct gnFramebufferInfo_t framebufferInfo);
     void (*_gnDestroyFramebuffer)(struct gnFramebuffer_t* framebuffer);

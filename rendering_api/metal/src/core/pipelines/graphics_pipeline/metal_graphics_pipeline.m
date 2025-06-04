@@ -51,10 +51,10 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
     }
 
     for (int i = 0; i < info.shaderModuleCount; i++) {
-        if (info.shaderModules[i].info.stage == GN_VERTEX_SHADER_MODULE) {
-            [descriptor setVertexFunction:info.shaderModules[i].shaderModule->function];
-        } else if (info.shaderModules[i].info.stage == GN_FRAGMENT_SHADER_MODULE) {
-            [descriptor setFragmentFunction:info.shaderModules[i].shaderModule->function];
+        if (info.shaderModules[i]->info.stage == GN_VERTEX_SHADER_MODULE) {
+            [descriptor setVertexFunction:info.shaderModules[i]->shaderModule->function];
+        } else if (info.shaderModules[i]->info.stage == GN_FRAGMENT_SHADER_MODULE) {
+            [descriptor setFragmentFunction:info.shaderModules[i]->shaderModule->function];
         } else {
             return GN_UNSUPPORTED_SHADER_MODULE;
         }

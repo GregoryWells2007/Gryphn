@@ -4,6 +4,7 @@
 #include <core/renderpass/gryphn_render_pass_descriptor.h>
 #include <core/shader_module/gryphn_shader_module.h>
 #include "utils/math/gryphn_vec2.h"
+#include "core/gryphn_handles.h"
 
 typedef enum gnDynamicState_e {
     GN_DYNAMIC_VIEWPORT,
@@ -84,19 +85,19 @@ typedef struct gnGraphicsPipelineInfo_t {
     struct gnUniformLayout_t* uniformLayout;
 
     uint32_t subpassIndex;
-    struct gnRenderPassDescriptor_t* renderPassDescriptor;
+    gnRenderPassDescriptorHandle renderPassDescriptor;
 
     uint32_t shaderModuleCount;
-    struct gnShaderModule_t* shaderModules;
+    gnShaderModuleHandle* shaderModules;
 } gnGraphicsPipelineInfo;
 
-struct gnPlatformGraphicsPipeline_t;
-
-typedef struct gnGraphicsPipeline_t {
+#ifdef GN_REVEAL_IMPL
+struct gnGraphicsPipeline_t {
     struct gnPlatformGraphicsPipeline_t* graphicsPipeline;
-    struct gnOutputDevice_t* device;
-    struct gnGraphicsPipelineInfo_t info;
-} gnGraphicsPipeline;
+    gnOutputDeviceHandle device;
+    gnGraphicsPipelineInfo info;
+};
+#endif
 
-gnReturnCode gnCreateGraphicsPipeline(struct gnGraphicsPipeline_t* graphicsPipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t info);
-void gnDestroyGraphicsPipeline(struct gnGraphicsPipeline_t* graphicsPipeline);
+gnReturnCode gnCreateGraphicsPipeline(gnGraphicsPipelineHandle* graphicsPipeline, gnOutputDeviceHandle device, struct gnGraphicsPipelineInfo_t info);
+void gnDestroyGraphicsPipeline(gnGraphicsPipelineHandle graphicsPipeline);
