@@ -66,8 +66,8 @@ typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnCreateShaderModule)(struct gnShaderModule_t* module, gnOutputDeviceHandle device, struct gnShaderModuleInfo_t shaderModuleInfo);
     void (*_gnDestroyShaderModule)(struct gnShaderModule_t* module);
 
-    gnReturnCode (*_gnCreateRenderPassDescriptor)(struct gnRenderPassDescriptor_t* renderPass, gnOutputDeviceHandle device, struct gnRenderPassDescriptorInfo_t info);
-    void (*_gnDestroyRenderPassDescriptor)(struct gnRenderPassDescriptor_t* renderPass);
+    gnReturnCode (*_gnCreateRenderPassDescriptor)(gnRenderPassDescriptorHandle renderPass, gnOutputDeviceHandle device, struct gnRenderPassDescriptorInfo_t info);
+    void (*_gnDestroyRenderPassDescriptor)(gnRenderPassDescriptorHandle renderPass);
 
     gnReturnCode (*_gnCreateGraphicsPipeline)(struct gnGraphicsPipeline_t* pipeline, gnOutputDeviceHandle device, struct gnGraphicsPipelineInfo_t pipelineInfo);
     void (*_gnDestroyGraphicsPipeline)(struct gnGraphicsPipeline_t* pipeline);

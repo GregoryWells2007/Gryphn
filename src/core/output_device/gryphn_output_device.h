@@ -27,8 +27,6 @@ struct gnOutputDevice_t {
     gnPhysicalDevice physicalDevice;
 };
 #endif
-typedef struct gnOutputDevice_t* gnOutputDeviceHandle;
-typedef gnOutputDeviceHandle gnOutputDevice;
 
 gnReturnCode gnCreateOutputDevice(gnOutputDeviceHandle* outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
 void gnWaitForDevice(gnOutputDeviceHandle device);

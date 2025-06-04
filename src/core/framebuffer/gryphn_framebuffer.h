@@ -1,9 +1,10 @@
 #pragma once
-#include "core/renderpass/gryphn_render_pass_descriptor.h"
 #include "utils/math/gryphn_vec2.h"
+#include "utils/gryphn_error_code.h"
+#include "core/gryphn_handles.h"
 
 typedef struct gnFramebufferInfo_t {
-    struct gnRenderPassDescriptor_t* renderPassDescriptor;
+    gnRenderPassDescriptorHandle renderPassDescriptor;
     uint32_t attachmentCount;
     gnTextureHandle* attachments;
     gnUInt2 size;
@@ -11,8 +12,8 @@ typedef struct gnFramebufferInfo_t {
 
 typedef struct gnFramebuffer_t {
     struct gnPlatformFramebuffer_t* framebuffer;
-    struct gnOutputDevice_t* device;
+    gnOutputDeviceHandle device;
 } gnFramebuffer;
 
-gnReturnCode gnCreateFramebuffer(struct gnFramebuffer_t* framebuffer, struct gnOutputDevice_t* device, struct gnFramebufferInfo_t framebufferInfo);
+gnReturnCode gnCreateFramebuffer(struct gnFramebuffer_t* framebuffer, gnOutputDeviceHandle device, struct gnFramebufferInfo_t framebufferInfo);
 void gnDestroyFramebuffer(struct gnFramebuffer_t* framebuffer);

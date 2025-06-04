@@ -9,3 +9,5 @@ GN_HANDLE(gnDebugger);
 GN_HANDLE(gnWindowSurface);
 GN_HANDLE(gnPresentationQueue);
 GN_HANDLE(gnTexture);
+GN_HANDLE(gnRenderPassDescriptor);
+GN_HANDLE(gnOutputDevice);

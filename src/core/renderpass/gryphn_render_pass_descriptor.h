@@ -2,6 +2,7 @@
 #include "utils/types/gryphn_image_format.h"
 #include "stdint.h"
 #include "core/output_device/gryphn_output_device.h"
+#include "core/gryphn_handles.h"
 
 typedef enum gnRenderPassStage_e {
     GN_COLOR_ATTACHMENT_OUTPUT = 0x00000400
@@ -64,13 +65,13 @@ typedef struct gnRenderPassDescriptorInfo_t {
     struct gnSubpassDependencyInfo_t* dependencies;
 } gnRenderPassDescriptorInfo;
 
-struct gnPlatformRenderPassDescriptor_t;
-
-typedef struct gnRenderPassDescriptor_t {
+#ifdef GN_REVEAL_IMPL
+struct gnRenderPassDescriptor_t {
     struct gnPlatformRenderPassDescriptor_t* renderPassDescriptor;
     struct gnRenderPassDescriptorInfo_t info;
     struct gnOutputDevice_t* device;
-} gnRenderPassDescriptor;
+};
+#endif
 
-gnReturnCode gnCreateRenderPassDescriptor(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, struct gnRenderPassDescriptorInfo_t info);
-void gnDestroyRenderPassDescriptor(struct gnRenderPassDescriptor_t* renderPass);
+gnReturnCode gnCreateRenderPassDescriptor(gnRenderPassDescriptorHandle* renderPass, gnOutputDeviceHandle device, struct gnRenderPassDescriptorInfo_t info);
+void gnDestroyRenderPassDescriptor(gnRenderPassDescriptorHandle renderPass);
