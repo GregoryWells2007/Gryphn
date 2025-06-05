@@ -15,8 +15,8 @@ gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t i
     __block gnFence* fenceToSignal = info.fence;
 
     for (int i = 0; i < info.commandBufferCount; i++) {
-        id<MTLCommandBuffer> commandBuffer = info.commandBuffers[i].commandBuffer->commandBuffer;
-        [info.commandBuffers[i].commandBuffer->commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+        id<MTLCommandBuffer> commandBuffer = info.commandBuffers[i]->commandBuffer->commandBuffer;
+        [info.commandBuffers[i]->commandBuffer->commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
             for (int c = 0; c < semsToSignalCount; c++) {
                 semsToSignal[c].semaphore->eventTriggered = gnTrue;
             }

@@ -2,9 +2,9 @@
 #include "core/commands/command_pool/metal_command_pool.h"
 #import <Metal/Metal.h>
 
-gnReturnCode gnCommandPoolAllocateCommandBuffersFn(struct gnCommandBuffer_t* commandBuffers, uint32_t count, struct gnCommandPool_t* pool) {
+gnReturnCode gnCommandPoolAllocateCommandBuffersFn(gnCommandBufferHandle* commandBuffers, uint32_t count, struct gnCommandPool_t* pool) {
     for (int i = 0; i < count; i++) {
-        commandBuffers[i].commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
+        commandBuffers[i]->commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
     }
 
     return GN_SUCCESS;

@@ -1,13 +1,17 @@
 #pragma once
-#include <core/command/command_pool/gryphn_command_pool.h>
+#include "stdint.h"
+#include "utils/gryphn_error_code.h"
+#include "core/gryphn_handles.h"
 
-typedef struct gnCommandBuffer_t {
+#ifdef GN_REVEAL_IMPL
+struct gnCommandBuffer_t {
     struct gnPlatformCommandBuffer_t* commandBuffer;
-    struct gnCommandPool_t* commandPool;
-} gnCommandBuffer;
+    gnCommandPoolHandle commandPool;
+};
+#endif
 
-gnReturnCode gnCommandPoolAllocateCommandBuffers(struct gnCommandBuffer_t* buffers, uint32_t count, struct gnCommandPool_t* commandPool);
+gnReturnCode gnCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* buffers, uint32_t count, gnCommandPoolHandle commandPool);
 
-void gnResetCommandBuffer(struct gnCommandBuffer_t* commandBuffer);
-gnReturnCode gnBeginCommandBuffer(struct gnCommandBuffer_t* commandBuffer);
-gnReturnCode gnEndCommandBuffer(struct gnCommandBuffer_t* commandBuffer);
+void gnResetCommandBuffer(gnCommandBufferHandle commandBuffer);
+gnReturnCode gnBeginCommandBuffer(gnCommandBufferHandle commandBuffer);
+gnReturnCode gnEndCommandBuffer(gnCommandBufferHandle commandBuffer);

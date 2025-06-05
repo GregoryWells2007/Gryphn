@@ -13,3 +13,5 @@ GN_HANDLE(gnRenderPassDescriptor);
 GN_HANDLE(gnOutputDevice);
 GN_HANDLE(gnShaderModule);
 GN_HANDLE(gnGraphicsPipeline);
+GN_HANDLE(gnCommandPool);
+GN_HANDLE(gnCommandBuffer);

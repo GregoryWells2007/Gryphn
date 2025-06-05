@@ -75,8 +75,8 @@ typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnCreateFramebuffer)(struct gnFramebuffer_t* framebuffer, gnOutputDeviceHandle device, struct gnFramebufferInfo_t framebufferInfo);
     void (*_gnDestroyFramebuffer)(struct gnFramebuffer_t* framebuffer);
 
-    gnReturnCode (*_gnCreateCommandPool)(struct gnCommandPool_t* commandPool, gnOutputDeviceHandle device, struct gnCommandPoolInfo_t info);
-    void (*_gnDestroyCommandPool)(struct gnCommandPool_t* commandPool);
+    gnReturnCode (*_gnCreateCommandPool)(gnCommandPoolHandle commandPool, gnOutputDeviceHandle device, struct gnCommandPoolInfo_t info);
+    void (*_gnDestroyCommandPool)(gnCommandPoolHandle commandPool);
 
     gnReturnCode (*_gnCreateSemaphore)(struct gnSemaphore_t* semaphore, gnOutputDeviceHandle device);
     void (*_gnDestroySemaphore)(struct gnSemaphore_t* semaphore);
@@ -87,24 +87,24 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnResetFence)(struct gnFence_t* fence);
     void (*_gnDestroyFence)(struct gnFence_t* fence);
 
-    gnReturnCode (*_gnSubmit)(gnOutputDeviceHandle device, struct gnSubmitInfo_t submit);
-    gnReturnCode (*_gnPresent)(gnOutputDeviceHandle device, struct gnPresentInfo_t info);
+    gnReturnCode (*_gnSubmit)(gnOutputDeviceHandle device, gnSubmitInfo submit);
+    gnReturnCode (*_gnPresent)(gnOutputDeviceHandle device, gnPresentInfo info);
 
     void (*_gnWaitForDevice)(gnOutputDeviceHandle device);
 } gnDeviceFunctions;
 
 typedef struct gnCommandFunctions_t {
-    gnReturnCode (*_gnCommandPoolAllocateCommandBuffers)(struct gnCommandBuffer_t* commandBuffers, uint32_t count, struct gnCommandPool_t* pool);
-    gnReturnCode (*_gnBeginCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
-    void (*_gnResetCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
-    gnReturnCode (*_gnEndCommandBuffer)(struct gnCommandBuffer_t* commandBuffer);
+    gnReturnCode (*_gnCommandPoolAllocateCommandBuffers)(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPoolHandle pool);
+    gnReturnCode (*_gnBeginCommandBuffer)(gnCommandBufferHandle commandBuffer);
+    void (*_gnResetCommandBuffer)(gnCommandBufferHandle commandBuffer);
+    gnReturnCode (*_gnEndCommandBuffer)(gnCommandBufferHandle commandBuffer);
 
-    void (*_gnCommandBeginRenderPass)(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo);
-    void (*_gnCommandEndRenderPass)(struct gnCommandBuffer_t* buffer);
+    void (*_gnCommandBeginRenderPass)(gnCommandBufferHandle buffer, struct gnRenderPassInfo_t passInfo);
+    void (*_gnCommandEndRenderPass)(gnCommandBufferHandle buffer);
 
-    void (*_gnCommandBindGraphicsPipeline)(struct gnCommandBuffer_t* buffer, struct gnGraphicsPipeline_t* graphicsPipeline);
-    void (*_gnCommandSetViewport)(struct gnCommandBuffer_t* buffer, struct gnViewport_t viewport);
-    void (*_gnCommandSetScissor)(struct gnCommandBuffer_t* buffer, struct gnScissor_t scissor);
+    void (*_gnCommandBindGraphicsPipeline)(gnCommandBufferHandle buffer, gnGraphicsPipelineHandle graphicsPipeline);
+    void (*_gnCommandSetViewport)(gnCommandBufferHandle buffer, gnViewport viewport);
+    void (*_gnCommandSetScissor)(gnCommandBufferHandle buffer, gnScissor scissor);
 
-    void (*_gnCommandDraw)(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
+    void (*_gnCommandDraw)(gnCommandBufferHandle buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
 } gnCommandFunctions;

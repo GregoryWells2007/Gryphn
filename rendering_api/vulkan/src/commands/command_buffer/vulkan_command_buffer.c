@@ -2,7 +2,7 @@
 #include "commands/command_pool/vulkan_command_pool.h"
 #include "output_device/vulkan_output_devices.h"
 
-gnReturnCode gnCommandPoolAllocateCommandBuffersFn(struct gnCommandBuffer_t* commandBuffers, uint32_t count, struct gnCommandPool_t* pool) {
+gnReturnCode gnCommandPoolAllocateCommandBuffersFn(gnCommandBufferHandle* commandBuffers, uint32_t count, struct gnCommandPool_t* pool) {
     VkCommandBufferAllocateInfo allocInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .commandPool = pool->commandPool->commandPool,
@@ -16,8 +16,8 @@ gnReturnCode gnCommandPoolAllocateCommandBuffersFn(struct gnCommandBuffer_t* com
         return GN_FAILED_TO_ALLOCATE_COMMAND_BUFFERS;
 
     for (int i = 0; i < count; i++) {
-        commandBuffers[i].commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
-        commandBuffers[i].commandBuffer->buffer = buffers[i];
+        commandBuffers[i]->commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
+        commandBuffers[i]->commandBuffer->buffer = buffers[i];
     }
 
     return GN_SUCCESS;

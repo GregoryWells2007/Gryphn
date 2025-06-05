@@ -21,7 +21,7 @@ gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t i
     for (int i = 0; i < info.waitCount; i++) waitStages[i] = vkGryphnWaitStage(info.waitStages[i]);
 
     VkCommandBuffer* commandBuffers = malloc(sizeof(VkCommandBuffer) * info.commandBufferCount);
-    for (int i = 0; i < info.commandBufferCount; i++) commandBuffers[i] = info.commandBuffers[i].commandBuffer->buffer;
+    for (int i = 0; i < info.commandBufferCount; i++) commandBuffers[i] = info.commandBuffers[i]->commandBuffer->buffer;
 
     VkSemaphore* signalSemaphores = malloc(sizeof(VkSemaphore) * info.signalCount);
     for (int i = 0; i < info.signalCount; i++) signalSemaphores[i] = info.signalSemaphores[i].semaphore->semaphore;
