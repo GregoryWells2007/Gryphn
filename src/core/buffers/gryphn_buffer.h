@@ -20,4 +20,5 @@ struct gnBuffer_t {
 #endif
 
 gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device, gnBufferInfo info);
+void gnBufferData(gnBufferHandle buffer, size_t dataSize, void* data);
 void gnDestroyBuffer(gnBufferHandle buffer);

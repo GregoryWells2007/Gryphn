@@ -49,6 +49,12 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
     vkBindBufferMemory(device->outputDevice->device, buffer->buffer->buffer, buffer->buffer->bufferMemory, 0);
     return GN_SUCCESS;
 }
+void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
+    void* bufferData;
+    vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, 0, dataSize, 0, &bufferData);
+    memcpy(bufferData, data, dataSize);
+    vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory);
+}
 void gnDestroyBufferFn(gnBufferHandle buffer) {
     vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->buffer, NULL);
     vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, NULL);

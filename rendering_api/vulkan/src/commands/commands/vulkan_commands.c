@@ -4,6 +4,7 @@
 #include "framebuffers/vulkan_framebuffer.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"
 #include "pipelines/graphics_pipeline/vulkan_graphics_pipeline.h"
+#include "buffers/vulkan_buffer.h"
 
 void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo) {
     VkClearValue* values = malloc(sizeof(VkClearValue) * passInfo.clearValueCount);
@@ -53,6 +54,11 @@ void gnCommandSetScissorFn(struct gnCommandBuffer_t* buffer, struct gnScissor_t 
         .offset = { scissor.position.x, scissor.position.y }
     };
     vkCmdSetScissor(buffer->commandBuffer->buffer, 0, 1, &vkScissor);
+}
+VkDeviceSize offsets[] = {0};
+void gnCommandBindBufferFn(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type)  {
+    if (type == GN_VERTEX_BUFFER)
+        vkCmdBindVertexBuffers(buffer->commandBuffer->buffer, 0, 1, &bufferToBind->buffer->buffer, offsets);
 }
 void gnCommandDrawFn(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     vkCmdDraw(buffer->commandBuffer->buffer, vertexCount, instanceCount, firstVertex, firstInstance);

@@ -17,7 +17,9 @@ void gnCommandSetViewport(struct gnCommandBuffer_t* buffer, struct gnViewport_t 
 void gnCommandSetScissor(struct gnCommandBuffer_t* buffer, struct gnScissor_t scissor) {
     buffer->commandPool->commandFunctions->_gnCommandSetScissor(buffer, scissor);
 }
-
+void gnCommandBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
+    buffer->commandPool->commandFunctions->_gnCommandBindBuffer(buffer, bufferToBind, type);
+}
 void gnCommandDraw(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     buffer->commandPool->commandFunctions->_gnCommandDraw(buffer, vertexCount, firstVertex, instanceCount, firstInstance);
 }

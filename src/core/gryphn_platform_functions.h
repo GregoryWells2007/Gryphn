@@ -83,7 +83,8 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnDestroySemaphore)(gnSemaphoreHandle semaphore);
 
     gnReturnCode (*_gnCreateBuffer)(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
-    gnReturnCode(*_gnDestroyBuffer)(gnBufferHandle buffer);
+    void (*_gnBufferData)(gnBufferHandle buffer, size_t size, void* data);
+    void (*_gnDestroyBuffer)(gnBufferHandle buffer);
 
     gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
     void (*_gnSignalFence)(gnFenceHandle fence);
@@ -110,5 +111,6 @@ typedef struct gnCommandFunctions_t {
     void (*_gnCommandSetViewport)(gnCommandBufferHandle buffer, gnViewport viewport);
     void (*_gnCommandSetScissor)(gnCommandBufferHandle buffer, gnScissor scissor);
 
+    void (*_gnCommandBindBuffer)(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type);
     void (*_gnCommandDraw)(gnCommandBufferHandle buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
 } gnCommandFunctions;

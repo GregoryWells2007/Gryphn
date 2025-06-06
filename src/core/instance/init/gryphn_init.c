@@ -85,6 +85,7 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnCreateSemaphore, "gnCreateSemaphoreFn");
     gnLoadDLLFunction(lib, functions->_gnDestroySemaphore, "gnDestroySemaphoreFn");
     gnLoadDLLFunction(lib, functions->_gnCreateBuffer, "gnCreateBufferFn");
+    gnLoadDLLFunction(lib, functions->_gnBufferData, "gnBufferDataFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyBuffer, "gnDestroyBufferFn");
     gnLoadDLLFunction(lib, functions->_gnCreateFence, "gnCreateFenceFn");
     gnLoadDLLFunction(lib, functions->_gnSignalFence, "gnSignalFenceFn");
@@ -106,5 +107,6 @@ void gnLoadCommandFunctions(struct gnDynamicLibrary_t* lib, struct gnCommandFunc
     gnLoadDLLFunction(lib, functions->_gnCommandBindGraphicsPipeline, "gnCommandBindGraphicsPipelineFn");
     gnLoadDLLFunction(lib, functions->_gnCommandSetViewport, "gnCommandSetViewportFn");
     gnLoadDLLFunction(lib, functions->_gnCommandSetScissor, "gnCommandSetScissorFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandBindBuffer, "gnCommandBindBufferFn");
     gnLoadDLLFunction(lib, functions->_gnCommandDraw, "gnCommandDrawFn");
 }

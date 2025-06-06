@@ -7,6 +7,9 @@ gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device,
     (*buffer)->device = device;
     return device->deviceFunctions->_gnCreateBuffer(*buffer, device, info);
 }
+void gnBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
+    buffer->device->deviceFunctions->_gnBufferData(buffer, dataSize, data);
+}
 void gnDestroyBuffer(gnBufferHandle buffer) {
     buffer->device->deviceFunctions->_gnDestroyBuffer(buffer);
 }
