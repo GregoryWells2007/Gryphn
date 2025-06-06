@@ -91,3 +91,31 @@ void gnCommandDrawFn(struct gnCommandBuffer_t* buffer, int vertexCount, int firs
             [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:firstVertex vertexCount:vertexCount instanceCount:instanceCount baseInstance:firstInstance];
     }
 }
+void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance)  {
+    id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
+    MTLPrimitiveType primative;
+    switch (buffer->commandBuffer->boundGraphcisPipeline->info.primitiveType) {
+    case GN_PRIMITIVE_POINTS: primative = MTLPrimitiveTypePoint; break;
+    case GN_PRIMITIVE_LINE_STRIP: primative = MTLPrimitiveTypeLineStrip; break;
+    case GN_PRIMITIVE_LINES: primative = MTLPrimitiveTypeLine; break;
+    case GN_PRIMITIVE_TRIANGLE_STRIP: primative = MTLPrimitiveTypeTriangleStrip; break;
+    case GN_PRIMITIVE_TRIANGLES: primative = MTLPrimitiveTypeTriangle; break;
+    }
+    [encoder
+        drawIndexedPrimitives:primative
+        indexCount:indexCount
+        indexType:((type == GN_UINT32) ? MTLIndexTypeUInt32 : MTLIndexTypeUInt16)
+        indexBuffer:buffer->commandBuffer->indexBuffer->buffer->buffer
+        indexBufferOffset:0
+        instanceCount:instanceCount
+        baseVertex:vertexOffset
+        baseInstance:firstInstance
+    ];
+
+    // [encoder drawIndexedPrimitives:(MTLPrimitiveType)
+        //     indexCount:indexCount
+        //     indexType:((type == GN_UINT32) ? MTLIndexTypeUInt32 : MTLIndexTypeUInt16)
+        //     indexBuffer:buffer->commandBuffer->indexBuffer->buffer->buffer
+        //     indexBufferOffset:firstIndex
+        // ];
+}
