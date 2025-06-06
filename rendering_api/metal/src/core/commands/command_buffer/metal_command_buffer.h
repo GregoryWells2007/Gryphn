@@ -8,4 +8,5 @@ typedef struct gnPlatformCommandBuffer_t {
     id<MTLCommandBuffer> commandBuffer;
     id<MTLCommandEncoder> encoder;
     struct gnGraphicsPipeline_t* boundGraphcisPipeline;
+    gnBufferHandle indexBuffer;
 } gnPlatformCommandBuffer;

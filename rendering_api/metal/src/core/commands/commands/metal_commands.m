@@ -70,10 +70,11 @@ void gnCommandSetScissorFn(struct gnCommandBuffer_t* buffer, struct gnScissor_t 
     [encoder setScissorRect:scissorRect];
 }
 void gnCommandBindBufferFn(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
-    if (type == GN_VERTEX_BUFFER) {
-        id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
+    id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
+    if (type == GN_VERTEX_BUFFER)
         [encoder setVertexBuffer:bufferToBind->buffer->buffer offset:0 atIndex:0];
-    }
+    else if (type == GN_INDEX_BUFFER)
+        buffer->commandBuffer->indexBuffer = bufferToBind;
 }
 void gnCommandDrawFn(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     if (buffer->commandBuffer->boundGraphcisPipeline != NULL) {

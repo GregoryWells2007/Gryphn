@@ -7,6 +7,7 @@
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
 switch (type) {
 case GN_VERTEX_BUFFER: return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
+case GN_INDEX_BUFFER: return VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
 }
 }
 
@@ -90,6 +91,7 @@ void VkCopyBuffer(VkBuffer source, VkBuffer destination, size_t size, VkCommandP
 gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));
     VkBufferUsageFlags usage = vkGryphnBufferType(info.type);
+    buffer->buffer->useStagingBuffer = gnFalse;
     if (info.usage == GN_STATIC_DRAW) {
         gnReturnCode createdBuffer = VkCreateBuffer(
             &buffer->buffer->stagingBuffer, &buffer->buffer->stagingBufferMemory,

@@ -23,3 +23,6 @@ void gnCommandBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBi
 void gnCommandDraw(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     buffer->commandPool->commandFunctions->_gnCommandDraw(buffer, vertexCount, firstVertex, instanceCount, firstInstance);
 }
+void gnCommandDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance) {
+    buffer->commandPool->commandFunctions->_gnCommandDrawIndexed(buffer, type, indexCount, firstIndex, vertexOffset, instanceCount, firstInstance);
+}

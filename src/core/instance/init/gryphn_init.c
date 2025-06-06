@@ -109,4 +109,5 @@ void gnLoadCommandFunctions(struct gnDynamicLibrary_t* lib, struct gnCommandFunc
     gnLoadDLLFunction(lib, functions->_gnCommandSetScissor, "gnCommandSetScissorFn");
     gnLoadDLLFunction(lib, functions->_gnCommandBindBuffer, "gnCommandBindBufferFn");
     gnLoadDLLFunction(lib, functions->_gnCommandDraw, "gnCommandDrawFn");
+    gnLoadDLLFunction(lib, functions->_gnCommandDrawIndexed, "gnCommandDrawIndexedFn");
 }

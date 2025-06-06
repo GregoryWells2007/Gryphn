@@ -3,8 +3,13 @@
 #include "utils/gryphn_error_code.h"
 #include <core/gryphn_handles.h>
 
+typedef enum gnIndexType {
+    GN_UINT16, GN_UINT32
+} gnIndexType;
+
 typedef enum gnBufferType {
-    GN_VERTEX_BUFFER = 0x00000001
+    GN_VERTEX_BUFFER = 0x00000001f,
+    GN_INDEX_BUFFER  = 0x00000002f,
 } gnBufferType;
 
 typedef enum gnBufferUsage {
