@@ -84,6 +84,7 @@ void VkCopyBuffer(VkBuffer source, VkBuffer destination, size_t size, VkCommandP
 
     vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
     vkQueueWaitIdle(queue);
+    vkFreeCommandBuffers(device, pool, 1, &commandBuffer);
 }
 
 gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
