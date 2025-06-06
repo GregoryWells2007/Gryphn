@@ -54,6 +54,12 @@ VkBlendOp vkGryphnBlendOperation(enum gnBlendOperation_e operation) {
     }
 }
 
+VkFormat vkGryphnVertexFormat(gnVertexFormat format) {
+    switch (format) {
+    case GN_FLOAT2: return VK_FORMAT_R32G32_SFLOAT;
+    }
+}
+
 gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(gnPlatformGraphicsPipeline));
 
@@ -71,10 +77,32 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         .pDynamicStates = dynamicStates
     };
 
+    int vertexAttributeCount = 0;
+    VkVertexInputAttributeDescription* attributeDescriptions = NULL;
+    VkVertexInputBindingDescription* bindingDescriptions = malloc(sizeof(VkVertexInputBindingDescription) * info.shaderInputLayout.bufferCount);
+    for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
+        bindingDescriptions[i].binding = info.shaderInputLayout.bufferAttributes[i].binding;
+        bindingDescriptions[i].stride = info.shaderInputLayout.bufferAttributes[i].size;
+        bindingDescriptions[i].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+        vertexAttributeCount += info.shaderInputLayout.bufferAttributes[i].attributeCount;
+    }
+    attributeDescriptions = malloc(sizeof(VkVertexInputBindingDescription) * vertexAttributeCount);
+    for (int i = 0, j = 0; j < info.shaderInputLayout.bufferCount; j++) {
+        for (int k = 0; k < info.shaderInputLayout.bufferAttributes[j].attributeCount; k++) {
+            attributeDescriptions[i].binding = j;
+            attributeDescriptions[i].location = info.shaderInputLayout.bufferAttributes[j].attributes[k].location;
+            attributeDescriptions[i].offset = info.shaderInputLayout.bufferAttributes[j].attributes[k].offset;
+            attributeDescriptions[i].format = vkGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[j].attributes[k].format);
+            i++;
+        }
+    }
+
     graphicsPipeline->graphicsPipeline->vertexInfo = (VkPipelineVertexInputStateCreateInfo){
         .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
-        .vertexBindingDescriptionCount = 0,
-        .vertexAttributeDescriptionCount = 0
+        .vertexBindingDescriptionCount = info.shaderInputLayout.bufferCount,
+        .pVertexBindingDescriptions = bindingDescriptions,
+        .vertexAttributeDescriptionCount = vertexAttributeCount,
+        .pVertexAttributeDescriptions = attributeDescriptions
     };
 
     graphicsPipeline->graphicsPipeline->inputAssembly = (VkPipelineInputAssemblyStateCreateInfo){
@@ -192,7 +220,7 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         .renderPass = info.renderPassDescriptor->renderPassDescriptor->renderPass,
         .subpass = info.subpassIndex,
         .basePipelineHandle = VK_NULL_HANDLE,
-        .basePipelineIndex = -1
+        .basePipelineIndex = -1,
     };
 
     if (vkCreateGraphicsPipelines(device->outputDevice->device, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &graphicsPipeline->graphicsPipeline->graphicsPipeline) != VK_SUCCESS) {
@@ -200,6 +228,8 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
     }
 
     free(dynamicStates);
+    free(bindingDescriptions);
+    free(attributeDescriptions);
     return GN_SUCCESS;
 }
 

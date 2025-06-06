@@ -5,6 +5,7 @@
 #include <core/shader_module/gryphn_shader_module.h>
 #include "utils/math/gryphn_vec2.h"
 #include "core/gryphn_handles.h"
+#include "core/shader_input/gryphn_shader_layout.h"
 
 typedef enum gnDynamicState_e {
     GN_DYNAMIC_VIEWPORT,
@@ -89,6 +90,7 @@ typedef struct gnGraphicsPipelineInfo_t {
 
     uint32_t shaderModuleCount;
     gnShaderModuleHandle* shaderModules;
+    gnShaderInputLayout shaderInputLayout;
 } gnGraphicsPipelineInfo;
 
 #ifdef GN_REVEAL_IMPL
