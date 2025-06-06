@@ -2,6 +2,7 @@
 #include "core/framebuffers/metal_framebuffer.h"
 #include "core/commands/command_buffer/metal_command_buffer.h"
 #include "core/pipelines/graphics_pipeline/metal_graphics_pipeline.h"
+#include "core/buffer/metal_buffer.h"
 #import <Metal/MTLRenderCommandEncoder.h>
 
 void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo) {
@@ -67,6 +68,12 @@ void gnCommandSetScissorFn(struct gnCommandBuffer_t* buffer, struct gnScissor_t 
     MTLScissorRect scissorRect = { scissor.position.x, scissor.position.y, scissor.size.x, scissor.size.y };
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setScissorRect:scissorRect];
+}
+void gnCommandBindBufferFn(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
+    if (type == GN_VERTEX_BUFFER) {
+        id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
+        [encoder setVertexBuffer:bufferToBind->buffer->buffer offset:0 atIndex:0];
+    }
 }
 void gnCommandDrawFn(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     if (buffer->commandBuffer->boundGraphcisPipeline != NULL) {
