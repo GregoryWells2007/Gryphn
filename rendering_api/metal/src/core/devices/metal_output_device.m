@@ -8,11 +8,12 @@
 gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
     outputDevice->outputDevice->device = deviceInfo.physicalDevice.physicalDevice->device.retain;
-    outputDevice->outputDevice->queueCount = deviceInfo.queueInfoCount;
-    outputDevice->outputDevice->queues = malloc(sizeof(id<MTLCommandQueue>) * deviceInfo.queueInfoCount);
-    for (int i = 0; i < deviceInfo.queueInfoCount; i++) {
-        outputDevice->outputDevice->queues[i] = outputDevice->outputDevice->device.newCommandQueue;
-    }
+    outputDevice->outputDevice->transferQueue = outputDevice->outputDevice->device.newCommandQueue;
+    // outputDevice->outputDevice->queueCount = deviceInfo.queueInfoCount;
+    // outputDevice->outputDevice->queues = malloc(sizeof(id<MTLCommandQueue>) * deviceInfo.queueInfoCount);
+    // for (int i = 0; i < deviceInfo.queueInfoCount; i++) {
+    //     outputDevice->outputDevice->queues[i] = outputDevice->outputDevice->device.newCommandQueue;
+    // }
 
     return GN_SUCCESS;
 }
@@ -22,9 +23,10 @@ void gnWaitForDeviceFn(gnOutputDeviceHandle device) {
 }
 
 void gnDestroyOutputDeviceFn(gnOutputDeviceHandle device) {
-    for (int i = 0; i < device->outputDevice->queueCount; i++) {
-        [device->outputDevice->queues[i] release];
-    }
+    // for (int i = 0; i < device->outputDevice->queueCount; i++) {
+    //     [device->outputDevice->queues[i] release];
+    // }
+    [device->outputDevice->transferQueue release];
     [device->outputDevice->device release];
     free(device->outputDevice);
 }

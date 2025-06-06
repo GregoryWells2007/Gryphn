@@ -20,7 +20,7 @@ gnReturnCode gnPresentFn(gnOutputDeviceHandle device, struct gnPresentInfo_t inf
         return GN_FAILED_TO_CREATE_FRAMEBUFFER;
     }
 
-    id<MTLCommandBuffer> commandBuffer = [device->outputDevice->queues[info.queueIndex] commandBuffer];
+    id<MTLCommandBuffer> commandBuffer = [device->outputDevice->transferQueue commandBuffer];
 
     MTLRenderPassDescriptor* passDesc = [MTLRenderPassDescriptor renderPassDescriptor];
     passDesc.colorAttachments[0].texture = drawable.texture;

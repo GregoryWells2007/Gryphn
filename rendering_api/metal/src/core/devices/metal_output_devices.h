@@ -12,10 +12,7 @@ struct gnPlatformOutputDevice_t {
     id<MTLDevice> device;
     MTKView* contentView;
 
-    int queueCount;
-    id<MTLCommandQueue>* queues;
-
     id<MTLCommandBuffer> executingCommandBuffer;
-
-    id<MTLRenderPipelineState> framebuffer;
+    id<MTLCommandQueue> transferQueue;
+    // id<MTLRenderPipelineState> framebuffer;
 } gnPlatformOutputDevice;
