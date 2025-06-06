@@ -20,3 +20,4 @@
 #include <core/sync/fence/gryphn_fence.h>
 #include <core/submit/gryphn_submit.h>
 #include <core/present/gryphn_present.h>
+#include <core/shader_input/gryphn_shader_layout.h>
