@@ -19,6 +19,12 @@ MTLBlendOperation vkGryphnBlendOperation(enum gnBlendOperation_e operation) {
     }
 }
 
+MTLVertexFormat mtlGryphnVertexFormat(gnVertexFormat format) {
+    switch (format) {
+    case GN_FLOAT2: return MTLVertexFormatFloat2;
+    }
+}
+
 gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
@@ -60,7 +66,22 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         }
     }
 
+    MTLVertexDescriptor* vertexDescriptor = [[MTLVertexDescriptor alloc] init];
+    MTLVertexAttributeDescriptorArray* attributes = vertexDescriptor.attributes;
+    MTLVertexBufferLayoutDescriptorArray* buffers = vertexDescriptor.layouts;
 
+    int k = 0;
+    for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
+        [[buffers objectAtIndexedSubscript:info.shaderInputLayout.bufferAttributes[i].binding] setStride:info.shaderInputLayout.bufferAttributes[i].size];
+        for (int j = 0; j < info.shaderInputLayout.bufferAttributes[i].attributeCount; j++) {
+            attributes[k].bufferIndex = i;
+            attributes[k].offset = info.shaderInputLayout.bufferAttributes[i].attributes[j].offset;
+            attributes[k].format = mtlGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[i].attributes[j].format);
+            k++;
+        }
+    }
+
+    [descriptor setVertexDescriptor:vertexDescriptor];
     NSError* error = nil;
     graphicsPipeline->graphicsPipeline->graphicsPipeline = [device->outputDevice->device newRenderPipelineStateWithDescriptor:descriptor error:&error];
     if (graphicsPipeline->graphicsPipeline->graphicsPipeline == nil) {
