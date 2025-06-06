@@ -46,21 +46,37 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
         vkGetDeviceQueue(outputDevice->outputDevice->device, deviceInfo.queueInfos[i].queueIndex, 0, &outputDevice->outputDevice->queues[i]);
     }
 
-    // {
-    //     QueueFamilyIndices queueFamilyIndices = findQueueFamilies(
-    //             outputDevice->physicalOutputDevice->physicalOutputDevice->instance->instance->window_surface,
-    //             outputDevice->physicalOutputDevice->physicalOutputDevice->device
-    //     );
+    uint32_t queueCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(
+        deviceInfo.physicalDevice.physicalDevice->device,
+        &queueCount,
+        NULL
+    );
 
-    //     VkCommandPoolCreateInfo poolInfo{};
-    //     poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    //     poolInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    //     poolInfo.queueFamilyIndex = queueFamilyIndices.graphicsFamily.value();
+    VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * queueCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(
+        deviceInfo.physicalDevice.physicalDevice->device,
+        &queueCount,
+        queueFamilies
+    );
 
-    //     if (vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, nullptr, &outputDevice->outputDevice->commandPool) != VK_SUCCESS) {
-    //         return GN_FAILED;
-    //     }
-    // }
+    uint32_t transferQueueIndex = 0;
+    for (int i = 0; i < queueCount; i++) {
+        if ((queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
+            transferQueueIndex = i;
+            break;
+        }
+    }
+
+    VkCommandPoolCreateInfo poolInfo = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+        .queueFamilyIndex = transferQueueIndex
+    };
+
+    if (vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferQueue) != VK_SUCCESS) {
+        return GN_FAILED_TO_CREATE_COMMAND_POOL;
+    }
 
     return GN_SUCCESS;
 }
@@ -70,6 +86,7 @@ void gnWaitForDeviceFn(const gnOutputDeviceHandle device) {
 }
 
 void gnDestroyOutputDeviceFn(gnOutputDeviceHandle device) {
+    vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferQueue, NULL);
     vkDestroyDevice(device->outputDevice->device, NULL);
     free(device->outputDevice);
 }
