@@ -49,11 +49,12 @@ void gnWindowSetMTKView(NSWindow* window, MTKView* view) {
 }
 
 CAMetalLayer* gnCreateCAMetalLayer(NSWindow* window) {
+    NSView* view = window.contentView;
     CAMetalLayer* layer = [CAMetalLayer layer];
-    layer.pixelFormat = MTLPixelFormatBGRA8Unorm;
-    layer.frame = window.contentView.layer.bounds;
-    window.contentView.wantsLayer = YES;
-    window.contentView.layer = layer;
+    [layer setContentsScale:[window backingScaleFactor]];
+    [layer setFramebufferOnly:YES];
+    [view setLayer:layer];
+    [view setWantsLayer:YES];
     return layer;
 }
 
