@@ -1,10 +1,11 @@
 #pragma once
-#include "core/framebuffer/gryphn_framebuffer.h"
 #include "utils/types/gryphn_color.h"
+#include "utils/math/gryphn_vec2.h"
+#include "core/gryphn_handles.h"
 
 typedef struct gnRenderPassInfo_t {
     gnRenderPassDescriptorHandle renderPassDescriptor;
-    struct gnFramebuffer_t* framebuffer;
+    gnFramebuffer framebuffer;
     gnUInt2 offset;
     gnUInt2 size;
     uint32_t clearValueCount;

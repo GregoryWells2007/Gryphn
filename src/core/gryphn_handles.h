@@ -17,3 +17,4 @@ GN_HANDLE(gnCommandPool);
 GN_HANDLE(gnCommandBuffer);
 GN_HANDLE(gnSemaphore);
 GN_HANDLE(gnFence);
+GN_HANDLE(gnFramebuffer);

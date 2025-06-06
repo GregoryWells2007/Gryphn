@@ -10,10 +10,12 @@ typedef struct gnFramebufferInfo_t {
     gnUInt2 size;
 } gnFramebufferInfo;
 
-typedef struct gnFramebuffer_t {
+#ifdef GN_REVEAL_IMPL
+struct gnFramebuffer_t {
     struct gnPlatformFramebuffer_t* framebuffer;
     gnOutputDeviceHandle device;
-} gnFramebuffer;
+};
+#endif
 
-gnReturnCode gnCreateFramebuffer(struct gnFramebuffer_t* framebuffer, gnOutputDeviceHandle device, struct gnFramebufferInfo_t framebufferInfo);
-void gnDestroyFramebuffer(struct gnFramebuffer_t* framebuffer);
+gnReturnCode gnCreateFramebuffer(gnFramebuffer* framebuffer, gnOutputDeviceHandle device, gnFramebufferInfo framebufferInfo);
+void gnDestroyFramebuffer(gnFramebuffer framebuffer);

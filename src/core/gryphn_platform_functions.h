@@ -72,8 +72,8 @@ typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnCreateGraphicsPipeline)(gnGraphicsPipelineHandle pipeline, gnOutputDeviceHandle device, gnGraphicsPipelineInfo pipelineInfo);
     void (*_gnDestroyGraphicsPipeline)(gnGraphicsPipelineHandle pipeline);
 
-    gnReturnCode (*_gnCreateFramebuffer)(struct gnFramebuffer_t* framebuffer, gnOutputDeviceHandle device, gnFramebufferInfo framebufferInfo);
-    void (*_gnDestroyFramebuffer)(struct gnFramebuffer_t* framebuffer);
+    gnReturnCode (*_gnCreateFramebuffer)(gnFramebuffer framebuffer, gnOutputDeviceHandle device, gnFramebufferInfo framebufferInfo);
+    void (*_gnDestroyFramebuffer)(gnFramebuffer framebuffer);
 
     gnReturnCode (*_gnCreateCommandPool)(gnCommandPoolHandle commandPool, gnOutputDeviceHandle device, gnCommandPoolInfo info);
     void (*_gnDestroyCommandPool)(gnCommandPoolHandle commandPool);
