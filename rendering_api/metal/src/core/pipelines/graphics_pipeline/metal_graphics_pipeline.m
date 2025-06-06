@@ -91,6 +91,7 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
     }
     [descriptor release];
+    [vertexDescriptor release];
     [error release];
     return GN_SUCCESS;
 }

@@ -84,6 +84,8 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnDestroyCommandPool, "gnDestroyCommandPoolFn");
     gnLoadDLLFunction(lib, functions->_gnCreateSemaphore, "gnCreateSemaphoreFn");
     gnLoadDLLFunction(lib, functions->_gnDestroySemaphore, "gnDestroySemaphoreFn");
+    gnLoadDLLFunction(lib, functions->_gnCreateBuffer, "gnCreateBufferFn");
+    gnLoadDLLFunction(lib, functions->_gnDestroyBuffer, "gnDestroyBufferFn");
     gnLoadDLLFunction(lib, functions->_gnCreateFence, "gnCreateFenceFn");
     gnLoadDLLFunction(lib, functions->_gnSignalFence, "gnSignalFenceFn");
     gnLoadDLLFunction(lib, functions->_gnWaitForFence, "gnWaitForFenceFn");
