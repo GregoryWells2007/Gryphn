@@ -22,6 +22,7 @@ MTLBlendOperation vkGryphnBlendOperation(enum gnBlendOperation_e operation) {
 MTLVertexFormat mtlGryphnVertexFormat(gnVertexFormat format) {
     switch (format) {
     case GN_FLOAT2: return MTLVertexFormatFloat2;
+    case GN_FLOAT3: return MTLVertexFormatFloat3;
     }
 }
 

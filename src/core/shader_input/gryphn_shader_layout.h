@@ -3,7 +3,7 @@
 #include "stdlib.h"
 
 typedef enum gnVertexFormat {
-    GN_FLOAT2
+    GN_FLOAT2, GN_FLOAT3
 } gnVertexFormat;
 
 typedef struct gnVertexAttribute {

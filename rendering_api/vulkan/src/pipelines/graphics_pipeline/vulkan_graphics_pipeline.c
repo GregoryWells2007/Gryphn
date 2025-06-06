@@ -57,6 +57,7 @@ VkBlendOp vkGryphnBlendOperation(enum gnBlendOperation_e operation) {
 VkFormat vkGryphnVertexFormat(gnVertexFormat format) {
     switch (format) {
     case GN_FLOAT2: return VK_FORMAT_R32G32_SFLOAT;
+    case GN_FLOAT3: return VK_FORMAT_R32G32B32_SFLOAT;
     }
 }
 
