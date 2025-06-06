@@ -18,6 +18,7 @@
 #include "sync/semaphore/gryphn_semaphore.h"
 #include "core/submit/gryphn_submit.h"
 #include "core/present/gryphn_present.h"
+#include "core/buffers/gryphn_buffer.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
@@ -80,6 +81,9 @@ typedef struct gnDeviceFunctions_t {
 
     gnReturnCode (*_gnCreateSemaphore)(gnSemaphoreHandle semaphore, gnOutputDeviceHandle device);
     void (*_gnDestroySemaphore)(gnSemaphoreHandle semaphore);
+
+    gnReturnCode (*_gnCreateBuffer)(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
+    gnReturnCode(*_gnDestroyBuffer)(gnBufferHandle buffer);
 
     gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
     void (*_gnSignalFence)(gnFenceHandle fence);
