@@ -7,9 +7,14 @@ typedef enum gnBufferType {
     GN_VERTEX_BUFFER = 0x00000001
 } gnBufferType;
 
+typedef enum gnBufferUsage {
+    GN_STATIC_DRAW, GN_DYNAMIC_DRAW
+} gnBufferUsage; // i love that OpenGL does this so im stealing it
+
 typedef struct gnBufferInfo {
     size_t size;
     gnBufferType type;
+    gnBufferUsage usage;
 } gnBufferInfo;
 
 #ifdef GN_REVEAL_IMPL

@@ -10,8 +10,11 @@ case GN_VERTEX_BUFFER: return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
 }
 }
 
-gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
-    buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));
+gnReturnCode VkCreateBuffer(
+    VkBuffer* buffer, VkDeviceMemory* memory, gnBufferInfo info,
+    VkDevice device, VkPhysicalDevice physcialDevice,
+    VkMemoryPropertyFlags flags
+) {
     VkBufferCreateInfo bufferInfo = {
         .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
         .size = info.size,
@@ -19,22 +22,21 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE
     };
 
-    if (vkCreateBuffer(device->outputDevice->device, &bufferInfo, NULL, &buffer->buffer->buffer) != VK_SUCCESS)
+    if (vkCreateBuffer(device, &bufferInfo, NULL, buffer) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_BUFFER;
 
     VkMemoryRequirements bufferRequirements;
-    vkGetBufferMemoryRequirements(device->outputDevice->device, buffer->buffer->buffer, &bufferRequirements);
-
-    VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(device->physicalDevice.physicalDevice->device, &memoryProperties);
+    vkGetBufferMemoryRequirements(device, *buffer, &bufferRequirements);
 
     VkMemoryAllocateInfo memoryAllocateInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .allocationSize = bufferRequirements.size,
     };
 
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(physcialDevice, &memoryProperties);
+
     gnBool foundMemory = gnFalse;
-    VkMemoryPropertyFlagBits flags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT;
     for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
         if ((bufferRequirements.memoryTypeBits & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & flags) == flags) {
             memoryAllocateInfo.memoryTypeIndex = i;
@@ -43,10 +45,30 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
     } // this whole thing was adapted from vulkan-tutorial.com
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 
-    if (vkAllocateMemory(device->outputDevice->device, &memoryAllocateInfo, NULL, &buffer->buffer->bufferMemory) != VK_SUCCESS) {
+    if (vkAllocateMemory(device, &memoryAllocateInfo, NULL, memory) != VK_SUCCESS) {
         return GN_FAILED_TO_ALLOCATE_MEMORY;
     }
-    vkBindBufferMemory(device->outputDevice->device, buffer->buffer->buffer, buffer->buffer->bufferMemory, 0);
+    vkBindBufferMemory(device, *buffer, *memory, 0);
+    return GN_SUCCESS;
+}
+
+gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
+    buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));
+    gnReturnCode createdBuffer = VkCreateBuffer(
+        &buffer->buffer->buffer, &buffer->buffer->bufferMemory,
+        info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
+        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+    );
+
+    if (info.usage == GN_STATIC_DRAW) {
+        gnReturnCode createdBuffer = VkCreateBuffer(
+            &buffer->buffer->stagingBuffer, &buffer->buffer->stagingBufferMemory,
+            info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
+        );
+        buffer->buffer->useStagingBuffer = gnTrue;
+    }
+
     return GN_SUCCESS;
 }
 void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
@@ -56,6 +78,11 @@ void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
     vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory);
 }
 void gnDestroyBufferFn(gnBufferHandle buffer) {
+    if (buffer->buffer->useStagingBuffer == gnTrue) {
+        vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer, NULL);
+        vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBufferMemory, NULL);
+    }
+
     vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->buffer, NULL);
     vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, NULL);
     free(buffer->buffer);
