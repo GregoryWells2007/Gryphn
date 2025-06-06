@@ -1,15 +1,18 @@
 #pragma once
-#include "core/output_device/gryphn_output_device.h"
+#include "core/gryphn_handles.h"
+#include "utils/gryphn_bool.h"
+#include "utils/gryphn_error_code.h"
 
-
-typedef struct gnFence_t {
+#ifdef GN_REVEAL_IMPL
+struct gnFence_t {
     struct gnPlatformFence_t* fence;
-    struct gnOutputDevice_t* device;
+    gnOutputDeviceHandle device;
     gnBool signaled;
-} gnFence;
+};
+#endif
 
-gnReturnCode gnCreateFence(struct gnFence_t* fence, struct gnOutputDevice_t* device);
-void gnSignalFence(struct gnFence_t* fence);
-void gnWaitForFence(struct gnFence_t* fence, uint64_t timeout);
-void gnResetFence(struct gnFence_t* fence);
-void gnDestroyFence(struct gnFence_t* fence);
+gnReturnCode gnCreateFence(gnFenceHandle* fence, gnOutputDeviceHandle device);
+void gnSignalFence(gnFenceHandle fence);
+void gnWaitForFence(gnFenceHandle fence, uint64_t timeout);
+void gnResetFence(gnFenceHandle fence);
+void gnDestroyFence(gnFenceHandle fence);

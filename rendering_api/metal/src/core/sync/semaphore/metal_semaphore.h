@@ -4,5 +4,5 @@
 
 typedef struct gnPlatformSemaphore_t {
     id<MTLEvent> event;
-    gnBool eventTriggered;
+    bool eventTriggered;
 } gnPlatformSemaphore;

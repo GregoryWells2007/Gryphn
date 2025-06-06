@@ -1,10 +1,13 @@
 #pragma once
-#include "core/output_device/gryphn_output_device.h"
+#include "core/gryphn_handles.h"
+#include "utils/gryphn_error_code.h"
 
-typedef struct gnSemaphore_t {
+#ifdef GN_REVEAL_IMPL
+struct gnSemaphore_t {
     struct gnPlatformSemaphore_t* semaphore;
-    struct gnOutputDevice_t* device;
-} gnSemaphore;
+    gnOutputDeviceHandle device;
+};
+#endif
 
-gnReturnCode gnCreateSemaphore(struct gnSemaphore_t* semaphore, struct gnOutputDevice_t* device);
-void gnDestroySemaphore(struct gnSemaphore_t* semaphore);
+gnReturnCode gnCreateSemaphore(gnSemaphore* semaphore, struct gnOutputDevice_t* device);
+void gnDestroySemaphore(gnSemaphore semaphore);

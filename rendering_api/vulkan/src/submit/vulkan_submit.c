@@ -17,14 +17,14 @@ gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t i
 
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
     VkPipelineStageFlags* waitStages = malloc(sizeof(VkPipelineStageFlags) * info.waitCount);
-    for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i].semaphore->semaphore;
+    for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;
     for (int i = 0; i < info.waitCount; i++) waitStages[i] = vkGryphnWaitStage(info.waitStages[i]);
 
     VkCommandBuffer* commandBuffers = malloc(sizeof(VkCommandBuffer) * info.commandBufferCount);
     for (int i = 0; i < info.commandBufferCount; i++) commandBuffers[i] = info.commandBuffers[i]->commandBuffer->buffer;
 
     VkSemaphore* signalSemaphores = malloc(sizeof(VkSemaphore) * info.signalCount);
-    for (int i = 0; i < info.signalCount; i++) signalSemaphores[i] = info.signalSemaphores[i].semaphore->semaphore;
+    for (int i = 0; i < info.signalCount; i++) signalSemaphores[i] = info.signalSemaphores[i]->semaphore->semaphore;
 
     VkSubmitInfo submitInfo = {
         .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,

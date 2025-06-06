@@ -15,3 +15,5 @@ GN_HANDLE(gnShaderModule);
 GN_HANDLE(gnGraphicsPipeline);
 GN_HANDLE(gnCommandPool);
 GN_HANDLE(gnCommandBuffer);
+GN_HANDLE(gnSemaphore);
+GN_HANDLE(gnFence);

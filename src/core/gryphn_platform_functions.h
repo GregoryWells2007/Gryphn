@@ -20,14 +20,14 @@
 #include "core/present/gryphn_present.h"
 
 typedef struct gnFunctions_t {
-    gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, struct gnInstanceInfo_t info);
+    gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
     void (*_gnDestroyInstance)(gnInstanceHandle instance);
 
-    gnReturnCode (*_gnCreateDebugger)(gnDebuggerHandle debugger, gnInstanceHandle instance, const struct gnDebuggerInfo_t info);
+    gnReturnCode (*_gnCreateDebugger)(gnDebuggerHandle debugger, gnInstanceHandle instance, const gnDebuggerInfo info);
     void (*_gnDestroyDebugger)(gnDebuggerHandle debugger);
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
-    gnBool (*_gnQueueCanPresentToSurface)(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
+    gnBool (*_gnQueueCanPresentToSurface)(const gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
 
 
     gnReturnCode (*_gnCreateOutputDevoce)(gnOutputDeviceHandle device, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
@@ -59,33 +59,33 @@ typedef struct gnFunctions_t {
 
 #include "core/presentation_queue/gryphn_presentation_queue.h"
 typedef struct gnDeviceFunctions_t {
-    gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, struct gnPresentationQueueInfo_t presentationInfo);
-    gnReturnCode (*_gnPresentationQueueGetImage)(gnPresentationQueueHandle presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex);
+    gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);
+    gnReturnCode (*_gnPresentationQueueGetImage)(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
     void (*_gnDestroyPresentationQueue)(gnPresentationQueueHandle presentationQueue);
 
-    gnReturnCode (*_gnCreateShaderModule)(gnShaderModuleHandle module, gnOutputDeviceHandle device, struct gnShaderModuleInfo_t shaderModuleInfo);
+    gnReturnCode (*_gnCreateShaderModule)(gnShaderModuleHandle module, gnOutputDeviceHandle device, gnShaderModuleInfo shaderModuleInfo);
     void (*_gnDestroyShaderModule)(gnShaderModuleHandle module);
 
-    gnReturnCode (*_gnCreateRenderPassDescriptor)(gnRenderPassDescriptorHandle renderPass, gnOutputDeviceHandle device, struct gnRenderPassDescriptorInfo_t info);
+    gnReturnCode (*_gnCreateRenderPassDescriptor)(gnRenderPassDescriptorHandle renderPass, gnOutputDeviceHandle device, gnRenderPassDescriptorInfo info);
     void (*_gnDestroyRenderPassDescriptor)(gnRenderPassDescriptorHandle renderPass);
 
-    gnReturnCode (*_gnCreateGraphicsPipeline)(gnGraphicsPipelineHandle pipeline, gnOutputDeviceHandle device, struct gnGraphicsPipelineInfo_t pipelineInfo);
+    gnReturnCode (*_gnCreateGraphicsPipeline)(gnGraphicsPipelineHandle pipeline, gnOutputDeviceHandle device, gnGraphicsPipelineInfo pipelineInfo);
     void (*_gnDestroyGraphicsPipeline)(gnGraphicsPipelineHandle pipeline);
 
-    gnReturnCode (*_gnCreateFramebuffer)(struct gnFramebuffer_t* framebuffer, gnOutputDeviceHandle device, struct gnFramebufferInfo_t framebufferInfo);
+    gnReturnCode (*_gnCreateFramebuffer)(struct gnFramebuffer_t* framebuffer, gnOutputDeviceHandle device, gnFramebufferInfo framebufferInfo);
     void (*_gnDestroyFramebuffer)(struct gnFramebuffer_t* framebuffer);
 
-    gnReturnCode (*_gnCreateCommandPool)(gnCommandPoolHandle commandPool, gnOutputDeviceHandle device, struct gnCommandPoolInfo_t info);
+    gnReturnCode (*_gnCreateCommandPool)(gnCommandPoolHandle commandPool, gnOutputDeviceHandle device, gnCommandPoolInfo info);
     void (*_gnDestroyCommandPool)(gnCommandPoolHandle commandPool);
 
-    gnReturnCode (*_gnCreateSemaphore)(struct gnSemaphore_t* semaphore, gnOutputDeviceHandle device);
-    void (*_gnDestroySemaphore)(struct gnSemaphore_t* semaphore);
+    gnReturnCode (*_gnCreateSemaphore)(gnSemaphoreHandle semaphore, gnOutputDeviceHandle device);
+    void (*_gnDestroySemaphore)(gnSemaphoreHandle semaphore);
 
-    gnReturnCode (*_gnCreateFence)(struct gnFence_t* fence, gnOutputDeviceHandle device);
-    void (*_gnSignalFence)(struct gnFence_t* fence);
-    void (*_gnWaitForFence)(struct gnFence_t* fence, uint64_t timeout);
-    void (*_gnResetFence)(struct gnFence_t* fence);
-    void (*_gnDestroyFence)(struct gnFence_t* fence);
+    gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
+    void (*_gnSignalFence)(gnFenceHandle fence);
+    void (*_gnWaitForFence)(gnFenceHandle fence, uint64_t timeout);
+    void (*_gnResetFence)(gnFenceHandle fence);
+    void (*_gnDestroyFence)(gnFenceHandle fence);
 
     gnReturnCode (*_gnSubmit)(gnOutputDeviceHandle device, gnSubmitInfo submit);
     gnReturnCode (*_gnPresent)(gnOutputDeviceHandle device, gnPresentInfo info);
@@ -99,7 +99,7 @@ typedef struct gnCommandFunctions_t {
     void (*_gnResetCommandBuffer)(gnCommandBufferHandle commandBuffer);
     gnReturnCode (*_gnEndCommandBuffer)(gnCommandBufferHandle commandBuffer);
 
-    void (*_gnCommandBeginRenderPass)(gnCommandBufferHandle buffer, struct gnRenderPassInfo_t passInfo);
+    void (*_gnCommandBeginRenderPass)(gnCommandBufferHandle buffer, gnRenderPassInfo passInfo);
     void (*_gnCommandEndRenderPass)(gnCommandBufferHandle buffer);
 
     void (*_gnCommandBindGraphicsPipeline)(gnCommandBufferHandle buffer, gnGraphicsPipelineHandle graphicsPipeline);

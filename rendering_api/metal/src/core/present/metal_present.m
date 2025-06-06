@@ -8,9 +8,9 @@
 #include "core/texture/metal_texture.h"
 #import <QuartzCore/CAMetalLayer.h>
 
-gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t info) {
+gnReturnCode gnPresentFn(gnOutputDeviceHandle device, struct gnPresentInfo_t info) {
     for (int i = 0; i < info.waitCount; i++) {
-        while (!info.waitSemaphores[i].semaphore->eventTriggered) {}
+        while (!info.waitSemaphores[i]->semaphore->eventTriggered) {}
     }
 
     for (int i =0 ; i < info.presentationQueueCount; i++) {
