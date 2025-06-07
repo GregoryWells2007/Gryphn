@@ -3,6 +3,7 @@
 #include "output_device/vulkan_output_devices.h"
 #include "shader_module/vulkan_shader_module.h"
 #include "renderpass/vulkan_render_pass_descriptor.h"
+#include "core/instance/gryphn_instance.h"
 
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e state) {
     switch (state) {

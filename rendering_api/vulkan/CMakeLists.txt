@@ -17,7 +17,7 @@ add_library(GryphnVulkanImpl SHARED ${SOURCE_FILES} ${METAL_FILES})
 target_include_directories(GryphnVulkanImpl PUBLIC
     ${CMAKE_SOURCE_DIR}/gryphn/include/
     ${CMAKE_SOURCE_DIR}/gryphn/src/
-    ${CMAKE_SOURCE_DIR}/gryphn/src/
+    ${CMAKE_SOURCE_DIR}/gryphn/src/utils/
     src/
     /Applications/vulkansdk/macOS/include/
 )

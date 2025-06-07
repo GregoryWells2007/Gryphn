@@ -1,5 +1,6 @@
 #include "vulkan_debugger.h"
 #include <instance/vulkan_instance.h>
+#include "core/instance/gryphn_instance.h"
 
 void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT* createInfo) {
     createInfo->sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;

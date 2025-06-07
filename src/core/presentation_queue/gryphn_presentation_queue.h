@@ -2,16 +2,16 @@
 #include <gryphn/gryphn_utils.h>
 #include <core/output_device/gryphn_output_device.h>
 #include <core/window_surface/gryphn_surface.h>
-#include <utils/types/gryphn_image_format.h>
+#include <utils/gryphn_image_format.h>
 #include <core/sync/semaphore/gryphn_semaphore.h>
 #include "core/gryphn_handles.h"
 
 typedef struct gnPresentationQueueInfo_t {
     uint32_t minImageCount;
-    struct gnUInt2_t imageSize;
+    gnUInt2 imageSize;
     gnWindowSurfaceHandle surface;
-    struct gnSurfaceFormat_t format;
-    enum gnImageSharingMode_e imageSharingMode;
+    gnSurfaceFormat format;
+    gnImageSharingMode imageSharingMode;
     uint32_t queueFamilyCount;
     uint32_t* queueFamilies;
 } gnPresentationQueueInfo;

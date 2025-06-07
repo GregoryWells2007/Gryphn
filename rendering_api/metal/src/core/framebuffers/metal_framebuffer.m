@@ -2,6 +2,7 @@
 #include "core/debugger/gryphn_debugger.h"
 #include "core/texture/metal_texture.h"
 #include "core/renderpass/gryphn_render_pass_descriptor.h"
+#include "core/instance/gryphn_instance.h"
 
 gnBool isDepthFormat(gnImageFormat format) {
     return gnFalse;

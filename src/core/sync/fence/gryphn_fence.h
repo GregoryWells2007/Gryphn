@@ -1,7 +1,8 @@
 #pragma once
-#include "core/gryphn_handles.h"
+#include "stdint.h"
 #include "utils/gryphn_bool.h"
 #include "utils/gryphn_error_code.h"
+#include "core/gryphn_handles.h"
 
 #ifdef GN_REVEAL_IMPL
 struct gnFence_t {

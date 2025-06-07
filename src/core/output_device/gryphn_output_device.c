@@ -2,6 +2,7 @@
 #include "core/instance/gryphn_instance.h"
 #include "core/gryphn_platform_functions.h"
 #include "core/instance/init/gryphn_init.h"
+#include "utils/gryphn_bool.h"
 
 gnReturnCode gnCreateOutputDevice(gnOutputDeviceHandle* outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
     *outputDevice = malloc(sizeof(struct gnOutputDevice_t));

@@ -1,7 +1,7 @@
 #pragma once
 #include <core/instance/gryphn_instance.h>
 #include <platform/gryphn_platform_include.h>
-#include <utils/types/gryphn_image_format.h>
+#include <utils/gryphn_image_format.h>
 #include "core/output_device/gryphn_physical_output_device.h"
 
 typedef struct gnSurfaceFormat_t {

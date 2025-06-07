@@ -1,5 +1,5 @@
 #pragma once
-#include "utils/strings/gryphn_string.h"
+#include "utils/gryphn_string.h"
 
 typedef enum gnRenderingAPI_t {
     GN_RENDERINGAPI_NONE, // idk why im putting this

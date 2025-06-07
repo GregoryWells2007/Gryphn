@@ -1,5 +1,5 @@
 #pragma once
-#include "utils/strings/gryphn_string.h"
+#include "utils/gryphn_string.h"
 #include "core/gryphn_handles.h"
 
 struct gnPlatformPhysicalDevice_t;

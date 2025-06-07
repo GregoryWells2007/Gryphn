@@ -1,5 +1,5 @@
 #pragma once
-#include "utils/types/gryphn_color.h"
+#include "utils/gryphn_color.h"
 #include "utils/math/gryphn_vec2.h"
 #include "core/gryphn_handles.h"
 

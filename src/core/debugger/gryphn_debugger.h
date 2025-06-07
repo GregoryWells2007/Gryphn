@@ -1,7 +1,7 @@
 #pragma once
-#include "utils/strings/gryphn_string.h"
+#include "utils/gryphn_string.h"
 #include "utils/gryphn_error_code.h"
-#include "core/instance/gryphn_instance.h"
+#include "core/gryphn_handles.h"
 
 struct gnPlatformDebugger_t;
 

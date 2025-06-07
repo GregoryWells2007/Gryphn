@@ -11,7 +11,7 @@ add_library(GryphnMetalImpl SHARED ${SOURCE_FILES})
 target_include_directories(GryphnMetalImpl PUBLIC
     ${CMAKE_SOURCE_DIR}/gryphn/include/
     ${CMAKE_SOURCE_DIR}/gryphn/src/
-    ${CMAKE_SOURCE_DIR}/gryphn/src/
+    ${CMAKE_SOURCE_DIR}/gryphn/src/utils/
     src/
     depends/SPIRV-Cross/
 )
