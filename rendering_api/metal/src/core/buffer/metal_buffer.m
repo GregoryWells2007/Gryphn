@@ -29,13 +29,12 @@ void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
     } else
         memcpy(buffer->buffer->buffer.contents, data, dataSize);
 }
+void* gnMapBufferFn(gnBufferHandle buffer) {
+    return buffer->buffer->buffer.contents;
+}
 void gnDestroyBufferFn(gnBufferHandle buffer) {
-    // if (buffer->buffer->useStagingBuffer == gnTrue) {
-    //     vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer, NULL);
-    //     vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBufferMemory, NULL);
-    // }
-
-    // vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->buffer, NULL);
-    // vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, NULL);
-    // free(buffer->buffer);
+    if (buffer->buffer->useStagingBuffer)
+        [buffer->buffer->stagingBuffer release];
+    [buffer->buffer->buffer release];
+    free(buffer->buffer);
 }
