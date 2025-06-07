@@ -26,9 +26,11 @@ typedef struct gnBufferInfo {
 struct gnBuffer_t {
     struct gnPlatformBuffer_t* buffer;
     gnDeviceHandle device;
+    gnBufferInfo info;
 };
 #endif
 
 gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device, gnBufferInfo info);
 void gnBufferData(gnBufferHandle buffer, size_t dataSize, void* data);
+void* gnMapBuffer(gnBufferHandle buffer);
 void gnDestroyBuffer(gnBufferHandle buffer);

@@ -84,6 +84,7 @@ typedef struct gnDeviceFunctions_t {
 
     gnReturnCode (*_gnCreateBuffer)(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
     void (*_gnBufferData)(gnBufferHandle buffer, size_t size, void* data);
+    void* (*_gnMapBuffer)(gnBufferHandle buffer);
     void (*_gnDestroyBuffer)(gnBufferHandle buffer);
 
     gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);

@@ -5,10 +5,20 @@
 gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     *buffer = malloc(sizeof(struct gnBuffer_t));
     (*buffer)->device = device;
+    (*buffer)->info = info;
     return device->deviceFunctions->_gnCreateBuffer(*buffer, device, info);
 }
 void gnBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
     buffer->device->deviceFunctions->_gnBufferData(buffer, dataSize, data);
+}
+void* gnMapBuffer(gnBufferHandle buffer) {
+    if (buffer->info.type == GN_STATIC_DRAW) {
+        gnDebuggerSetErrorMessage(buffer->device->instance->debugger, (gnMessageData){
+           .message = gnCreateString("Cannot map static draw buffers")
+        });
+        return NULL;
+    }
+    return buffer->device->deviceFunctions->_gnMapBuffer(buffer);
 }
 void gnDestroyBuffer(gnBufferHandle buffer) {
     buffer->device->deviceFunctions->_gnDestroyBuffer(buffer);
