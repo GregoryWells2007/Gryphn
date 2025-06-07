@@ -14,6 +14,7 @@ endif()
 add_library(Gryphn ${SOURCE_FILES} ${METAL_FILES})
 target_include_directories(Gryphn PUBLIC ${CMAKE_SOURCE_DIR}/gryphn/src/)
 target_include_directories(Gryphn PUBLIC ${CMAKE_SOURCE_DIR}/gryphn/include/)
+target_include_directories(Gryphn PUBLIC ${CMAKE_SOURCE_DIR}/gryphn/src/utils)
 add_compile_definitions(GN_REVEAL_IMPL)
 
 if(WIN32)
