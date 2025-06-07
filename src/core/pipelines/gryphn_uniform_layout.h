@@ -1,6 +1,18 @@
 #pragma once
 #include "stdint.h"
+#include "core/shader_module/gryphn_shader_module.h"
 
-typedef struct gnUniformLayout_t {
-    uint32_t pushConstantCount;
+typedef enum gnUniformType {
+    GN_UNIFORM_BUFFER
+} gnUniformType;
+
+typedef struct gnUniformBinding {
+    uint32_t binding;
+    gnUniformType type;
+    gnShaderModuleStage stage;
+} gnUniformBinding;
+
+typedef struct gnUniformLayout {
+    uint32_t uniformBindingCount;
+    gnUniformBinding* uniformBindings;
 } gnUniformLayout;

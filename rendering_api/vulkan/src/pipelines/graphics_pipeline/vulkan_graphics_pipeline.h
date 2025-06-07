@@ -15,7 +15,9 @@ typedef struct gnPlatformGraphicsPipeline_t {
     VkPipelineColorBlendAttachmentState colorBlendAttachment;
     VkPipelineColorBlendStateCreateInfo colorBlending;
 
-    gnBool createdPipelineLayout;
+    // gnBool createdPipelineLayout;
+    uint32_t setCount;
+    VkDescriptorSetLayout* sets;
     VkPipelineLayout pipelineLayout;
 
 

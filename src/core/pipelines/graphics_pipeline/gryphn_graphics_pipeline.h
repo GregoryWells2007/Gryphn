@@ -83,14 +83,13 @@ typedef struct gnGraphicsPipelineInfo_t {
     struct gnCullMode_t cullMode;
     struct gnColorBlending_t colorBlending;
 
-    struct gnUniformLayout_t* uniformLayout;
-
     uint32_t subpassIndex;
     gnRenderPassDescriptorHandle renderPassDescriptor;
 
     uint32_t shaderModuleCount;
     gnShaderModuleHandle* shaderModules;
     gnShaderInputLayout shaderInputLayout;
+    gnUniformLayout uniformLayout;
 } gnGraphicsPipelineInfo;
 
 #ifdef GN_REVEAL_IMPL

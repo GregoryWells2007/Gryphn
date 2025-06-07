@@ -1,9 +1,7 @@
 #include "vulkan_graphics_pipeline.h"
-#include "core/debugger/gryphn_debugger.h"
 #include "output_device/vulkan_output_devices.h"
 #include "shader_module/vulkan_shader_module.h"
 #include "renderpass/vulkan_render_pass_descriptor.h"
-#include "core/instance/gryphn_instance.h"
 
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e state) {
     switch (state) {
@@ -59,6 +57,12 @@ VkFormat vkGryphnVertexFormat(gnVertexFormat format) {
     switch (format) {
     case GN_FLOAT2: return VK_FORMAT_R32G32_SFLOAT;
     case GN_FLOAT3: return VK_FORMAT_R32G32B32_SFLOAT;
+    }
+}
+
+VkDescriptorType vkGryphnUniformType(gnUniformType type) {
+    switch(type) {
+    case GN_UNIFORM_BUFFER: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     }
 }
 
@@ -180,25 +184,38 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         .blendConstants[3] = 0.0f
     };
 
-    if (info.uniformLayout == NULL) {
-        VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
-            .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
-            .setLayoutCount = 0,
-            pipelineLayoutInfo.pSetLayouts = NULL,
-            pipelineLayoutInfo.pushConstantRangeCount = 0,
-            pipelineLayoutInfo.pPushConstantRanges = NULL
+    graphicsPipeline->graphicsPipeline->setCount = info.uniformLayout.uniformBindingCount;
+    graphicsPipeline->graphicsPipeline->sets = malloc(sizeof(VkDescriptorSetLayoutBinding) * info.uniformLayout.uniformBindingCount);
+    for (int i = 0; i < info.uniformLayout.uniformBindingCount; i++) {
+        VkDescriptorSetLayoutBinding setLayout = {
+            .binding = info.uniformLayout.uniformBindings[i].binding,
+            .descriptorCount = 1,
+            .descriptorType = vkGryphnUniformType(info.uniformLayout.uniformBindings[i].type),
+            .stageFlags = vkGryphnShaderModuleStage(info.uniformLayout.uniformBindings[i].stage)
         };
 
-        if (vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout) != VK_SUCCESS) {
+        VkDescriptorSetLayoutCreateInfo info = {
+            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+            .bindingCount = 1,
+            .pBindings = &setLayout
+        };
+
+        if (vkCreateDescriptorSetLayout(device->outputDevice->device, &info, NULL, &graphicsPipeline->graphicsPipeline->sets[i]) != VK_SUCCESS) {
             return GN_FAILED_TO_CREATE_UNIFORM_LAYOUT;
         }
+    }
 
-        graphicsPipeline->graphicsPipeline->createdPipelineLayout = gnTrue;
-    } else {
-        graphicsPipeline->graphicsPipeline->createdPipelineLayout = gnFalse;
-        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-            .message = gnCreateString("Graphics pipelines can not currently accept uniform layouts")
-        });
+
+    VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
+        .setLayoutCount = graphicsPipeline->graphicsPipeline->setCount,
+        pipelineLayoutInfo.pSetLayouts = graphicsPipeline->graphicsPipeline->sets,
+        pipelineLayoutInfo.pushConstantRangeCount = 0,
+        pipelineLayoutInfo.pPushConstantRanges = NULL
+    };
+
+    if (vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout) != VK_SUCCESS) {
+        return GN_FAILED_TO_CREATE_UNIFORM_LAYOUT;
     }
 
     VkPipelineShaderStageCreateInfo* modules = malloc(sizeof(VkPipelineShaderStageCreateInfo) * info.shaderModuleCount);
@@ -236,8 +253,9 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
 }
 
 void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) {
-    if (graphicsPipeline->graphicsPipeline->createdPipelineLayout)
-        vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
+    for (int i = 0; i < graphicsPipeline->graphicsPipeline->setCount; i++)
+        vkDestroyDescriptorSetLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->sets[i], NULL);
+    vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
     vkDestroyPipeline(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->graphicsPipeline, NULL);
 
     free(graphicsPipeline->graphicsPipeline);
