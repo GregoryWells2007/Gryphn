@@ -1,7 +1,0 @@
-#pragma once
-
-enum gnColorMode {
-    GN_RED, GN_RGB8, GN_RGBA8, GN_BGRA8,
-    GN_DEPTH8_STENCIL24,
-    GN_DEPTH_STENCIL = GN_DEPTH8_STENCIL24
-};
