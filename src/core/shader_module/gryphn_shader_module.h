@@ -5,11 +5,13 @@
 #include "core/gryphn_handles.h"
 
 typedef enum gnShaderModuleStage_e {
-    GN_VERTEX_SHADER_MODULE, GN_FRAGMENT_SHADER_MODULE
+    GN_VERTEX_SHADER_MODULE   = 0x00000001,
+    GN_FRAGMENT_SHADER_MODULE = 0x00000002,
+    GN_ALL_SHADER_MODULE      = 0xffffffff
 } gnShaderModuleStage;
 
 typedef struct gnShaderModuleInfo_t {
-    enum gnShaderModuleStage_e stage;
+    gnShaderModuleStage stage;
     uint32_t* code;
     uint32_t size;
     gnString entryPoint;
