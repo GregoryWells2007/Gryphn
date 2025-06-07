@@ -127,6 +127,11 @@ void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
         vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory);
     }
 }
+void* gnMapBufferFn(gnBufferHandle buffer) {
+    void* data;
+    vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, 0, buffer->info.size, 0, &data);
+    return data;
+}
 void gnDestroyBufferFn(gnBufferHandle buffer) {
     if (buffer->buffer->useStagingBuffer == gnTrue) {
         vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer, NULL);
