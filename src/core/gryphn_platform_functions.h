@@ -12,14 +12,12 @@
 #include "pipelines/graphics_pipeline/gryphn_graphics_pipeline.h"
 #include "framebuffer/gryphn_framebuffer.h"
 #include "command/command_pool/gryphn_command_pool.h"
-#include "command/command_buffer/gryphn_command_buffer.h"
 #include "renderpass/gryphn_render_pass.h"
-#include "sync/fence/gryphn_fence.h"
-#include "sync/semaphore/gryphn_semaphore.h"
 #include "core/submit/gryphn_submit.h"
 #include "core/present/gryphn_present.h"
 #include "core/buffers/gryphn_buffer.h"
 #include "core/uniforms/gryphn_uniform.h"
+#include "core/textures/gryphn_texture.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
@@ -93,6 +91,8 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnDestroyUniformPool)(gnUniformPool pool);
 
     void (*_gnUpdateBufferUniform)(gnUniform uniform, gnBufferUniformInfo* bufferInfo);
+
+    gnReturnCode (*_gnCreateTexture)(gnTexture texture, gnDevice device, const gnTextureInfo info);
 
     gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
     void (*_gnSignalFence)(gnFenceHandle fence);

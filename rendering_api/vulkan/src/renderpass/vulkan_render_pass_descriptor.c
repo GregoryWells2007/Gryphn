@@ -2,7 +2,7 @@
 #include "vulkan_surface/vulkan_surface.h"
 #include "output_device/vulkan_output_devices.h"
 
-VkAttachmentLoadOp vkGryphnLoadOperation(enum gnLoadOperation_e loadOperation) {
+VkAttachmentLoadOp vkGryphnLoadOperation(gnLoadOperation loadOperation) {
     switch(loadOperation) {
     case GN_LOAD_OPERATION_LOAD: return VK_ATTACHMENT_LOAD_OP_LOAD;
     case GN_LOAD_OPERATION_CLEAR: return VK_ATTACHMENT_LOAD_OP_CLEAR;
@@ -10,14 +10,14 @@ VkAttachmentLoadOp vkGryphnLoadOperation(enum gnLoadOperation_e loadOperation) {
     }
 }
 
-VkAttachmentStoreOp vkGryphnStoreOperation(enum gnStoreOperation_e storeOperation) {
+VkAttachmentStoreOp vkGryphnStoreOperation(gnStoreOperation storeOperation) {
     switch (storeOperation) {
     case GN_STORE_OPERATION_STORE: return VK_ATTACHMENT_STORE_OP_STORE;
     case GN_STORE_OPERATION_DONT_CARE: return VK_ATTACHMENT_STORE_OP_DONT_CARE;
     }
 }
 
-VkImageLayout vkGryphnImageLayout(enum gnImageLayout_e layout) {
+VkImageLayout vkGryphnImageLayout(gnImageLayout layout) {
     switch(layout) {
     case GN_LAYOUT_UNDEFINED: return VK_IMAGE_LAYOUT_UNDEFINED;
     case GN_LAYOUT_PRESENTATION_QUEUE_IMAGE: return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;

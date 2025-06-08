@@ -21,20 +21,20 @@ typedef enum gnStoreOperation_e {
 } gnStoreOperation;
 
 typedef struct gnRenderPassAttachmentInfo_t {
-    enum gnImageFormat_e format;
-    enum gnLoadOperation_e loadOperation;
-    enum gnStoreOperation_e storeOperation;
+    gnImageFormat format;
+    gnLoadOperation loadOperation;
+    gnStoreOperation storeOperation;
 
-    enum gnLoadOperation_e stencilLoadOperation;
-    enum gnStoreOperation_e stencilStoreOperation;
+    gnLoadOperation stencilLoadOperation;
+    gnStoreOperation stencilStoreOperation;
 
-    enum gnImageLayout_e initialLayout;
-    enum gnImageLayout_e finalLayout;
+    gnImageLayout initialLayout;
+    gnImageLayout finalLayout;
 } gnRenderPassAttachmentInfo;
 
 typedef struct gnSubpassAttachmentInfo_t {
     uint32_t index;
-    enum gnImageLayout_e imageLayout;
+    gnImageLayout imageLayout;
 } gnSubpassAttachmentInfo;
 
 typedef struct gnSubpassInfo_t {

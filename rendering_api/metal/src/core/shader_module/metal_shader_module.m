@@ -55,10 +55,6 @@ gnReturnCode gnCreateShaderModuleFn(struct gnShaderModule_t *module, struct gnOu
     spvc_result res = spvc_compiler_compile(compiler, &result);
     if (res != SPVC_SUCCESS)
         return GN_FAILED_TO_CONVERT_SHADER_CODE;
-    printf("Res %s\n", result);
-
-
-
 
     NSError* error = nil;
     MTLCompileOptions* mtloptions = nil;

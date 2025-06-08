@@ -15,7 +15,7 @@ VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
 }
 
 gnReturnCode VkCreateBuffer(
-    VkBuffer* buffer, VkDeviceMemory* memory, gnBufferInfo info,
+    VkGryphnBuffer* buffer, gnBufferInfo info,
     VkDevice device, VkPhysicalDevice physcialDevice,
     VkMemoryPropertyFlags flags, VkBufferUsageFlags usage
 ) {
@@ -26,11 +26,11 @@ gnReturnCode VkCreateBuffer(
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE
     };
 
-    if (vkCreateBuffer(device, &bufferInfo, NULL, buffer) != VK_SUCCESS)
+    if (vkCreateBuffer(device, &bufferInfo, NULL, &buffer->buffer) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_BUFFER;
 
     VkMemoryRequirements bufferRequirements;
-    vkGetBufferMemoryRequirements(device, *buffer, &bufferRequirements);
+    vkGetBufferMemoryRequirements(device, buffer->buffer, &bufferRequirements);
 
     VkMemoryAllocateInfo memoryAllocateInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
@@ -49,10 +49,10 @@ gnReturnCode VkCreateBuffer(
     } // this whole thing was adapted from vulkan-tutorial.com
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 
-    if (vkAllocateMemory(device, &memoryAllocateInfo, NULL, memory) != VK_SUCCESS) {
+    if (vkAllocateMemory(device, &memoryAllocateInfo, NULL, &buffer->memory) != VK_SUCCESS) {
         return GN_FAILED_TO_ALLOCATE_MEMORY;
     }
-    vkBindBufferMemory(device, *buffer, *memory, 0);
+    vkBindBufferMemory(device, buffer->buffer, buffer->memory, 0);
     return GN_SUCCESS;
 }
 
@@ -98,21 +98,21 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
     if (info.usage == GN_STATIC_DRAW) {
         buffer->buffer->useStagingBuffer = gnTrue;
         VkCreateBuffer(
-            &buffer->buffer->stagingBuffer, &buffer->buffer->stagingBufferMemory,
+            &buffer->buffer->stagingBuffer,
             info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT
         );
 
         return VkCreateBuffer(
-            &buffer->buffer->buffer, &buffer->buffer->bufferMemory,
+            &buffer->buffer->buffer,
             info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
             vkGryphnBufferType(info.type) | VK_BUFFER_USAGE_TRANSFER_DST_BIT
         );
     } else {
         return VkCreateBuffer(
-            &buffer->buffer->buffer, &buffer->buffer->bufferMemory,
+            &buffer->buffer->buffer,
             info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             vkGryphnBufferType(info.type)
@@ -126,31 +126,31 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
 void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
     void* bufferData;
     if (buffer->buffer->useStagingBuffer) {
-        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBufferMemory, 0, dataSize, 0, &bufferData);
+        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory, 0, dataSize, 0, &bufferData);
         memcpy(bufferData, data, dataSize);
-        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBufferMemory);
+        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory);
         VkCopyBuffer(
-            buffer->buffer->stagingBuffer, buffer->buffer->buffer, dataSize,
+            buffer->buffer->stagingBuffer.buffer, buffer->buffer->buffer.buffer, dataSize,
             buffer->device->outputDevice->transferCommandPool, buffer->device->outputDevice->device,
             buffer->device->outputDevice->transferQueue);
     } else {
-        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, 0, dataSize, 0, &bufferData);
+        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, dataSize, 0, &bufferData);
         memcpy(bufferData, data, dataSize);
-        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory);
+        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory);
     }
 }
 void* gnMapBufferFn(gnBufferHandle buffer) {
     void* data;
-    vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, 0, buffer->info.size, 0, &data);
+    vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, buffer->info.size, 0, &data);
     return data;
 }
 void gnDestroyBufferFn(gnBufferHandle buffer) {
     if (buffer->buffer->useStagingBuffer == gnTrue) {
-        vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer, NULL);
-        vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBufferMemory, NULL);
+        vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.buffer, NULL);
+        vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory, NULL);
     }
 
-    vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->buffer, NULL);
-    vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->bufferMemory, NULL);
+    vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->buffer.buffer, NULL);
+    vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, NULL);
     free(buffer->buffer);
 }
