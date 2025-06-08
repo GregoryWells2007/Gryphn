@@ -2,6 +2,8 @@
 #include "vulkan_uniform_layout.h"
 #include "stdlib.h"
 #include "output_device/vulkan_output_devices.h"
+#include "core/uniforms/gryphn_uniform.h"
+#include "vulkan_uniform.h"
 
 gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
     pool->uniformPool = malloc(sizeof(struct gnPlatformUniformPool_t));
@@ -20,7 +22,6 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, const gnUniformLa
     pool->uniformPool->pools[pool->uniformPool->poolCount].layouts = vkGryphnCreateSetLayouts(&layout, &pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount, pool->device->outputDevice->device);
     VkDescriptorPoolSize* sizes = malloc(sizeof(VkDescriptorPoolSize) * layout.uniformBindingCount);
 
-    gnUniform* uniforms = malloc(sizeof(gnUniform) * pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount);
     for (int i = 0; i < layout.uniformBindingCount; i++) {
         sizes[i].type = vkGryphnUniformType(layout.uniformBindings[i].type);
         sizes[i].descriptorCount = 1;
@@ -38,6 +39,25 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, const gnUniformLa
         &pool->uniformPool->pools[pool->uniformPool->poolCount].pool
     ) != VK_SUCCESS)
         return NULL;
+
+    VkDescriptorSetAllocateInfo allocInfo = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
+        .descriptorPool = pool->uniformPool->pools[pool->uniformPool->poolCount].pool,
+        .descriptorSetCount = 1,
+        .pSetLayouts = pool->uniformPool->pools[pool->uniformPool->poolCount].layouts
+    };
+
+    VkDescriptorSet* sets = malloc(sizeof(VkDescriptorSet) * pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount);
+    if (vkAllocateDescriptorSets(pool->device->outputDevice->device, &allocInfo, sets) != VK_SUCCESS)
+        return NULL;
+
+    gnUniform* uniforms = malloc(sizeof(gnUniform) * pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount);
+    for (int i = 0; i < pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount; i++) {
+        uniforms[i] = malloc(sizeof(struct gnUniform_t));
+        uniforms[i]->uniform = malloc(sizeof(struct gnPlatformUniform_t));
+        uniforms[i]->uniform->set = sets[i];
+    }
+
     pool->uniformPool->poolCount++;
 
     free(sizes);
