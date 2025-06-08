@@ -12,3 +12,7 @@ gnReturnCode gnCreateUniformPool(gnUniformPool* pool, gnDeviceHandle device) {
 gnUniform* gnUniformPoolAllocateUniforms(gnUniformPool pool, const gnUniformLayout layout) {
     return pool->device->deviceFunctions->_gnUniformPoolAllocateUniforms(pool, layout);
 }
+
+void gnDestroyUniformPool(gnUniformPool pool) {
+    pool->device->deviceFunctions->_gnDestroyUniformPool(pool);
+}
