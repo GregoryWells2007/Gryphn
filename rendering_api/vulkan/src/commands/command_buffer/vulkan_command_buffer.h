@@ -8,4 +8,5 @@ typedef struct gnPlatformCommandBuffer_t {
 
     gnBool changedBuffer;
     gnBufferHandle boundIndexBuffer;
+    gnGraphicsPipeline boundGraphicsPipeline;
 } gnPlatformCommandBuffer;

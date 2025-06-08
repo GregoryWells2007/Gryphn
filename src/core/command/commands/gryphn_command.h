@@ -8,6 +8,7 @@ void gnCommandEndRenderPass(gnCommandBufferHandle buffer);
 void gnCommandBindGraphicsPipeline(gnCommandBufferHandle buffer, gnGraphicsPipelineHandle graphicsPipeline);
 void gnCommandSetViewport(gnCommandBufferHandle buffer, gnViewport viewport);
 void gnCommandSetScissor(gnCommandBufferHandle buffer, gnScissor scissor);
+void gnCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform);
 
 #include "core/buffers/gryphn_buffer.h"
 void gnCommandBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type);

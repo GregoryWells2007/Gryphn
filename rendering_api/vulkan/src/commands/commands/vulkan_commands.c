@@ -5,8 +5,9 @@
 #include "commands/command_buffer/vulkan_command_buffer.h"
 #include "pipelines/graphics_pipeline/vulkan_graphics_pipeline.h"
 #include "buffers/vulkan_buffer.h"
+#include "uniforms/vulkan_uniform.h"
 
-void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo) {
+void gnCommandBeginRenderPassFn(gnCommandBuffer buffer, struct gnRenderPassInfo_t passInfo) {
     VkClearValue* values = malloc(sizeof(VkClearValue) * passInfo.clearValueCount);
     for (int i = 0; i < passInfo.clearValueCount; i++) {
         values[i] = (VkClearValue){{{
@@ -31,13 +32,14 @@ void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, struct gnRende
 
     vkCmdBeginRenderPass(buffer->commandBuffer->buffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 }
-void gnCommandEndRenderPassFn(struct gnCommandBuffer_t* buffer) {
+void gnCommandEndRenderPassFn(gnCommandBuffer buffer) {
     vkCmdEndRenderPass(buffer->commandBuffer->buffer);
 }
-void gnCommandBindGraphicsPipelineFn(struct gnCommandBuffer_t* buffer, struct gnGraphicsPipeline_t* graphicsPipeline) {
+void gnCommandBindGraphicsPipelineFn(gnCommandBuffer buffer, gnGraphicsPipeline graphicsPipeline) {
+    buffer->commandBuffer->boundGraphicsPipeline = graphicsPipeline;
     vkCmdBindPipeline(buffer->commandBuffer->buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline->graphicsPipeline->graphicsPipeline);
 }
-void gnCommandSetViewportFn(struct gnCommandBuffer_t* buffer, struct gnViewport_t viewport) {
+void gnCommandSetViewportFn(gnCommandBuffer buffer, gnViewport viewport) {
     VkViewport vkViewport = {
         .x = viewport.position.x,
         .y = viewport.size.y,
@@ -48,7 +50,7 @@ void gnCommandSetViewportFn(struct gnCommandBuffer_t* buffer, struct gnViewport_
     };
     vkCmdSetViewport(buffer->commandBuffer->buffer, 0, 1, &vkViewport);
 }
-void gnCommandSetScissorFn(struct gnCommandBuffer_t* buffer, struct gnScissor_t scissor) {
+void gnCommandSetScissorFn(gnCommandBuffer buffer, struct gnScissor_t scissor) {
     VkRect2D vkScissor = {
         .extent = { scissor.size.x, scissor.size.y },
         .offset = { scissor.position.x, scissor.position.y }
@@ -64,11 +66,20 @@ void gnCommandBindBufferFn(gnCommandBufferHandle buffer, gnBufferHandle bufferTo
         buffer->commandBuffer->boundIndexBuffer = bufferToBind;
     }
 }
-void gnCommandDrawFn(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
+void gnCommandDrawFn(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     vkCmdDraw(buffer->commandBuffer->buffer, vertexCount, instanceCount, firstVertex, firstInstance);
 }
 void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance)  {
     if (buffer->commandBuffer->changedBuffer) vkCmdBindIndexBuffer(buffer->commandBuffer->buffer, buffer->commandBuffer->boundIndexBuffer->buffer->buffer, 0, (type == GN_UINT32) ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
     vkCmdDrawIndexed(buffer->commandBuffer->buffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
     buffer->commandBuffer->changedBuffer = gnFalse;
+}
+
+void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform) {
+    vkCmdBindDescriptorSets(
+        buffer->commandBuffer->buffer,
+        VK_PIPELINE_BIND_POINT_GRAPHICS,
+        buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->pipelineLayout, 0, 1,
+        &uniform->uniform->set, 0, NULL
+    );
 }
