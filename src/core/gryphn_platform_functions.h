@@ -88,6 +88,7 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnDestroyBuffer)(gnBufferHandle buffer);
 
     gnReturnCode (*_gnCreateUniformPool)(gnUniformPool pool, gnDeviceHandle device);
+    gnUniform* (*_gnUniformPoolAllocateUniforms)(gnUniformPool pool, const gnUniformLayout layout);
 
     gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
     void (*_gnSignalFence)(gnFenceHandle fence);

@@ -90,6 +90,7 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnMapBuffer, "gnMapBufferFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyBuffer, "gnDestroyBufferFn");
     gnLoadDLLFunction(lib, functions->_gnCreateUniformPool, "gnCreateUniformPoolFn");
+    gnLoadDLLFunction(lib, functions->_gnUniformPoolAllocateUniforms, "gnUniformPoolAllocateUniformsFn");
     gnLoadDLLFunction(lib, functions->_gnCreateFence, "gnCreateFenceFn");
     gnLoadDLLFunction(lib, functions->_gnSignalFence, "gnSignalFenceFn");
     gnLoadDLLFunction(lib, functions->_gnWaitForFence, "gnWaitForFenceFn");

@@ -2,6 +2,7 @@
 #include "output_device/vulkan_output_devices.h"
 #include "shader_module/vulkan_shader_module.h"
 #include "renderpass/vulkan_render_pass_descriptor.h"
+#include "uniforms/vulkan_uniform_layout.h"
 
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e state) {
     switch (state) {
@@ -60,13 +61,7 @@ VkFormat vkGryphnVertexFormat(gnVertexFormat format) {
     }
 }
 
-VkDescriptorType vkGryphnUniformType(gnUniformType type) {
-    switch(type) {
-    case GN_UNIFORM_BUFFER_DESCRIPTOR: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-    }
-}
-
-gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t info) {
+gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(gnPlatformGraphicsPipeline));
 
     for (int i = 0; i < GN_DYNAMIC_STATE_MAX; i++) graphicsPipeline->graphicsPipeline->isDynamic[i] = gnFalse;
@@ -184,27 +179,9 @@ gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPip
         .blendConstants[3] = 0.0f
     };
 
-    graphicsPipeline->graphicsPipeline->setCount = info.uniformLayout.uniformBindingCount;
-    graphicsPipeline->graphicsPipeline->sets = malloc(sizeof(VkDescriptorSetLayoutBinding) * info.uniformLayout.uniformBindingCount);
-    for (int i = 0; i < info.uniformLayout.uniformBindingCount; i++) {
-        VkDescriptorSetLayoutBinding setLayout = {
-            .binding = info.uniformLayout.uniformBindings[i].binding,
-            .descriptorCount = 1,
-            .descriptorType = vkGryphnUniformType(info.uniformLayout.uniformBindings[i].type),
-            .stageFlags = vkGryphnShaderModuleStage(info.uniformLayout.uniformBindings[i].stage)
-        };
-
-        VkDescriptorSetLayoutCreateInfo info = {
-            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-            .bindingCount = 1,
-            .pBindings = &setLayout
-        };
-
-        if (vkCreateDescriptorSetLayout(device->outputDevice->device, &info, NULL, &graphicsPipeline->graphicsPipeline->sets[i]) != VK_SUCCESS) {
-            return GN_FAILED_TO_CREATE_UNIFORM_LAYOUT;
-        }
-    }
-
+    graphicsPipeline->graphicsPipeline->sets = vkGryphnCreateSetLayouts(
+        &info.uniformLayout, &graphicsPipeline->graphicsPipeline->setCount, device->outputDevice->device
+    );
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
