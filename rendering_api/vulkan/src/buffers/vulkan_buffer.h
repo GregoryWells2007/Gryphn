@@ -1,6 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include "utils/gryphn_bool.h"
+#include <core/buffers/gryphn_buffer.h>
 
 struct gnPlatformBuffer_t {
     VkBuffer buffer;

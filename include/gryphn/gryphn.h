@@ -23,3 +23,4 @@
 #include <core/shader_input/gryphn_shader_layout.h>
 #include <core/buffers/gryphn_buffer.h>
 #include <core/uniforms/gryphn_uniform_pool.h>
+#include <core/uniforms/gryphn_uniform.h>
