@@ -24,3 +24,4 @@ GN_HANDLE(gnSemaphore);
 GN_HANDLE(gnFence);
 GN_HANDLE(gnFramebuffer);
 GN_HANDLE(gnBuffer);
+GN_HANDLE(gnUniformPool);

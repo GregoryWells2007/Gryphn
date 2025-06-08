@@ -62,7 +62,7 @@ VkFormat vkGryphnVertexFormat(gnVertexFormat format) {
 
 VkDescriptorType vkGryphnUniformType(gnUniformType type) {
     switch(type) {
-    case GN_UNIFORM_BUFFER: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    case GN_UNIFORM_BUFFER_DESCRIPTOR: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
     }
 }
 

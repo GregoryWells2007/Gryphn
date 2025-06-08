@@ -8,8 +8,9 @@ typedef enum gnIndexType {
 } gnIndexType;
 
 typedef enum gnBufferType {
-    GN_VERTEX_BUFFER = 0x00000001f,
-    GN_INDEX_BUFFER  = 0x00000002f,
+    GN_VERTEX_BUFFER  = 0x00000001,
+    GN_INDEX_BUFFER   = 0x00000002,
+    GN_UNIFORM_BUFFER = 0x00000004
 } gnBufferType;
 
 typedef enum gnBufferUsage {

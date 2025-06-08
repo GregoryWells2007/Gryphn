@@ -5,10 +5,13 @@
 #include "output_device/vulkan_physical_device.h"
 
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
-switch (type) {
-case GN_VERTEX_BUFFER: return VK_BUFFER_USAGE_VERTEX_BUFFER_BIT;
-case GN_INDEX_BUFFER: return VK_BUFFER_USAGE_INDEX_BUFFER_BIT;
-}
+    VkBufferUsageFlags usageFlags = 0;
+    switch (type) {
+    case GN_VERTEX_BUFFER: usageFlags |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT; break;
+    case GN_INDEX_BUFFER: usageFlags |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT; break;
+    case GN_UNIFORM_BUFFER: usageFlags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT; break;
+    }
+    return usageFlags;
 }
 
 gnReturnCode VkCreateBuffer(
@@ -93,20 +96,29 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
     VkBufferUsageFlags usage = vkGryphnBufferType(info.type);
     buffer->buffer->useStagingBuffer = gnFalse;
     if (info.usage == GN_STATIC_DRAW) {
-        gnReturnCode createdBuffer = VkCreateBuffer(
+        buffer->buffer->useStagingBuffer = gnTrue;
+        VkCreateBuffer(
             &buffer->buffer->stagingBuffer, &buffer->buffer->stagingBufferMemory,
             info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            VK_BUFFER_USAGE_TRANSFER_SRC_BIT
         );
-        usage |= VK_BUFFER_USAGE_TRANSFER_DST_BIT;
-        buffer->buffer->useStagingBuffer = gnTrue;
+
+        return VkCreateBuffer(
+            &buffer->buffer->buffer, &buffer->buffer->bufferMemory,
+            info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
+            VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
+            vkGryphnBufferType(info.type) | VK_BUFFER_USAGE_TRANSFER_DST_BIT
+        );
+    } else {
+        return VkCreateBuffer(
+            &buffer->buffer->buffer, &buffer->buffer->bufferMemory,
+            info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+            vkGryphnBufferType(info.type)
+        );
     }
 
-    gnReturnCode createdBuffer = VkCreateBuffer(
-        &buffer->buffer->buffer, &buffer->buffer->bufferMemory,
-        info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
-        VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, usage
-    );
 
 
     return GN_SUCCESS;

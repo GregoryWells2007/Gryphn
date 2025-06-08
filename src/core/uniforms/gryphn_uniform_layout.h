@@ -3,7 +3,7 @@
 #include "core/shader_module/gryphn_shader_module.h"
 
 typedef enum gnUniformType {
-    GN_UNIFORM_BUFFER
+    GN_UNIFORM_BUFFER_DESCRIPTOR
 } gnUniformType;
 
 typedef struct gnUniformBinding {

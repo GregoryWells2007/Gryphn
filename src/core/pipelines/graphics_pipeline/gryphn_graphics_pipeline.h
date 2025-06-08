@@ -1,6 +1,6 @@
 #pragma once
 #include <core/output_device/gryphn_output_device.h>
-#include <core/pipelines/gryphn_uniform_layout.h>
+#include <core/uniforms/gryphn_uniform_layout.h>
 #include <core/renderpass/gryphn_render_pass_descriptor.h>
 #include <core/shader_module/gryphn_shader_module.h>
 #include "utils/math/gryphn_vec2.h"
