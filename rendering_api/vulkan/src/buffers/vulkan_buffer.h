@@ -17,7 +17,6 @@ struct gnPlatformBuffer_t {
 };
 
 gnReturnCode VkCreateBuffer(
-    VkGryphnBuffer*, gnBufferInfo info,
-    VkDevice device, VkPhysicalDevice physcialDevice,
+    VkGryphnBuffer* buffer, size_t size, gnDevice device,
     VkMemoryPropertyFlags flags, VkBufferUsageFlags usage
 );

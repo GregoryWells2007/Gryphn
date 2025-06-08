@@ -15,22 +15,21 @@ VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
 }
 
 gnReturnCode VkCreateBuffer(
-    VkGryphnBuffer* buffer, gnBufferInfo info,
-    VkDevice device, VkPhysicalDevice physcialDevice,
+    VkGryphnBuffer* buffer, size_t size, gnDevice device,
     VkMemoryPropertyFlags flags, VkBufferUsageFlags usage
 ) {
     VkBufferCreateInfo bufferInfo = {
         .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
-        .size = info.size,
+        .size = size,
         .usage = usage,
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE
     };
 
-    if (vkCreateBuffer(device, &bufferInfo, NULL, &buffer->buffer) != VK_SUCCESS)
+    if (vkCreateBuffer(device->outputDevice->device, &bufferInfo, NULL, &buffer->buffer) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_BUFFER;
 
     VkMemoryRequirements bufferRequirements;
-    vkGetBufferMemoryRequirements(device, buffer->buffer, &bufferRequirements);
+    vkGetBufferMemoryRequirements(device->outputDevice->device, buffer->buffer, &bufferRequirements);
 
     VkMemoryAllocateInfo memoryAllocateInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
@@ -38,7 +37,7 @@ gnReturnCode VkCreateBuffer(
     };
 
     VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(physcialDevice, &memoryProperties);
+    vkGetPhysicalDeviceMemoryProperties(device->physicalDevice.physicalDevice->device, &memoryProperties);
 
     gnBool foundMemory = gnFalse;
     for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
@@ -49,10 +48,9 @@ gnReturnCode VkCreateBuffer(
     } // this whole thing was adapted from vulkan-tutorial.com
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 
-    if (vkAllocateMemory(device, &memoryAllocateInfo, NULL, &buffer->memory) != VK_SUCCESS) {
+    if (vkAllocateMemory(device->outputDevice->device, &memoryAllocateInfo, NULL, &buffer->memory) != VK_SUCCESS)
         return GN_FAILED_TO_ALLOCATE_MEMORY;
-    }
-    vkBindBufferMemory(device, buffer->buffer, buffer->memory, 0);
+    vkBindBufferMemory(device->outputDevice->device, buffer->buffer, buffer->memory, 0);
     return GN_SUCCESS;
 }
 
@@ -99,21 +97,21 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
         buffer->buffer->useStagingBuffer = gnTrue;
         VkCreateBuffer(
             &buffer->buffer->stagingBuffer,
-            info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
+            info.size, device,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             VK_BUFFER_USAGE_TRANSFER_SRC_BIT
         );
 
         return VkCreateBuffer(
             &buffer->buffer->buffer,
-            info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
+            info.size, device,
             VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT,
             vkGryphnBufferType(info.type) | VK_BUFFER_USAGE_TRANSFER_DST_BIT
         );
     } else {
         return VkCreateBuffer(
             &buffer->buffer->buffer,
-            info, device->outputDevice->device, device->physicalDevice.physicalDevice->device,
+            info.size, device,
             VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
             vkGryphnBufferType(info.type)
         );
