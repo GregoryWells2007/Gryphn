@@ -75,11 +75,11 @@ void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int 
     buffer->commandBuffer->changedBuffer = gnFalse;
 }
 
-void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform) {
+void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
     vkCmdBindDescriptorSets(
         buffer->commandBuffer->buffer,
         VK_PIPELINE_BIND_POINT_GRAPHICS,
-        buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->pipelineLayout, 0, 1,
+        buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->pipelineLayout, set, 1,
         &uniform->uniform->set, 0, NULL
     );
 }

@@ -17,8 +17,8 @@ void gnCommandSetViewport(struct gnCommandBuffer_t* buffer, struct gnViewport_t 
 void gnCommandSetScissor(struct gnCommandBuffer_t* buffer, struct gnScissor_t scissor) {
     buffer->commandPool->commandFunctions->_gnCommandSetScissor(buffer, scissor);
 }
-void gnCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform) {
-    buffer->commandPool->commandFunctions->_gnCommandBindUniform(buffer, uniform);
+void gnCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
+    buffer->commandPool->commandFunctions->_gnCommandBindUniform(buffer, uniform, set);
 }
 void gnCommandBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
     buffer->commandPool->commandFunctions->_gnCommandBindBuffer(buffer, bufferToBind, type);

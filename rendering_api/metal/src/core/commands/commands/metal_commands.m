@@ -114,7 +114,7 @@ void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int 
     ];
 }
 
-void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform) {
+void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     if (uniform->uniform->type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
         gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->data;
