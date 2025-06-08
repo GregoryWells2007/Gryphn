@@ -3,6 +3,7 @@
 #include "core/commands/command_buffer/metal_command_buffer.h"
 #include "core/pipelines/graphics_pipeline/metal_graphics_pipeline.h"
 #include "core/buffer/metal_buffer.h"
+#include "core/uniforms/metal_uniform.h"
 #import <Metal/MTLRenderCommandEncoder.h>
 
 void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo) {
@@ -111,11 +112,16 @@ void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int 
         baseVertex:vertexOffset
         baseInstance:firstInstance
     ];
+}
 
-    // [encoder drawIndexedPrimitives:(MTLPrimitiveType)
-        //     indexCount:indexCount
-        //     indexType:((type == GN_UINT32) ? MTLIndexTypeUInt32 : MTLIndexTypeUInt16)
-        //     indexBuffer:buffer->commandBuffer->indexBuffer->buffer->buffer
-        //     indexBufferOffset:firstIndex
-        // ];
+void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform) {
+    id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
+    if (uniform->uniform->type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
+        gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->data;
+
+        [encoder setVertexBuffer:info.buffer->buffer->buffer
+            offset:info.offset
+            atIndex:(info.binding + 1)
+        ];
+    }
 }

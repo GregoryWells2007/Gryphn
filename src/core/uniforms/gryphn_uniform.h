@@ -4,7 +4,6 @@
 #include "core/gryphn_handles.h"
 
 typedef struct gnBufferUniformInfo {
-    gnUniform uniform;
     uint32_t binding;
     gnBuffer buffer;
     size_t offset;

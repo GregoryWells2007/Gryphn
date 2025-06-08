@@ -47,11 +47,11 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, const gnUniformLa
         .pSetLayouts = pool->uniformPool->pools[pool->uniformPool->poolCount].layouts
     };
 
-    VkDescriptorSet* sets = malloc(sizeof(VkDescriptorSet) * pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount);
+    VkDescriptorSet* sets = malloc(sizeof(VkDescriptorSet) * layout.uniformBindingCount);
     if (vkAllocateDescriptorSets(pool->device->outputDevice->device, &allocInfo, sets) != VK_SUCCESS)
         return NULL;
 
-    gnUniform* uniforms = malloc(sizeof(gnUniform) * pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount);
+    gnUniform* uniforms = malloc(sizeof(gnUniform) * layout.uniformBindingCount);
     for (int i = 0; i < pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount; i++) {
         uniforms[i] = malloc(sizeof(struct gnUniform_t));
         uniforms[i]->uniform = malloc(sizeof(struct gnPlatformUniform_t));
