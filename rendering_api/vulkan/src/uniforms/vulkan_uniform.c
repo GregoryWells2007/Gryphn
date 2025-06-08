@@ -5,7 +5,7 @@
 
 void gnUpdateBufferUniformFn(gnUniform uniform, gnBufferUniformInfo* info) {
     VkDescriptorBufferInfo bufferInfo = {
-        .buffer = info->buffer->buffer->buffer,
+        .buffer = info->buffer->buffer->buffer.buffer,
         .offset = info->offset,
         .range = info->size
     };
