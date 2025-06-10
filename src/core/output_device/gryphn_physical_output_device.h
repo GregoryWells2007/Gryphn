@@ -1,4 +1,5 @@
 #pragma once
+#include "stdint.h"
 #include "utils/gryphn_string.h"
 #include "core/gryphn_handles.h"
 

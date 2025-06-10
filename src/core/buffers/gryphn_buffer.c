@@ -12,7 +12,7 @@ void gnBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
     buffer->device->deviceFunctions->_gnBufferData(buffer, dataSize, data);
 }
 void* gnMapBuffer(gnBufferHandle buffer) {
-    if (buffer->info.type == GN_STATIC_DRAW) {
+    if (buffer->info.usage == GN_STATIC_DRAW) {
         gnDebuggerSetErrorMessage(buffer->device->instance->debugger, (gnMessageData){
            .message = gnCreateString("Cannot map static draw buffers")
         });

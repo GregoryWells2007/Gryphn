@@ -3,6 +3,7 @@
 #include <platform/gryphn_platform_include.h>
 #include "gryphn_dynamic_library.h"
 // #include <dlfcn.h>
+#include "stdbool.h"
 #include "stdio.h"
 
 gnBool gnIsAPISupported(gnRenderingAPI api) {

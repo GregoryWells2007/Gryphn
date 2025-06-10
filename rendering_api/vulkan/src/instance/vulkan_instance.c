@@ -56,23 +56,20 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
 gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
+
     #ifdef GN_PLATFORM_LINUX
-    #ifdef GN_WINDOW_X11
+    gnBool isX11 = gnFalse;
     uint32_t extensionCount = 3;
-    const char* extensions[] = {
-        "VK_KHR_xlib_surface",
-        "VK_KHR_surface",
-        VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-    };
-    #endif
-    #ifdef GN_WINFDOW_WAYLAND
-    uint32_t extensionCount = 3;
-    const char* extensions[] = {
-        "VK_KHR_wayland_surface",
-        "VK_KHR_surface",
-        VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-    };
-    #endif
+    const char* extensions[3];
+    if (isX11) {
+        extensions[0] = "VK_KHR_xlib_surface";
+        extensions[1] = "VK_KHR_surface";
+        extensions[2] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+    } else {
+        extensions[0] = "VK_KHR_wayland_surface";
+        extensions[1] = "VK_KHR_surface";
+        extensions[2] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
+    }
     #endif
     #ifdef GN_PLATFORM_WINDOWS
     uint32_t extensionCount = 3;
