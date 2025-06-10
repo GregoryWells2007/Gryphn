@@ -1,13 +1,15 @@
+#include <core/window_surface/gryphn_surface_create_functions.h>
 #include <instance/vulkan_instance.h>
 #include "vulkan_surface.h"
 #include <output_device/vulkan_physical_device.h>
 #include <stdio.h>
 
+
 #ifdef GN_PLATFORM_LINUX
 #ifdef GN_WINDOW_X11
 #include <vulkan/vulkan_xlib.h>
 #include <X11/Xlib.h>
-gnReturnCode gnCreateX11WindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo) {
+gnReturnCode gnCreateX11WindowSurfaceFn(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo) {
     windowSurface->windowSurface = malloc(sizeof(struct gnPlatformWindowSurface_t));
     VkXlibSurfaceCreateInfoKHR info = {};
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;

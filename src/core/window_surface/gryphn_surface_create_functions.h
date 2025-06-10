@@ -7,10 +7,10 @@
     #ifdef GN_WINDOW_X11
         typedef struct gnX11WindowSurfaceInfo_t {
             Display* display;
-            Window* window;
-        } gnX11WindowSurfaceCreateInfo;
+            Window window;
+        } gnX11WindowSurfaceInfo;
 
-        gnReturnCode gnCreateX11WindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo);
+        gnReturnCode gnCreateX11WindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo);
     #endif
     #ifdef GN_WINDOW_WAYLAND
         typedef struct gnWaylandWindowSurfaceInfo_t {

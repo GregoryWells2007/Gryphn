@@ -58,7 +58,7 @@ gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instan
 
 
     #ifdef GN_PLATFORM_LINUX
-    gnBool isX11 = gnFalse;
+    gnBool isX11 = gnTrue;
     uint32_t extensionCount = 3;
     const char* extensions[3];
     if (isX11) {
@@ -101,7 +101,12 @@ gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instan
     VkInstanceCreateInfo createInfo = {};
     createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
     createInfo.pApplicationInfo = &appInfo;
-    createInfo.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+    VkInstanceCreateFlags createFlags = 0;
+    #ifdef GN_PLATFORM_MACOS
+    createFlags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+    #endif
+
+    createInfo.flags = createFlags;
 
     const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
     createInfo.enabledLayerCount = 1;

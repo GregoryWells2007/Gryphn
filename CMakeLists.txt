@@ -39,6 +39,7 @@ if(APPLE)
 endif()
 if(UNIX AND NOT APPLE)
     add_compile_definitions(GN_PLATFORM_LINUX)
+    add_compile_definitions(GN_WINDOW_X11)
     add_subdirectory(rendering_api/vulkan/)
 endif()
 

@@ -1,6 +1,5 @@
 #include "gryphn_debugger.h"
 #include <core/gryphn_platform_functions.h>
-#include "stdio.h"
 
 gnReturnCode gnCreateDebugger(gnDebuggerHandle* debugger, const struct gnDebuggerInfo_t info) {
     *debugger = malloc(sizeof(struct gnDebugger_t));
