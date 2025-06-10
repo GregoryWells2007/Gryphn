@@ -1,6 +1,7 @@
 #include "vulkan_surface/vulkan_surface.h"
 #include "vulkan_texture.h"
 #include "output_device/vulkan_output_devices.h"
+#include "output_device/vulkan_physical_device.h"
 
 VkImageType vkGryphnTextureType(gnTextureType type) {
 switch(type) {
@@ -31,6 +32,22 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
 
     if (vkCreateImage(device->outputDevice->device, &imageInfo, NULL, &texture->texture->image) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_IMAGE;
+
+    VkMemoryRequirements memRequirements;
+    vkGetImageMemoryRequirements(device->outputDevice->device, texture->texture->image, &memRequirements);
+
+    gnBool foundMemory = gnFalse;
+    VkMemoryAllocateInfo allocInfo = {
+        .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
+        .allocationSize = memRequirements.size,
+        .memoryTypeIndex = VkMemoryIndex(device->physicalDevice.physicalDevice->device, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &foundMemory)
+    };
+    if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
+
+    if (vkAllocateMemory(device->outputDevice->device, &allocInfo, NULL, &texture->texture->memory) != VK_SUCCESS)
+        return GN_FAILED_TO_ALLOCATE_MEMORY;
+
+    vkBindImageMemory(device->outputDevice->device, texture->texture->image, texture->texture->memory, 0);
 
     return GN_SUCCESS;
 }

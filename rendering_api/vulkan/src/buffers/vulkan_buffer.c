@@ -14,6 +14,17 @@ VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
     return usageFlags;
 }
 
+uint32_t VkMemoryIndex(VkPhysicalDevice device, uint32_t memoryType, VkMemoryPropertyFlags flags, gnBool* foundMemory) {
+    VkPhysicalDeviceMemoryProperties memoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(device, &memoryProperties);
+    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
+        if ((memoryType & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & flags) == flags) {
+            *foundMemory = gnTrue;
+            return i;
+        }
+    } // this whole thing was adapted from vulkan-tutorial.com
+    return 0;
+}
 gnReturnCode VkCreateBuffer(
     VkGryphnBuffer* buffer, size_t size, gnDevice device,
     VkMemoryPropertyFlags flags, VkBufferUsageFlags usage
@@ -31,21 +42,12 @@ gnReturnCode VkCreateBuffer(
     VkMemoryRequirements bufferRequirements;
     vkGetBufferMemoryRequirements(device->outputDevice->device, buffer->buffer, &bufferRequirements);
 
+    gnBool foundMemory = gnFalse;
     VkMemoryAllocateInfo memoryAllocateInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .allocationSize = bufferRequirements.size,
+        .memoryTypeIndex = VkMemoryIndex(device->physicalDevice.physicalDevice->device, bufferRequirements.memoryTypeBits, flags, &foundMemory)
     };
-
-    VkPhysicalDeviceMemoryProperties memoryProperties;
-    vkGetPhysicalDeviceMemoryProperties(device->physicalDevice.physicalDevice->device, &memoryProperties);
-
-    gnBool foundMemory = gnFalse;
-    for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
-        if ((bufferRequirements.memoryTypeBits & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & flags) == flags) {
-            memoryAllocateInfo.memoryTypeIndex = i;
-            foundMemory = gnTrue;
-        }
-    } // this whole thing was adapted from vulkan-tutorial.com
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 
     if (vkAllocateMemory(device->outputDevice->device, &memoryAllocateInfo, NULL, &buffer->memory) != VK_SUCCESS)

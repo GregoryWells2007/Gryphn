@@ -20,3 +20,4 @@ gnReturnCode VkCreateBuffer(
     VkGryphnBuffer* buffer, size_t size, gnDevice device,
     VkMemoryPropertyFlags flags, VkBufferUsageFlags usage
 );
+uint32_t VkMemoryIndex(VkPhysicalDevice device, uint32_t memoryType, VkMemoryPropertyFlags flags, gnBool* foundMemory);

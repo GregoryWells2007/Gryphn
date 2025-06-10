@@ -7,5 +7,6 @@ typedef struct gnPlatformTexture_t {
     VkGryphnBuffer buffer;
 
     VkImage image;
+    VkDeviceMemory memory;
     VkImageView imageView;
 } gnPlatformTexture;
