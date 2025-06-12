@@ -1,6 +1,7 @@
 #pragma once
 #include "stdlib.h"
 #include "utils/gryphn_error_code.h"
+#include "utils/lists/gryphn_array_list.h"
 #include <core/gryphn_handles.h>
 
 typedef enum gnIndexType {
@@ -30,8 +31,11 @@ struct gnBuffer_t {
     gnBufferInfo info;
 };
 #endif
+typedef void* gnBufferMemory;
+GN_ARRAY_LIST(gnBuffer);
+GN_ARRAY_LIST(gnBufferMemory);
 
 gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device, gnBufferInfo info);
-void gnBufferData(gnBufferHandle buffer, size_t dataSize, void* data);
-void* gnMapBuffer(gnBufferHandle buffer);
+void gnBufferData(gnBufferHandle buffer, size_t dataSize, gnBufferMemory data);
+gnBufferMemory gnMapBuffer(gnBufferHandle buffer);
 void gnDestroyBuffer(gnBufferHandle buffer);

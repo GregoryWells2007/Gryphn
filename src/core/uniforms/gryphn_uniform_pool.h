@@ -2,6 +2,7 @@
 #include "core/gryphn_handles.h"
 #include "utils/gryphn_error_code.h"
 #include "core/uniforms/gryphn_uniform_layout.h"
+#include "core/uniforms/gryphn_uniform.h"
 
 #ifdef GN_REVEAL_IMPL
 struct gnUniformPool_t {
@@ -11,5 +12,5 @@ struct gnUniformPool_t {
 #endif
 
 gnReturnCode gnCreateUniformPool(gnUniformPool* pool, gnDeviceHandle device);
-gnUniform* gnUniformPoolAllocateUniforms(gnUniformPool pool, const gnUniformLayout layout);
+gnUniformArrayList gnUniformPoolAllocateUniforms(gnUniformPool pool, const gnUniformLayout layout);
 void gnDestroyUniformPool(gnUniformPool pool);

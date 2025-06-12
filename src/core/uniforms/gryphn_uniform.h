@@ -1,6 +1,7 @@
 #pragma once
 #include "stdint.h"
 #include "stdlib.h"
+#include "utils/lists/gryphn_array_list.h"
 #include "core/gryphn_handles.h"
 
 typedef struct gnBufferUniformInfo {
@@ -16,5 +17,6 @@ struct gnUniform_t {
     gnUniformPool pool;
 };
 #endif
+GN_ARRAY_LIST(gnUniform)
 
 void gnUpdateBufferUniform(gnUniform uniform, gnBufferUniformInfo bufferInfo);

@@ -11,11 +11,15 @@ gnReturnCode gnCreateUniformPool(gnUniformPool* pool, gnDeviceHandle device) {
 }
 
 // you own this memory now
-gnUniform* gnUniformPoolAllocateUniforms(gnUniformPool pool, const gnUniformLayout layout) {
+gnUniformArrayList gnUniformPoolAllocateUniforms(gnUniformPool pool, const gnUniformLayout layout, uint32_t count) {
     gnUniform* uniforms = pool->device->deviceFunctions->_gnUniformPoolAllocateUniforms(pool, layout);
     for (int i = 0; i < layout.uniformBindingCount; i++)
         uniforms[i]->pool = pool;
-    return uniforms;
+
+    gnUniformArrayList list = gnUniformArrayListCreate();
+    gnUniformArrayListResize(&list, layout.uniformBindingCount);
+    for (int i = 0; i < layout.uniformBindingCount; i++) list.data[i] = uniforms[i];
+    return list;
 }
 
 void gnDestroyUniformPool(gnUniformPool pool) {
