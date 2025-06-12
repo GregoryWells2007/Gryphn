@@ -1,12 +1,10 @@
-#define GN_WINDOW_X11
 #include "gryphn_surface_create_functions.h"
 #include "core/instance/gryphn_instance.h"
 #include "core/gryphn_platform_functions.h"
-#include "stdio.h"
 
 #ifdef GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11
-        gnReturnCode gnCreateX11WindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo) {
+        gnReturnCode gnCreateX11WindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo) {
             *windowSurface = malloc(sizeof(struct gnWindowSurface_t));
             (*windowSurface)->instance = instance;
             return instance->functions->_gnCreateX11WindowSurface(*windowSurface, instance, createInfo);

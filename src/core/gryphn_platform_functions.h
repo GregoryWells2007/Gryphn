@@ -6,7 +6,7 @@
 #include "output_device/gryphn_physical_output_device.h"
 #include "output_device/gryphn_output_device.h"
 #include "window_surface/gryphn_surface.h"
-#include "window_surface/gryphn_surface_create_functions.h"
+#include <core/window_surface/gryphn_surface_create_functions.h>
 #include "shader_module/gryphn_shader_module.h"
 #include "renderpass/gryphn_render_pass_descriptor.h"
 #include "pipelines/graphics_pipeline/gryphn_graphics_pipeline.h"
@@ -34,10 +34,9 @@ typedef struct gnFunctions_t {
     void (*_gnDestroyOutputDevice)(gnOutputDeviceHandle device);
 
 
-
     #ifdef GN_PLATFORM_LINUX
         #ifdef GN_WINDOW_X11
-            gnReturnCode (*_gnCreateX11WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnX11WindowSurfaceInfo_t createInfo);
+            gnReturnCode (*_gnCreateX11WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo);
         #endif
         #ifdef GN_WINDOW_WAYLAND
             gnReturnCode (*_gnCreateWaylandWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);

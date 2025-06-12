@@ -1,5 +1,6 @@
 #include "vulkan_shader_module.h"
 #include "output_device/vulkan_output_devices.h"
+#include "stdio.h"
 
 VkShaderStageFlagBits vkGryphnShaderModuleStage(gnShaderModuleStage stage) {
     VkShaderStageFlagBits outStage = 0;
@@ -11,17 +12,17 @@ VkShaderStageFlagBits vkGryphnShaderModuleStage(gnShaderModuleStage stage) {
     return outStage;
 }
 
-gnReturnCode gnCreateShaderModuleFn(struct gnShaderModule_t *module, struct gnOutputDevice_t *device, struct gnShaderModuleInfo_t shaderModuleInfo) {
+gnReturnCode gnCreateShaderModuleFn(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
     module->shaderModule = malloc(sizeof(struct gnPlatformShaderModule_t));
 
-    VkShaderModuleCreateInfo createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
-    createInfo.codeSize = shaderModuleInfo.size;
-    createInfo.pCode = shaderModuleInfo.code;
+    VkShaderModuleCreateInfo createInfo = {
+        .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+        .codeSize = shaderModuleInfo.size,
+        .pCode = shaderModuleInfo.code
+    };
 
-    if (vkCreateShaderModule(device->outputDevice->device, &createInfo, NULL, &module->shaderModule->shaderModule) != VK_SUCCESS) {
+    if (vkCreateShaderModule(device->outputDevice->device, &createInfo, NULL, &module->shaderModule->shaderModule) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_SHADER_MODULE;
-    }
 
     module->shaderModule->shaderStageInfo = (VkPipelineShaderStageCreateInfo){
         .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,

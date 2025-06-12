@@ -1,7 +1,7 @@
 #pragma once
-#include "utils/gryphn_image_format.h"
 #include "stdint.h"
-#include "core/output_device/gryphn_output_device.h"
+#include "utils/gryphn_image_format.h"
+#include "utils/gryphn_error_code.h"
 #include "core/gryphn_handles.h"
 
 typedef enum gnRenderPassStage_e {

@@ -3,8 +3,10 @@
 #include <core/gryphn_platform_functions.h>
 #include "core/debugger/gryphn_debugger.h"
 #include "core/instance/gryphn_instance.h"
+#include "stdio.h"
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, struct gnInstanceInfo_t info) {
+
     *instanceHandlePtr = malloc(sizeof(struct gnInstance_t));
     gnInstanceHandle instance = *instanceHandlePtr;
 
@@ -14,10 +16,14 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, struct gnInst
     instance->dynamicLib = gnLoadRenderingDLL(info.renderingAPI);
     if (instance->dynamicLib == NULL) return GN_UNABLE_TO_LOAD_DYNAMIC_LIBARRY;
     instance->functions = malloc(sizeof(struct gnFunctions_t));
+    instance->loadCommandFunctions = gnFalse;
+    instance->loadDeviceFunctions = gnFalse;
     gnLoadFunctions(instance->dynamicLib, instance->functions);
     return instance->functions->_gnCreateInstance(instance, info);
 }
 void gnInstanceAttachDebugger(gnInstanceHandle instance, struct gnDebugger_t *debugger) {
+
+
     if (instance->debugger != NULL) {
         gnDebuggerSetErrorMessage(debugger, (gnMessageData){
             .message = gnCreateString("Debugger already attached to instance")

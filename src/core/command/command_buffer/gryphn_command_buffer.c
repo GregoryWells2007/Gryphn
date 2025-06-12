@@ -7,6 +7,7 @@ gnReturnCode gnCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* buffers,
         buffers[i] = malloc(sizeof(struct gnCommandBuffer_t));
         buffers[i]->commandPool = commandPool;
     }
+    printf("Created the graphics pipeline: %p\n", commandPool->commandFunctions->_gnCommandBindGraphicsPipeline);
     return commandPool->commandFunctions->_gnCommandPoolAllocateCommandBuffers(buffers, count, commandPool);
 }
 

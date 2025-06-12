@@ -7,55 +7,57 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     VkDebugUtilsMessageTypeFlagsEXT messageType,
     const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData,
     void* pUserData) {
+        printf("Created instance: %s\n", pCallbackData->pMessage);
 
-    gnMessageSeverity severity;
-    gnMessageType type;
-    gnMessageData data = {
-        .message = gnCreateString(pCallbackData->pMessage)
-    };
 
-    switch (messageSeverity) {
-    default: break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: severity = GN_MESSAGE_VERBOSE; break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: severity = GN_MESSAGE_INFO; break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: severity = GN_MESSAGE_WARNING; break;
-    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: severity = GN_MESSAGE_ERROR; break;
-    }
+    // gnMessageSeverity severity;
+    // gnMessageType type;
+    // gnMessageData data = {
+    //     .message = gnCreateString(pCallbackData->pMessage)
+    // };
 
-    switch (messageType) {
-    default: break;
-    case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: type = GN_DEBUG_MESSAGE_GENERAL; break;
-    case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT: type = GN_DEBUG_MESSAGE_VALIDATION; break;
-    case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: type = GN_DEBUG_MESSAGE_PERFORMANCE; break;
-    }
+    // switch (messageSeverity) {
+    // default: break;
+    // case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: severity = GN_MESSAGE_VERBOSE; break;
+    // case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: severity = GN_MESSAGE_INFO; break;
+    // case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: severity = GN_MESSAGE_WARNING; break;
+    // case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: severity = GN_MESSAGE_ERROR; break;
+    // }
 
-    gnInstanceHandle instance = (gnInstanceHandle)pUserData;
+    // switch (messageType) {
+    // default: break;
+    // case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: type = GN_DEBUG_MESSAGE_GENERAL; break;
+    // case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT: type = GN_DEBUG_MESSAGE_VALIDATION; break;
+    // case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: type = GN_DEBUG_MESSAGE_PERFORMANCE; break;
+    // }
 
-    if (instance->debugger) {
-        instance->debugger->info.callback(
-          severity, type, data, instance->debugger->info.userData
-        );
-    } else {
-        instance->instance->instanceMessageCount++;
-        if (instance->instance->instanceMessageCount == 1) {
-            instance->instance->instanceMessages = malloc(sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
-        }
-        else {
-        instance->instance->instanceMessages = realloc(instance->instance->instanceMessages, sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
-        }
-            instance->instance->instanceMessages[instance->instance->instanceMessageCount - 1] = (struct gnInstanceMessage){
-                .data = data,
-                .severity = severity,
-                .type = type
-            };
-    }
+    // gnInstanceHandle instance = (gnInstanceHandle)pUserData;
+
+    // if (instance->debugger) {
+    //     instance->debugger->info.callback(
+    //       severity, type, data, instance->debugger->info.userData
+    //     );
+    // } else {
+    //     instance->instance->instanceMessageCount++;
+    //     if (instance->instance->instanceMessageCount == 1) {
+    //         instance->instance->instanceMessages = malloc(sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
+    //     }
+    //     else {
+    //     instance->instance->instanceMessages = realloc(instance->instance->instanceMessages, sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
+    //     }
+    //         instance->instance->instanceMessages[instance->instance->instanceMessageCount - 1] = (struct gnInstanceMessage){
+    //             .data = data,
+    //             .severity = severity,
+    //             .type = type
+    //         };
+    // }
 
     return VK_FALSE;
 }
 
 gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
-
+    instance->instance->instanceMessageCount = 0;
 
     #ifdef GN_PLATFORM_LINUX
     gnBool isX11 = gnTrue;
@@ -88,6 +90,7 @@ gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instan
         VK_EXT_DEBUG_UTILS_EXTENSION_NAME
     };
     #endif
+
 
     VkApplicationInfo appInfo = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,

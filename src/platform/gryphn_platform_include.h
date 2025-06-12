@@ -2,7 +2,7 @@
 #include "core/gryphn_rendering_api.h"
 
 #ifdef GN_PLATFORM_LINUX
-#include "platform_linux/gryphn_platform_linux.h"
+#include <platform/platform_linux/gryphn_platform_linux.h>
 #endif
 
 #ifdef GN_PLATFORM_MACOS

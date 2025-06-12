@@ -1,6 +1,7 @@
 #include "vulkan_render_pass_descriptor.h"
 #include "vulkan_surface/vulkan_surface.h"
 #include "output_device/vulkan_output_devices.h"
+#include "stdio.h"
 
 VkAttachmentLoadOp vkGryphnLoadOperation(gnLoadOperation loadOperation) {
     switch(loadOperation) {
@@ -32,6 +33,7 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
     VkAttachmentDescription* attachments = malloc(sizeof(VkAttachmentDescription) * info.attachmentCount);
     for (int i = 0; i < info.attachmentCount; i++) {
         attachments[i].format = vkGryphnFormatToVulkanFormat(info.attachmentInfos[i].format);
+        attachments[i].flags = 0;
         attachments[i].samples = VK_SAMPLE_COUNT_1_BIT;
 
         attachments[i].loadOp = vkGryphnLoadOperation(info.attachmentInfos[i].loadOperation);
@@ -45,16 +47,30 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
     }
 
     VkSubpassDescription* subpasses = malloc(sizeof(VkSubpassDescription) * info.subpassCount);
+    VkAttachmentReference** colorAttachments = malloc(sizeof(VkAttachmentReference*) * info.subpassCount);
+
+    VkAttachmentReference ref = {
+        .attachment = 0,
+        .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
+    };
 
     for (int i = 0; i < info.subpassCount; i++) {
-        subpasses[i].pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
-        subpasses[i].colorAttachmentCount = info.subpassInfos[i].colorAttachmentCount;
-        VkAttachmentReference* colorAttachments = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
+        colorAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
+
         for (int c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
-            colorAttachments[c].attachment = info.subpassInfos[i].colorAttachments[c].index;
-            colorAttachments[c].layout = vkGryphnImageLayout(info.subpassInfos[i].colorAttachments[c].imageLayout);
+            colorAttachments[i][c] = (VkAttachmentReference){
+                .attachment = info.subpassInfos[i].colorAttachments[c].index,
+                .layout = vkGryphnImageLayout(info.subpassInfos[i].colorAttachments[c].imageLayout)
+            };
         }
-        subpasses[i].pColorAttachments = colorAttachments;
+
+
+        subpasses[i] = (VkSubpassDescription){
+            .flags = 0,
+            .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
+            .colorAttachmentCount = info.subpassInfos[i].colorAttachmentCount,
+            .pColorAttachments = colorAttachments[i]
+        };
     }
 
     VkSubpassDependency* dependencies = malloc(sizeof(VkSubpassDependency) * info.dependencyCount);
@@ -69,22 +85,24 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
         };
     }
 
-    VkRenderPassCreateInfo renderPassInfo = (VkRenderPassCreateInfo){
+    VkRenderPassCreateInfo renderPassInfo = (VkRenderPassCreateInfo) {
         .sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO,
+        .pNext = NULL,
+        .flags = 0,
         .attachmentCount = info.attachmentCount,
         .pAttachments = attachments,
         .subpassCount = info.subpassCount,
         .pSubpasses = subpasses,
         .dependencyCount = info.dependencyCount,
-        .pDependencies = dependencies
+        .pDependencies = dependencies,
     };
 
-    if (vkCreateRenderPass(device->outputDevice->device, &renderPassInfo, NULL, &renderPass->renderPassDescriptor->renderPass) != VK_SUCCESS) {
+    if (vkCreateRenderPass(device->outputDevice->device, &renderPassInfo, NULL, &renderPass->renderPassDescriptor->renderPass) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_RENDER_PASS;
-    }
 
     free(attachments);
     free(subpasses);
+    free(dependencies);
 
     return GN_SUCCESS;
 }

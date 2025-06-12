@@ -1,11 +1,15 @@
 #pragma once
+#ifndef GN_WINDOW_X11
+#define GN_WINDOW_X11
+#endif
 #include <platform/gryphn_platform_include.h>
-#include "core/gryphn_handles.h"
-#include "utils/gryphn_error_code.h"
+#include <core/gryphn_handles.h>
+#include <utils/gryphn_error_code.h>
+
 
 #ifdef GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11
-        typedef struct gnX11WindowSurfaceInfo_t {
+        typedef struct gnX11WindowSurfaceInfo {
             Display* display;
             Window window;
         } gnX11WindowSurfaceInfo;

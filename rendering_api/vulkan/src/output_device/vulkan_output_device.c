@@ -13,6 +13,7 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
     float queuePriority = 1.0f;
     for (int i = 0; i < deviceInfo.queueInfoCount; i++) {
         queueCreateInfos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+        queueCreateInfos[i].flags = 0;
         queueCreateInfos[i].queueFamilyIndex = deviceInfo.queueInfos[i].queueIndex;
         queueCreateInfos[i].queueCount = deviceInfo.queueInfos[i].queueCount;
         queueCreateInfos[i].pQueuePriorities = &queuePriority;

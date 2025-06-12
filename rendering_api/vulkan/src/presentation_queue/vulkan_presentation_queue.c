@@ -73,9 +73,10 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQ
     createInfo.clipped = VK_TRUE;
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    if (vkCreateSwapchainKHR(device->outputDevice->device, &createInfo, NULL, &presentationQueue->presentationQueue->swapChain) != VK_SUCCESS) {
+    VkResult result = vkCreateSwapchainKHR(device->outputDevice->device, &createInfo, NULL, &presentationQueue->presentationQueue->swapChain);
+    if (result == VK_ERROR_NATIVE_WINDOW_IN_USE_KHR) return GN_WINDOW_IN_USE;
+    if (result != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_PRESENTATION_QUEUE;
-    }
 
     vkGetSwapchainImagesKHR(device->outputDevice->device, presentationQueue->presentationQueue->swapChain, &presentationQueue->imageCount, NULL);
     presentationQueue->presentationQueue->swapChainImages = malloc(sizeof(VkImage) * presentationQueue->imageCount);
