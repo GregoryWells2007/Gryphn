@@ -6,9 +6,9 @@
 #include "stdio.h"
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, struct gnInstanceInfo_t info) {
-
     *instanceHandlePtr = malloc(sizeof(struct gnInstance_t));
     gnInstanceHandle instance = *instanceHandlePtr;
+    instance->debugger = NULL;
 
     if (!gnIsAPISupported(info.renderingAPI)) return GN_UNSUPPORTED_RENDERING_API;
     instance->loadDeviceFunctions = gnFalse;
@@ -22,8 +22,6 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, struct gnInst
     return instance->functions->_gnCreateInstance(instance, info);
 }
 void gnInstanceAttachDebugger(gnInstanceHandle instance, struct gnDebugger_t *debugger) {
-
-
     if (instance->debugger != NULL) {
         gnDebuggerSetErrorMessage(debugger, (gnMessageData){
             .message = gnCreateString("Debugger already attached to instance")
@@ -39,15 +37,11 @@ void gnInstanceAttachDebugger(gnInstanceHandle instance, struct gnDebugger_t *de
     }
 }
 
-#include "stdio.h"
 void gnDestroyInstance(gnInstanceHandle instance) {
-    if (instance->debugger) {
-        instance->functions->_gnDestroyDebugger(instance->debugger);
-    }
+    if (instance->debugger) instance->functions->_gnDestroyDebugger(instance->debugger);
     instance->functions->_gnDestroyInstance(instance);
 }
 
 void gnInstanceReleaseDebugger(gnInstanceHandle instance) {
     instance->debugger = NULL;
-    free(instance);
 }

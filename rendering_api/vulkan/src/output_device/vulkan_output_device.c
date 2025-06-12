@@ -76,9 +76,11 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
         .queueFamilyIndex = transferQueueIndex
     };
 
-    if (vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferCommandPool) != VK_SUCCESS) {
+    if (vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferCommandPool) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_COMMAND_POOL;
-    }
+
+    free(queueCreateInfos);
+    free(queueFamilies);
 
     return GN_SUCCESS;
 }

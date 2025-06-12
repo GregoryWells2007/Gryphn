@@ -4,6 +4,9 @@
 #include "renderpass/vulkan_render_pass_descriptor.h"
 #include "uniforms/vulkan_uniform_layout.h"
 
+#include "stdio.h"
+
+
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e state) {
     switch (state) {
     case GN_DYNAMIC_VIEWPORT: return VK_DYNAMIC_STATE_VIEWPORT;
@@ -63,37 +66,35 @@ VkFormat vkGryphnVertexFormat(gnVertexFormat format) {
 
 gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(gnPlatformGraphicsPipeline));
-
     for (int i = 0; i < GN_DYNAMIC_STATE_MAX; i++) graphicsPipeline->graphicsPipeline->isDynamic[i] = gnFalse;
 
-    VkDynamicState* dynamicStates = malloc(sizeof(VkDynamicState) * info.dynamicState.dynamicStateCount);
+    graphicsPipeline->graphicsPipeline->dynamicStates = malloc(sizeof(VkDynamicState) * info.dynamicState.dynamicStateCount);
     for (int i = 0; i < info.dynamicState.dynamicStateCount; i++) {
         graphicsPipeline->graphicsPipeline->isDynamic[info.dynamicState.dynamicStates[i]] = gnTrue;
-        dynamicStates[i] = vkGryphnDynamicStateToVulkanDynamicState(info.dynamicState.dynamicStates[i]);
+        graphicsPipeline->graphicsPipeline->dynamicStates[i] = vkGryphnDynamicStateToVulkanDynamicState(info.dynamicState.dynamicStates[i]);
     }
 
     graphicsPipeline->graphicsPipeline->dynamicState = (VkPipelineDynamicStateCreateInfo){
         .sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO,
         .dynamicStateCount = info.dynamicState.dynamicStateCount,
-        .pDynamicStates = dynamicStates
+        .pDynamicStates = graphicsPipeline->graphicsPipeline->dynamicStates
     };
 
     int vertexAttributeCount = 0;
-    VkVertexInputAttributeDescription* attributeDescriptions = NULL;
-    VkVertexInputBindingDescription* bindingDescriptions = malloc(sizeof(VkVertexInputBindingDescription) * info.shaderInputLayout.bufferCount);
+    graphicsPipeline->graphicsPipeline->bindingDescriptions = malloc(sizeof(VkVertexInputBindingDescription) * info.shaderInputLayout.bufferCount);
     for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
-        bindingDescriptions[i].binding = info.shaderInputLayout.bufferAttributes[i].binding;
-        bindingDescriptions[i].stride = info.shaderInputLayout.bufferAttributes[i].size;
-        bindingDescriptions[i].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
+        graphicsPipeline->graphicsPipeline->bindingDescriptions[i].binding = info.shaderInputLayout.bufferAttributes[i].binding;
+        graphicsPipeline->graphicsPipeline->bindingDescriptions[i].stride = info.shaderInputLayout.bufferAttributes[i].size;
+        graphicsPipeline->graphicsPipeline->bindingDescriptions[i].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
         vertexAttributeCount += info.shaderInputLayout.bufferAttributes[i].attributeCount;
     }
-    attributeDescriptions = malloc(sizeof(VkVertexInputBindingDescription) * vertexAttributeCount);
+    graphicsPipeline->graphicsPipeline->attributeDescriptions = malloc(sizeof(VkVertexInputAttributeDescription) * vertexAttributeCount);
     for (int i = 0, j = 0; j < info.shaderInputLayout.bufferCount; j++) {
         for (int k = 0; k < info.shaderInputLayout.bufferAttributes[j].attributeCount; k++) {
-            attributeDescriptions[i].binding = j;
-            attributeDescriptions[i].location = info.shaderInputLayout.bufferAttributes[j].attributes[k].location;
-            attributeDescriptions[i].offset = info.shaderInputLayout.bufferAttributes[j].attributes[k].offset;
-            attributeDescriptions[i].format = vkGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[j].attributes[k].format);
+            graphicsPipeline->graphicsPipeline->attributeDescriptions[i].binding = j;
+            graphicsPipeline->graphicsPipeline->attributeDescriptions[i].location = info.shaderInputLayout.bufferAttributes[j].attributes[k].location;
+            graphicsPipeline->graphicsPipeline->attributeDescriptions[i].offset = info.shaderInputLayout.bufferAttributes[j].attributes[k].offset;
+            graphicsPipeline->graphicsPipeline->attributeDescriptions[i].format = vkGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[j].attributes[k].format);
             i++;
         }
     }
@@ -101,9 +102,9 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
     graphicsPipeline->graphicsPipeline->vertexInfo = (VkPipelineVertexInputStateCreateInfo){
         .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
         .vertexBindingDescriptionCount = info.shaderInputLayout.bufferCount,
-        .pVertexBindingDescriptions = bindingDescriptions,
+        .pVertexBindingDescriptions = graphicsPipeline->graphicsPipeline->bindingDescriptions,
         .vertexAttributeDescriptionCount = vertexAttributeCount,
-        .pVertexAttributeDescriptions = attributeDescriptions
+        .pVertexAttributeDescriptions = graphicsPipeline->graphicsPipeline->attributeDescriptions
     };
 
     graphicsPipeline->graphicsPipeline->inputAssembly = (VkPipelineInputAssemblyStateCreateInfo){
@@ -191,19 +192,18 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
         pipelineLayoutInfo.pPushConstantRanges = NULL
     };
 
-    if (vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout) != VK_SUCCESS) {
+    if (vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_UNIFORM_LAYOUT;
-    }
 
-    VkPipelineShaderStageCreateInfo* modules = malloc(sizeof(VkPipelineShaderStageCreateInfo) * info.shaderModuleCount);
+    graphicsPipeline->graphicsPipeline->modules = malloc(sizeof(VkPipelineShaderStageCreateInfo) * info.shaderModuleCount);
     for (int i = 0; i < info.shaderModuleCount; i++) {
-        modules[i] = info.shaderModules[i]->shaderModule->shaderStageInfo;
+        graphicsPipeline->graphicsPipeline->modules[i] = info.shaderModules[i]->shaderModule->shaderStageInfo;
     }
 
     VkGraphicsPipelineCreateInfo pipelineInfo = {
         .sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO,
         .stageCount = info.shaderModuleCount,
-        .pStages = modules,
+        .pStages = graphicsPipeline->graphicsPipeline->modules,
         .pVertexInputState = &graphicsPipeline->graphicsPipeline->vertexInfo,
         .pInputAssemblyState = &graphicsPipeline->graphicsPipeline->inputAssembly,
         .pViewportState = &graphicsPipeline->graphicsPipeline->viewportState,
@@ -219,21 +219,21 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
         .basePipelineIndex = -1,
     };
 
-    if (vkCreateGraphicsPipelines(device->outputDevice->device, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &graphicsPipeline->graphicsPipeline->graphicsPipeline) != VK_SUCCESS) {
+    if (vkCreateGraphicsPipelines(device->outputDevice->device, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &graphicsPipeline->graphicsPipeline->graphicsPipeline) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
-    }
 
-    free(dynamicStates);
-    free(bindingDescriptions);
-    free(attributeDescriptions);
     return GN_SUCCESS;
 }
 
 void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) {
+    free(graphicsPipeline->graphicsPipeline->dynamicStates);
+    free(graphicsPipeline->graphicsPipeline->bindingDescriptions);
+    free(graphicsPipeline->graphicsPipeline->attributeDescriptions);
     for (int i = 0; i < graphicsPipeline->graphicsPipeline->setCount; i++)
         vkDestroyDescriptorSetLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->sets[i], NULL);
-    vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
-    vkDestroyPipeline(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->graphicsPipeline, NULL);
+    free(graphicsPipeline->graphicsPipeline->modules);
 
+    vkDestroyPipeline(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->graphicsPipeline, NULL);
+    vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
     free(graphicsPipeline->graphicsPipeline);
 }

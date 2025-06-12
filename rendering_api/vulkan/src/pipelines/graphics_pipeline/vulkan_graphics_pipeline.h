@@ -22,4 +22,12 @@ typedef struct gnPlatformGraphicsPipeline_t {
 
 
     VkPipeline graphicsPipeline;
+
+
+
+    // memory that needs to be freeed
+    VkDynamicState* dynamicStates;
+    VkVertexInputBindingDescription* bindingDescriptions;
+    VkVertexInputAttributeDescription* attributeDescriptions;
+    VkPipelineShaderStageCreateInfo* modules;
 } gnPlatformGraphicsPipeline;

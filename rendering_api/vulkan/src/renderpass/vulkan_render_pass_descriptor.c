@@ -30,24 +30,26 @@ VkImageLayout vkGryphnImageLayout(gnImageLayout layout) {
 gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, struct gnRenderPassDescriptorInfo_t info) {
     renderPass->renderPassDescriptor = malloc(sizeof(gnPlatformRenderPassDescriptor));
 
-    VkAttachmentDescription* attachments = malloc(sizeof(VkAttachmentDescription) * info.attachmentCount);
+    renderPass->renderPassDescriptor->attachmentCount = info.attachmentCount;
+    renderPass->renderPassDescriptor->attachments = malloc(sizeof(VkAttachmentDescription) * info.attachmentCount);
     for (int i = 0; i < info.attachmentCount; i++) {
-        attachments[i].format = vkGryphnFormatToVulkanFormat(info.attachmentInfos[i].format);
-        attachments[i].flags = 0;
-        attachments[i].samples = VK_SAMPLE_COUNT_1_BIT;
+        renderPass->renderPassDescriptor->attachments[i].format = vkGryphnFormatToVulkanFormat(info.attachmentInfos[i].format);
+        renderPass->renderPassDescriptor->attachments[i].flags = 0;
+        renderPass->renderPassDescriptor->attachments[i].samples = VK_SAMPLE_COUNT_1_BIT;
 
-        attachments[i].loadOp = vkGryphnLoadOperation(info.attachmentInfos[i].loadOperation);
-        attachments[i].storeOp = vkGryphnStoreOperation(info.attachmentInfos[i].storeOperation);
+        renderPass->renderPassDescriptor->attachments[i].loadOp = vkGryphnLoadOperation(info.attachmentInfos[i].loadOperation);
+        renderPass->renderPassDescriptor->attachments[i].storeOp = vkGryphnStoreOperation(info.attachmentInfos[i].storeOperation);
 
-        attachments[i].stencilLoadOp = vkGryphnLoadOperation(info.attachmentInfos[i].stencilLoadOperation);
-        attachments[i].stencilStoreOp = vkGryphnStoreOperation(info.attachmentInfos[i].stencilStoreOperation);
+        renderPass->renderPassDescriptor->attachments[i].stencilLoadOp = vkGryphnLoadOperation(info.attachmentInfos[i].stencilLoadOperation);
+        renderPass->renderPassDescriptor->attachments[i].stencilStoreOp = vkGryphnStoreOperation(info.attachmentInfos[i].stencilStoreOperation);
 
-        attachments[i].initialLayout = vkGryphnImageLayout(info.attachmentInfos[i].initialLayout);
-        attachments[i].finalLayout = vkGryphnImageLayout(info.attachmentInfos[i].finalLayout);
+        renderPass->renderPassDescriptor->attachments[i].initialLayout = vkGryphnImageLayout(info.attachmentInfos[i].initialLayout);
+        renderPass->renderPassDescriptor->attachments[i].finalLayout = vkGryphnImageLayout(info.attachmentInfos[i].finalLayout);
     }
 
-    VkSubpassDescription* subpasses = malloc(sizeof(VkSubpassDescription) * info.subpassCount);
-    VkAttachmentReference** colorAttachments = malloc(sizeof(VkAttachmentReference*) * info.subpassCount);
+    renderPass->renderPassDescriptor->subpassCount = info.subpassCount;
+    renderPass->renderPassDescriptor->subpasses = malloc(sizeof(VkSubpassDescription) * info.subpassCount);
+    renderPass->renderPassDescriptor->colorAttachments = malloc(sizeof(VkAttachmentReference*) * info.subpassCount);
 
     VkAttachmentReference ref = {
         .attachment = 0,
@@ -55,27 +57,27 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
     };
 
     for (int i = 0; i < info.subpassCount; i++) {
-        colorAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
+        renderPass->renderPassDescriptor->colorAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
 
         for (int c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
-            colorAttachments[i][c] = (VkAttachmentReference){
+            renderPass->renderPassDescriptor->colorAttachments[i][c] = (VkAttachmentReference){
                 .attachment = info.subpassInfos[i].colorAttachments[c].index,
                 .layout = vkGryphnImageLayout(info.subpassInfos[i].colorAttachments[c].imageLayout)
             };
         }
 
 
-        subpasses[i] = (VkSubpassDescription){
+        renderPass->renderPassDescriptor->subpasses[i] = (VkSubpassDescription){
             .flags = 0,
             .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
             .colorAttachmentCount = info.subpassInfos[i].colorAttachmentCount,
-            .pColorAttachments = colorAttachments[i]
+            .pColorAttachments = renderPass->renderPassDescriptor->colorAttachments[i]
         };
     }
 
-    VkSubpassDependency* dependencies = malloc(sizeof(VkSubpassDependency) * info.dependencyCount);
+    renderPass->renderPassDescriptor->dependencies = malloc(sizeof(VkSubpassDependency) * info.dependencyCount);
     for (int i = 0; i < info.dependencyCount; i++) {
-        dependencies[i] = (VkSubpassDependency) {
+        renderPass->renderPassDescriptor->dependencies[i] = (VkSubpassDependency) {
             .srcSubpass = (info.dependencies[i].source == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].source,
             .dstSubpass = (info.dependencies[i].destination == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].destination,
             .srcStageMask = info.dependencies[i].soruceStageMask,
@@ -90,24 +92,25 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
         .pNext = NULL,
         .flags = 0,
         .attachmentCount = info.attachmentCount,
-        .pAttachments = attachments,
+        .pAttachments = renderPass->renderPassDescriptor->attachments,
         .subpassCount = info.subpassCount,
-        .pSubpasses = subpasses,
+        .pSubpasses = renderPass->renderPassDescriptor->subpasses,
         .dependencyCount = info.dependencyCount,
-        .pDependencies = dependencies,
+        .pDependencies = renderPass->renderPassDescriptor->dependencies,
     };
 
     if (vkCreateRenderPass(device->outputDevice->device, &renderPassInfo, NULL, &renderPass->renderPassDescriptor->renderPass) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_RENDER_PASS;
 
-    free(attachments);
-    free(subpasses);
-    free(dependencies);
-
     return GN_SUCCESS;
 }
 
 
-void gnDestroyRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* renderPass) {
+void gnDestroyRenderPassDescriptorFn(gnRenderPassDescriptor renderPass) {
     vkDestroyRenderPass(renderPass->device->outputDevice->device, renderPass->renderPassDescriptor->renderPass, NULL);
+
+
+    free(renderPass->renderPassDescriptor->attachments);
+    free(renderPass->renderPassDescriptor->subpasses);
+    free(renderPass->renderPassDescriptor->dependencies);
 }

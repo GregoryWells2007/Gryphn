@@ -4,4 +4,13 @@
 
 typedef struct gnPlatformRenderPassDescriptor_t {
     VkRenderPass renderPass;
+
+    uint32_t attachmentCount;
+    VkAttachmentDescription* attachments;
+
+    uint32_t subpassCount;
+    VkSubpassDescription* subpasses;
+    VkSubpassDependency* dependencies;
+
+    VkAttachmentReference** colorAttachments;
 } gnPlatformRenderPassDescriptor;

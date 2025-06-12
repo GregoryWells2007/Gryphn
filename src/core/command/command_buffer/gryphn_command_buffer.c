@@ -1,13 +1,11 @@
 #include "gryphn_command_buffer.h"
 #include "core/gryphn_platform_functions.h"
-#include "stdio.h"
 
 gnReturnCode gnCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* buffers, uint32_t count, gnCommandPoolHandle commandPool) {
     for (int i = 0; i < count; i++) {
         buffers[i] = malloc(sizeof(struct gnCommandBuffer_t));
         buffers[i]->commandPool = commandPool;
     }
-    printf("Created the graphics pipeline: %p\n", commandPool->commandFunctions->_gnCommandBindGraphicsPipeline);
     return commandPool->commandFunctions->_gnCommandPoolAllocateCommandBuffers(buffers, count, commandPool);
 }
 

@@ -7,5 +7,5 @@ gnReturnCode gnCreateDebugger(gnDebuggerHandle* debugger, const struct gnDebugge
     return GN_SUCCESS;
 }
 void gnDestroyDebugger(gnDebuggerHandle debugger) {
-    free(debugger);
+    // free(debugger);
 }
