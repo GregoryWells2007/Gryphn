@@ -8,31 +8,31 @@ VkDescriptorType vkGryphnUniformType(gnUniformType type) {
     }
 }
 
-VkDescriptorSetLayout* vkGryphnCreateSetLayouts(
-    const gnUniformLayout* layout, uint32_t* setCount,
+VkDescriptorSetLayout vkGryphnCreateSetLayouts(
+    const gnUniformLayout* layout,
     VkDevice device
 ) {
+    VkDescriptorSetLayout vkLayout;
     gnUniformLayout uniformLayout = *layout;
 
-    *setCount = uniformLayout.uniformBindingCount;
-    VkDescriptorSetLayout* sets = malloc(sizeof(VkDescriptorSetLayoutBinding) * uniformLayout.uniformBindingCount);
+    VkDescriptorSetLayoutBinding* bindings = malloc(sizeof(VkDescriptorSetLayoutBinding) * uniformLayout.uniformBindingCount);
     for (int i = 0; i < uniformLayout.uniformBindingCount; i++) {
-        VkDescriptorSetLayoutBinding setLayout = {
+        bindings[i] = (VkDescriptorSetLayoutBinding){
             .binding = uniformLayout.uniformBindings[i].binding,
             .descriptorCount = 1,
             .descriptorType = vkGryphnUniformType(uniformLayout.uniformBindings[i].type),
             .stageFlags = vkGryphnShaderModuleStage(uniformLayout.uniformBindings[i].stage)
         };
-
-        VkDescriptorSetLayoutCreateInfo info = {
-            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-            .bindingCount = 1,
-            .pBindings = &setLayout
-        };
-
-        if (vkCreateDescriptorSetLayout(device, &info, NULL, sets) != VK_SUCCESS) {
-            return NULL;
-        }
     }
-    return sets;
+
+
+    VkDescriptorSetLayoutCreateInfo info = {
+        .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
+        .bindingCount = uniformLayout.uniformBindingCount,
+        .pBindings = bindings
+    };
+
+    if (vkCreateDescriptorSetLayout(device, &info, NULL, &vkLayout) != VK_SUCCESS)
+        return NULL;
+    return vkLayout;
 }

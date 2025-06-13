@@ -4,7 +4,7 @@
 typedef struct type##_t* type##Handle; \
 typedef struct type##_t* type
 
-#define GN_HANDLE_ALIAS(alias, handle) \
+#define GN_HANDLE_ALIAS(handle, alias) \
 typedef struct handle##_t* alias##Handle; \
 typedef struct handle##_t* alias
 
@@ -15,7 +15,7 @@ GN_HANDLE(gnPresentationQueue);
 GN_HANDLE(gnTexture);
 GN_HANDLE(gnRenderPassDescriptor);
 GN_HANDLE(gnOutputDevice);
-GN_HANDLE_ALIAS(gnDevice, gnOutputDevice);
+GN_HANDLE_ALIAS(gnOutputDevice, gnDevice);
 GN_HANDLE(gnShaderModule);
 GN_HANDLE(gnGraphicsPipeline);
 GN_HANDLE(gnCommandPool);

@@ -18,6 +18,7 @@
 #include "core/buffers/gryphn_buffer.h"
 #include "core/uniforms/gryphn_uniform.h"
 #include "core/textures/gryphn_texture.h"
+#include "core/uniforms/gryphn_uniform_pool.h"
 
 typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
@@ -86,7 +87,7 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnDestroyBuffer)(gnBufferHandle buffer);
 
     gnReturnCode (*_gnCreateUniformPool)(gnUniformPool pool, gnDeviceHandle device);
-    gnUniform* (*_gnUniformPoolAllocateUniforms)(gnUniformPool pool, const gnUniformLayout layout);
+    gnUniform* (*_gnUniformPoolAllocateUniforms)(gnUniformPool pool, gnUniformAllocationInfo allocInfo);
     void (*_gnDestroyUniformPool)(gnUniformPool pool);
 
     void (*_gnUpdateBufferUniform)(gnUniform uniform, gnBufferUniformInfo* bufferInfo);

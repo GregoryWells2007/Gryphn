@@ -11,6 +11,11 @@ struct gnUniformPool_t {
 };
 #endif
 
+typedef struct gnUniformAllocationInfo {
+    const uint32_t layoutCount;
+    const gnUniformLayout* layouts;
+} gnUniformAllocationInfo;
+
 gnReturnCode gnCreateUniformPool(gnUniformPool* pool, gnDeviceHandle device);
-gnUniformArrayList gnUniformPoolAllocateUniforms(gnUniformPool pool, const gnUniformLayout layout);
+gnUniformArrayList gnUniformPoolAllocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInfo);
 void gnDestroyUniformPool(gnUniformPool pool);
