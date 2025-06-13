@@ -13,7 +13,6 @@
 #ifndef GLFW_EXPOSE_NATIVE_COCOA
 #error "Must define GLFW_EXPOSE_NATIVE_COCOA on macos"
 #endif
-
 static gnReturnCode gnCreateGLFWWindowSurface(gnWindowSurfaceHandle* windowSurface, struct gnInstance_t* instance, GLFWwindow* window) {
     gnMacOSWindowSurfaceInfo surfaceCreateInfo = {
         .layer = gnCreateCAMetalLayer(glfwGetCocoaWindow(window))
@@ -21,12 +20,17 @@ static gnReturnCode gnCreateGLFWWindowSurface(gnWindowSurfaceHandle* windowSurfa
 
     return gnCreateMacOSWindowSurface(windowSurface, instance, surfaceCreateInfo);
 }
+#endif
+#ifdef GN_PLATFORM_LINUX
+#ifndef GLFW_EXPOSE_NATIVE_X11
+#error "Must define GLFW_EXPOSE_NATIVE_X11 on linux"
+#endif
+static gnReturnCode gnCreateGLFWWindowSurface(gnWindowSurfaceHandle* windowSurface, struct gnInstance_t* instance, GLFWwindow* window) {
+    gnX11WindowSurfaceInfo surfaceCreateInfo = {
+        .window = glfwGetX11Window(window),
+        .display = glfwGetX11Display()
+    };
 
-// gnReturnCode gnCreateGLFWWindowSurface(struct gnWindowSurface_t* windowSurface, struct gnInstance_t* instance, GLFWwindow* window) {
-//     gnMetalWindowSurfaceInfo surfaceCreateInfo = {
-//         .layer = (CAMetalLayer*)glfwGetCocoaWindow(window).contentView.layer;
-//     };
-//     return gnCreateMetalWindowSurface(windowSurface, instance, surfaceCreateInfo);
-// }
-
+    return gnCreateX11WindowSurface(windowSurface, instance, surfaceCreateInfo);
+}
 #endif
