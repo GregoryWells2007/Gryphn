@@ -20,7 +20,7 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
         .usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
         .samples = VK_SAMPLE_COUNT_1_BIT,
         .extent = {
-            .width = info.width,
+            .width = 100,
             .height = info.height,
             .depth = 1
         },
