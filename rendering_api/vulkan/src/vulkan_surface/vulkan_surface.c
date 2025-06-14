@@ -88,10 +88,10 @@ struct gnSurfaceFormat_t* vkGetSurfaceFormats(
     return formats;
 }
 
-struct gnSurfaceDetails_t gnGetSurfaceDetailsFn(
-    struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device
+gnSurfaceDetails gnGetSurfaceDetailsFn(
+    gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device
 ) {
-    struct gnSurfaceDetails_t surfaceDetails;
+    gnSurfaceDetails surfaceDetails;
     surfaceDetails.formats = vkGetSurfaceFormats(windowSurface, device, &surfaceDetails.formatCount);
 
     VkSurfaceCapabilitiesKHR details;
@@ -99,6 +99,10 @@ struct gnSurfaceDetails_t gnGetSurfaceDetailsFn(
 
     surfaceDetails.minImageCount = details.minImageCount;
     surfaceDetails.maxImageCount = details.maxImageCount;
+
+    surfaceDetails.minImageSize = (gnUInt2){ details.minImageExtent.width, details.minImageExtent.height };
+    surfaceDetails.maxImageSize = (gnUInt2){ details.maxImageExtent.width, details.maxImageExtent.height };
+    surfaceDetails.currentSize = (gnUInt2){ details.currentExtent.width, details.currentExtent.height };
 
     return surfaceDetails;
 }

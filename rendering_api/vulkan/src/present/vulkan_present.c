@@ -3,8 +3,6 @@
 #include "presentation_queue/vulkan_presentation_queue.h"
 #include "output_device/vulkan_output_devices.h"
 
-#include "stdio.h"
-
 gnReturnCode gnPresentFn(struct gnOutputDevice_t* device, struct gnPresentInfo_t info) {
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
     for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;

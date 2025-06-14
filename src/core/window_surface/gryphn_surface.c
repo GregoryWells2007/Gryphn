@@ -10,7 +10,7 @@ struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(
     struct gnPhysicalDevice_t device,
     uint32_t* formatCount
 ) {
-    struct gnSurfaceDetails_t surfaceDetails = windowSurface->instance->functions->_gnGetSurfaceDetails(windowSurface, device);
+    gnSurfaceDetails surfaceDetails = windowSurface->instance->functions->_gnGetSurfaceDetails(windowSurface, device);
     *formatCount = surfaceDetails.formatCount;
     return surfaceDetails.formats;
 }
@@ -54,16 +54,16 @@ struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
 }
 
 uint32_t gnGetMinImageCount(gnWindowSurfaceHandle  surface, struct gnPhysicalDevice_t device) {
-    struct gnSurfaceDetails_t surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
+    gnSurfaceDetails surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
     return surfaceDetails.minImageCount;
 }
 uint32_t gnGetMaxImageCount(gnWindowSurfaceHandle  surface, struct gnPhysicalDevice_t device) {
-    struct gnSurfaceDetails_t surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
+    gnSurfaceDetails surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
     return surfaceDetails.maxImageCount;
 }
 
 uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle  surface, struct gnPhysicalDevice_t device) {
-    struct gnSurfaceDetails_t surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
+    gnSurfaceDetails surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
 
     uint32_t imageCount = surfaceDetails.minImageCount + 1;
     if (surfaceDetails.maxImageCount > 0 && imageCount > surfaceDetails.maxImageCount) {
@@ -71,3 +71,5 @@ uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle  surface, struct gnPhysi
     }
     return imageCount;
 }
+
+gnSurfaceDetails gnGetSurfaceDetails(gnWindowSurfaceHandle surface, gnPhysicalDevice device) { return surface->instance->functions->_gnGetSurfaceDetails(surface, device); }

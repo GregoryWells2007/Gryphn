@@ -54,7 +54,7 @@ typedef struct gnFunctions_t {
     #endif
 
     void (*_gnDestroyWindowSurface)(gnWindowSurfaceHandle windowSurface);
-    struct gnSurfaceDetails_t (*_gnGetSurfaceDetails)(gnWindowSurfaceHandle windowSurface, struct gnPhysicalDevice_t device);
+    gnSurfaceDetails (*_gnGetSurfaceDetails)(gnWindowSurfaceHandle windowSurface, struct gnPhysicalDevice_t device);
 } gnFunctions;
 
 #include "core/presentation_queue/gryphn_presentation_queue.h"

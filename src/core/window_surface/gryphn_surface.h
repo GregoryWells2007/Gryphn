@@ -9,12 +9,13 @@ typedef struct gnSurfaceFormat_t {
     gnColorSpace colorSpace;
 } gnSurfaceFormat;
 
-typedef struct gnSurfaceDetails_t {
+typedef struct gnSurfaceDetails {
     uint32_t formatCount;
     struct gnSurfaceFormat_t* formats;
 
     uint32_t minImageCount, maxImageCount;
-} gnSufaceDetails;
+    gnUInt2 minImageSize, maxImageSize, currentSize;
+} gnSurfaceDetails;
 
 #ifdef GN_REVEAL_IMPL
 struct gnWindowSurface_t {
@@ -47,3 +48,6 @@ struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
 uint32_t gnGetMinImageCount(gnWindowSurfaceHandle surface, struct gnPhysicalDevice_t device);
 uint32_t gnGetMaxImageCount(gnWindowSurfaceHandle surface, struct gnPhysicalDevice_t device);
 uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle surface, struct gnPhysicalDevice_t device);
+
+
+gnSurfaceDetails gnGetSurfaceDetails(gnWindowSurfaceHandle surface, gnPhysicalDevice device);

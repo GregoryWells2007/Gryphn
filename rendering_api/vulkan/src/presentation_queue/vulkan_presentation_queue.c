@@ -11,6 +11,17 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQ
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
     vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface->windowSurface->surface);
+
+    if (details.capabilities.currentExtent.width != presentationInfo.imageSize.x || details.capabilities.currentExtent.height != presentationInfo.imageSize.y) {
+        gnDebuggerSetErrorMessage(device->instance->debugger,
+          (gnMessageData){
+              .message = gnCreateString("Image size is unsupposed for presentation queue")
+          }
+        );
+
+        presentationInfo.imageSize = (gnUInt2){ details.capabilities.currentExtent.width, details.capabilities.currentExtent.height };
+    }
+
     if (details.formatCount == 0) {
         gnDebuggerSetErrorMessage(device->instance->debugger,
           (gnMessageData){
