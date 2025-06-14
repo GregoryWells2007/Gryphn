@@ -7,6 +7,7 @@ typedef struct VkGryphnBuffer {
     VkBuffer buffer;
     VkDeviceMemory memory;
 } VkGryphnBuffer;
+void gnDestroyVulkanBuffer(VkGryphnBuffer* buffer, VkDevice device);
 
 struct gnPlatformBuffer_t {
     VkGryphnBuffer buffer;

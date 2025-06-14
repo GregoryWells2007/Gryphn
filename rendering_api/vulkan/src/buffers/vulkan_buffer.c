@@ -119,13 +119,14 @@ void* gnMapBufferFn(gnBufferHandle buffer) {
     vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, buffer->info.size, 0, &data);
     return data;
 }
-void gnDestroyBufferFn(gnBufferHandle buffer) {
-    if (buffer->buffer->useStagingBuffer == gnTrue) {
-        vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.buffer, NULL);
-        vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory, NULL);
-    }
 
-    vkDestroyBuffer(buffer->device->outputDevice->device, buffer->buffer->buffer.buffer, NULL);
-    vkFreeMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, NULL);
+void gnDestroyVulkanBuffer(VkGryphnBuffer* buffer, VkDevice device) {
+    vkDestroyBuffer(device, buffer->buffer, NULL);
+    vkFreeMemory(device, buffer->memory, NULL);
+}
+
+void gnDestroyBufferFn(gnBufferHandle buffer) {
+    if (buffer->buffer->useStagingBuffer == gnTrue) gnDestroyVulkanBuffer(&buffer->buffer->stagingBuffer, buffer->device->outputDevice->device);
+    gnDestroyVulkanBuffer(&buffer->buffer->buffer, buffer->device->outputDevice->device);
     free(buffer->buffer);
 }
