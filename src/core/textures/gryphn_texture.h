@@ -1,6 +1,5 @@
 #pragma once
 #include "stdint.h"
-#include "stdlib.h"
 #include "utils/gryphn_image_format.h"
 #include "utils/gryphn_error_code.h"
 #include <core/gryphn_handles.h>

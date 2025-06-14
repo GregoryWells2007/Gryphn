@@ -44,3 +44,37 @@ gnReturnCode gnEndCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
         return GN_FAIELD_TO_END_RECORDING;
     return GN_SUCCESS;
 }
+
+
+VkCommandBuffer VkBeginTransferOperation(VkDevice device, VkCommandPool pool) {
+    VkCommandBufferAllocateInfo allocInfo = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .commandPool = pool,
+        .commandBufferCount = 1
+    };
+
+    VkCommandBuffer commandBuffer;
+    vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer);
+
+    VkCommandBufferBeginInfo beginInfo = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
+    };
+    vkBeginCommandBuffer(commandBuffer, &beginInfo);
+    return commandBuffer;
+}
+
+void VkEndTransferOperation(VkCommandBuffer transferBuffer, VkCommandPool pool, VkQueue syncQueue, VkDevice device) {
+    vkEndCommandBuffer(transferBuffer);
+
+    VkSubmitInfo submitInfo = {
+        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        .commandBufferCount = 1,
+        .pCommandBuffers = &transferBuffer
+    };
+
+    vkQueueSubmit(syncQueue, 1, &submitInfo, VK_NULL_HANDLE);
+    vkQueueWaitIdle(syncQueue);
+    vkFreeCommandBuffers(device, pool, 1, &transferBuffer);
+}

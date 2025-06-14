@@ -3,6 +3,7 @@
 #include "core/output_device/gryphn_output_device.h"
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
+#include "commands/command_buffer/vulkan_command_buffer.h"
 
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
     VkBufferUsageFlags usageFlags = 0;
@@ -57,38 +58,12 @@ gnReturnCode VkCreateBuffer(
 }
 
 void VkCopyBuffer(VkBuffer source, VkBuffer destination, size_t size, VkCommandPool pool, VkDevice device, VkQueue queue) {
-    VkCommandBufferAllocateInfo allocInfo = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
-        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
-        .commandPool = pool,
-        .commandBufferCount = 1
-    };
-
-    VkCommandBuffer commandBuffer;
-    vkAllocateCommandBuffers(device, &allocInfo, &commandBuffer);
-
-    VkCommandBufferBeginInfo beginInfo = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
-        .flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT
-    };
-    vkBeginCommandBuffer(commandBuffer, &beginInfo);
-
-
+    VkCommandBuffer transferBuffer = VkBeginTransferOperation(device, pool);
     VkBufferCopy copyRegion = {
       .size = size
     };
-    vkCmdCopyBuffer(commandBuffer, source, destination, 1, &copyRegion);
-    vkEndCommandBuffer(commandBuffer);
-
-    VkSubmitInfo submitInfo = {
-        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
-        .commandBufferCount = 1,
-        .pCommandBuffers = &commandBuffer
-    };
-
-    vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
-    vkQueueWaitIdle(queue);
-    vkFreeCommandBuffers(device, pool, 1, &commandBuffer);
+    vkCmdCopyBuffer(transferBuffer, source, destination, 1, &copyRegion);
+    VkEndTransferOperation(transferBuffer, pool, queue, device);
 }
 
 gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {

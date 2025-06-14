@@ -10,3 +10,6 @@ typedef struct gnPlatformCommandBuffer_t {
     gnBufferHandle boundIndexBuffer;
     gnGraphicsPipeline boundGraphicsPipeline;
 } gnPlatformCommandBuffer;
+
+VkCommandBuffer VkBeginTransferOperation(VkDevice device, VkCommandPool pool);
+void VkEndTransferOperation(VkCommandBuffer transferBuffer, VkCommandPool pool, VkQueue syncQueue, VkDevice device);
