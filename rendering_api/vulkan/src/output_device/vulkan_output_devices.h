@@ -10,3 +10,6 @@ typedef struct gnPlatformOutputDevice_t {
     VkQueue transferQueue;
     VkCommandPool transferCommandPool;
 } gnPlatformOutputDevice;
+
+VkCommandBuffer gnBeginVulkanTransferOperation(gnDevice device);
+void gnEndVulkanTransferOperation(gnDevice device, VkCommandBuffer commandBuffer);

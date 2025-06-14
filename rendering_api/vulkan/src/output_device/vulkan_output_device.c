@@ -3,8 +3,7 @@
 #include <output_device/vulkan_output_devices.h>
 #include "vulkan_device_extensions.h"
 #include "core/instance/gryphn_instance.h"
-
-#include <stdio.h>
+#include "commands/command_buffer/vulkan_command_buffer.h"
 
 gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
@@ -93,4 +92,12 @@ void gnDestroyOutputDeviceFn(gnOutputDeviceHandle device) {
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);
     vkDestroyDevice(device->outputDevice->device, NULL);
     free(device->outputDevice);
+}
+
+
+VkCommandBuffer gnBeginVulkanTransferOperation(gnDevice device) {
+    return VkBeginTransferOperation(device->outputDevice->device, device->outputDevice->transferCommandPool);
+}
+void gnEndVulkanTransferOperation(gnDevice device, VkCommandBuffer buffer) {
+    VkEndTransferOperation(buffer, device->outputDevice->transferCommandPool, device->outputDevice->transferQueue, device->outputDevice->device);
 }
