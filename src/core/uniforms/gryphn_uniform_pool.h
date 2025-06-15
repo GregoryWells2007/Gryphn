@@ -12,8 +12,8 @@ struct gnUniformPool_t {
 #endif
 
 typedef struct gnUniformAllocationInfo {
-    const uint32_t layoutCount;
-    const gnUniformLayout* layouts;
+    const uint32_t setCount;
+    const gnUniformSet* sets;
 } gnUniformAllocationInfo;
 
 gnReturnCode gnCreateUniformPool(gnUniformPool* pool, gnDeviceHandle device);

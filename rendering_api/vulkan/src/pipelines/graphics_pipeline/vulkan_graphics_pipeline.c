@@ -180,9 +180,9 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
         .blendConstants[3] = 0.0f
     };
 
-    graphicsPipeline->graphicsPipeline->setCount = 1;
-    graphicsPipeline->graphicsPipeline->sets = malloc(sizeof(VkDescriptorSetLayout));
-    graphicsPipeline->graphicsPipeline->sets[0] = vkGryphnCreateSetLayouts(&info.uniformLayout, device->outputDevice->device);
+    graphicsPipeline->graphicsPipeline->setCount = info.uniformLayout.setCount;
+    graphicsPipeline->graphicsPipeline->sets = malloc(sizeof(VkDescriptorSetLayout) * info.uniformLayout.setCount);
+    for (int i = 0; i < info.uniformLayout.setCount; i++) graphicsPipeline->graphicsPipeline->sets[i] = vkGryphnCreateSetLayouts(&info.uniformLayout.sets[i], device->outputDevice->device);
 
     VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,

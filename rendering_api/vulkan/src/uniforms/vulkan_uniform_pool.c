@@ -15,51 +15,22 @@ gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
     return GN_SUCCESS;
 }
 
-VkDescriptorSetLayout* fsdfsdfsdfsdfsdfdsf(
-    const gnUniformLayout* layout, uint32_t* setCount,
-    VkDevice device
-) {
-    gnUniformLayout uniformLayout = *layout;
-
-    *setCount = uniformLayout.uniformBindingCount;
-    VkDescriptorSetLayout* sets = malloc(sizeof(VkDescriptorSetLayoutBinding) * uniformLayout.uniformBindingCount);
-    for (int i = 0; i < uniformLayout.uniformBindingCount; i++) {
-        VkDescriptorSetLayoutBinding setLayout = {
-            .binding = uniformLayout.uniformBindings[i].binding,
-            .descriptorCount = 1,
-            .descriptorType = vkGryphnUniformType(uniformLayout.uniformBindings[i].type),
-            .stageFlags = vkGryphnShaderModuleStage(uniformLayout.uniformBindings[i].stage)
-        };
-
-        VkDescriptorSetLayoutCreateInfo info = {
-            .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-            .bindingCount = 1,
-            .pBindings = &setLayout
-        };
-
-        if (vkCreateDescriptorSetLayout(device, &info, NULL, sets) != VK_SUCCESS) {
-            return NULL;
-        }
-    }
-    return sets;
-}
-
 gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocationInfo allocInfo) {
     if (pool->uniformPool->poolCount >= pool->uniformPool->maxPoolCount) {
         pool->uniformPool->maxPoolCount *= 2;
         pool->uniformPool->pools = realloc(pool->uniformPool->pools, sizeof(vkGryphnUniformPool) * pool->uniformPool->maxPoolCount);
     }
 
-    pool->uniformPool->pools[pool->uniformPool->poolCount].layouts = malloc(sizeof(VkDescriptorSetLayout) * allocInfo.layoutCount);
-    pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount = allocInfo.layoutCount;
+    pool->uniformPool->pools[pool->uniformPool->poolCount].layouts = malloc(sizeof(VkDescriptorSetLayout) * allocInfo.setCount);
+    pool->uniformPool->pools[pool->uniformPool->poolCount].layoutCount = allocInfo.setCount;
     VkDescriptorPoolSize uniformBufferSize = {
         .type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
         .descriptorCount = 0
     };
-    for (int i = 0; i < allocInfo.layoutCount; i++) {
-        for (int c = 0; c < allocInfo.layouts[i].uniformBindingCount; c++)
-            if (allocInfo.layouts[i].uniformBindings[c].type == GN_UNIFORM_BUFFER_DESCRIPTOR) uniformBufferSize.descriptorCount++;
-        pool->uniformPool->pools[pool->uniformPool->poolCount].layouts[i] = vkGryphnCreateSetLayouts(&allocInfo.layouts[i], pool->device->outputDevice->device);
+    for (int i = 0; i < allocInfo.setCount; i++) {
+        for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++)
+            if (allocInfo.sets[i].uniformBindings[c].type == GN_UNIFORM_BUFFER_DESCRIPTOR) uniformBufferSize.descriptorCount++;
+        pool->uniformPool->pools[pool->uniformPool->poolCount].layouts[i] = vkGryphnCreateSetLayouts(&allocInfo.sets[i], pool->device->outputDevice->device);
     }
 
     uint32_t maxSets = uniformBufferSize.descriptorCount;
@@ -80,16 +51,16 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocati
     VkDescriptorSetAllocateInfo vkAllocInfo = {
         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
         .descriptorPool = pool->uniformPool->pools[pool->uniformPool->poolCount].pool,
-        .descriptorSetCount = allocInfo.layoutCount,
+        .descriptorSetCount = allocInfo.setCount,
         .pSetLayouts = pool->uniformPool->pools[pool->uniformPool->poolCount].layouts
     };
 
-    VkDescriptorSet* sets = malloc(sizeof(VkDescriptorSet) * allocInfo.layoutCount);
+    VkDescriptorSet* sets = malloc(sizeof(VkDescriptorSet) * allocInfo.setCount);
     if (vkAllocateDescriptorSets(pool->device->outputDevice->device, &vkAllocInfo, sets) != VK_SUCCESS)
         return NULL;
 
-    gnUniform* uniforms = malloc(sizeof(gnUniform) * allocInfo.layoutCount);
-    for (int i = 0; i < allocInfo.layoutCount; i++) {
+    gnUniform* uniforms = malloc(sizeof(gnUniform) * allocInfo.setCount);
+    for (int i = 0; i < allocInfo.setCount; i++) {
         uniforms[i] = malloc(sizeof(struct gnUniform_t));
         uniforms[i]->uniform = malloc(sizeof(struct gnPlatformUniform_t));
         uniforms[i]->uniform->set = sets[i];

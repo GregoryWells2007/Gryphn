@@ -89,6 +89,7 @@ typedef struct gnGraphicsPipelineInfo_t {
     uint32_t shaderModuleCount;
     gnShaderModuleHandle* shaderModules;
     gnShaderInputLayout shaderInputLayout;
+
     gnUniformLayout uniformLayout;
 } gnGraphicsPipelineInfo;
 

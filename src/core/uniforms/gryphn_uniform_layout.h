@@ -14,7 +14,12 @@ typedef struct gnUniformBinding {
     gnShaderModuleStage stage;
 } gnUniformBinding;
 
-typedef struct gnUniformLayout {
+typedef struct gnUniformSet {
     uint32_t uniformBindingCount;
     gnUniformBinding* uniformBindings;
+} gnUniformSet;
+
+typedef struct gnUniformLayout {
+    uint32_t setCount;
+    gnUniformSet* sets;
 } gnUniformLayout;

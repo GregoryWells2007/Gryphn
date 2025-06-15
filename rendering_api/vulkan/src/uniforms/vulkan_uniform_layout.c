@@ -10,26 +10,26 @@ VkDescriptorType vkGryphnUniformType(gnUniformType type) {
 }
 
 VkDescriptorSetLayout vkGryphnCreateSetLayouts(
-    const gnUniformLayout* layout,
+    const gnUniformSet* set,
     VkDevice device
 ) {
     VkDescriptorSetLayout vkLayout;
-    gnUniformLayout uniformLayout = *layout;
+    gnUniformSet uniformSet = *set;
 
-    VkDescriptorSetLayoutBinding* bindings = malloc(sizeof(VkDescriptorSetLayoutBinding) * uniformLayout.uniformBindingCount);
-    for (int i = 0; i < uniformLayout.uniformBindingCount; i++) {
+    VkDescriptorSetLayoutBinding* bindings = malloc(sizeof(VkDescriptorSetLayoutBinding) * uniformSet.uniformBindingCount);
+    for (int i = 0; i < uniformSet.uniformBindingCount; i++) {
         bindings[i] = (VkDescriptorSetLayoutBinding){
-            .binding = uniformLayout.uniformBindings[i].binding,
+            .binding = uniformSet.uniformBindings[i].binding,
             .descriptorCount = 1,
-            .descriptorType = vkGryphnUniformType(uniformLayout.uniformBindings[i].type),
-            .stageFlags = vkGryphnShaderModuleStage(uniformLayout.uniformBindings[i].stage)
+            .descriptorType = vkGryphnUniformType(uniformSet.uniformBindings[i].type),
+            .stageFlags = vkGryphnShaderModuleStage(uniformSet.uniformBindings[i].stage)
         };
     }
 
 
     VkDescriptorSetLayoutCreateInfo info = {
         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO,
-        .bindingCount = uniformLayout.uniformBindingCount,
+        .bindingCount = uniformSet.uniformBindingCount,
         .pBindings = bindings
     };
 
