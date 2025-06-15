@@ -1,7 +1,20 @@
 ## Gryphn
-Cross platform rendering api
+Cross platform high performace rendering api
 
-# Info / Code Style
-Internal functions you are not supposed to call are titled in snake case <br />
-In most, should be all, cases the internal functions are contained in the .C files
-Functions that should be called by the user are titled in camel case and begin with gn
+# Info
+Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12, OpenGL, Software) with its own API that aims to mimic vulkans API while simplifying it and adding more utils <br />|
+Supported APIs
+
+- [x] Vulkan
+- [x] Metal
+- [ ] Direct 3D 11
+- [ ] Direct 3D 12
+- [ ] OpenGL
+- [ ] Software
+
+# Features
+Ability to create applications that can leverage Buffers and Textures to render full 3d scenes <br />
+
+# Plans
+Improved Validation <br />
+  Currently validation is always run and it discards the messages if you dont have a debugger attached, I plan to support layers like vulkan that can validation certain parts of the API
