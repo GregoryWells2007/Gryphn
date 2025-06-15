@@ -4,11 +4,11 @@
 
 VkShaderStageFlagBits vkGryphnShaderModuleStage(gnShaderModuleStage stage) {
     VkShaderStageFlagBits outStage = 0;
-    switch(stage) {
-    case GN_VERTEX_SHADER_MODULE: outStage |= VK_SHADER_STAGE_VERTEX_BIT; break;
-    case GN_FRAGMENT_SHADER_MODULE: outStage |= VK_SHADER_STAGE_FRAGMENT_BIT; break;
-    case GN_ALL_SHADER_MODULE: return VK_SHADER_STAGE_ALL_GRAPHICS;
-    }
+
+    if ((stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE) outStage |= VK_SHADER_STAGE_VERTEX_BIT;
+    if ((stage & GN_FRAGMENT_SHADER_MODULE) == GN_FRAGMENT_SHADER_MODULE) outStage |= VK_SHADER_STAGE_FRAGMENT_BIT;
+    if ((stage & GN_ALL_SHADER_MODULE) == GN_ALL_SHADER_MODULE) return VK_SHADER_STAGE_ALL_GRAPHICS;
+
     return outStage;
 }
 

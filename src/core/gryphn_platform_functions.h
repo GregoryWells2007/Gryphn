@@ -91,6 +91,7 @@ typedef struct gnDeviceFunctions_t {
     void (*_gnDestroyUniformPool)(gnUniformPool pool);
 
     void (*_gnUpdateBufferUniform)(gnUniform uniform, gnBufferUniformInfo* bufferInfo);
+    void (*_gnUpdateImageUniform)(gnUniform uniform, gnImageUniformInfo* imageInfo);
 
     gnReturnCode (*_gnCreateTexture)(gnTexture texture, gnDevice device, const gnTextureInfo info);
     void (*_gnTextureData)(gnTextureHandle texture, void* pixelData);

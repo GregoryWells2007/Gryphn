@@ -4,6 +4,7 @@
 VkDescriptorType vkGryphnUniformType(gnUniformType type) {
     switch(type) {
     case GN_UNIFORM_BUFFER_DESCRIPTOR: return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    case GN_IMAGE_DESCRIPTOR: return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     case GN_UNIFORM_TYPE_MAX: return VK_DESCRIPTOR_TYPE_MAX_ENUM;
     }
 }

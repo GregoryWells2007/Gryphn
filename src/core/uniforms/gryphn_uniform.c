@@ -6,3 +6,7 @@
 void gnUpdateBufferUniform(gnUniform uniform, gnBufferUniformInfo bufferInfo) {
     uniform->pool->device->deviceFunctions->_gnUpdateBufferUniform(uniform, &bufferInfo);
 }
+
+void gnUpdateImageUniform(gnUniform uniform, gnImageUniformInfo imageInfo) {
+    uniform->pool->device->deviceFunctions->_gnUpdateImageUniform(uniform, &imageInfo);
+}

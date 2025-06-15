@@ -93,6 +93,7 @@ void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFuncti
     gnLoadDLLFunction(lib, functions->_gnUniformPoolAllocateUniforms, "gnUniformPoolAllocateUniformsFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyUniformPool, "gnDestroyUniformPoolFn");
     gnLoadDLLFunction(lib, functions->_gnUpdateBufferUniform, "gnUpdateBufferUniformFn");
+    gnLoadDLLFunction(lib, functions->_gnUpdateImageUniform, "gnUpdateImageUniformFn");
     gnLoadDLLFunction(lib, functions->_gnCreateTexture, "gnCreateTextureFn");
     gnLoadDLLFunction(lib, functions->_gnTextureData, "gnTextureDataFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyTexture, "gnDestroyTextureFn");

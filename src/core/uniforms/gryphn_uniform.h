@@ -11,6 +11,11 @@ typedef struct gnBufferUniformInfo {
     size_t size;
 } gnBufferUniformInfo;
 
+typedef struct gnImageUniformInfo {
+    uint32_t binding;
+    gnTexture texture;
+} gnImageUniformInfo;
+
 #ifdef GN_REVEAL_IMPL
 struct gnUniform_t {
     struct gnPlatformUniform_t* uniform;
@@ -20,3 +25,4 @@ struct gnUniform_t {
 GN_ARRAY_LIST(gnUniform)
 
 void gnUpdateBufferUniform(gnUniform uniform, gnBufferUniformInfo bufferInfo);
+void gnUpdateImageUniform(gnUniform uniform, gnImageUniformInfo imageInfo);

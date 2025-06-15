@@ -110,7 +110,8 @@ gnSurfaceDetails gnGetSurfaceDetailsFn(
 
 VkFormat vkGryphnFormatToVulkanFormat(gnImageFormat format) {
     switch (format) {
-    case GN_FORMAT_BGRA8_SRGB: { return VK_FORMAT_B8G8R8A8_SRGB; }
+    case GN_FORMAT_BGRA8_SRGB: return VK_FORMAT_B8G8R8A8_SRGB;
+    case GN_FORMAT_RGBA8_SRGB: return VK_FORMAT_R8G8B8A8_SRGB;
     default: return VK_FORMAT_UNDEFINED;
     }
 }

@@ -6,7 +6,7 @@
 
 VkImageType vkGryphnTextureType(gnTextureType type) {
     switch(type) {
-    case GN_TEXTURE_2D: return VK_IMAGE_TYPE_2D;
+        case GN_TEXTURE_2D: return VK_IMAGE_TYPE_2D;
     }
 }
 
@@ -114,6 +114,7 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
 
     size_t imageSize = info.width * info.height;
     if (info.format == GN_FORMAT_BGRA8_SRGB) { imageSize *= 4; }
+    if (info.format == GN_FORMAT_RGBA8_SRGB) { imageSize *= 4; }
 
     gnReturnCode staginBufferCreateCode = VkCreateBuffer(
         &texture->texture->buffer, imageSize, device,
