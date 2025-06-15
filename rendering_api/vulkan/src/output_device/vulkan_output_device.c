@@ -18,28 +18,30 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
         queueCreateInfos[i].pQueuePriorities = &queuePriority;
     }
 
-    VkPhysicalDeviceFeatures deviceFeatures = {};
+    VkPhysicalDeviceFeatures deviceFeatures = {
+        .samplerAnisotropy = VK_TRUE
+    };
 
-    VkDeviceCreateInfo createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
-    createInfo.queueCreateInfoCount = deviceInfo.queueInfoCount;
-    createInfo.pQueueCreateInfos = queueCreateInfos;
-    createInfo.pEnabledFeatures = &deviceFeatures;
+    VkDeviceCreateInfo deviceCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .queueCreateInfoCount = deviceInfo.queueInfoCount,
+        .pQueueCreateInfos = queueCreateInfos,
+        .pEnabledFeatures = &deviceFeatures,
 
-    createInfo.enabledExtensionCount = deviceExtensionCount;
-    createInfo.ppEnabledExtensionNames = deviceExtensions;
+        .enabledExtensionCount = deviceExtensionCount,
+        .ppEnabledExtensionNames = deviceExtensions,
+    };
 
     if (instance->debugger == NULL)
-        createInfo.enabledLayerCount = 0;
+        deviceCreateInfo.enabledLayerCount = 0;
     else {
         const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
-        createInfo.enabledLayerCount = 1;
-        createInfo.ppEnabledLayerNames = validation_layers;
+        deviceCreateInfo.enabledLayerCount = 1;
+        deviceCreateInfo.ppEnabledLayerNames = validation_layers;
     }
 
-    if (vkCreateDevice(deviceInfo.physicalDevice.physicalDevice->device, &createInfo, NULL, &outputDevice->outputDevice->device) != VK_SUCCESS) {
+    if (vkCreateDevice(deviceInfo.physicalDevice.physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_DEVICE;
-    }
 
     outputDevice->outputDevice->queues = malloc(sizeof(VkQueue) * deviceInfo.queueInfoCount);
     for (int i = 0; i < deviceInfo.queueInfoCount; i++) {

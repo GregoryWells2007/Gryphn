@@ -13,6 +13,7 @@ void gnDestroyVulkanImage(VkGryphnImage* image, VkDevice device);
 typedef struct gnPlatformTexture_t {
     VkGryphnBuffer buffer;
     VkGryphnImage image;
+    VkSampler sampler;
 
     size_t size;
     uint32_t width, height;

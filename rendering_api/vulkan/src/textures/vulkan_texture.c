@@ -5,9 +5,24 @@
 #include "core/debugger/gryphn_debugger.h"
 
 VkImageType vkGryphnTextureType(gnTextureType type) {
-switch(type) {
-case GN_TEXTURE_2D: return VK_IMAGE_TYPE_3D;
+    switch(type) {
+    case GN_TEXTURE_2D: return VK_IMAGE_TYPE_2D;
+    }
 }
+
+VkImageViewType vkGryphnTextureTypeView(gnTextureType type) {
+    switch(type) {
+        case GN_TEXTURE_2D: return VK_IMAGE_VIEW_TYPE_2D;
+    }
+}
+
+VkSamplerAddressMode vkGryphnTextureWrap(gnTextureWrap wrap) {
+    switch(wrap) {
+        case GN_REPEAT: return VK_SAMPLER_ADDRESS_MODE_REPEAT;
+        case GN_MIRRORED_REPEAT: return VK_SAMPLER_ADDRESS_MODE_MIRRORED_REPEAT;
+        case GN_CLAMP_TO_EDGE: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_EDGE;
+        case GN_CLAMP_TO_BORDER: return VK_SAMPLER_ADDRESS_MODE_CLAMP_TO_BORDER;
+    }
 }
 
 void VkTransitionImageLayout(gnDevice device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
@@ -149,6 +164,51 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
 
     texture->texture->beenWrittenToo = gnFalse;
 
+    VkImageViewCreateInfo viewInfo = {
+        .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+        .image = texture->texture->image.image,
+        .viewType = vkGryphnTextureTypeView(info.type),
+        .format = vkGryphnFormatToVulkanFormat(info.format),
+
+        .subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        .subresourceRange.baseMipLevel = 0,
+        .subresourceRange.levelCount = 1,
+        .subresourceRange.baseArrayLayer = 0,
+        .subresourceRange.layerCount = 1,
+    };
+
+    if (vkCreateImageView(device->outputDevice->device, &viewInfo, NULL, &texture->texture->image.imageView) != VK_SUCCESS)
+        return GN_FAILED_TO_CREATE_IMAGE_VIEW;
+
+    VkPhysicalDeviceProperties properties = {};
+    vkGetPhysicalDeviceProperties(device->physicalDevice.physicalDevice->device, &properties);
+
+    VkSamplerCreateInfo samplerInfo = {
+        .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+        .minFilter = (info.minFilter == GN_FILTER_LINEAR) ? VK_FILTER_LINEAR : VK_FILTER_NEAREST,
+        .magFilter = (info.magFilter == GN_FILTER_LINEAR) ? VK_FILTER_LINEAR : VK_FILTER_NEAREST,
+
+        .addressModeU = vkGryphnTextureWrap(info.wrapU),
+        .addressModeV = vkGryphnTextureWrap(info.wrapV),
+        .addressModeW = vkGryphnTextureWrap(info.wrapW),
+
+        .anisotropyEnable = VK_TRUE,
+        .maxAnisotropy = properties.limits.maxSamplerAnisotropy,
+        .borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK,
+        .unnormalizedCoordinates = VK_FALSE,
+
+        .compareEnable = VK_FALSE,
+        .compareOp = VK_COMPARE_OP_ALWAYS,
+
+        .mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR,
+        .mipLodBias = 0.0f,
+        .minLod = 0.0f,
+        .maxLod = 0.0f,
+    };
+
+    if (vkCreateSampler(device->outputDevice->device, &samplerInfo, NULL, &texture->texture->sampler) != VK_SUCCESS)
+        return GN_FAILED_TO_CREATE_SAMPLER;
+
     return GN_SUCCESS;
 }
 
@@ -174,10 +234,13 @@ void gnTextureDataFn(gnTextureHandle texture, void* pixelData) {
 
 void gnDestroyVulkanImage(VkGryphnImage* image, VkDevice device) {
     vkDestroyImage(device, image->image, NULL);
+    vkDestroyImageView(device, image->imageView, NULL);
     vkFreeMemory(device, image->memory, NULL);
 }
 
 void gnDestroyTextureFn(gnTexture texture) {
+    vkDestroySampler(texture->device->outputDevice->device, texture->texture->sampler, NULL);
+
     gnDestroyVulkanBuffer(&texture->texture->buffer, texture->device->outputDevice->device);
     gnDestroyVulkanImage(&texture->texture->image, texture->device->outputDevice->device);
 }
