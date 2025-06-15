@@ -116,8 +116,8 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQ
         if (vkCreateImageView(device->outputDevice->device, &imageViewCreateInfo, NULL, &presentationQueue->presentationQueue->swapChainImageViews[i]) != VK_SUCCESS)
             return GN_FAILED_TO_CREATE_IMAGE_VIEW;
 
-        presentationQueue->images[i]->texture->image = presentationQueue->presentationQueue->swapChainImages[i];
-        presentationQueue->images[i]->texture->imageView = presentationQueue->presentationQueue->swapChainImageViews[i];
+        presentationQueue->images[i]->texture->image.image = presentationQueue->presentationQueue->swapChainImages[i];
+        presentationQueue->images[i]->texture->image.imageView = presentationQueue->presentationQueue->swapChainImageViews[i];
     }
 
     return GN_SUCCESS;

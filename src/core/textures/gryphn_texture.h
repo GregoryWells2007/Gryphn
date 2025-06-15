@@ -23,3 +23,5 @@ struct gnTexture_t {
 #endif
 
 gnReturnCode gnCreateTexture(gnTexture* texture, gnDevice device, const gnTextureInfo info);
+void gnTextureData(gnTextureHandle texture, void* pixelData);
+void gnDestroyTexture(gnTexture texture);
