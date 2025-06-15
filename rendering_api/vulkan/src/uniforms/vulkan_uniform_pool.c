@@ -4,7 +4,6 @@
 #include "output_device/vulkan_output_devices.h"
 #include "core/uniforms/gryphn_uniform.h"
 #include "vulkan_uniform.h"
-#include "shader_module/vulkan_shader_module.h"
 #include "stdio.h"
 
 gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
@@ -29,7 +28,7 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocati
     };
     for (int i = 0; i < allocInfo.setCount; i++) {
         for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++)
-            if (allocInfo.sets[i].uniformBindings[c].type == GN_UNIFORM_BUFFER_DESCRIPTOR) uniformBufferSize.descriptorCount++;
+            uniformBufferSize.descriptorCount++;
         pool->uniformPool->pools[pool->uniformPool->poolCount].layouts[i] = vkGryphnCreateSetLayouts(&allocInfo.sets[i], pool->device->outputDevice->device);
     }
 
