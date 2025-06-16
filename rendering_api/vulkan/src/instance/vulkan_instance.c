@@ -103,18 +103,19 @@ gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instan
                 const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
                 createInfo.enabledLayerCount = 1;
                 createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
+
+                vkUserData* userData = malloc(sizeof(vkUserData));
+                userData->debuggerCallback = instanceInfo.debugger->info.callback;
+                userData->userData = instanceInfo.debugger->info.userData;
+
+                VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
+                vkPopulateDebugMessengerCreateInfo(&debugCreateInfo);
+                debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
+                debugCreateInfo.pUserData = userData;
+                createInfo.pNext = &debugCreateInfo;
             }
         }
 
-        vkUserData* userData = malloc(sizeof(vkUserData));
-        userData->debuggerCallback = instanceInfo.debugger->info.callback;
-        userData->userData = instanceInfo.debugger->info.userData;
-
-        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
-        vkPopulateDebugMessengerCreateInfo(&debugCreateInfo);
-        debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
-        debugCreateInfo.pUserData = userData;
-        createInfo.pNext = &debugCreateInfo;
     }
 
 
