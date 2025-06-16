@@ -40,8 +40,8 @@ struct gnDynamicLibrary_t* gnLoadRenderingDLL(gnRenderingAPI renderingAPI) {
 void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* functions) {
     gnLoadDLLFunction(lib, functions->_gnCreateInstance, "gnCreateInstanceFn");
     gnLoadDLLFunction(lib, functions->_gnDestroyInstance, "gnDestroyInstanceFn");
-    gnLoadDLLFunction(lib, functions->_gnCreateDebugger, "gnCreateDebuggerFn");
-    gnLoadDLLFunction(lib, functions->_gnDestroyDebugger, "gnDestroyDebuggerFn");
+    // gnLoadDLLFunction(lib, functions->_gnCreateDebugger, "gnCreateDebuggerFn");
+    // gnLoadDLLFunction(lib, functions->_gnDestroyDebugger, "gnDestroyDebuggerFn");
     gnLoadDLLFunction(lib, functions->_gnGetPhysicalDevices, "gnGetPhysicalDevicesFn");
     gnLoadDLLFunction(lib, functions->_gnQueueCanPresentToSurface, "gnQueueCanPresentToSurfaceFn");
     gnLoadDLLFunction(lib, functions->_gnCreateOutputDevoce, "gnCreateOutputDeviceFn");

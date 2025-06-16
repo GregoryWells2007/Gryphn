@@ -6,10 +6,4 @@ typedef struct gnPlatformDebugger_t {
     VkDebugUtilsMessengerEXT debugMessenger;
 } gnPlatformDebugger;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void populateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT* createInfo);
-#ifdef __cplusplus
-}
-#endif
+void vkPopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT* createInfo);

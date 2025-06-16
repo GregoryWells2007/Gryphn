@@ -2,6 +2,11 @@
 #include <debugger/vulkan_debugger.h>
 #include <stdio.h>
 
+typedef struct vkUserData {
+    gnDebuggerCallback debuggerCallback;
+    void* userData;
+} vkUserData;
+
 static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -29,27 +34,11 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: type = GN_DEBUG_MESSAGE_PERFORMANCE; break;
     }
 
-    gnInstanceHandle instance = (gnInstanceHandle)pUserData;
-
-    if (instance->debugger) {
-        instance->debugger->info.callback(
-          severity, type, data, instance->debugger->info.userData
-        );
-    } else {
-        instance->instance->instanceMessageCount++;
-        if (instance->instance->instanceMessageCount == 1)
-            instance->instance->instanceMessages = malloc(sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
-        else
-            instance->instance->instanceMessages = realloc(instance->instance->instanceMessages, sizeof(struct gnInstanceMessage) * instance->instance->instanceMessageCount);
-
-        instance->instance->instanceMessages[instance->instance->instanceMessageCount - 1] = (struct gnInstanceMessage){
-            .data = data,
-            .severity = severity,
-            .type = type
-        };
-    }
-
-    return VK_FALSE;
+    vkUserData* userData = (vkUserData*)pUserData;
+    gnDebuggerCallback callback = userData->debuggerCallback;
+    gnBool result = callback(severity, type, data, userData->userData);
+    if (result == gnFalse) return VK_FALSE;
+    return VK_TRUE;
 }
 
 gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
@@ -108,15 +97,26 @@ gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instan
 
     createInfo.flags = createFlags;
 
-    const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
-    createInfo.enabledLayerCount = 1;
-    createInfo.ppEnabledLayerNames = validation_layers;
+    if (instanceInfo.debugger != NULL) {
+        for (int i = 0; i < instanceInfo.debugger->info.layerCount; i++) {
+            if (instanceInfo.debugger->info.layers[i] == GN_DEBUGGER_LAYER_PLATFORM) {
+                const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
+                createInfo.enabledLayerCount = 1;
+                createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
+            }
+        }
 
-    VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
-    populateDebugMessengerCreateInfo(&debugCreateInfo);
-    debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
-    debugCreateInfo.pUserData = instance;
-    createInfo.pNext = &debugCreateInfo;
+        vkUserData* userData = malloc(sizeof(vkUserData));
+        userData->debuggerCallback = instanceInfo.debugger->info.callback;
+        userData->userData = instanceInfo.debugger->info.userData;
+
+        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
+        vkPopulateDebugMessengerCreateInfo(&debugCreateInfo);
+        debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
+        debugCreateInfo.pUserData = userData;
+        createInfo.pNext = &debugCreateInfo;
+    }
+
 
     createInfo.enabledExtensionCount = extensionCount;
     createInfo.ppEnabledExtensionNames = extensions;

@@ -18,3 +18,5 @@ Ability to create applications that can leverage Buffers and Textures to render 
 # Plans
 Improved Validation <br />
   Currently validation is always run and it discards the messages if you dont have a debugger attached, I plan to support layers like vulkan that can validation certain parts of the API
+Device Features <br />
+  Physical Devices dont report features that they support at all so the developer can't chose them based on features

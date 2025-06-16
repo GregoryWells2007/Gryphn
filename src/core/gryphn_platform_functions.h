@@ -2,7 +2,7 @@
 // theoretically you could have multible gryphn instances running in one application,
 // why I dont know
 #include "instance/gryphn_instance.h"
-#include "debugger/gryphn_debugger.h"
+// #include "debugger/gryphn_debugger.h"
 #include "output_device/gryphn_physical_output_device.h"
 #include "output_device/gryphn_output_device.h"
 #include "window_surface/gryphn_surface.h"
@@ -24,12 +24,8 @@ typedef struct gnFunctions_t {
     gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
     void (*_gnDestroyInstance)(gnInstanceHandle instance);
 
-    gnReturnCode (*_gnCreateDebugger)(gnDebuggerHandle debugger, gnInstanceHandle instance, const gnDebuggerInfo info);
-    void (*_gnDestroyDebugger)(gnDebuggerHandle debugger);
-
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
     gnBool (*_gnQueueCanPresentToSurface)(const gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
-
 
     gnReturnCode (*_gnCreateOutputDevoce)(gnOutputDeviceHandle device, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
     void (*_gnDestroyOutputDevice)(gnOutputDeviceHandle device);

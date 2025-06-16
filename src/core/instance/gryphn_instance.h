@@ -15,6 +15,7 @@ typedef struct gnInstanceInfo_t {
     gnVersion engineVersion;
 
     gnRenderingAPI renderingAPI;
+    gnDebuggerHandle debugger;
 } gnInstanceInfo;
 
 #ifdef GN_REVEAL_IMPL
@@ -35,6 +36,4 @@ struct gnInstance_t {
 #endif
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, struct gnInstanceInfo_t info);
-void gnInstanceAttachDebugger(gnInstanceHandle istance, gnDebuggerHandle debugger);
-void gnInstanceReleaseDebugger(gnInstanceHandle instance);
 void gnDestroyInstance(gnInstanceHandle instance);

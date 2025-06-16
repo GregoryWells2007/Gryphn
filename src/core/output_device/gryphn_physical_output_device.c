@@ -1,6 +1,5 @@
 #include "gryphn_physical_output_device.h"
 #include "core/gryphn_platform_functions.h"
-#include "stdio.h"
 
 gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {
     gnPhysicalDevice* devices = instance->functions->_gnGetPhysicalDevices(instance, count);
@@ -11,14 +10,14 @@ gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* coun
 }
 
 gnBool gnQueueCanPresentToSurface(const struct gnPhysicalDevice_t device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
-    if (queueIndex >= device.queueProperties.queueCount) {
-        gnDebuggerSetErrorMessage(device.instance->debugger,
-            (gnMessageData){
-                .message = gnCreateString("gnQueueCanPresentToSurface queue index passed in is large then queueProperties.queueCount")
-            }
-        );
-        return gnFalse;
-    }
+    // if (queueIndex >= device.queueProperties.queueCount) {
+    //     gnDebuggerSetErrorMessage(device.instance->debugger,
+    //         (gnMessageData){
+    //             .message = gnCreateString("gnQueueCanPresentToSurface queue index passed in is large then queueProperties.queueCount")
+    //         }
+    //     );
+    //     return gnFalse;
+    // }
     return device.instance->functions->_gnQueueCanPresentToSurface(device, queueIndex, windowSurface);
 }
 
@@ -46,11 +45,11 @@ int gnGetGraphicsQueueIndex(const struct gnPhysicalDevice_t device) {
             break;
         }
     }
-    gnDebuggerSetErrorMessage(device.instance->debugger,
-        (gnMessageData){
-            .message = gnCreateString("gnGetGraphicsQueueIndex failed no queue that support graphics on this device")
-        }
-    );
+    // gnDebuggerSetErrorMessage(device.instance->debugger,
+    //     (gnMessageData){
+    //         .message = gnCreateString("gnGetGraphicsQueueIndex failed no queue that support graphics on this device")
+    //     }
+    // );
     return -1;
 }
 int gnGetPresentQueueIndex(const struct gnPhysicalDevice_t device, gnWindowSurfaceHandle windowSurface) {
@@ -60,10 +59,10 @@ int gnGetPresentQueueIndex(const struct gnPhysicalDevice_t device, gnWindowSurfa
             break;
         }
     }
-    gnDebuggerSetErrorMessage(device.instance->debugger,
-        (gnMessageData){
-            .message = gnCreateString("gnGetPresentQueueIndex failed no queue that support presenting to this window surface")
-        }
-    );
+    // gnDebuggerSetErrorMessage(device.instance->debugger,
+    //     (gnMessageData){
+    //         .message = gnCreateString("gnGetPresentQueueIndex failed no queue that support presenting to this window surface")
+    //     }
+    // );
     return -1;
 }
