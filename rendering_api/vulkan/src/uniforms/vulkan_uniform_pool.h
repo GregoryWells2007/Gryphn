@@ -9,6 +9,6 @@ typedef struct vkGryphnUniformPool {
 } vkGryphnUniformPool;
 
 struct gnPlatformUniformPool_t {
-    uint32_t poolCount, maxPoolCount;
+    uint32_t poolCount, maxPoolCount, currentPool;
     vkGryphnUniformPool* pools;
 };

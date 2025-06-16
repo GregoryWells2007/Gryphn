@@ -32,6 +32,10 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
     };
     deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount, deviceInfo.physicalDevice.physicalDevice->device);
 
+    outputDevice->outputDevice->enabledOversizedDescriptorPools = gnFalse;
+    for (int i = 0; i < deviceCreateInfo.enabledExtensionCount; i++)
+        if (strcmp(deviceCreateInfo.ppEnabledExtensionNames[i], VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME) == 0) outputDevice->outputDevice->enabledOversizedDescriptorPools = gnTrue;
+
     if (instance->debugger == NULL)
         deviceCreateInfo.enabledLayerCount = 0;
     else {

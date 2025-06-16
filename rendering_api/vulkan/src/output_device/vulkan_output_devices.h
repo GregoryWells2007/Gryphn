@@ -9,6 +9,8 @@ typedef struct gnPlatformOutputDevice_t {
 
     VkQueue transferQueue;
     VkCommandPool transferCommandPool;
+
+    gnBool enabledOversizedDescriptorPools;
 } gnPlatformOutputDevice;
 
 VkCommandBuffer gnBeginVulkanTransferOperation(gnDevice device);
