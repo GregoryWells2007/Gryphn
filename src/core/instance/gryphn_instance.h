@@ -3,9 +3,7 @@
 #include "core/gryphn_rendering_api.h"
 #include "core/gryphn_handles.h"
 
-struct gnPlatformInstance_t;
-struct gnFunctions_t;
-struct gnDynamicLibrary_t;
+typedef struct gnInstanceFunctions gnInstanceFunctions;
 
 typedef struct gnInstanceInfo_t {
     gnString  applicationName;
@@ -27,7 +25,7 @@ struct gnInstance_t {
 
     struct gnDynamicLibrary_t* dynamicLib;
 
-    struct gnFunctions_t* functions;
+    gnInstanceFunctions *functions, *unvalidatedFunctions;
     struct gnDeviceFunctions_t* deviceFunctions;
     struct gnCommandFunctions_t* commandFunctions;
 

@@ -37,36 +37,38 @@ struct gnDynamicLibrary_t* gnLoadRenderingDLL(gnRenderingAPI renderingAPI) {
     return gnLoadDynamicLibrary(gnCombineStrings(gnCreateString("gryphn/rendering_apis/"), libName));
 }
 
-void gnLoadFunctions(struct gnDynamicLibrary_t* lib, struct gnFunctions_t* functions) {
-    gnLoadDLLFunction(lib, functions->_gnCreateInstance, "gnCreateInstanceFn");
-    gnLoadDLLFunction(lib, functions->_gnDestroyInstance, "gnDestroyInstanceFn");
-    // gnLoadDLLFunction(lib, functions->_gnCreateDebugger, "gnCreateDebuggerFn");
-    // gnLoadDLLFunction(lib, functions->_gnDestroyDebugger, "gnDestroyDebuggerFn");
-    gnLoadDLLFunction(lib, functions->_gnGetPhysicalDevices, "gnGetPhysicalDevicesFn");
-    gnLoadDLLFunction(lib, functions->_gnQueueCanPresentToSurface, "gnQueueCanPresentToSurfaceFn");
-    gnLoadDLLFunction(lib, functions->_gnCreateOutputDevoce, "gnCreateOutputDeviceFn");
-    gnLoadDLLFunction(lib, functions->_gnDestroyOutputDevice, "gnDestroyOutputDeviceFn");
+gnInstanceFunctions* gnLoadFunctions(gnInstanceHandle instance) {
+    gnInstanceFunctions* functions = malloc(sizeof(gnInstanceFunctions));
+
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnCreateInstance, "gnCreateInstanceFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnDestroyInstance, "gnDestroyInstanceFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnGetPhysicalDevices, "gnGetPhysicalDevicesFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnQueueCanPresentToSurface, "gnQueueCanPresentToSurfaceFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnCreateOutputDevice, "gnCreateOutputDeviceFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnDestroyOutputDevice, "gnDestroyOutputDeviceFn");
 
     #ifdef GN_PLATFORM_LINUX
         #ifdef GN_WINDOW_X11
-        gnLoadDLLFunction(lib, functions->_gnCreateX11WindowSurface, "gnCreateX11WindowSurfaceFn");
+        gnLoadDLLFunction(instance->dynamicLib, functions->_gnCreateX11WindowSurface, "gnCreateX11WindowSurfaceFn");
         #endif
         #ifdef GN_WINDOW_WAYLAND
-        gnLoadDLLFunction(lib, functions->_gnCreateWaylandWindowSurface, "gnCreateWaylandWindowSurfaceFn");
+        gnLoadDLLFunction(instance->dynamicLib, functions->_gnCreateWaylandWindowSurface, "gnCreateWaylandWindowSurfaceFn");
         #endif
     #endif
 
 
     #ifdef GN_PLATFORM_WIN32
-    gnLoadDLLFunction(lib, functions->_gnCreateWin32WindowSurface, "gnCreateWin32WindowSurfaceFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnCreateWin32WindowSurface, "gnCreateWin32WindowSurfaceFn");
     #endif
 
     #ifdef GN_PLATFORM_MACOS
-    gnLoadDLLFunction(lib, functions->_gnCreateMacOSWindowSurface, "gnCreateMacOSWindowSurfaceFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnCreateMacOSWindowSurface, "gnCreateMacOSWindowSurfaceFn");
     #endif
 
-    gnLoadDLLFunction(lib, functions->_gnDestroyWindowSurface, "gnDestroyWindowSurfaceFn");
-    gnLoadDLLFunction(lib, functions->_gnGetSurfaceDetails, "gnGetSurfaceDetailsFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnDestroyWindowSurface, "gnDestroyWindowSurfaceFn");
+    gnLoadDLLFunction(instance->dynamicLib, functions->_gnGetSurfaceDetails, "gnGetSurfaceDetailsFn");
+
+    return functions;
 }
 
 void gnLoadDeviceFunctions(struct gnDynamicLibrary_t* lib, struct gnDeviceFunctions_t* functions) {

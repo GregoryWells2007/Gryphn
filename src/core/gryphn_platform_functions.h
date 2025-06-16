@@ -20,14 +20,14 @@
 #include "core/textures/gryphn_texture.h"
 #include "core/uniforms/gryphn_uniform_pool.h"
 
-typedef struct gnFunctions_t {
+typedef struct gnInstanceFunctions {
     gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
     void (*_gnDestroyInstance)(gnInstanceHandle instance);
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
     gnBool (*_gnQueueCanPresentToSurface)(const gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
 
-    gnReturnCode (*_gnCreateOutputDevoce)(gnOutputDeviceHandle device, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
+    gnReturnCode (*_gnCreateOutputDevice)(gnOutputDeviceHandle device, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
     void (*_gnDestroyOutputDevice)(gnOutputDeviceHandle device);
 
 
@@ -51,7 +51,7 @@ typedef struct gnFunctions_t {
 
     void (*_gnDestroyWindowSurface)(gnWindowSurfaceHandle windowSurface);
     gnSurfaceDetails (*_gnGetSurfaceDetails)(gnWindowSurfaceHandle windowSurface, struct gnPhysicalDevice_t device);
-} gnFunctions;
+} gnInstanceFunctions;
 
 #include "core/presentation_queue/gryphn_presentation_queue.h"
 typedef struct gnDeviceFunctions_t {
