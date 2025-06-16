@@ -26,18 +26,26 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocati
         .type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
         .descriptorCount = 0
     };
+
+    VkDescriptorPoolSize imageSize = {
+        .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
+        .descriptorCount = 0
+    };
+
     for (int i = 0; i < allocInfo.setCount; i++) {
-        for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++)
-            uniformBufferSize.descriptorCount++;
+        for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
+            if (allocInfo.sets[i].uniformBindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) uniformBufferSize.descriptorCount++;
+            if (allocInfo.sets[i].uniformBindings[i].type == GN_IMAGE_DESCRIPTOR) imageSize.descriptorCount++;
+        }
         pool->uniformPool->pools[pool->uniformPool->poolCount].layouts[i] = vkGryphnCreateSetLayouts(&allocInfo.sets[i], pool->device->outputDevice->device);
     }
 
-    uint32_t maxSets = uniformBufferSize.descriptorCount;
+    uint32_t maxSets = uniformBufferSize.descriptorCount + uniformBufferSize.descriptorCount;
 
     VkDescriptorPoolCreateInfo poolInfo = {
         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
         .poolSizeCount = 1,
-        .pPoolSizes = &uniformBufferSize,
+        .pPoolSizes = (VkDescriptorPoolSize[]){ uniformBufferSize, imageSize },
         .maxSets = maxSets
     };
 

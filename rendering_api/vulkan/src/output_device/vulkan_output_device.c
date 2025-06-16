@@ -22,15 +22,15 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
         .samplerAnisotropy = VK_TRUE
     };
 
+
+
     VkDeviceCreateInfo deviceCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .queueCreateInfoCount = deviceInfo.queueInfoCount,
         .pQueueCreateInfos = queueCreateInfos,
-        .pEnabledFeatures = &deviceFeatures,
-
-        .enabledExtensionCount = deviceExtensionCount,
-        .ppEnabledExtensionNames = deviceExtensions,
+        .pEnabledFeatures = &deviceFeatures
     };
+    deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount);
 
     if (instance->debugger == NULL)
         deviceCreateInfo.enabledLayerCount = 0;
