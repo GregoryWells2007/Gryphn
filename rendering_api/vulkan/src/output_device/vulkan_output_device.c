@@ -5,7 +5,7 @@
 #include "core/instance/gryphn_instance.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"
 
-gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
+gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
 
     VkDeviceQueueCreateInfo* queueCreateInfos = malloc(sizeof(VkDeviceQueueCreateInfo) * deviceInfo.queueInfoCount);
@@ -30,7 +30,7 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
         .pQueueCreateInfos = queueCreateInfos,
         .pEnabledFeatures = &deviceFeatures
     };
-    deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount);
+    deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount, deviceInfo.physicalDevice.physicalDevice->device);
 
     if (instance->debugger == NULL)
         deviceCreateInfo.enabledLayerCount = 0;
