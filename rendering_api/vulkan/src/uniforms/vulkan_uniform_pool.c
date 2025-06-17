@@ -6,11 +6,20 @@
 #include "vulkan_uniform.h"
 #include "stdio.h"
 
+VkGryphnUniformPool* GetLastUniformPool(VkGryphnUniformPoolArrayList* list) { return &list->data[list->count - 1]; }
+
 gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
     pool->uniformPool = malloc(sizeof(struct gnPlatformUniformPool_t));
-    pool->uniformPool->poolCount = 0;
-    // pool->uniformPool->maxPoolCount = 2;
-    pool->uniformPool->pools = malloc(sizeof(vkGryphnUniformPool) * pool->uniformPool->maxPoolCount);
+    pool->uniformPool->pools = VkGryphnUniformPoolArrayListCreate();
+    {
+        VkGryphnUniformPool firstPool = {
+            .pool = VK_NULL_HANDLE,
+            .layouts = VkDescriptorSetLayoutArrayListCreate()
+        };
+        VkGryphnUniformPoolArrayListAdd(&pool->uniformPool->pools, firstPool);
+    } // scopped because the add function copies and I don't want it lying around
+
+    VkGryphnUniformPool* currentPool = GetLastUniformPool(&pool->uniformPool->pools);
 
     VkDescriptorPoolCreateInfo poolInfo = {
         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
@@ -22,11 +31,9 @@ gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
 
     if (vkCreateDescriptorPool(
         pool->device->outputDevice->device, &poolInfo, NULL,
-        &pool->uniformPool->pools[0].pool
+        &currentPool->pool
     ) != VK_SUCCESS)
         return GN_FAILED_TO_ALLOCATE_MEMORY;
-
-    pool->uniformPool->pools[0].layouts = VkDescriptorSetLayoutArrayListCreate();
 
     // if (device->outputDevice->enabledOversizedDescriptorPools == gnTrue) {
     //     VkDescriptorPoolCreateInfo poolInfo = {
@@ -56,21 +63,23 @@ gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
 }
 
 gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocationInfo allocInfo) {
-    uint32_t startingCount = pool->uniformPool->pools[0].layouts.count;
-    VkDescriptorSetLayoutArrayListExpand(&pool->uniformPool->pools[0].layouts, allocInfo.setCount);
+    VkGryphnUniformPool* currentPool = GetLastUniformPool(&pool->uniformPool->pools);
+
+    uint32_t startingCount = currentPool->layouts.count;
+    VkDescriptorSetLayoutArrayListExpand(&currentPool->layouts, allocInfo.setCount);
 
     for (int i = 0; i < allocInfo.setCount; i++) {
         VkDescriptorSetLayoutArrayListAdd(
-            &pool->uniformPool->pools[0].layouts,
+            &currentPool->layouts,
             vkGryphnCreateSetLayouts(&allocInfo.sets[i], pool->device->outputDevice->device)
         );
     }
 
     VkDescriptorSetAllocateInfo vkAllocInfo = {
         .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO,
-        .descriptorPool = pool->uniformPool->pools[0].pool,
+        .descriptorPool = currentPool->pool,
         .descriptorSetCount = allocInfo.setCount,
-        .pSetLayouts = &pool->uniformPool->pools[0].layouts.data[startingCount]
+        .pSetLayouts = &currentPool->layouts.data[startingCount]
     };
 
     VkDescriptorSet* sets = malloc(sizeof(VkDescriptorSet) * allocInfo.setCount);
@@ -167,8 +176,10 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocati
 }
 
 void gnDestroyUniformPoolFn(gnUniformPool pool) {
-    vkDestroyDescriptorPool(pool->device->outputDevice->device, pool->uniformPool->pools[0].pool, NULL);
-    for (int i = 0; i < pool->uniformPool->pools[0].layouts.count; i++) {
-        vkDestroyDescriptorSetLayout(pool->device->outputDevice->device, pool->uniformPool->pools[0].layouts.data[i], NULL);
+    for (int k = 0; k < pool->uniformPool->pools.count; k++) {
+        vkDestroyDescriptorPool(pool->device->outputDevice->device, pool->uniformPool->pools.data[k].pool, NULL);
+        for (int i = 0; i < pool->uniformPool->pools.data[k].layouts.count; i++) {
+            vkDestroyDescriptorSetLayout(pool->device->outputDevice->device, pool->uniformPool->pools.data[k].layouts.data[i], NULL);
+        }
     }
 }

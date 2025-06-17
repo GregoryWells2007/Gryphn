@@ -4,12 +4,12 @@
 
 GN_ARRAY_LIST(VkDescriptorSetLayout);
 
-typedef struct vkGryphnUniformPool {
+typedef struct VkGryphnUniformPool {
     VkDescriptorPool pool;
     VkDescriptorSetLayoutArrayList layouts;
-} vkGryphnUniformPool;
+} VkGryphnUniformPool;
+GN_ARRAY_LIST(VkGryphnUniformPool);
 
 struct gnPlatformUniformPool_t {
-    uint32_t poolCount, maxPoolCount, currentPool;
-    vkGryphnUniformPool* pools;
+    VkGryphnUniformPoolArrayList pools;
 };
