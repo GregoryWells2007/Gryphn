@@ -66,10 +66,23 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocati
             }
         }
 
+        uint32_t count = 0;
+        VkDescriptorPoolSize poolSizes[2] = {};
+
+        if (uniformBufferSize.descriptorCount > 0) {
+            poolSizes[count] = uniformBufferSize;
+            count++;
+        }
+
+        if (imageSize.descriptorCount > 0) {
+            poolSizes[count] = imageSize;
+            count++;
+        }
+
         VkDescriptorPoolCreateInfo poolInfo = {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
-            .poolSizeCount = 2,
-            .pPoolSizes = (VkDescriptorPoolSize[]){ uniformBufferSize, imageSize },
+            .poolSizeCount = count,
+            .pPoolSizes = poolSizes,
             .maxSets = allocInfo.setCount
         };
 
