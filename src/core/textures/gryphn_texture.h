@@ -29,6 +29,7 @@ typedef struct gnTextureInfo {
 struct gnTexture_t {
     struct gnPlatformTexture_t* texture;
     gnDeviceHandle device;
+    gnTextureInfo info;
 };
 #endif
 

@@ -25,7 +25,18 @@ VkSamplerAddressMode vkGryphnTextureWrap(gnTextureWrap wrap) {
     }
 }
 
-void VkTransitionImageLayout(gnDevice device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
+VkImageAspectFlags vkGryphnGetAspectFlags(gnImageFormat format) {
+    VkImageAspectFlags aspectMask = 0;
+
+    if (format == GN_FORMAT_D32S8_UINT || format == GN_FORMAT_D24S8_UINT) aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT | VK_IMAGE_ASPECT_STENCIL_BIT;
+    else { aspectMask = VK_IMAGE_ASPECT_COLOR_BIT; }
+
+    return aspectMask;
+}
+
+gnBool vkGryphnIsDepthStencil(gnImageFormat format) { return (format == GN_FORMAT_D32S8_UINT || format == GN_FORMAT_D24S8_UINT); }
+
+void VkTransitionImageLayout(gnDevice device, VkImage image, gnImageFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
     VkCommandBuffer transferBuffer = gnBeginVulkanTransferOperation(device);
 
     VkPipelineStageFlags sourceStage, destinationStage;
@@ -43,7 +54,13 @@ void VkTransitionImageLayout(gnDevice device, VkImage image, VkFormat format, Vk
 
         destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         destinationAccessMask = VK_ACCESS_SHADER_READ_BIT;
-    }
+    } else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
+       sourceAccessMask = 0;
+       sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+
+       destinationAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+       destinationStage = VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+   }
 
     VkImageMemoryBarrier barrier = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
@@ -58,7 +75,7 @@ void VkTransitionImageLayout(gnDevice device, VkImage image, VkFormat format, Vk
         .newLayout = newLayout,
 
 
-        .subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        .subresourceRange.aspectMask = vkGryphnGetAspectFlags(format),
         .subresourceRange.baseMipLevel = 0,
         .subresourceRange.levelCount = 1,
         .subresourceRange.baseArrayLayer = 0,
@@ -109,6 +126,8 @@ void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, uint32_t wi
     gnEndVulkanTransferOperation(device, transferBuffer);
 }
 
+#include "stdio.h"
+
 gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
 
@@ -128,7 +147,6 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
         .tiling = VK_IMAGE_TILING_OPTIMAL,
         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-        .usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
         .samples = VK_SAMPLE_COUNT_1_BIT,
         .extent = {
             .width = info.width,
@@ -140,6 +158,11 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
         .imageType = vkGryphnTextureType(info.type),
         .format = vkGryphnFormatToVulkanFormat(info.format)
     };
+
+    if (vkGryphnIsDepthStencil(info.format))
+        imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    else
+        imageInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
     if (vkCreateImage(device->outputDevice->device, &imageInfo, NULL, &texture->texture->image.image) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_IMAGE;
@@ -171,7 +194,7 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
         .viewType = vkGryphnTextureTypeView(info.type),
         .format = vkGryphnFormatToVulkanFormat(info.format),
 
-        .subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        .subresourceRange.aspectMask = vkGryphnGetAspectFlags(info.format),
         .subresourceRange.baseMipLevel = 0,
         .subresourceRange.levelCount = 1,
         .subresourceRange.baseArrayLayer = 0,
@@ -210,6 +233,9 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
     if (vkCreateSampler(device->outputDevice->device, &samplerInfo, NULL, &texture->texture->sampler) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_SAMPLER;
 
+    if (vkGryphnIsDepthStencil(info.format))
+        VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
+
     return GN_SUCCESS;
 }
 
@@ -226,9 +252,9 @@ void gnTextureDataFn(gnTextureHandle texture, void* pixelData) {
     }
 
     //gnDevice device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout
-    VkTransitionImageLayout(texture->device, texture->texture->image.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
     VkCopyBufferToImage(texture->texture->buffer, texture->texture->image, texture->texture->width, texture->texture->height, texture->device);
-    VkTransitionImageLayout(texture->device, texture->texture->image.image, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+    VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     texture->texture->beenWrittenToo = gnTrue;
 }

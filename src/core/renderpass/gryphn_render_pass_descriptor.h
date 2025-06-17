@@ -4,12 +4,14 @@
 #include "utils/gryphn_error_code.h"
 #include "core/gryphn_handles.h"
 
-typedef enum gnRenderPassStage_e {
-    GN_COLOR_ATTACHMENT_OUTPUT = 0x00000400
+typedef enum gnRenderPassStage {
+    GN_COLOR_ATTACHMENT_OUTPUT = 1,
+    GN_EARLY_FRAGMENT_TEST = 2
 } gnRenderPassStage; // I stole these from vulkan to make that conversion easier
 
-typedef enum gnRenderPassAccess_e {
-    GN_COLOR_ATTACHMENT_WRITE = 0x00000100
+typedef enum gnRenderPassAccess {
+    GN_COLOR_ATTACHMENT_WRITE = 1,
+    GN_DEPTH_STENCIL_WRITE = 2
 } gnRenderPassAccess;
 
 typedef enum gnLoadOperation_e {
@@ -39,7 +41,8 @@ typedef struct gnSubpassAttachmentInfo_t {
 
 typedef struct gnSubpassInfo_t {
     uint32_t colorAttachmentCount;
-    struct gnSubpassAttachmentInfo_t* colorAttachments;
+    gnSubpassAttachmentInfo* colorAttachments;
+    gnSubpassAttachmentInfo* depthAttachment;
 } gnSubpassInfo;
 
 #define GN_SUBPASS_EXTERNAL -1
@@ -47,31 +50,31 @@ typedef struct gnSubpassInfo_t {
 typedef struct gnSubpassDependencyInfo_t {
     int source, destination;
 
-    enum gnRenderPassStage_e soruceStageMask;
-    enum gnRenderPassAccess_e sourceAccessMask;
+    gnRenderPassStage soruceStageMask;
+    gnRenderPassAccess sourceAccessMask;
 
-    enum gnRenderPassStage_e destinationStageMask;
-    enum gnRenderPassAccess_e destinationAccessMask;
+    gnRenderPassStage destinationStageMask;
+    gnRenderPassAccess destinationAccessMask;
 } gnSubpassDependencyInfo;
 
-typedef struct gnRenderPassDescriptorInfo_t {
+typedef struct gnRenderPassDescriptorInfo {
     uint32_t attachmentCount;
-    struct gnRenderPassAttachmentInfo_t* attachmentInfos;
+    gnRenderPassAttachmentInfo* attachmentInfos;
 
     uint32_t subpassCount;
-    struct gnSubpassInfo_t* subpassInfos;
+    gnSubpassInfo* subpassInfos;
 
     uint32_t dependencyCount;
-    struct gnSubpassDependencyInfo_t* dependencies;
+    gnSubpassDependencyInfo* dependencies;
 } gnRenderPassDescriptorInfo;
 
 #ifdef GN_REVEAL_IMPL
 struct gnRenderPassDescriptor_t {
     struct gnPlatformRenderPassDescriptor_t* renderPassDescriptor;
-    struct gnRenderPassDescriptorInfo_t info;
-    struct gnOutputDevice_t* device;
+    gnRenderPassDescriptorInfo info;
+    gnDeviceHandle device;
 };
 #endif
 
-gnReturnCode gnCreateRenderPassDescriptor(gnRenderPassDescriptorHandle* renderPass, gnOutputDeviceHandle device, struct gnRenderPassDescriptorInfo_t info);
+gnReturnCode gnCreateRenderPassDescriptor(gnRenderPassDescriptorHandle* renderPass, gnOutputDeviceHandle device, gnRenderPassDescriptorInfo info);
 void gnDestroyRenderPassDescriptor(gnRenderPassDescriptorHandle renderPass);

@@ -4,6 +4,7 @@
 gnReturnCode gnCreateTexture(gnTexture* texture, gnDevice device, const gnTextureInfo info) {
     *texture = malloc(sizeof(struct gnTexture_t));
     (*texture)->device = device;
+    (*texture)->info = info;
     return device->deviceFunctions->_gnCreateTexture(*texture, device, info);
 }
 

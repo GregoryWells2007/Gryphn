@@ -4,13 +4,8 @@
 #include "sync/fence/vulkan_fence.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"
 #include "output_device/vulkan_output_devices.h"
-#include "core/renderpass/gryphn_render_pass_descriptor.h"
+#include "renderpass/vulkan_render_pass_descriptor.h"
 
-VkPipelineStageFlags vkGryphnWaitStage(enum gnRenderPassStage_e stage) {
-    switch(stage) {
-    case GN_COLOR_ATTACHMENT_OUTPUT: return VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-    }
-}
 
 gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t info) {
     VK_SUBPASS_EXTERNAL;
@@ -18,7 +13,7 @@ gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t i
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
     VkPipelineStageFlags* waitStages = malloc(sizeof(VkPipelineStageFlags) * info.waitCount);
     for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;
-    for (int i = 0; i < info.waitCount; i++) waitStages[i] = vkGryphnWaitStage(info.waitStages[i]);
+    for (int i = 0; i < info.waitCount; i++) waitStages[i] = vkGryphnRenderPassStage(info.waitStages[i]);
 
     VkCommandBuffer* commandBuffers = malloc(sizeof(VkCommandBuffer) * info.commandBufferCount);
     for (int i = 0; i < info.commandBufferCount; i++) commandBuffers[i] = info.commandBuffers[i]->commandBuffer->buffer;

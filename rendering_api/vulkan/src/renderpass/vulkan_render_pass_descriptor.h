@@ -13,4 +13,7 @@ typedef struct gnPlatformRenderPassDescriptor_t {
     VkSubpassDependency* dependencies;
 
     VkAttachmentReference** colorAttachments;
+    VkAttachmentReference* depthAttachments;
 } gnPlatformRenderPassDescriptor;
+
+VkPipelineStageFlags vkGryphnRenderPassStage(gnRenderPassStage stage);

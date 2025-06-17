@@ -23,11 +23,26 @@ VkImageLayout vkGryphnImageLayout(gnImageLayout layout) {
     case GN_LAYOUT_UNDEFINED: return VK_IMAGE_LAYOUT_UNDEFINED;
     case GN_LAYOUT_PRESENTATION_QUEUE_IMAGE: return VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
     case GN_LAYOUT_TRANSFER_DESTINATION: return VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
-    case GN_COLOR_ATTACHMENT: return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    case GN_LAYOUT_COLOR_ATTACHMENT: return VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+    case GN_LAYOUT_DEPTH_STENCIL: return VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
     }
 }
 
-gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, struct gnRenderPassDescriptorInfo_t info) {
+VkPipelineStageFlags vkGryphnRenderPassStage(gnRenderPassStage stage) {
+    VkPipelineStageFlags flags = 0;
+    if ((stage & GN_COLOR_ATTACHMENT_OUTPUT) == GN_COLOR_ATTACHMENT_OUTPUT) flags |= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+    if ((stage & GN_EARLY_FRAGMENT_TEST) == GN_EARLY_FRAGMENT_TEST) flags |= VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    return flags;
+}
+
+VkAccessFlags vkGryphnRenderPassAccess(gnRenderPassAccess access) {
+    VkAccessFlags flags = 0;
+    if ((flags & GN_COLOR_ATTACHMENT_WRITE) == GN_COLOR_ATTACHMENT_WRITE) flags |= VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    if ((flags & GN_DEPTH_STENCIL_WRITE) == GN_DEPTH_STENCIL_WRITE) flags |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    return flags;
+}
+
+gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, gnRenderPassDescriptorInfo info) {
     renderPass->renderPassDescriptor = malloc(sizeof(gnPlatformRenderPassDescriptor));
 
     renderPass->renderPassDescriptor->attachmentCount = info.attachmentCount;
@@ -50,11 +65,7 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
     renderPass->renderPassDescriptor->subpassCount = info.subpassCount;
     renderPass->renderPassDescriptor->subpasses = malloc(sizeof(VkSubpassDescription) * info.subpassCount);
     renderPass->renderPassDescriptor->colorAttachments = malloc(sizeof(VkAttachmentReference*) * info.subpassCount);
-
-    VkAttachmentReference ref = {
-        .attachment = 0,
-        .layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL
-    };
+    renderPass->renderPassDescriptor->depthAttachments = malloc(sizeof(VkAttachmentReference) * info.subpassCount);
 
     for (int i = 0; i < info.subpassCount; i++) {
         renderPass->renderPassDescriptor->colorAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
@@ -66,13 +77,20 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
             };
         }
 
-
         renderPass->renderPassDescriptor->subpasses[i] = (VkSubpassDescription){
             .flags = 0,
             .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
             .colorAttachmentCount = info.subpassInfos[i].colorAttachmentCount,
             .pColorAttachments = renderPass->renderPassDescriptor->colorAttachments[i]
         };
+
+        if (info.subpassInfos[i].depthAttachment != NULL) {
+            renderPass->renderPassDescriptor->depthAttachments[i] = (VkAttachmentReference){
+                .attachment = info.subpassInfos[i].depthAttachment->index,
+                .layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL
+            };
+            renderPass->renderPassDescriptor->subpasses[i].pDepthStencilAttachment = &renderPass->renderPassDescriptor->depthAttachments[i];
+        }
     }
 
     renderPass->renderPassDescriptor->dependencies = malloc(sizeof(VkSubpassDependency) * info.dependencyCount);
@@ -80,10 +98,10 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
         renderPass->renderPassDescriptor->dependencies[i] = (VkSubpassDependency) {
             .srcSubpass = (info.dependencies[i].source == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].source,
             .dstSubpass = (info.dependencies[i].destination == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].destination,
-            .srcStageMask = info.dependencies[i].soruceStageMask,
-            .srcAccessMask = info.dependencies[i].sourceAccessMask,
-            .dstStageMask = info.dependencies[i].destinationStageMask,
-            .dstAccessMask = info.dependencies[i].destinationAccessMask
+            .srcStageMask = vkGryphnRenderPassStage(info.dependencies[i].soruceStageMask),
+            .srcAccessMask = vkGryphnRenderPassAccess(info.dependencies[i].sourceAccessMask),
+            .dstStageMask = vkGryphnRenderPassStage(info.dependencies[i].destinationStageMask),
+            .dstAccessMask = vkGryphnRenderPassAccess(info.dependencies[i].destinationAccessMask)
         };
     }
 
@@ -113,4 +131,5 @@ void gnDestroyRenderPassDescriptorFn(gnRenderPassDescriptor renderPass) {
     free(renderPass->renderPassDescriptor->attachments);
     free(renderPass->renderPassDescriptor->subpasses);
     free(renderPass->renderPassDescriptor->dependencies);
+    free(renderPass->renderPassDescriptor->depthAttachments);
 }
