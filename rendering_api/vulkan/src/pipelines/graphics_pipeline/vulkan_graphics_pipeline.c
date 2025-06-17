@@ -16,7 +16,7 @@ VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e st
     }
 }
 
-VkPrimitiveTopology vkGryphnPrimitiveType(enum gnPrimitiveType_e primitiveType) {
+VkPrimitiveTopology vkGryphnPrimitiveType(gnPrimitiveType primitiveType) {
     switch (primitiveType) {
     case GN_PRIMITIVE_POINTS: return VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
     case GN_PRIMITIVE_LINES: return VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
@@ -61,6 +61,32 @@ VkFormat vkGryphnVertexFormat(gnVertexFormat format) {
     switch (format) {
     case GN_FLOAT2: return VK_FORMAT_R32G32_SFLOAT;
     case GN_FLOAT3: return VK_FORMAT_R32G32B32_SFLOAT;
+    }
+}
+
+VkCompareOp vkGrypnCompareOperation(gnCompareOperation operation) {
+    switch(operation) {
+    case GN_COMPARE_NEVER: return VK_COMPARE_OP_NEVER;
+    case GN_COMPARE_LESS: return VK_COMPARE_OP_LESS;
+    case GN_COMPARE_EQUAL: return VK_COMPARE_OP_EQUAL;
+    case GN_COMPARE_LESS_OR_EQUAL: return VK_COMPARE_OP_LESS_OR_EQUAL;
+    case GN_COMPARE_GREATER: return VK_COMPARE_OP_GREATER;
+    case GN_COMPARE_NOT_EQUAL: return VK_COMPARE_OP_NOT_EQUAL;
+    case GN_COMPARE_GREATER_OR_EQUAL: return VK_COMPARE_OP_GREATER_OR_EQUAL;
+    case GN_COMPARE_ALWAYS: return VK_COMPARE_OP_ALWAYS;
+    }
+}
+
+VkStencilOp vkGryphnStencilOperation(gnStencilOperation operation) {
+    switch(operation) {
+    case GN_STENCIL_KEEP: return VK_STENCIL_OP_KEEP;
+    case GN_STENCIL_ZERO: return VK_STENCIL_OP_ZERO;
+    case GN_STENCIL_REPLACE: return VK_STENCIL_OP_REPLACE;
+    case GN_STENCIL_INCREMENT_AND_CLAMP: return VK_STENCIL_OP_INCREMENT_AND_CLAMP;
+    case GN_STENCIL_DECREMENT_AND_CLAMP: return VK_STENCIL_OP_DECREMENT_AND_CLAMP;
+    case GN_STENCIL_INVERT: return VK_STENCIL_OP_INVERT;
+    case GN_STENCIL_INCREMENT_AND_WRAP: return VK_STENCIL_OP_INCREMENT_AND_WRAP;
+    case GN_STENCIL_DECREMENT_AND_WRAP: return VK_STENCIL_OP_DECREMENT_AND_WRAP;
     }
 }
 
@@ -180,6 +206,37 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
         .blendConstants[3] = 0.0f
     };
 
+    graphicsPipeline->graphicsPipeline->depthStencil = (VkPipelineDepthStencilStateCreateInfo){
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO,
+        .depthWriteEnable = info.depthStencil.depthWriteEnable,
+        .depthTestEnable = info.depthStencil.depthWriteEnable,
+        .depthCompareOp = vkGrypnCompareOperation(info.depthStencil.operation),
+        .depthBoundsTestEnable = VK_FALSE,
+        .stencilTestEnable = info.depthStencil.stencilTestEnable,
+    };
+
+    if (info.depthStencil.stencilTestEnable) {
+        graphicsPipeline->graphicsPipeline->depthStencil.front = (VkStencilOpState){
+            .failOp = vkGryphnStencilOperation(info.depthStencil.front.failOperation),
+            .passOp = vkGryphnStencilOperation(info.depthStencil.front.passOperation),
+            .depthFailOp = vkGryphnStencilOperation(info.depthStencil.front.depthFailOperation),
+            .compareOp = vkGrypnCompareOperation(info.depthStencil.front.compareOperation),
+            .compareMask = info.depthStencil.front.compareMask,
+            .writeMask = info.depthStencil.front.writeMask,
+            .reference = info.depthStencil.front.reference,
+        };
+
+        graphicsPipeline->graphicsPipeline->depthStencil.back = (VkStencilOpState){
+            .failOp = vkGryphnStencilOperation(info.depthStencil.back.failOperation),
+            .passOp = vkGryphnStencilOperation(info.depthStencil.back.passOperation),
+            .depthFailOp = vkGryphnStencilOperation(info.depthStencil.back.depthFailOperation),
+            .compareOp = vkGrypnCompareOperation(info.depthStencil.back.compareOperation),
+            .compareMask = info.depthStencil.back.compareMask,
+            .writeMask = info.depthStencil.back.writeMask,
+            .reference = info.depthStencil.back.reference,
+        };
+    }
+
     graphicsPipeline->graphicsPipeline->setCount = info.uniformLayout.setCount;
     graphicsPipeline->graphicsPipeline->sets = malloc(sizeof(VkDescriptorSetLayout) * info.uniformLayout.setCount);
     for (int i = 0; i < info.uniformLayout.setCount; i++) graphicsPipeline->graphicsPipeline->sets[i] = vkGryphnCreateSetLayouts(&info.uniformLayout.sets[i], device->outputDevice->device);
@@ -209,7 +266,7 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
         .pViewportState = &graphicsPipeline->graphicsPipeline->viewportState,
         .pRasterizationState = &graphicsPipeline->graphicsPipeline->rasterizer,
         .pMultisampleState = &multisampling,
-        .pDepthStencilState = NULL,
+        .pDepthStencilState = &graphicsPipeline->graphicsPipeline->depthStencil,
         .pColorBlendState = &graphicsPipeline->graphicsPipeline->colorBlending,
         .pDynamicState = &graphicsPipeline->graphicsPipeline->dynamicState,
         .layout = graphicsPipeline->graphicsPipeline->pipelineLayout,
