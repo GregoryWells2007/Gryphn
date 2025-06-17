@@ -29,11 +29,11 @@ const char* *vkGetGryphnDeviceExtensions(uint32_t* outCount, VkPhysicalDevice de
     }
     free(vkExtensions);
 
-    if (supportsDescriptorPoolOverallocation) {
-        count++;
-        extensiosns = realloc(extensiosns, sizeof(const char*) * count);
-        extensiosns[(count - 1)] = VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME;
-    }
+    // if (supportsDescriptorPoolOverallocation) {
+    //     count++;
+    //     extensiosns = realloc(extensiosns, sizeof(const char*) * count);
+    //     extensiosns[(count - 1)] = VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME;
+    // }
 
     *outCount = count;
 
