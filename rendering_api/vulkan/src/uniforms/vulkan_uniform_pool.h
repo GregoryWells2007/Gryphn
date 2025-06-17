@@ -2,10 +2,11 @@
 #include <vulkan/vulkan.h>
 #include <core/uniforms/gryphn_uniform_pool.h>
 
+GN_ARRAY_LIST(VkDescriptorSetLayout);
+
 typedef struct vkGryphnUniformPool {
     VkDescriptorPool pool;
-    uint32_t layoutCount;
-    VkDescriptorSetLayout* layouts;
+    VkDescriptorSetLayoutArrayList layouts;
 } vkGryphnUniformPool;
 
 struct gnPlatformUniformPool_t {
