@@ -31,4 +31,5 @@ typedef struct gnPlatformGraphicsPipeline_t {
     VkVertexInputBindingDescription* bindingDescriptions;
     VkVertexInputAttributeDescription* attributeDescriptions;
     VkPipelineShaderStageCreateInfo* modules;
+    VkPushConstantRange* ranges;
 } gnPlatformGraphicsPipeline;

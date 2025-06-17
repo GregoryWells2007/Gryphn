@@ -19,7 +19,15 @@ typedef struct gnUniformSet {
     gnUniformBinding* uniformBindings;
 } gnUniformSet;
 
+typedef struct gnPushConstantLayout {
+    gnShaderModuleStage  stage;
+    size_t size;
+    size_t offset;
+} gnPushConstantLayout;
+
 typedef struct gnUniformLayout {
     uint32_t setCount;
     gnUniformSet* sets;
+    uint32_t pushConstantCount;
+    gnPushConstantLayout* pushConstants;
 } gnUniformLayout;

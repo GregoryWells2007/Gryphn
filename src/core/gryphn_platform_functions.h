@@ -118,6 +118,7 @@ typedef struct gnCommandFunctions_t {
     void (*_gnCommandSetViewport)(gnCommandBufferHandle buffer, gnViewport viewport);
     void (*_gnCommandSetScissor)(gnCommandBufferHandle buffer, gnScissor scissor);
     void (*_gnCommandBindUniform)(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set);
+    void (*_gnCommandPushConstant)(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);
 
     void (*_gnCommandBindBuffer)(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type);
     void (*_gnCommandDraw)(gnCommandBufferHandle buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);

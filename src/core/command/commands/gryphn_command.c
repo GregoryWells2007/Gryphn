@@ -25,6 +25,9 @@ void gnCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint3
 void gnCommandBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
     buffer->commandPool->commandFunctions->_gnCommandBindBuffer(buffer, bufferToBind, type);
 }
+void gnCommandPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
+    buffer->commandPool->commandFunctions->_gnCommandPushConstant(buffer, layout, data);
+}
 void gnCommandDraw(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     buffer->commandPool->commandFunctions->_gnCommandDraw(buffer, vertexCount, firstVertex, instanceCount, firstInstance);
 }

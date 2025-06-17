@@ -241,12 +241,21 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
     graphicsPipeline->graphicsPipeline->sets = malloc(sizeof(VkDescriptorSetLayout) * info.uniformLayout.setCount);
     for (int i = 0; i < info.uniformLayout.setCount; i++) graphicsPipeline->graphicsPipeline->sets[i] = vkGryphnCreateSetLayouts(&info.uniformLayout.sets[i], device->outputDevice->device);
 
+    graphicsPipeline->graphicsPipeline->ranges = malloc(sizeof(VkPushConstantRange) * info.uniformLayout.pushConstantCount);
+    for (int i = 0; i < info.uniformLayout.pushConstantCount; i++) {
+        graphicsPipeline->graphicsPipeline->ranges[i] = (VkPushConstantRange) {
+            .offset = info.uniformLayout.pushConstants[i].offset,
+            .size = info.uniformLayout.pushConstants[i].size,
+            .stageFlags = vkGryphnShaderModuleStage(info.uniformLayout.pushConstants[i].stage)
+        };
+    }
+
     VkPipelineLayoutCreateInfo pipelineLayoutInfo = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO,
         .setLayoutCount = graphicsPipeline->graphicsPipeline->setCount,
         pipelineLayoutInfo.pSetLayouts = graphicsPipeline->graphicsPipeline->sets,
-        pipelineLayoutInfo.pushConstantRangeCount = 0,
-        pipelineLayoutInfo.pPushConstantRanges = NULL
+        pipelineLayoutInfo.pushConstantRangeCount = info.uniformLayout.pushConstantCount,
+        pipelineLayoutInfo.pPushConstantRanges = graphicsPipeline->graphicsPipeline->ranges
     };
 
     if (vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout) != VK_SUCCESS)
@@ -286,6 +295,7 @@ void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) 
     free(graphicsPipeline->graphicsPipeline->dynamicStates);
     free(graphicsPipeline->graphicsPipeline->bindingDescriptions);
     free(graphicsPipeline->graphicsPipeline->attributeDescriptions);
+    free(graphicsPipeline->graphicsPipeline->ranges);
     for (int i = 0; i < graphicsPipeline->graphicsPipeline->setCount; i++)
         vkDestroyDescriptorSetLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->sets[i], NULL);
     free(graphicsPipeline->graphicsPipeline->modules);

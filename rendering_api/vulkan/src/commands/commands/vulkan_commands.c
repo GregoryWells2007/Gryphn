@@ -6,6 +6,7 @@
 #include "pipelines/graphics_pipeline/vulkan_graphics_pipeline.h"
 #include "buffers/vulkan_buffer.h"
 #include "uniforms/vulkan_uniform.h"
+#include "shader_module/vulkan_shader_module.h"
 
 void gnCommandBeginRenderPassFn(gnCommandBuffer buffer, struct gnRenderPassInfo_t passInfo) {
     VkClearValue* values = malloc(sizeof(VkClearValue) * passInfo.clearValueCount);
@@ -81,5 +82,16 @@ void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform, uin
         VK_PIPELINE_BIND_POINT_GRAPHICS,
         buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->pipelineLayout, set, 1,
         &uniform->uniform->set, 0, NULL
+    );
+}
+
+void gnCommandPushConstantFn(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
+    vkCmdPushConstants(
+        buffer->commandBuffer->buffer,
+        buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->pipelineLayout,
+        vkGryphnShaderModuleStage(layout.stage),
+        layout.offset,
+        layout.size,
+        data
     );
 }
