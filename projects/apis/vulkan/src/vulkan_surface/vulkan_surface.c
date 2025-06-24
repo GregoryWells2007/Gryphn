@@ -1,4 +1,4 @@
-#include <core/window_surface/gryphn_surface_create_functions.h>
+#include <window_surface/gryphn_surface_create_functions.h>
 #include <instance/vulkan_instance.h>
 #include "vulkan_surface.h"
 #include <output_device/vulkan_physical_device.h>

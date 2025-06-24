@@ -1,7 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include "utils/gryphn_bool.h"
-#include <core/buffers/gryphn_buffer.h>
+#include <buffers/gryphn_buffer.h>
 
 typedef struct VkGryphnBuffer {
     VkBuffer buffer;

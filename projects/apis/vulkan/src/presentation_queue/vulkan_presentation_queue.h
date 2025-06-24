@@ -1,5 +1,5 @@
 #pragma once
-#include "core/presentation_queue/gryphn_presentation_queue.h"
+#include "presentation_queue/gryphn_presentation_queue.h"
 #include <vulkan/vulkan.h>
 
 typedef struct gnPlatformPresentationQueue_t {

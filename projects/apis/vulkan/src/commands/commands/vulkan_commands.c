@@ -1,5 +1,5 @@
 #include <vulkan/vulkan.h>
-#include "core/command/commands/gryphn_command.h"
+#include "command/commands/gryphn_command.h"
 #include <renderpass/vulkan_render_pass_descriptor.h>
 #include "framebuffers/vulkan_framebuffer.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"

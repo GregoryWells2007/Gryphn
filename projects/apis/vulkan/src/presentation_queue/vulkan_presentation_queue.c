@@ -2,7 +2,7 @@
 #include "vulkan_swapchain_support.h"
 #include <output_device/vulkan_physical_device.h>
 #include "vulkan_surface/vulkan_surface.h"
-#include "core/debugger/gryphn_debugger.h"
+#include "debugger/gryphn_debugger.h"
 #include "textures/vulkan_texture.h"
 #include "sync/semaphore/vulkan_semaphore.h"
 #include "stdio.h"

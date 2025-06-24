@@ -1,5 +1,5 @@
 #pragma once
-#include <core/window_surface/gryphn_surface.h>
+#include <window_surface/gryphn_surface.h>
 #include <vulkan/vulkan.h>
 
 typedef struct gnPlatformWindowSurface_t {

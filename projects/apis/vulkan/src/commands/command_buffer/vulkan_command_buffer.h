@@ -1,5 +1,5 @@
 #pragma once
-#include "core/command/command_buffer/gryphn_command_buffer.h"
+#include "command/command_buffer/gryphn_command_buffer.h"
 #include "utils/gryphn_bool.h"
 #include <vulkan/vulkan.h>
 

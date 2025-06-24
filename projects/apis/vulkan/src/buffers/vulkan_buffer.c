@@ -1,6 +1,6 @@
 #include "vulkan_buffer.h"
-#include "core/buffers/gryphn_buffer.h"
-#include "core/output_device/gryphn_output_device.h"
+#include "buffers/gryphn_buffer.h"
+#include "output_device/gryphn_output_device.h"
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"

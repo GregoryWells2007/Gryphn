@@ -2,7 +2,7 @@
 #include "vulkan_uniform_layout.h"
 #include "stdlib.h"
 #include "output_device/vulkan_output_devices.h"
-#include "core/uniforms/gryphn_uniform.h"
+#include "uniforms/gryphn_uniform.h"
 #include "vulkan_uniform.h"
 #include "stdio.h"
 

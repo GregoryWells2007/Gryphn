@@ -1,7 +1,7 @@
 #include "vulkan_uniform.h"
 #include "buffers/vulkan_buffer.h"
 #include "output_device/vulkan_output_devices.h"
-#include "core/uniforms/gryphn_uniform_pool.h"
+#include "uniforms/gryphn_uniform_pool.h"
 #include "textures/vulkan_texture.h"
 
 void gnUpdateBufferUniformFn(gnUniform uniform, gnBufferUniformInfo* info) {

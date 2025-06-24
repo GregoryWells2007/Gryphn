@@ -2,7 +2,7 @@
 #include "vulkan_texture.h"
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
-#include "core/debugger/gryphn_debugger.h"
+#include "debugger/gryphn_debugger.h"
 
 VkImageType vkGryphnTextureType(gnTextureType type) {
     switch(type) {

@@ -1,5 +1,5 @@
 #include <vulkan/vulkan.h>
-#include "core/submit/gryphn_submit.h"
+#include "submit/gryphn_submit.h"
 #include "sync/semaphore/vulkan_semaphore.h"
 #include "sync/fence/vulkan_fence.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"

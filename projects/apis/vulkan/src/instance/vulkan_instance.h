@@ -1,7 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include "core/debugger/gryphn_debugger.h"
-#include "core/instance/gryphn_instance.h"
+#include "debugger/gryphn_debugger.h"
+#include "instance/gryphn_instance.h"
 
 struct gnInstanceMessage {
     gnMessageSeverity severity;
