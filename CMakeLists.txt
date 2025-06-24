@@ -3,8 +3,8 @@ project(Gryphn)
 
 add_compile_definitions(GN_PLATFORM_LINUX GN_WINDOW_X11 GN_REVEAL_IMPL)
 
-add_subdirectory(src/core/) # build gryphn code
-add_subdirectory(src/apis/vulkan/)
+add_subdirectory(projects/core/) # build gryphn code
+add_subdirectory(projects/apis/vulkan/)
 
 add_library(Gryphn INTERFACE)
 target_link_libraries(Gryphn INTERFACE GryphnCore GryphnVulkanImpl)
