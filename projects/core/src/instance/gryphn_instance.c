@@ -1,13 +1,10 @@
 #include "gryphn_instance.h"
 #include <gryphn_platform_functions.h>
 #include "instance/gryphn_instance.h"
-#include "gryphn_handles.h"
+#include "loader/src/gryphn_loader.h"
 
-gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, gnInstanceInfo info) {
-    // *instanceHandlePtr = malloc(sizeof(struct gnInstance_t));
-    // gnInstanceHandle instance = *instanceHandlePtr;
-    // if (!gnIsAPISupported(info.renderingAPI)) return GN_UNSUPPORTED_RENDERING_API;
-    // instance->loadDeviceFunctions = gnFalse;
+gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
+    *instance = malloc(sizeof(struct gnInstance_t));
     // instance->dynamicLib = gnLoadRenderingDLL(info.renderingAPI);
     // if (instance->dynamicLib == NULL) return GN_UNABLE_TO_LOAD_DYNAMIC_LIBARRY;
     // instance->functions = gnLoadFunctions(instance);
@@ -15,8 +12,6 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instanceHandlePtr, gnInstanceInf
     // if (info.debugger)
     //     instance->debugger = info.debugger;
 
-    // instance->loadCommandFunctions = gnFalse;
-    // instance->loadDeviceFunctions = gnFalse;
     // return instance->functions->_gnCreateInstance(instance, info);
     return GN_SUCCESS;
 }
