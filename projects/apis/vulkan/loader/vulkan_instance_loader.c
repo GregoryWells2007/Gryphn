@@ -4,7 +4,7 @@
 #include <output_device/vulkan_output_devices.h>
 #include <vulkan_surface/vulkan_surface.h>
 
-gnInstanceFunctions loadVulkanInstanceFunctions() {
+gnInstanceFunctions loadVulkanInstanceFunctions(loaderInfo info) {
     return (gnInstanceFunctions){
         ._gnCreateInstance = createInstance,
         ._gnDestroyInstance = destroyInstance,

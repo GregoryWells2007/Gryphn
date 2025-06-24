@@ -1,12 +1,8 @@
 #pragma once
-#include "gryphn_rendering_api.h"
 #include "gryphn_instance_functions.h"
 #include "gryphn_device_functions.h"
 #include "gryphn_command_functions.h"
-
-typedef struct loaderInfo {
-    gnRenderingAPI api;
-} loaderInfo;
+#include "gryphn_loader_info.h"
 
 gnInstanceFunctions loadInstanceFunctions(loaderInfo info);
 gnDeviceFunctions loadDeviceFunctions(loaderInfo info);
