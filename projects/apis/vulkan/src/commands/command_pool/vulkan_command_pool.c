@@ -1,7 +1,7 @@
 #include "vulkan_command_pool.h"
 #include "output_device/vulkan_output_devices.h"
 
-gnReturnCode gnCreateCommandPoolFn(struct gnCommandPool_t* commandPool, struct gnOutputDevice_t* device, gnCommandPoolInfo info) {
+gnReturnCode createCommandPool(gnCommandPool commandPool, gnDevice device, gnCommandPoolInfo info) {
     commandPool->commandPool = malloc(sizeof(gnPlatformCommandPool));
 
     VkCommandPoolCreateInfo poolInfo = {
@@ -17,7 +17,7 @@ gnReturnCode gnCreateCommandPoolFn(struct gnCommandPool_t* commandPool, struct g
     return GN_SUCCESS;
 }
 
-void gnDestroyCommandPoolFn(struct gnCommandPool_t* commandPool) {
+void destroyCommandPool(gnCommandPool commandPool) {
     vkDestroyCommandPool(commandPool->device->outputDevice->device, commandPool->commandPool->commandPool, NULL);
     free(commandPool->commandPool);
 }

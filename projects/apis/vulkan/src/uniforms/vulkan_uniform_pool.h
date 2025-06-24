@@ -13,3 +13,7 @@ GN_ARRAY_LIST(VkGryphnUniformPool);
 struct gnPlatformUniformPool_t {
     VkGryphnUniformPoolArrayList pools;
 };
+
+gnReturnCode createUniformPool(gnUniformPool pool, gnDeviceHandle device);
+gnUniform* allocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInfo);
+void destroyUniformPool(gnUniformPool pool);

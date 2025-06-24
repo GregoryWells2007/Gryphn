@@ -8,7 +8,7 @@
 
 VkGryphnUniformPool* GetLastUniformPool(VkGryphnUniformPoolArrayList* list) { return &list->data[list->count - 1]; }
 
-gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
+gnReturnCode createUniformPool(gnUniformPool pool, gnDeviceHandle device) {
     pool->uniformPool = malloc(sizeof(struct gnPlatformUniformPool_t));
     pool->uniformPool->pools = VkGryphnUniformPoolArrayListCreate();
 
@@ -40,7 +40,7 @@ gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
     return GN_SUCCESS;
 }
 
-gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocationInfo allocInfo) {
+gnUniform* allocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInfo) {
     gnBool fixedAllocation = !pool->device->outputDevice->enabledOversizedDescriptorPools;
     if (fixedAllocation) {
         VkGryphnUniformPool newPool = {
@@ -127,7 +127,7 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, gnUniformAllocati
     return uniforms;
 }
 
-void gnDestroyUniformPoolFn(gnUniformPool pool) {
+void destroyUniformPool(gnUniformPool pool) {
     for (int k = 0; k < pool->uniformPool->pools.count; k++) {
         vkDestroyDescriptorPool(pool->device->outputDevice->device, pool->uniformPool->pools.data[k].pool, NULL);
         for (int i = 0; i < pool->uniformPool->pools.data[k].layouts.count; i++)

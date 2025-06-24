@@ -17,3 +17,6 @@ typedef struct gnPlatformRenderPassDescriptor_t {
 } gnPlatformRenderPassDescriptor;
 
 VkPipelineStageFlags vkGryphnRenderPassStage(gnRenderPassStage stage);
+
+gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device, gnRenderPassDescriptorInfo info);
+void destroyRenderPass(gnRenderPassDescriptor renderPass);

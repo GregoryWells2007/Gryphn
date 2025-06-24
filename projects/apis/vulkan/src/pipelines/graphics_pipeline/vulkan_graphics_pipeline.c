@@ -87,7 +87,7 @@ VkStencilOp vkGryphnStencilOperation(gnStencilOperation operation) {
     }
 }
 
-gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnDevice device, gnGraphicsPipelineInfo info) {
+gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(gnPlatformGraphicsPipeline));
     for (int i = 0; i < GN_DYNAMIC_STATE_MAX; i++) graphicsPipeline->graphicsPipeline->isDynamic[i] = gnFalse;
 
@@ -288,7 +288,7 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnD
     return GN_SUCCESS;
 }
 
-void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) {
+void destroyGraphicsPipeline(gnGraphicsPipeline graphicsPipeline) {
     free(graphicsPipeline->graphicsPipeline->dynamicStates);
     free(graphicsPipeline->graphicsPipeline->bindingDescriptions);
     free(graphicsPipeline->graphicsPipeline->attributeDescriptions);

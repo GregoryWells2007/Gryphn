@@ -5,3 +5,6 @@
 typedef struct gnPlatformFramebuffer_t {
     VkFramebuffer framebuffer;
 } gnPlatformFramebuffer;
+
+gnReturnCode createFramebuffer(gnFramebuffer framebuffer, gnDevice device, gnFramebufferInfo info);
+void destroyFramebuffer(gnFramebuffer framebuffer);

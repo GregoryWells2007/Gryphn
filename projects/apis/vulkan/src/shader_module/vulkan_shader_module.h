@@ -8,3 +8,7 @@ typedef struct gnPlatformShaderModule_t {
 } gnPlatformShaderModule;
 
 VkShaderStageFlagBits vkGryphnShaderModuleStage(gnShaderModuleStage stage);
+
+
+gnReturnCode createShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
+void destroyShaderModule(gnShaderModule module);

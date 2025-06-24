@@ -19,3 +19,7 @@ typedef struct gnPlatformTexture_t {
     uint32_t width, height;
     gnBool beenWrittenToo;
 } gnPlatformTexture;
+
+gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureInfo info);
+void textureData(gnTextureHandle texture, void* pixelData);
+void destroyTexture(gnTexture texture);

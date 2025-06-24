@@ -12,7 +12,7 @@ VkShaderStageFlagBits vkGryphnShaderModuleStage(gnShaderModuleStage stage) {
     return outStage;
 }
 
-gnReturnCode gnCreateShaderModuleFn(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
+gnReturnCode createShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
     module->shaderModule = malloc(sizeof(struct gnPlatformShaderModule_t));
 
     VkShaderModuleCreateInfo createInfo = {
@@ -34,6 +34,6 @@ gnReturnCode gnCreateShaderModuleFn(gnShaderModule module, gnDevice device, gnSh
     return GN_SUCCESS;
 }
 
-void gnDestroyShaderModuleFn(struct gnShaderModule_t* module) {
+void destroyShaderModule(gnShaderModule module) {
     vkDestroyShaderModule(module->device->outputDevice->device, module->shaderModule->shaderModule, NULL);
 }

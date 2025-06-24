@@ -42,7 +42,7 @@ VkAccessFlags vkGryphnRenderPassAccess(gnRenderPassAccess access) {
     return flags;
 }
 
-gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, gnRenderPassDescriptorInfo info) {
+gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device, gnRenderPassDescriptorInfo info) {
     renderPass->renderPassDescriptor = malloc(sizeof(gnPlatformRenderPassDescriptor));
 
     renderPass->renderPassDescriptor->attachmentCount = info.attachmentCount;
@@ -124,7 +124,7 @@ gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* ren
 }
 
 
-void gnDestroyRenderPassDescriptorFn(gnRenderPassDescriptor renderPass) {
+void destroyRenderPass(gnRenderPassDescriptor renderPass) {
     vkDestroyRenderPass(renderPass->device->outputDevice->device, renderPass->renderPassDescriptor->renderPass, NULL);
 
 

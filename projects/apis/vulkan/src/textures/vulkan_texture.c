@@ -128,7 +128,7 @@ void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, uint32_t wi
 
 #include "stdio.h"
 
-gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextureInfo info) {
+gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
 
     size_t imageSize = info.width * info.height;
@@ -239,7 +239,7 @@ gnReturnCode gnCreateTextureFn(gnTexture texture, gnDevice device, const gnTextu
     return GN_SUCCESS;
 }
 
-void gnTextureDataFn(gnTextureHandle texture, void* pixelData) {
+void textureData(gnTextureHandle texture, void* pixelData) {
     void* data;
     vkMapMemory(texture->device->outputDevice->device, texture->texture->buffer.memory, 0, texture->texture->size, 0, &data);
     memcpy(data, pixelData, texture->texture->size);
@@ -265,7 +265,7 @@ void gnDestroyVulkanImage(VkGryphnImage* image, VkDevice device) {
     vkFreeMemory(device, image->memory, NULL);
 }
 
-void gnDestroyTextureFn(gnTexture texture) {
+void destroyTexture(gnTexture texture) {
     vkDestroySampler(texture->device->outputDevice->device, texture->texture->sampler, NULL);
 
     gnDestroyVulkanBuffer(&texture->texture->buffer, texture->device->outputDevice->device);

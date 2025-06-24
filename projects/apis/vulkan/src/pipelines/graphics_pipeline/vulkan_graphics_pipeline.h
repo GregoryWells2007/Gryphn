@@ -33,3 +33,6 @@ typedef struct gnPlatformGraphicsPipeline_t {
     VkPipelineShaderStageCreateInfo* modules;
     VkPushConstantRange* ranges;
 } gnPlatformGraphicsPipeline;
+
+void destroyGraphicsPipeline(gnGraphicsPipeline graphicsPipeline);
+gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevice device, gnGraphicsPipelineInfo info);
