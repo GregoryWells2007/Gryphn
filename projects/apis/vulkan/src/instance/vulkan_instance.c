@@ -44,36 +44,19 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
 gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
-    #ifdef GN_PLATFORM_LINUX
-    gnBool isX11 = gnTrue;
-    uint32_t extensionCount = 3;
-    const char* extensions[3];
-    if (isX11) {
-        extensions[0] = "VK_KHR_xlib_surface";
-        extensions[1] = "VK_KHR_surface";
-        extensions[2] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-    } else {
-        extensions[0] = "VK_KHR_wayland_surface";
-        extensions[1] = "VK_KHR_surface";
-        extensions[2] = VK_EXT_DEBUG_UTILS_EXTENSION_NAME;
-    }
-    #endif
-    #ifdef GN_PLATFORM_WINDOWS
-    uint32_t extensionCount = 3;
-    const char* extensions[] = {
-        "VK_KHR_win32_surface",
-        "VK_KHR_surface",
-        VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-    };
-    #endif
+    vkStringArrayList extensions = vkStringArrayListCreate();
+    vkStringArrayListAdd(&extensions, "VK_KHR_surface");
+    vkStringArrayListReserve(&extensions, 5);
+
     #ifdef GN_PLATFORM_MACOS
-    uint32_t extensionCount = 4;
-    const char* extensions[] = {
-        "VK_KHR_portability_enumeration",
-        "VK_EXT_metal_surface",
-        "VK_KHR_surface",
-        VK_EXT_DEBUG_UTILS_EXTENSION_NAME
-    };
+    vkStringArrayListAdd(&extensions, "VK_EXT_metal_surface");
+    vkStringArrayListAdd(&extensions, "VK_KHR_portability_enumeration");
+    #elif GN_PLATFORM_WINDOWS
+    vkStringArrayListAdd(&extensions, "VK_KHR_win32_surface");
+    #elif GN_PLATFORM_LINUX
+    #ifdef GN_WINDOW_X11
+    vkStringArrayListAdd(&extensions, "VK_KHR_xlib_surface");
+    #endif
     #endif
 
 
@@ -86,19 +69,21 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
         .apiVersion = VK_API_VERSION_1_3,
     };
 
-    VkInstanceCreateInfo createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-    createInfo.pApplicationInfo = &appInfo;
-    VkInstanceCreateFlags createFlags = 0;
-    #ifdef GN_PLATFORM_MACOS
-    createFlags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
-    #endif
+    VkInstanceCreateInfo createInfo = {
+        .sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO,
+        .flags = 0,
+        .pApplicationInfo = &appInfo
+    };
 
-    createInfo.flags = createFlags;
+    #ifdef GN_PLATFORM_MACOS
+    createInfo.createFlags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+    #endif
 
     if (instanceInfo.debugger != NULL) {
         for (int i = 0; i < instanceInfo.debugger->info.layerCount; i++) {
             if (instanceInfo.debugger->info.layers[i] == GN_DEBUGGER_LAYER_PLATFORM) {
+                vkStringArrayListAdd(&extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+
                 const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
                 createInfo.enabledLayerCount = 1;
                 createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
@@ -118,8 +103,8 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
     }
 
 
-    createInfo.enabledExtensionCount = extensionCount;
-    createInfo.ppEnabledExtensionNames = extensions;
+    createInfo.enabledExtensionCount = extensions.count;
+    createInfo.ppEnabledExtensionNames = extensions.data;
 
     VkResult result = vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance);
     if (result != VK_SUCCESS)
