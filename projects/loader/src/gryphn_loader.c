@@ -1,5 +1,7 @@
+#include "gryphn_loader.h"
 #include "stdio.h"
 
-void test_loader() {
-    printf("Loader works %i\n", 32);
+gnInstanceFunctions loadInstanceFunctions(gnRenderingAPI api) {
+    printf("Loading instance functions");
+    return (gnInstanceFunctions){ NULL };
 }

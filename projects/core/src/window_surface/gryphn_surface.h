@@ -3,15 +3,16 @@
 #include <utils/gryphn_image_format.h>
 #include <instance/gryphn_instance.h>
 #include "output_device/gryphn_physical_output_device.h"
+#include "utils/math/gryphn_vec2.h"
 
-typedef struct gnSurfaceFormat_t {
+typedef struct gnSurfaceFormat {
     gnImageFormat format;
     gnColorSpace colorSpace;
 } gnSurfaceFormat;
 
 typedef struct gnSurfaceDetails {
     uint32_t formatCount;
-    struct gnSurfaceFormat_t* formats;
+    gnSurfaceFormat* formats;
 
     uint32_t minImageCount, maxImageCount;
     gnUInt2 minImageSize, maxImageSize, currentSize;
@@ -27,27 +28,27 @@ struct gnWindowSurface_t {
 
 
 void gnDestroyWindowSurface(gnWindowSurfaceHandle windowSurface);
-struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(
+gnSurfaceFormat* gnGetSupportedSurfaceFormats(
     gnWindowSurfaceHandle windowSurface,
-    struct gnPhysicalDevice_t device,
+    gnPhysicalDevice device,
     uint32_t* formatCount
 );
 gnBool gnIsSurfaceFormatSupported(
     gnWindowSurfaceHandle windowSurface,
-    struct gnPhysicalDevice_t device,
-    struct gnSurfaceFormat_t format
+    gnPhysicalDevice device,
+    gnSurfaceFormat format
 );
 // this function will give you you're preferred surface format
 // unless its not supported then it will give you the first supported surface format
 // at some point this function will attempt to give you the most simmilar surface format
-struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
+gnSurfaceFormat gnGetPreferredSurfaceFormat(
     gnWindowSurfaceHandle windowSurface,
-    struct gnPhysicalDevice_t device,
-    struct gnSurfaceFormat_t format
+    gnPhysicalDevice device,
+    gnSurfaceFormat format
 );
-uint32_t gnGetMinImageCount(gnWindowSurfaceHandle surface, struct gnPhysicalDevice_t device);
-uint32_t gnGetMaxImageCount(gnWindowSurfaceHandle surface, struct gnPhysicalDevice_t device);
-uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle surface, struct gnPhysicalDevice_t device);
+uint32_t gnGetMinImageCount(gnWindowSurfaceHandle surface, gnPhysicalDevice device);
+uint32_t gnGetMaxImageCount(gnWindowSurfaceHandle surface, gnPhysicalDevice device);
+uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle surface, gnPhysicalDevice device);
 
 
 gnSurfaceDetails gnGetSurfaceDetails(gnWindowSurfaceHandle surface, gnPhysicalDevice device);

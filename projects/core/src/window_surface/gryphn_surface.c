@@ -1,24 +1,23 @@
 #include "gryphn_surface.h"
-#include "gryphn_platform_functions.h"
 
 void gnDestroyWindowSurface(gnWindowSurfaceHandle windowSurface) {
-    windowSurface->instance->functions->_gnDestroyWindowSurface(windowSurface);
+    windowSurface->instance->instanceFunctions._gnDestroyWindowSurface(windowSurface);
 }
 
-struct gnSurfaceFormat_t* gnGetSupportedSurfaceFormats(
+gnSurfaceFormat* gnGetSupportedSurfaceFormats(
     gnWindowSurfaceHandle windowSurface,
-    struct gnPhysicalDevice_t device,
+    gnPhysicalDevice device,
     uint32_t* formatCount
 ) {
-    gnSurfaceDetails surfaceDetails = windowSurface->instance->functions->_gnGetSurfaceDetails(windowSurface, device);
+    gnSurfaceDetails surfaceDetails = windowSurface->instance->instanceFunctions._gnGetSurfaceDetails(windowSurface, device);
     *formatCount = surfaceDetails.formatCount;
     return surfaceDetails.formats;
 }
 
 gnBool gnIsSurfaceFormatSupported(
     gnWindowSurfaceHandle windowSurface,
-    struct gnPhysicalDevice_t device,
-    struct gnSurfaceFormat_t format
+    gnPhysicalDevice device,
+    gnSurfaceFormat format
 ) {
     uint32_t formatCount = 0;
     gnSurfaceFormat* formats = gnGetSupportedSurfaceFormats(windowSurface, device, &formatCount);
@@ -30,10 +29,10 @@ gnBool gnIsSurfaceFormatSupported(
     return gnFalse;
 }
 
-struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
+gnSurfaceFormat gnGetPreferredSurfaceFormat(
     gnWindowSurfaceHandle windowSurface,
-    struct gnPhysicalDevice_t device,
-    struct gnSurfaceFormat_t format
+    gnPhysicalDevice device,
+    gnSurfaceFormat format
 ) {
     uint32_t formatCount = 0;
     gnSurfaceFormat* formats = gnGetSupportedSurfaceFormats(windowSurface, device, &formatCount);
@@ -53,17 +52,17 @@ struct gnSurfaceFormat_t gnGetPreferredSurfaceFormat(
     return formats[0];
 }
 
-uint32_t gnGetMinImageCount(gnWindowSurfaceHandle  surface, struct gnPhysicalDevice_t device) {
-    gnSurfaceDetails surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
+uint32_t gnGetMinImageCount(gnWindowSurfaceHandle  surface, gnPhysicalDevice device) {
+    gnSurfaceDetails surfaceDetails = surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device);
     return surfaceDetails.minImageCount;
 }
-uint32_t gnGetMaxImageCount(gnWindowSurfaceHandle  surface, struct gnPhysicalDevice_t device) {
-    gnSurfaceDetails surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
+uint32_t gnGetMaxImageCount(gnWindowSurfaceHandle  surface, gnPhysicalDevice device) {
+    gnSurfaceDetails surfaceDetails = surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device);
     return surfaceDetails.maxImageCount;
 }
 
-uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle  surface, struct gnPhysicalDevice_t device) {
-    gnSurfaceDetails surfaceDetails = surface->instance->functions->_gnGetSurfaceDetails(surface, device);
+uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle  surface, gnPhysicalDevice device) {
+    gnSurfaceDetails surfaceDetails = surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device);
 
     uint32_t imageCount = surfaceDetails.minImageCount + 1;
     if (surfaceDetails.maxImageCount > 0 && imageCount > surfaceDetails.maxImageCount) {
@@ -72,4 +71,4 @@ uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle  surface, struct gnPhysi
     return imageCount;
 }
 
-gnSurfaceDetails gnGetSurfaceDetails(gnWindowSurfaceHandle surface, gnPhysicalDevice device) { return surface->instance->functions->_gnGetSurfaceDetails(surface, device); }
+gnSurfaceDetails gnGetSurfaceDetails(gnWindowSurfaceHandle surface, gnPhysicalDevice device) { return surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device); }

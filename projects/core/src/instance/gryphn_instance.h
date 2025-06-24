@@ -1,11 +1,11 @@
 #pragma once
-#include <gryphn/gryphn_utils.h>
 #include "gryphn_rendering_api.h"
 #include "gryphn_handles.h"
+#include "utils/gryphn_version.h"
+#include "utils/gryphn_error_code.h"
+#include "loader/src/gryphn_instance_functions.h"
 
-typedef struct gnInstanceFunctions gnInstanceFunctions;
-
-typedef struct gnInstanceInfo_t {
+typedef struct gnInstanceInfo {
     gnString  applicationName;
     gnVersion applicationVersion;
 
@@ -20,12 +20,10 @@ typedef struct gnInstanceInfo_t {
 struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnBool valid,
-        loadDeviceFunctions,
-        loadCommandFunctions;
+           loadDeviceFunctions,
+           loadCommandFunctions;
 
-    struct gnDynamicLibrary_t* dynamicLib;
-
-    gnInstanceFunctions *functions, *unvalidatedFunctions;
+    gnInstanceFunctions instanceFunctions;
     struct gnDeviceFunctions_t* deviceFunctions;
     struct gnCommandFunctions_t* commandFunctions;
 
@@ -33,5 +31,5 @@ struct gnInstance_t {
 };
 #endif
 
-gnReturnCode gnCreateInstance(gnInstanceHandle* instance, struct gnInstanceInfo_t info);
+gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info);
 void gnDestroyInstance(gnInstanceHandle instance);

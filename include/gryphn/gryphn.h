@@ -1,10 +1,10 @@
 #pragma once
 #define GRYPHN_INCLUDE
-#include <core/src/instance/init/gryphn_init.h>
 #include <core/src/instance/gryphn_instance.h>
 #include <core/src/debugger/gryphn_debugger.h>
 #include <core/src/output_device/gryphn_physical_output_device.h>
 #include <core/src/window_surface/gryphn_surface.h>
+#include <core/src/window_surface/gryphn_surface_create_functions.h>
 #include <core/src/presentation_queue/gryphn_presentation_queue.h>
 #include <core/src/shader_module/gryphn_shader_module.h>
 #include <core/src/pipelines/graphics_pipeline/gryphn_graphics_pipeline.h>

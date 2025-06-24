@@ -20,39 +20,6 @@
 #include "textures/gryphn_texture.h"
 #include "uniforms/gryphn_uniform_pool.h"
 
-typedef struct gnInstanceFunctions {
-    gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
-    void (*_gnDestroyInstance)(gnInstanceHandle instance);
-
-    gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
-    gnBool (*_gnQueueCanPresentToSurface)(const gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
-
-    gnReturnCode (*_gnCreateOutputDevice)(gnOutputDeviceHandle device, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo);
-    void (*_gnDestroyOutputDevice)(gnOutputDeviceHandle device);
-
-
-    #ifdef GN_PLATFORM_LINUX
-        #ifdef GN_WINDOW_X11
-            gnReturnCode (*_gnCreateX11WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo);
-        #endif
-        #ifdef GN_WINDOW_WAYLAND
-            gnReturnCode (*_gnCreateWaylandWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
-        #endif
-    #endif
-
-
-    #ifdef GN_PLATFORM_WIN32
-        gnReturnCode (*_gnCreateWin32WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnWin32WindowSurfaceInfo_t createInfo);
-    #endif
-
-    #ifdef GN_PLATFORM_MACOS
-        gnReturnCode (*_gnCreateMacOSWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
-    #endif
-
-    void (*_gnDestroyWindowSurface)(gnWindowSurfaceHandle windowSurface);
-    gnSurfaceDetails (*_gnGetSurfaceDetails)(gnWindowSurfaceHandle windowSurface, struct gnPhysicalDevice_t device);
-} gnInstanceFunctions;
-
 #include "presentation_queue/gryphn_presentation_queue.h"
 typedef struct gnDeviceFunctions_t {
     gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);

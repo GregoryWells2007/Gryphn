@@ -1,3 +1,5 @@
 #pragma once
+#include "gryphn_rendering_api.h"
+#include "gryphn_instance_functions.h"
 
-void test_loader();
+gnInstanceFunctions loadInstanceFunctions(gnRenderingAPI api);
