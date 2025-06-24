@@ -15,6 +15,9 @@ typedef struct gnOutputDeviceInfo gnOutputDeviceInfo;
         typedef struct gnX11WindowSurfaceInfo gnX11WindowSurfaceInfo;
     #endif
 #endif
+#ifdef GN_PLATFORM_MACOS
+    typedef struct gnMacOSWindowSurfaceInfo gnMacOSWindowSurfaceInfo;
+#endif
 
 typedef struct gnInstanceFunctions {
     gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
@@ -32,17 +35,17 @@ typedef struct gnInstanceFunctions {
             gnReturnCode (*_gnCreateX11WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo);
         #endif
         #ifdef GN_WINDOW_WAYLAND
-            gnReturnCode (*_gnCreateWaylandWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnWaylandWindowSurfaceInfo_t createInfo);
+            gnReturnCode (*_gnCreateWaylandWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnWaylandWindowSurfaceInfo createInfo);
         #endif
     #endif
 
 
     #ifdef GN_PLATFORM_WIN32
-        gnReturnCode (*_gnCreateWin32WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnWin32WindowSurfaceInfo_t createInfo);
+        gnReturnCode (*_gnCreateWin32WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnWin32WindowSurfaceInfo createInfo);
     #endif
 
     #ifdef GN_PLATFORM_MACOS
-        gnReturnCode (*_gnCreateMacOSWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo);
+        gnReturnCode (*_gnCreateMacOSWindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);
     #endif
 
     void (*_gnDestroyWindowSurface)(gnWindowSurfaceHandle windowSurface);
