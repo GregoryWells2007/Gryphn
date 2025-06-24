@@ -3,12 +3,13 @@ project(GryphnVulkanImpl)
 add_compile_definitions(GN_REVEAL_IMPL)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.h")
+file(GLOB_RECURSE LOADER_FILES CONFIGURE_DEPENDS "loader/*.c" "loader/*.h")
 if (APPLE)
     file(GLOB_RECURSE METAL_FILES CONFIGURE_DEPENDS "src/*.m")
 endif()
 
 find_package(Vulkan REQUIRED)
-add_library(GryphnVulkanImpl STATIC ${SOURCE_FILES} ${METAL_FILES})
+add_library(GryphnVulkanImpl STATIC ${SOURCE_FILES} ${METAL_FILES} ${LOADER_FILES})
 target_link_libraries(GryphnVulkanImpl ${Vulkan_LIBRARY})
 
 target_include_directories(GryphnVulkanImpl PUBLIC

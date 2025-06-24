@@ -41,9 +41,8 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_TRUE;
 }
 
-gnReturnCode gnCreateInstanceFn(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
+gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
-    instance->instance->instanceMessageCount = 0;
 
     #ifdef GN_PLATFORM_LINUX
     gnBool isX11 = gnTrue;

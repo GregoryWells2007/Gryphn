@@ -1,7 +1,9 @@
 #include "gryphn_loader.h"
-#include "stdio.h"
+#include <apis/vulkan/loader/vulkan_loader.h>
 
 gnInstanceFunctions loadInstanceFunctions(gnRenderingAPI api) {
-    printf("Loading instance functions");
-    return (gnInstanceFunctions){ NULL };
+    switch (api) {
+    case GN_RENDERINGAPI_NONE: return (gnInstanceFunctions){ NULL };
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanFunctions(api);
+    }
 }
