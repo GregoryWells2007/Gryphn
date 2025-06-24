@@ -1,5 +1,5 @@
 #include "gryphn_fence.h"
-#include "gryphn_platform_functions.h"
+#include "output_device/gryphn_output_device.h"
 
 gnReturnCode gnCreateFence(gnFenceHandle* fence, struct gnOutputDevice_t* device) {
     *fence = malloc(sizeof(struct gnFence_t));
@@ -9,7 +9,6 @@ gnReturnCode gnCreateFence(gnFenceHandle* fence, struct gnOutputDevice_t* device
 }
 void gnSignalFence(gnFenceHandle fence) {
     fence->signaled = gnTrue;
-    // fence->device->deviceFunctions->_gnSignalFence(fence);
 }
 void gnWaitForFence(gnFenceHandle fence, uint64_t timeout) {
     if (fence->signaled == gnTrue) return;

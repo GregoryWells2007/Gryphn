@@ -2,7 +2,7 @@
 #include "commands/command_pool/vulkan_command_pool.h"
 #include "output_device/vulkan_output_devices.h"
 
-gnReturnCode gnCommandPoolAllocateCommandBuffersFn(gnCommandBufferHandle* commandBuffers, uint32_t count, struct gnCommandPool_t* pool) {
+gnReturnCode allocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPool pool) {
     VkCommandBufferAllocateInfo allocInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
         .commandPool = pool->commandPool->commandPool,
@@ -23,12 +23,12 @@ gnReturnCode gnCommandPoolAllocateCommandBuffersFn(gnCommandBufferHandle* comman
     return GN_SUCCESS;
 }
 
-void gnResetCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
+void resetCommandBuffer(gnCommandBufferHandle commandBuffer) {
     vkResetCommandBuffer(commandBuffer->commandBuffer->buffer, 0);
 }
 
 
-gnReturnCode gnBeginCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
+gnReturnCode beginCommandBuffer(gnCommandBufferHandle commandBuffer) {
     VkCommandBufferBeginInfo beginInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
     };
@@ -39,7 +39,7 @@ gnReturnCode gnBeginCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
     return GN_SUCCESS;
 }
 
-gnReturnCode gnEndCommandBufferFn(struct gnCommandBuffer_t* commandBuffer) {
+gnReturnCode endCommandBuffer(gnCommandBufferHandle commandBuffer) {
     if (vkEndCommandBuffer(commandBuffer->commandBuffer->buffer) != VK_SUCCESS)
         return GN_FAIELD_TO_END_RECORDING;
     return GN_SUCCESS;

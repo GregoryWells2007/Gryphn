@@ -4,7 +4,7 @@
 #include "uniforms/gryphn_uniform_pool.h"
 #include "textures/vulkan_texture.h"
 
-void gnUpdateBufferUniformFn(gnUniform uniform, gnBufferUniformInfo* info) {
+void updateBufferUniform(gnUniform uniform, gnBufferUniformInfo* info) {
     VkDescriptorBufferInfo bufferInfo = {
         .buffer = info->buffer->buffer->buffer.buffer,
         .offset = info->offset,
@@ -24,7 +24,7 @@ void gnUpdateBufferUniformFn(gnUniform uniform, gnBufferUniformInfo* info) {
     vkUpdateDescriptorSets(uniform->pool->device->outputDevice->device, 1, &write, 0, NULL);
 }
 
-void gnUpdateImageUniformFn(gnUniform uniform, gnImageUniformInfo* info) {
+void updateImageUniform(gnUniform uniform, gnImageUniformInfo* info) {
     VkDescriptorImageInfo imageInfo = {
         .imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,
         .imageView = info->texture->texture->image.imageView,

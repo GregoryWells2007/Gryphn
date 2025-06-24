@@ -1,12 +1,14 @@
 #pragma once
-// theoretically you could have multible gryphn instances running in one application,
-// why I dont know
-#include "instance/gryphn_instance.h"
-#include <debugger/gryphn_debugger.h>
-#include <window_surface/gryphn_surface_create_functions.h>
-#include "pipelines/graphics_pipeline/gryphn_graphics_pipeline.h"
-#include "renderpass/gryphn_render_pass.h"
-#include "buffers/gryphn_buffer.h"
+#include "stdint.h"
+#include "utils/gryphn_error_code.h"
+#include "gryphn_handles.h"
+
+typedef struct gnRenderPassInfo gnRenderPassInfo;
+typedef struct gnViewport gnViewport;
+typedef struct gnScissor gnScissor;
+typedef struct gnPushConstantLayout gnPushConstantLayout;
+typedef enum gnBufferType gnBufferType;
+typedef enum gnIndexType gnIndexType;
 
 typedef struct gnCommandFunctions_t {
     gnReturnCode (*_gnCommandPoolAllocateCommandBuffers)(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPoolHandle pool);

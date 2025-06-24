@@ -1,5 +1,5 @@
 #include "gryphn_texture.h"
-#include "gryphn_platform_functions.h"
+#include "output_device/gryphn_output_device.h"
 
 gnReturnCode gnCreateTexture(gnTexture* texture, gnDevice device, const gnTextureInfo info) {
     *texture = malloc(sizeof(struct gnTexture_t));

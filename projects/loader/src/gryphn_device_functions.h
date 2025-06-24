@@ -58,7 +58,6 @@ typedef struct gnDeviceFunctions {
     void (*_gnDestroyTexture)(gnTexture texture);
 
     gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
-    void (*_gnSignalFence)(gnFenceHandle fence);
     void (*_gnWaitForFence)(gnFenceHandle fence, uint64_t timeout);
     void (*_gnResetFence)(gnFenceHandle fence);
     void (*_gnDestroyFence)(gnFenceHandle fence);

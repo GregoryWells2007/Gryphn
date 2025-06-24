@@ -66,7 +66,7 @@ void VkCopyBuffer(VkBuffer source, VkBuffer destination, size_t size, VkCommandP
     VkEndTransferOperation(transferBuffer, pool, queue, device);
 }
 
-gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
+gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));
     VkBufferUsageFlags usage = vkGryphnBufferType(info.type);
     buffer->buffer->useStagingBuffer = gnFalse;
@@ -98,7 +98,7 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
 
     return GN_SUCCESS;
 }
-void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
+void bufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
     void* bufferData;
     if (buffer->buffer->useStagingBuffer) {
         vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory, 0, dataSize, 0, &bufferData);
@@ -114,7 +114,7 @@ void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
         vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory);
     }
 }
-void* gnMapBufferFn(gnBufferHandle buffer) {
+void* mapBuffer(gnBufferHandle buffer) {
     void* data;
     vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, buffer->info.size, 0, &data);
     return data;
@@ -125,7 +125,7 @@ void gnDestroyVulkanBuffer(VkGryphnBuffer* buffer, VkDevice device) {
     vkFreeMemory(device, buffer->memory, NULL);
 }
 
-void gnDestroyBufferFn(gnBufferHandle buffer) {
+void destroyBuffer(gnBufferHandle buffer) {
     if (buffer->buffer->useStagingBuffer == gnTrue) gnDestroyVulkanBuffer(&buffer->buffer->stagingBuffer, buffer->device->outputDevice->device);
     gnDestroyVulkanBuffer(&buffer->buffer->buffer, buffer->device->outputDevice->device);
     free(buffer->buffer);

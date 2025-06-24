@@ -1,13 +1,7 @@
-#include <vulkan/vulkan.h>
-#include "submit/gryphn_submit.h"
-#include "sync/semaphore/vulkan_semaphore.h"
-#include "sync/fence/vulkan_fence.h"
-#include "commands/command_buffer/vulkan_command_buffer.h"
-#include "output_device/vulkan_output_devices.h"
-#include "renderpass/vulkan_render_pass_descriptor.h"
+#include "vulkan_submit.h"
 
 
-gnReturnCode gnSubmitFn(gnDevice device, gnSubmitInfo info) {
+gnReturnCode submit(gnDevice device, gnSubmitInfo info) {
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
     VkPipelineStageFlags* waitStages = malloc(sizeof(VkPipelineStageFlags) * info.waitCount);
     for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;

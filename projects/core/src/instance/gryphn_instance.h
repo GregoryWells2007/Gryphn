@@ -5,6 +5,7 @@
 #include "utils/gryphn_error_code.h"
 #include "loader/src/gryphn_instance_functions.h"
 #include "loader/src/gryphn_device_functions.h"
+#include "loader/src/gryphn_command_functions.h"
 
 typedef struct gnInstanceInfo {
     gnString  applicationName;
@@ -24,7 +25,7 @@ struct gnInstance_t {
 
     gnInstanceFunctions instanceFunctions;
     gnDeviceFunctions deviceFunctions;
-    struct gnCommandFunctions_t* commandFunctions;
+    gnCommandFunctions commandFunctions;
 
     gnDebuggerHandle debugger;
 };

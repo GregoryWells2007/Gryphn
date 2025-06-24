@@ -1,5 +1,6 @@
 #include "gryphn_framebuffer.h"
-#include "gryphn_platform_functions.h"
+#include "stdlib.h"
+#include "output_device/gryphn_output_device.h"
 
 gnReturnCode gnCreateFramebuffer(gnFramebuffer* framebuffer, gnOutputDeviceHandle device, gnFramebufferInfo framebufferInfo) {
     *framebuffer = malloc(sizeof(struct gnFramebuffer_t));

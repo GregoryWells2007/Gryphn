@@ -13,3 +13,9 @@ typedef struct gnPlatformCommandBuffer_t {
 
 VkCommandBuffer VkBeginTransferOperation(VkDevice device, VkCommandPool pool);
 void VkEndTransferOperation(VkCommandBuffer transferBuffer, VkCommandPool pool, VkQueue syncQueue, VkDevice device);
+
+
+gnReturnCode allocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPool pool);
+gnReturnCode beginCommandBuffer(gnCommandBufferHandle commandBuffer);
+void resetCommandBuffer(gnCommandBufferHandle commandBuffer);
+gnReturnCode endCommandBuffer(gnCommandBufferHandle commandBuffer);

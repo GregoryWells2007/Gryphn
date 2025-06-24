@@ -5,3 +5,6 @@
 typedef struct gnPlatformSemaphore_t {
     VkSemaphore semaphore;
 } gnPlatformSemaphore;
+
+gnReturnCode createSemaphore(gnSemaphore semaphore, gnDevice device);
+void destroySemaphore(gnSemaphore semaphore);

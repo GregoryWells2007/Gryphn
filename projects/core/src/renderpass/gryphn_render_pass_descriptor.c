@@ -1,5 +1,5 @@
 #include "gryphn_render_pass_descriptor.h"
-#include "gryphn_platform_functions.h"
+#include "output_device/gryphn_output_device.h"
 
 gnReturnCode gnCreateRenderPassDescriptor(gnRenderPassDescriptorHandle* renderPass, gnOutputDeviceHandle device, gnRenderPassDescriptorInfo info) {
     *renderPass = malloc(sizeof(struct gnRenderPassDescriptor_t));

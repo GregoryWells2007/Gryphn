@@ -1,5 +1,5 @@
 #include "gryphn_semaphore.h"
-#include "gryphn_platform_functions.h"
+#include "output_device/gryphn_output_device.h"
 
 gnReturnCode gnCreateSemaphore(gnSemaphore* semaphore, struct gnOutputDevice_t* device) {
     *semaphore = malloc(sizeof(struct gnSemaphore_t));

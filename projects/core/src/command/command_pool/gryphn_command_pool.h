@@ -2,7 +2,7 @@
 #include "stdint.h"
 #include <utils/gryphn_error_code.h>
 #include "gryphn_handles.h"
-#include <gryphn_platform_functions.h>
+#include "loader/src/gryphn_command_functions.h"
 
 typedef struct gnCommandPoolInfo {
     uint32_t queueIndex;
@@ -11,8 +11,8 @@ typedef struct gnCommandPoolInfo {
 #ifdef GN_REVEAL_IMPL
 struct gnCommandPool_t {
     struct gnPlatformCommandPool_t* commandPool;
-    struct gnCommandFunctions_t* commandFunctions;
-    struct gnOutputDevice_t* device;
+    gnCommandFunctions* commandFunctions;
+    gnDevice device;
 };
 #endif
 

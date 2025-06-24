@@ -1,7 +1,6 @@
 #include "gryphn_command.h"
 #include "command/command_buffer/gryphn_command_buffer.h"
 #include "command/command_pool/gryphn_command_pool.h"
-#include "gryphn_platform_functions.h"
 
 void gnCommandBeginRenderPass(gnCommandBufferHandle buffer, gnRenderPassInfo passInfo) {
     buffer->commandPool->commandFunctions->_gnCommandBeginRenderPass(buffer, passInfo);

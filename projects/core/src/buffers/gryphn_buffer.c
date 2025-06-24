@@ -1,6 +1,5 @@
 #include "gryphn_buffer.h"
 #include "output_device/gryphn_output_device.h"
-#include "gryphn_platform_functions.h"
 
 gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     *buffer = malloc(sizeof(struct gnBuffer_t));

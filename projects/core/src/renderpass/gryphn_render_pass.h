@@ -3,7 +3,7 @@
 #include "utils/math/gryphn_vec2.h"
 #include "gryphn_handles.h"
 
-typedef struct gnRenderPassInfo_t {
+typedef struct gnRenderPassInfo {
     gnRenderPassDescriptorHandle renderPassDescriptor;
     gnFramebuffer framebuffer;
     gnUInt2 offset;

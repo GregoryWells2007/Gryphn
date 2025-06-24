@@ -2,6 +2,7 @@
 #include "gryphn_rendering_api.h"
 #include "gryphn_instance_functions.h"
 #include "gryphn_device_functions.h"
+#include "gryphn_command_functions.h"
 
 typedef struct loaderInfo {
     gnRenderingAPI api;
@@ -9,3 +10,4 @@ typedef struct loaderInfo {
 
 gnInstanceFunctions loadInstanceFunctions(loaderInfo info);
 gnDeviceFunctions loadDeviceFunctions(loaderInfo info);
+gnCommandFunctions loadCommandFunctions(loaderInfo info);

@@ -6,7 +6,13 @@
 #include <framebuffers/vulkan_framebuffer.h>
 #include <textures/vulkan_texture.h>
 #include <uniforms/vulkan_uniform_pool.h>
+#include <uniforms/vulkan_uniform.h>
 #include <commands/command_pool/vulkan_command_pool.h>
+#include <buffers/vulkan_buffer.h>
+#include <sync/semaphore/vulkan_semaphore.h>
+#include <sync/fence/vulkan_fence.h>
+#include <present/vulkan_present.h>
+#include <submit/vulkan_submit.h>
 #include <output_device/vulkan_output_devices.h>
 
 gnDeviceFunctions loadVulkanDeviceFunctions() {
@@ -30,33 +36,32 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
         ._gnCreateCommandPool = createCommandPool,
         ._gnDestroyCommandPool = destroyCommandPool,
 
-        // gnReturnCode (*_gnCreateSemaphore)(gnSemaphoreHandle semaphore, gnOutputDeviceHandle device);
-        // void (*_gnDestroySemaphore)(gnSemaphoreHandle semaphore);
+        ._gnCreateSemaphore = createSemaphore,
+        ._gnDestroySemaphore = destroySemaphore,
 
-        // gnReturnCode (*_gnCreateBuffer)(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
-        // void (*_gnBufferData)(gnBufferHandle buffer, size_t size, void* data);
-        // void* (*_gnMapBuffer)(gnBufferHandle buffer);
-        // void (*_gnDestroyBuffer)(gnBufferHandle buffer);
+        ._gnCreateBuffer = createBuffer,
+        ._gnBufferData = bufferData,
+        ._gnMapBuffer = mapBuffer,
+        ._gnDestroyBuffer = destroyBuffer,
 
         ._gnCreateUniformPool = createUniformPool,
         ._gnUniformPoolAllocateUniforms = allocateUniforms,
         ._gnDestroyUniformPool = destroyUniformPool,
 
-        // void (*_gnUpdateBufferUniform)(gnUniform uniform, gnBufferUniformInfo* bufferInfo);
-        // void (*_gnUpdateImageUniform)(gnUniform uniform, gnImageUniformInfo* imageInfo);
+        ._gnUpdateBufferUniform = updateBufferUniform,
+        ._gnUpdateImageUniform = updateImageUniform,
 
         ._gnCreateTexture = createTexture,
         ._gnTextureData = textureData,
         ._gnDestroyTexture = destroyTexture,
 
-        // gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
-        // void (*_gnSignalFence)(gnFenceHandle fence);
-        // void (*_gnWaitForFence)(gnFenceHandle fence, uint64_t timeout);
-        // void (*_gnResetFence)(gnFenceHandle fence);
-        // void (*_gnDestroyFence)(gnFenceHandle fence);
+        ._gnCreateFence = createFence,
+        ._gnWaitForFence = waitForFence,
+        ._gnResetFence = resetFence,
+        ._gnDestroyFence = destroyFence,
 
-        // gnReturnCode (*_gnSubmit)(gnOutputDeviceHandle device, gnSubmitInfo submit);
-        // gnReturnCode (*_gnPresent)(gnOutputDeviceHandle device, gnPresentInfo info);
+        ._gnSubmit = submit,
+        ._gnPresent = present,
 
         ._gnWaitForDevice = waitForDevice
     };

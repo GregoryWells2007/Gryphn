@@ -1,5 +1,5 @@
-#include <gryphn_platform_functions.h>
 #include "gryphn_shader_module.h"
+#include "output_device/gryphn_output_device.h"
 
 gnReturnCode gnCreateShaderModule(gnShaderModuleHandle* module, gnOutputDeviceHandle device, struct gnShaderModuleInfo shaderModuleInfo) {
     *module = malloc(sizeof(struct gnShaderModule_t));

@@ -1,5 +1,4 @@
 #include "gryphn_graphics_pipeline.h"
-#include "gryphn_platform_functions.h"
 
 gnReturnCode gnCreateGraphicsPipeline(gnGraphicsPipelineHandle* graphicsPipeline, gnDevice device, gnGraphicsPipelineInfo info) {
     *graphicsPipeline = malloc(sizeof(struct gnGraphicsPipeline_t));

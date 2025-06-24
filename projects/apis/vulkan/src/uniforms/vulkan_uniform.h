@@ -5,3 +5,6 @@
 typedef struct gnPlatformUniform_t {
     VkDescriptorSet set;
 } gnPlatformUniform;
+
+void updateBufferUniform(gnUniform uniform, gnBufferUniformInfo* info);
+void updateImageUniform(gnUniform uniform, gnImageUniformInfo* info);

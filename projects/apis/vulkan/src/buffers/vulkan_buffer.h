@@ -22,3 +22,8 @@ gnReturnCode VkCreateBuffer(
     VkMemoryPropertyFlags flags, VkBufferUsageFlags usage
 );
 uint32_t VkMemoryIndex(VkPhysicalDevice device, uint32_t memoryType, VkMemoryPropertyFlags flags, gnBool* foundMemory);
+
+gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info);
+void bufferData(gnBufferHandle buffer, size_t dataSize, void* data);
+void* mapBuffer(gnBufferHandle buffer);
+void destroyBuffer(gnBufferHandle buffer);

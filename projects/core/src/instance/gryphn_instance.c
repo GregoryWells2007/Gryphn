@@ -1,5 +1,4 @@
 #include "gryphn_instance.h"
-#include <gryphn_platform_functions.h>
 #include "instance/gryphn_instance.h"
 #include <loader/src/gryphn_instance_functions.h>
 #include "loader/src/gryphn_loader.h"
@@ -13,6 +12,7 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
 
     (*instance)->instanceFunctions = loadInstanceFunctions(loadInfo);
     (*instance)->deviceFunctions = loadDeviceFunctions(loadInfo);
+    (*instance)->commandFunctions = loadCommandFunctions(loadInfo);
     (*instance)->debugger = info.debugger;
     return (*instance)->instanceFunctions._gnCreateInstance((*instance), info);
 }

@@ -1,9 +1,6 @@
-#include "present/gryphn_present.h"
-#include "sync/semaphore/vulkan_semaphore.h"
-#include "presentation_queue/vulkan_presentation_queue.h"
-#include "output_device/vulkan_output_devices.h"
+#include "vulkan_present.h"
 
-gnReturnCode gnPresentFn(gnDevice device, gnPresentInfo info) {
+gnReturnCode present(gnDevice device, gnPresentInfo info) {
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
     for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;
 
