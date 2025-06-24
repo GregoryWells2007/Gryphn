@@ -1,46 +1,50 @@
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 project(Gryphn)
 
-file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
-    "src/*.cpp" "src/*.hpp"
-    "src/*.c" "src/*.h"
-)
-if(APPLE)
-    file(GLOB_RECURSE METAL_FILES CONFIGURE_DEPENDS "src/*.m")
-endif()
-add_library(Gryphn ${SOURCE_FILES} ${METAL_FILES})
-target_include_directories(Gryphn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-target_include_directories(Gryphn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include/)
-target_include_directories(Gryphn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/utils)
-target_include_directories(Gryphn PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/utils/utils)
-add_compile_definitions(GN_REVEAL_IMPL)
+add_compile_definitions(GN_PLATFORM_LINUX GN_WINDOW_X11 GN_REVEAL_IMPL)
 
-make_directory(${CMAKE_BINARY_DIR}/gryphn/rendering_apis/)
+add_subdirectory(src/core/) # build gryphn code
+add_subdirectory(src/apis/vulkan/)
 
-if(WIN32)
-    add_compile_definitions(GN_PLATFORM_WIN32)
-    # add_subdirectory(rendering_api/dirctx/)
-    add_subdirectory(rendering_api/vulkan/)
-endif()
-if(APPLE)
-    add_compile_definitions(GN_PLATFORM_MACOS)
-    add_subdirectory(rendering_api/metal/)
-    add_subdirectory(rendering_api/vulkan/)
+add_library(Gryphn INTERFACE)
+target_link_libraries(Gryphn INTERFACE GryphnCore GryphnVulkanImpl)
 
-    target_link_libraries(Gryphn
-        "-framework IOKit"
-        "-framework CoreFoundation"
-        "-framework CoreGraphics"
-        "-framework AppKit"
-        "-framework Metal"
-        "-framework QuartzCore"
-        "-framework MetalKit"
-    )
-endif()
-if(UNIX AND NOT APPLE)
-    add_compile_definitions(GN_PLATFORM_LINUX)
-    add_compile_definitions(GN_WINDOW_X11)
-    add_subdirectory(rendering_api/vulkan/)
-endif()
+# set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+# project(Gryphn)
+# add_library(Gryphn STATIC "")
 
-target_link_libraries(Gryphn)
+# # build gryphn core
+# add_subdirectory(src/core/)
+# target_link_libraries(Gryphn GryphnCore)
+
+# # build the selected apis
+# if(WIN32)
+#     add_compile_definitions(GN_PLATFORM_WIN32)
+#     add_subdirectory(src/apis/vulkan/)
+
+#     target_link_libraries(Gryphn GryphnVulkanImpl)
+# endif()
+# if(APPLE)
+#     add_compile_definitions(GN_PLATFORM_MACOS)
+#     add_subdirectory(src/apis/metal/)
+#     add_subdirectory(src/apis/vulkan/)
+
+#     target_link_libraries(Gryphn
+#         "-framework IOKit"
+#         "-framework CoreFoundation"
+#         "-framework CoreGraphics"
+#         "-framework AppKit"
+#         "-framework Metal"
+#         "-framework QuartzCore"
+#         "-framework MetalKit"
+#     )
+
+#     target_link_libraries(Gryphn GryphnVulkanImpl GryphnMetalImpl)
+# endif()
+# if(UNIX AND NOT APPLE)
+#     add_compile_definitions(GN_PLATFORM_LINUX)
+#     add_compile_definitions(GN_WINDOW_X11)
+#     add_subdirectory(src/apis/vulkan/)
+
+#     target_link_libraries(Gryphn GryphnVulkanImpl)
+# endif()

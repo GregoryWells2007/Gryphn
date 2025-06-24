@@ -1,0 +1,15 @@
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+project(GryphnCore)
+add_compile_definitions(GN_REVEAL_IMPL)
+
+file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.c")
+if(APPLE)
+    file(GLOB_RECURSE METAL_FILES CONFIGURE_DEPENDS "src/*.m")
+endif()
+add_library(GryphnCore ${SOURCE_FILES} ${METAL_FILES})
+
+target_include_directories(GryphnCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
+target_include_directories(GryphnCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+target_include_directories(GryphnCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../include/)
+target_include_directories(GryphnCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../utils)
+target_include_directories(GryphnCore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../utils)

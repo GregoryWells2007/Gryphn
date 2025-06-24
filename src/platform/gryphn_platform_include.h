@@ -1,5 +1,5 @@
 #pragma once
-#include "core/gryphn_rendering_api.h"
+#include "gryphn_rendering_api.h"
 
 #ifdef GN_PLATFORM_LINUX
 #include <platform/platform_linux/gryphn_platform_linux.h>
