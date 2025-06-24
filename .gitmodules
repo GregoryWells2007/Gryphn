@@ -1,6 +1,6 @@
 [submodule "projects/utils"]
 	path = projects/utils
 	url = https://github.com/GregoryWells2007/GryphnUtils.git
-[submodule "src/apis/metal/depends/SPIRV-Cross"]
-	path = src/apis/metal/depends/SPIRV-Cross
+[submodule "projects/apis/metal/depends/SPIRV-Cross"]
+	path = projects/apis/metal/depends/SPIRV-Cross
 	url = https://github.com/KhronosGroup/SPIRV-Cross.git
