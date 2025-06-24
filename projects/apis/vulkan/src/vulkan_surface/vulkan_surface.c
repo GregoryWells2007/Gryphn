@@ -61,13 +61,13 @@ void gnDestroyWindowSurfaceFn(struct gnWindowSurface_t* windowSurface) {
     vkDestroySurfaceKHR(windowSurface->instance->instance->vk_instance, windowSurface->windowSurface->surface, NULL);
 }
 
-struct gnSurfaceFormat_t* vkGetSurfaceFormats(
-    struct gnWindowSurface_t* windowSurface, struct gnPhysicalDevice_t device, uint32_t* formatCount
+gnSurfaceFormat* vkGetSurfaceFormats(
+    struct gnWindowSurface_t* windowSurface, gnPhysicalDevice device, uint32_t* formatCount
 ) {
-    struct gnSurfaceFormat_t* formats = NULL;
+    gnSurfaceFormat* formats = NULL;
 
     vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice->device, windowSurface->windowSurface->surface, formatCount, NULL);
-    formats = malloc(sizeof(struct gnSurfaceFormat_t) * *formatCount);
+    formats = malloc(sizeof(gnSurfaceFormat) * *formatCount);
     VkSurfaceFormatKHR* vkFormats = malloc(sizeof(VkSurfaceFormatKHR) * *formatCount);;
 
     if (*formatCount > 0) {
