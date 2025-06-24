@@ -5,5 +5,3 @@
 typedef struct gnPlatformDebugger_t {
     VkDebugUtilsMessengerEXT debugMessenger;
 } gnPlatformDebugger;
-
-void vkPopulateDebugMessengerCreateInfo(VkDebugUtilsMessengerCreateInfoEXT* createInfo);

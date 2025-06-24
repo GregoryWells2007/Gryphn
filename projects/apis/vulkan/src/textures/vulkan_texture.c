@@ -2,7 +2,6 @@
 #include "vulkan_texture.h"
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
-#include "debugger/gryphn_debugger.h"
 
 VkImageType vkGryphnTextureType(gnTextureType type) {
     switch(type) {
@@ -244,12 +243,6 @@ void textureData(gnTextureHandle texture, void* pixelData) {
     vkMapMemory(texture->device->outputDevice->device, texture->texture->buffer.memory, 0, texture->texture->size, 0, &data);
     memcpy(data, pixelData, texture->texture->size);
     vkUnmapMemory(texture->device->outputDevice->device, texture->texture->buffer.memory);
-
-    if (texture->texture->beenWrittenToo) {
-        gnDebuggerSetErrorMessage(texture->device->instance->debugger, (gnMessageData){
-           .message = gnCreateString("this texture has alreay been written too with gnTextureData (vulkan) i need to implement the functionality to write to it multible times")
-        });
-    }
 
     //gnDevice device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout
     VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);

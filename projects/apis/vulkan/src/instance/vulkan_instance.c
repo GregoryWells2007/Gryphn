@@ -92,8 +92,11 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
                 userData->debuggerCallback = instanceInfo.debugger->info.callback;
                 userData->userData = instanceInfo.debugger->info.userData;
 
-                VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {};
-                vkPopulateDebugMessengerCreateInfo(&debugCreateInfo);
+                VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {
+                    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+                    .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+                    .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+                };
                 debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
                 debugCreateInfo.pUserData = userData;
                 createInfo.pNext = &debugCreateInfo;
@@ -101,7 +104,6 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
         }
 
     }
-
 
     createInfo.enabledExtensionCount = extensions.count;
     createInfo.ppEnabledExtensionNames = extensions.data;
