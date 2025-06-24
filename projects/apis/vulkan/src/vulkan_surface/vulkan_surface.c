@@ -9,7 +9,7 @@
 #ifdef GN_WINDOW_X11
 #include <vulkan/vulkan_xlib.h>
 #include <X11/Xlib.h>
-gnReturnCode gnCreateX11WindowSurfaceFn(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo) {
+gnReturnCode createX11WindowSurface(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo) {
     windowSurface->windowSurface = malloc(sizeof(struct gnPlatformWindowSurface_t));
     VkXlibSurfaceCreateInfoKHR info = {};
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
@@ -57,7 +57,7 @@ gnReturnCode gnCreateWin32WindowSurface(struct gnWindowSurface_t* windowSurface,
 #endif
 
 
-void gnDestroyWindowSurfaceFn(struct gnWindowSurface_t* windowSurface) {
+void destroyWindowSurface(struct gnWindowSurface_t* windowSurface) {
     vkDestroySurfaceKHR(windowSurface->instance->instance->vk_instance, windowSurface->windowSurface->surface, NULL);
 }
 
@@ -88,7 +88,7 @@ gnSurfaceFormat* vkGetSurfaceFormats(
     return formats;
 }
 
-gnSurfaceDetails gnGetSurfaceDetailsFn(
+gnSurfaceDetails getSurfaceDetails(
     gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device
 ) {
     gnSurfaceDetails surfaceDetails;

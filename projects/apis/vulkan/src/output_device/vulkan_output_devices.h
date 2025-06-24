@@ -15,3 +15,8 @@ typedef struct gnPlatformOutputDevice_t {
 
 VkCommandBuffer gnBeginVulkanTransferOperation(gnDevice device);
 void gnEndVulkanTransferOperation(gnDevice device, VkCommandBuffer commandBuffer);
+
+
+gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
+void waitForDevice(const gnOutputDeviceHandle device);
+void destroyOutputDevice(gnOutputDeviceHandle device);

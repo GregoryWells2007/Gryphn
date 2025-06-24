@@ -3,7 +3,7 @@
 #include <output_device/vulkan_device_extensions.h>
 #include <vulkan_surface/vulkan_surface.h>
 
-gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstanceHandle instance, uint32_t* deviceCount) {
+gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* deviceCount) {
     vkEnumeratePhysicalDevices(instance->instance->vk_instance, deviceCount, NULL);
     if (deviceCount == 0)
         return NULL;
@@ -49,7 +49,7 @@ gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstanceHandle instance, uint32_t* de
     return outputDevices;
 }
 
-gnBool gnQueueCanPresentToSurfaceFn(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
+gnBool queueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
     VkBool32 supportsPresent = VK_FALSE;
     vkGetPhysicalDeviceSurfaceSupportKHR(device.physicalDevice->device, queueIndex, windowSurface->windowSurface->surface, &supportsPresent);
     if (supportsPresent)

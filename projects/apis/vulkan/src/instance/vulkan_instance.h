@@ -8,3 +8,4 @@ typedef struct gnPlatformInstance_t {
 } gnPlatformInstance;
 
 gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceInfo);
+void destroyInstance(gnInstanceHandle instance);

@@ -129,7 +129,7 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
     return GN_SUCCESS;
 }
 
-void gnDestroyInstanceFn(gnInstanceHandle instance) {
+void destroyInstance(gnInstanceHandle instance) {
     instance->valid = gnFalse;
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

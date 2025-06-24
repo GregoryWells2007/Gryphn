@@ -5,7 +5,7 @@
 #include "instance/gryphn_instance.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"
 
-gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
+gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
 
     VkDeviceQueueCreateInfo* queueCreateInfos = malloc(sizeof(VkDeviceQueueCreateInfo) * deviceInfo.queueInfoCount);
@@ -90,11 +90,11 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
     return GN_SUCCESS;
 }
 
-void gnWaitForDeviceFn(const gnOutputDeviceHandle device) {
+void waitForDevice(const gnOutputDeviceHandle device) {
     vkDeviceWaitIdle(device->outputDevice->device);
 }
 
-void gnDestroyOutputDeviceFn(gnOutputDeviceHandle device) {
+void destroyOutputDevice(gnOutputDeviceHandle device) {
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);
     vkDestroyDevice(device->outputDevice->device, NULL);
     free(device->outputDevice);

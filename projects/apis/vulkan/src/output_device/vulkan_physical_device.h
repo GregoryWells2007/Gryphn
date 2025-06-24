@@ -5,3 +5,6 @@
 typedef struct gnPlatformPhysicalDevice_t {
     VkPhysicalDevice device;
 } gnPlatformPhysicalDevice;
+
+gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* deviceCount);
+gnBool queueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface);
