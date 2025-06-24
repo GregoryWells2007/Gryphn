@@ -3,7 +3,7 @@
 #include "renderpass/gryphn_render_pass_descriptor.h"
 #include "gryphn_handles.h"
 
-typedef struct gnSubmitInfo_t {
+typedef struct gnSubmitInfo {
     uint32_t waitCount;
     gnRenderPassStage* waitStages;
     gnSemaphoreHandle* waitSemaphores;

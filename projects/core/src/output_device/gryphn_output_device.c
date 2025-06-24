@@ -1,10 +1,9 @@
 #include "gryphn_output_device.h"
 #include "instance/gryphn_instance.h"
-#include "gryphn_platform_functions.h"
 
 gnReturnCode gnCreateOutputDevice(gnOutputDeviceHandle* outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     *outputDevice = malloc(sizeof(struct gnOutputDevice_t));
-    (*outputDevice)->deviceFunctions = instance->deviceFunctions;
+    (*outputDevice)->deviceFunctions = &instance->deviceFunctions;
 
     (*outputDevice)->instance = instance;
     (*outputDevice)->physicalDevice = deviceInfo.physicalDevice;

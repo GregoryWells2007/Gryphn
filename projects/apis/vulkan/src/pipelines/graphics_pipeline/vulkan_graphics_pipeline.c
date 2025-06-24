@@ -4,10 +4,7 @@
 #include "renderpass/vulkan_render_pass_descriptor.h"
 #include "uniforms/vulkan_uniform_layout.h"
 
-#include "stdio.h"
-
-
-VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(enum gnDynamicState_e state) {
+VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(gnDynamicState state) {
     switch (state) {
     case GN_DYNAMIC_VIEWPORT: return VK_DYNAMIC_STATE_VIEWPORT;
     case GN_DYNAMIC_SCISSOR: return VK_DYNAMIC_STATE_SCISSOR;
@@ -26,7 +23,7 @@ VkPrimitiveTopology vkGryphnPrimitiveType(gnPrimitiveType primitiveType) {
     }
 }
 
-VkPolygonMode vkGryphnPolygonMode(enum gnFillMode_e fillMode) {
+VkPolygonMode vkGryphnPolygonMode(gnFillMode fillMode) {
     switch (fillMode) {
     case GN_FILL_MODE_FILL: return VK_POLYGON_MODE_FILL;
     case GN_FILL_MODE_LINE: return VK_POLYGON_MODE_LINE;
@@ -34,7 +31,7 @@ VkPolygonMode vkGryphnPolygonMode(enum gnFillMode_e fillMode) {
     }
 }
 
-VkCullModeFlags vkGryphnCullMode(enum gnCullFace_e face) {
+VkCullModeFlags vkGryphnCullMode(gnCullFace face) {
     switch (face) {
         case GN_CULL_FACE_NONE: return VK_CULL_MODE_NONE;
         case GN_CULL_FACE_BACK: return VK_CULL_MODE_BACK_BIT;
@@ -42,7 +39,7 @@ VkCullModeFlags vkGryphnCullMode(enum gnCullFace_e face) {
     }
 }
 
-VkBlendFactor vkGryphnBlendFactor(enum gnBlendFactor_e factor) {
+VkBlendFactor vkGryphnBlendFactor(gnBlendFactor factor) {
     switch (factor) {
     case GN_BLEND_FACTOR_ZERO: return VK_BLEND_FACTOR_ZERO;
     case GN_BLEND_FACTOR_ONE: return VK_BLEND_FACTOR_ONE;
@@ -51,7 +48,7 @@ VkBlendFactor vkGryphnBlendFactor(enum gnBlendFactor_e factor) {
     }
 }
 
-VkBlendOp vkGryphnBlendOperation(enum gnBlendOperation_e operation) {
+VkBlendOp vkGryphnBlendOperation(gnBlendOperation operation) {
     switch(operation) {
     case GN_OPERATION_ADD: return VK_BLEND_OP_ADD;
     }

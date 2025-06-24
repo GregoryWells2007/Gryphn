@@ -7,7 +7,7 @@
 #include "gryphn_handles.h"
 #include "shader_input/gryphn_shader_layout.h"
 
-typedef enum gnDynamicState_e {
+typedef enum gnDynamicState {
     GN_DYNAMIC_VIEWPORT,
     GN_DYNAMIC_SCISSOR,
 
@@ -16,45 +16,45 @@ typedef enum gnDynamicState_e {
 
 typedef struct gnDynamicStateInfo {
     uint32_t dynamicStateCount;
-    enum gnDynamicState_e* dynamicStates;
+    gnDynamicState* dynamicStates;
 } gnDynamicStateInfo;
 
 typedef enum gnPrimitiveType {
     GN_PRIMITIVE_POINTS, GN_PRIMITIVE_LINES, GN_PRIMITIVE_LINE_STRIP, GN_PRIMITIVE_TRIANGLES, GN_PRIMITIVE_TRIANGLE_STRIP
 } gnPrimitiveType;
 
-typedef enum gnBlendFactor_e {
+typedef enum gnBlendFactor {
     GN_BLEND_FACTOR_ZERO,
     GN_BLEND_FACTOR_ONE,
     GN_BLEND_FACTOR_SRC_ALPHA,
     GN_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA
 } gnBlendFactor;
 
-typedef enum gnBlendOperation_e {
+typedef enum gnBlendOperation {
     GN_OPERATION_ADD
 } gnBlendOperation;
 
-typedef struct gnViewport_t {
+typedef struct gnViewport {
     gnVec2 position;
     gnVec2 size;
     float minDepth;
     float maxDepth;
 } gnViewport;
 
-typedef struct gnScissor_t {
+typedef struct gnScissor {
     gnInt2 position;
     gnUInt2 size;
 } gnScissor;
 
-typedef enum gnFillMode_e {
+typedef enum gnFillMode {
     GN_FILL_MODE_FILL, GN_FILL_MODE_LINE, GN_FILL_MODE_POINT
 } gnFillMode;
 
-typedef enum gnCullFace_e {
+typedef enum gnCullFace {
     GN_CULL_FACE_NONE, GN_CULL_FACE_BACK, GN_CULL_FACE_FRONT
 } gnCullFace;
 
-typedef enum gnCullDirection_e {
+typedef enum gnCullDirection {
     GN_DIRECTION_CLOCK_WISE, GN_DIRECTION_COUNTER_CLOCK_WISE
 } gnCullDirection;
 
@@ -72,11 +72,11 @@ typedef enum gnStencilOperation {
 } gnStencilOperation;
 
 typedef struct gnCullMode_t {
-    enum gnCullFace_e face;
-    enum gnCullDirection_e direction;
+    gnCullFace face;
+    gnCullDirection direction;
 } gnCullMode;
 
-typedef struct gnColorBlending_t {
+typedef struct gnColorBlending {
     gnBool enable;
     gnBlendFactor sourceColorBlendFactor;
     gnBlendFactor sourceAlphaBlendFactor;
@@ -100,7 +100,7 @@ typedef struct gnDepthStencilState {
     gnStencilState front, back;
 } gnDepthStencilState;
 
-typedef struct gnGraphicsPipelineInfo_t {
+typedef struct gnGraphicsPipelineInfo {
     gnDynamicStateInfo dynamicState;
     gnPrimitiveType primitiveType;
     gnViewport viewport;

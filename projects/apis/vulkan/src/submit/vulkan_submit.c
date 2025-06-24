@@ -7,9 +7,7 @@
 #include "renderpass/vulkan_render_pass_descriptor.h"
 
 
-gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t info) {
-    VK_SUBPASS_EXTERNAL;
-
+gnReturnCode gnSubmitFn(gnDevice device, gnSubmitInfo info) {
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
     VkPipelineStageFlags* waitStages = malloc(sizeof(VkPipelineStageFlags) * info.waitCount);
     for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;

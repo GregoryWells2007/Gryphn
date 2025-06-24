@@ -6,7 +6,13 @@
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
     *instance = malloc(sizeof(struct gnInstance_t));
-    (*instance)->instanceFunctions = loadInstanceFunctions(info.renderingAPI);
+
+    loaderInfo loadInfo = {
+        .api = info.renderingAPI
+    };
+
+    (*instance)->instanceFunctions = loadInstanceFunctions(loadInfo);
+    (*instance)->deviceFunctions = loadDeviceFunctions(loadInfo);
     (*instance)->debugger = info.debugger;
     return (*instance)->instanceFunctions._gnCreateInstance((*instance), info);
 }

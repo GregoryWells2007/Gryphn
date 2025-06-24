@@ -1,7 +1,6 @@
 #include "gryphn_command_pool.h"
-#include "gryphn_platform_functions.h"
 
-gnReturnCode gnCreateCommandPool(gnCommandPoolHandle* commandPool, gnOutputDeviceHandle device, struct gnCommandPoolInfo_t info) {
+gnReturnCode gnCreateCommandPool(gnCommandPoolHandle* commandPool, gnOutputDeviceHandle device, gnCommandPoolInfo info) {
     *commandPool = malloc(sizeof(struct gnCommandPool_t));
     (*commandPool)->commandFunctions = device->instance->commandFunctions;
 

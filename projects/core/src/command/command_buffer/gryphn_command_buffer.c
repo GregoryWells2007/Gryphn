@@ -1,5 +1,5 @@
 #include "gryphn_command_buffer.h"
-#include "gryphn_platform_functions.h"
+#include "command/command_pool/gryphn_command_pool.h"
 
 gnReturnCode gnCommandPoolAllocateCommandBuffersFromPointer(gnCommandBufferHandle* buffers, uint32_t count, gnCommandPoolHandle commandPool) {
     for (int i = 0; i < count; i++) {

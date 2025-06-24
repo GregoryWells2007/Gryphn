@@ -1,5 +1,4 @@
 #include "gryphn_presentation_queue.h"
-#include "gryphn_platform_functions.h"
 
 gnReturnCode gnCreatePresentationQueue(gnPresentationQueueHandle* presentationQueue, gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo){
     *presentationQueue = malloc(sizeof(struct gnPresentationQueue_t));

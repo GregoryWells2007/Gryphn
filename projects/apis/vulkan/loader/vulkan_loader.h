@@ -1,5 +1,6 @@
 #pragma once
 #include "loader/src/gryphn_instance_functions.h"
-#include "core/src/gryphn_rendering_api.h"
+#include "loader/src/gryphn_device_functions.h"
 
-gnInstanceFunctions loadVulkanFunctions(gnRenderingAPI api);
+gnInstanceFunctions loadVulkanInstanceFunctions();
+gnDeviceFunctions loadVulkanDeviceFunctions();

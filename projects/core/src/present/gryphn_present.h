@@ -3,7 +3,7 @@
 #include "stdint.h"
 #include "gryphn_handles.h"
 
-typedef struct gnPresentInfo_t {
+typedef struct gnPresentInfo {
     uint32_t waitCount;
     gnSemaphoreHandle* waitSemaphores;
     uint32_t presentationQueueCount;

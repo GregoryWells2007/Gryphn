@@ -2,8 +2,9 @@
 #include "stdint.h"
 #include <utils/gryphn_error_code.h>
 #include "gryphn_handles.h"
+#include <gryphn_platform_functions.h>
 
-typedef struct gnCommandPoolInfo_t {
+typedef struct gnCommandPoolInfo {
     uint32_t queueIndex;
 } gnCommandPoolInfo;
 
@@ -15,5 +16,5 @@ struct gnCommandPool_t {
 };
 #endif
 
-gnReturnCode gnCreateCommandPool(gnCommandPoolHandle* commandPool, gnOutputDeviceHandle device, struct gnCommandPoolInfo_t info);
+gnReturnCode gnCreateCommandPool(gnCommandPoolHandle* commandPool, gnOutputDeviceHandle device, gnCommandPoolInfo info);
 void gnDestroyCommandPool(gnCommandPoolHandle commandPool);

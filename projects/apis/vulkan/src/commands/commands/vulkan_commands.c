@@ -8,7 +8,7 @@
 #include "uniforms/vulkan_uniform.h"
 #include "shader_module/vulkan_shader_module.h"
 
-void gnCommandBeginRenderPassFn(gnCommandBuffer buffer, struct gnRenderPassInfo_t passInfo) {
+void gnCommandBeginRenderPassFn(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
     VkClearValue* values = malloc(sizeof(VkClearValue) * passInfo.clearValueCount);
     for (int i = 0; i < passInfo.clearValueCount; i++) {
         values[i] = (VkClearValue){{{
@@ -51,7 +51,7 @@ void gnCommandSetViewportFn(gnCommandBuffer buffer, gnViewport viewport) {
     };
     vkCmdSetViewport(buffer->commandBuffer->buffer, 0, 1, &vkViewport);
 }
-void gnCommandSetScissorFn(gnCommandBuffer buffer, struct gnScissor_t scissor) {
+void gnCommandSetScissorFn(gnCommandBuffer buffer, gnScissor scissor) {
     VkRect2D vkScissor = {
         .extent = { scissor.size.x, scissor.size.y },
         .offset = { scissor.position.x, scissor.position.y }

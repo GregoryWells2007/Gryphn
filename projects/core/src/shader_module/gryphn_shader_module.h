@@ -4,13 +4,13 @@
 #include "utils/gryphn_error_code.h"
 #include "gryphn_handles.h"
 
-typedef enum gnShaderModuleStage_e {
+typedef enum gnShaderModuleStage {
     GN_VERTEX_SHADER_MODULE   = 0x00000001,
     GN_FRAGMENT_SHADER_MODULE = 0x00000002,
     GN_ALL_SHADER_MODULE      = 0xffffffff
 } gnShaderModuleStage;
 
-typedef struct gnShaderModuleInfo_t {
+typedef struct gnShaderModuleInfo {
     gnShaderModuleStage stage;
     uint32_t* code;
     uint32_t size;
@@ -25,5 +25,5 @@ struct gnShaderModule_t {
 };
 #endif
 
-gnReturnCode gnCreateShaderModule(gnShaderModuleHandle* module, gnOutputDeviceHandle device, struct gnShaderModuleInfo_t shaderModuleInfo);
+gnReturnCode gnCreateShaderModule(gnShaderModuleHandle* module, gnOutputDeviceHandle device, struct gnShaderModuleInfo shaderModuleInfo);
 void gnDestroyShaderModule(gnShaderModuleHandle module);

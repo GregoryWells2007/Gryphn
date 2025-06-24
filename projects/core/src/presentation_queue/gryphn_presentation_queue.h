@@ -6,7 +6,7 @@
 #include <sync/semaphore/gryphn_semaphore.h>
 #include "gryphn_handles.h"
 
-typedef struct gnPresentationQueueInfo_t {
+typedef struct gnPresentationQueueInfo {
     uint32_t minImageCount;
     gnUInt2 imageSize;
     gnWindowSurfaceHandle surface;
@@ -25,7 +25,7 @@ struct gnPresentationQueue_t {
     gnBool valid;
     uint32_t imageCount;
     gnTextureHandle* images;
-    struct gnPresentationQueueInfo_t info;
+    gnPresentationQueueInfo info;
 };
 #endif
 

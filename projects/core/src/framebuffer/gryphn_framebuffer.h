@@ -3,7 +3,7 @@
 #include "utils/gryphn_error_code.h"
 #include "gryphn_handles.h"
 
-typedef struct gnFramebufferInfo_t {
+typedef struct gnFramebufferInfo {
     gnRenderPassDescriptorHandle renderPassDescriptor;
     uint32_t attachmentCount;
     gnTextureHandle* attachments;

@@ -3,7 +3,7 @@
 #include "renderpass/vulkan_render_pass_descriptor.h"
 #include "output_device/vulkan_output_devices.h"
 
-gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct gnOutputDevice_t* device, struct gnFramebufferInfo_t info) {
+gnReturnCode gnCreateFramebufferFn(gnFramebuffer framebuffer, gnDevice device, gnFramebufferInfo info) {
     framebuffer->framebuffer = malloc(sizeof(struct gnPlatformFramebuffer_t));
 
     VkImageView* attachments = malloc(sizeof(VkImageView) * info.attachmentCount);
@@ -28,7 +28,7 @@ gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct g
     return GN_SUCCESS;
 }
 
-void gnDestroyFramebufferFn(struct gnFramebuffer_t* framebuffer) {
+void gnDestroyFramebufferFn(gnFramebuffer framebuffer) {
     vkDestroyFramebuffer(framebuffer->device->outputDevice->device, framebuffer->framebuffer->framebuffer, NULL);
     free(framebuffer->framebuffer);
 }

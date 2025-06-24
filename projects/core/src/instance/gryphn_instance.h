@@ -4,6 +4,7 @@
 #include "utils/gryphn_version.h"
 #include "utils/gryphn_error_code.h"
 #include "loader/src/gryphn_instance_functions.h"
+#include "loader/src/gryphn_device_functions.h"
 
 typedef struct gnInstanceInfo {
     gnString  applicationName;
@@ -19,12 +20,10 @@ typedef struct gnInstanceInfo {
 #ifdef GN_REVEAL_IMPL
 struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
-    gnBool valid,
-           loadDeviceFunctions,
-           loadCommandFunctions;
+    gnBool valid;
 
     gnInstanceFunctions instanceFunctions;
-    struct gnDeviceFunctions_t* deviceFunctions;
+    gnDeviceFunctions deviceFunctions;
     struct gnCommandFunctions_t* commandFunctions;
 
     gnDebuggerHandle debugger;

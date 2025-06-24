@@ -7,7 +7,7 @@
 #include "sync/semaphore/vulkan_semaphore.h"
 #include "stdio.h"
 
-gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, struct gnPresentationQueueInfo_t presentationInfo) {
+gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
     vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface->windowSurface->surface);
