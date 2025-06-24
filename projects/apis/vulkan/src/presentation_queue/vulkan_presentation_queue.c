@@ -7,7 +7,7 @@
 #include "sync/semaphore/vulkan_semaphore.h"
 #include "stdio.h"
 
-gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
+gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
     vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice.physicalDevice->device, presentationInfo.surface->windowSurface->surface);
@@ -123,7 +123,7 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQ
     return GN_SUCCESS;
 }
 
-gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueueHandle presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
+gnReturnCode getPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
     VkResult result = vkAcquireNextImageKHR(
         presentationQueue->outputDevice->outputDevice->device,
         presentationQueue->presentationQueue->swapChain,
@@ -135,7 +135,7 @@ gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueueHandle presentatio
     return GN_SUCCESS;
 }
 
-void gnDestroyPresentationQueueFn(gnPresentationQueueHandle queue) {
+void destroyPresentationQueue(gnPresentationQueueHandle queue) {
     for (int i = 0; i < queue->imageCount; i++)
         vkDestroyImageView(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChainImageViews[i], NULL);
     vkDestroySwapchainKHR(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChain, NULL);
