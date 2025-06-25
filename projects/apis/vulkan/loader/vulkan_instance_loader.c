@@ -21,17 +21,17 @@ gnInstanceFunctions loadVulkanInstanceFunctions(loaderInfo info) {
                 ._gnCreateX11WindowSurface = createX11WindowSurface,
             #endif
             #ifdef GN_WINDOW_WAYLAND
-                ._gnCreateWaylandWindowSurface
+                ._gnCreateWaylandWindowSurface,
             #endif
         #endif
 
 
         #ifdef GN_PLATFORM_WIN32
-            ._gnCreateWin32WindowSurface
+            ._gnCreateWin32WindowSurface,
         #endif
 
         #ifdef GN_PLATFORM_MACOS
-            ._gnCreateMacOSWindowSurface
+            ._gnCreateMacOSWindowSurface = createMacOSWindowSurface,
         #endif
 
         ._gnDestroyWindowSurface = destroyWindowSurface,

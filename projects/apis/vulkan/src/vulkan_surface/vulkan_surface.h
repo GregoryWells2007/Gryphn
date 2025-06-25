@@ -14,6 +14,9 @@ VkColorSpaceKHR vkGryphnColorSpaceToVulkanColorSpace(gnColorSpace colorSpace);
 gnReturnCode createX11WindowSurface(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo);
 #endif
 #endif
+#ifdef GN_PLATFORM_MACOS
+gnReturnCode createMacOSWindowSurface(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);
+#endif
 
 gnSurfaceDetails getSurfaceDetails(gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device);
 void destroyWindowSurface(gnWindowSurface windowSurface);

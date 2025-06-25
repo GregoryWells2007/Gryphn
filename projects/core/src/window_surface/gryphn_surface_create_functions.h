@@ -1,11 +1,7 @@
 #pragma once
-#ifndef GN_WINDOW_X11
-#define GN_WINDOW_X11
-#endif
 #include <platform/gryphn_platform_include.h>
 #include <gryphn_handles.h>
 #include <utils/gryphn_error_code.h>
-
 
 #ifdef GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11
@@ -41,5 +37,5 @@
         CAMetalLayer* layer;
     } gnMacOSWindowSurfaceInfo;
 
-    gnReturnCode gnCreateMacOSWindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo createInfo);
+    gnReturnCode gnCreateMacOSWindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);
 #endif

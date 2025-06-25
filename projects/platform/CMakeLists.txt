@@ -1,0 +1,9 @@
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+project(GryphnPlatform)
+
+if (APPLE)
+    file(GLOB_RECURSE APPLE_FILES CONFIGURE_DEPENDS "platform_macos/*.m")
+endif()
+add_library(GryphnPlatform STATIC ${APPLE_FILES})
+target_include_directories(GryphnPlatform PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../utils/)
+target_include_directories(GryphnPlatform PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../core/)

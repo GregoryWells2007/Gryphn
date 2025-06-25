@@ -4,6 +4,7 @@ add_compile_definitions(GN_REVEAL_IMPL)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.c")
 if(APPLE)
+    add_compile_definitions(GN_PLATFORM_MACOS)
     file(GLOB_RECURSE METAL_FILES CONFIGURE_DEPENDS "src/*.m")
 endif()
 add_library(GryphnCore ${SOURCE_FILES} ${METAL_FILES})

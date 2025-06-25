@@ -42,6 +42,7 @@ gnReturnCode createUniformPool(gnUniformPool pool, gnDeviceHandle device) {
 
 gnUniform* allocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInfo) {
     gnBool fixedAllocation = !pool->device->outputDevice->enabledOversizedDescriptorPools;
+
     if (fixedAllocation) {
         VkGryphnUniformPool newPool = {
             .pool = VK_NULL_HANDLE,
@@ -61,8 +62,8 @@ gnUniform* allocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInf
 
         for (int i = 0; i < allocInfo.setCount; i++) {
             for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
-                if (allocInfo.sets[i].uniformBindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) uniformBufferSize.descriptorCount++;
-                if (allocInfo.sets[i].uniformBindings[i].type == GN_IMAGE_DESCRIPTOR) imageSize.descriptorCount++;
+                if (allocInfo.sets[i].uniformBindings[c].type == GN_UNIFORM_BUFFER_DESCRIPTOR) uniformBufferSize.descriptorCount++;
+                if (allocInfo.sets[i].uniformBindings[c].type == GN_IMAGE_DESCRIPTOR) imageSize.descriptorCount++;
             }
         }
 

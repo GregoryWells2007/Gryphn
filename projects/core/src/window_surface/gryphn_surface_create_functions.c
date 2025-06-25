@@ -27,7 +27,7 @@
 #endif
 
 #ifdef GN_PLATFORM_MACOS
-    gnReturnCode gnCreateMacOSWindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, struct gnMacOSWindowSurfaceInfo_t createInfo) {
+    gnReturnCode gnCreateMacOSWindowSurface(gnWindowSurfaceHandle* windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
         *windowSurface = malloc(sizeof(struct gnWindowSurface_t));
         (*windowSurface)->instance = instance;
         return instance->instanceFunctions._gnCreateMacOSWindowSurface(*windowSurface, instance, createInfo);
