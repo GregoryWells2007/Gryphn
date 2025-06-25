@@ -7,10 +7,11 @@ file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
 )
 add_library(GryphnMetalImpl STATIC ${SOURCE_FILES})
 target_include_directories(GryphnMetalImpl PUBLIC
-    ${CMAKE_SOURCE_DIR}/gryphn/include/
-    ${CMAKE_SOURCE_DIR}/gryphn/src/
-    ${CMAKE_SOURCE_DIR}/gryphn/src/utils/
-    src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../utils/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../include/
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/
     depends/SPIRV-Cross/
 )
 add_compile_definitions(GN_REVEAL_IMPL)

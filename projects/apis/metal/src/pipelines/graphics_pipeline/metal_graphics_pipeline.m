@@ -1,10 +1,10 @@
 #include "metal_graphics_pipeline.h"
-#include "core/devices/metal_output_devices.h"
-#include "core/debugger/gryphn_debugger.h"
-#include "core/shader_module/metal_shader_module.h"
-#include "core/surface/metal_surface.h"
+#include "devices/metal_output_devices.h"
+#include "debugger/gryphn_debugger.h"
+#include "shader_module/metal_shader_module.h"
+#include "surface/metal_surface.h"
 
-MTLBlendFactor vkGryphnBlendFactor(enum gnBlendFactor_e factor) {
+MTLBlendFactor vkGryphnBlendFactor(gnBlendFactor factor) {
     switch (factor) {
     case GN_BLEND_FACTOR_ZERO: return MTLBlendFactorZero;
     case GN_BLEND_FACTOR_ONE: return MTLBlendFactorOne;
@@ -13,7 +13,7 @@ MTLBlendFactor vkGryphnBlendFactor(enum gnBlendFactor_e factor) {
     }
 }
 
-MTLBlendOperation vkGryphnBlendOperation(enum gnBlendOperation_e operation) {
+MTLBlendOperation vkGryphnBlendOperation(gnBlendOperation operation) {
     switch(operation) {
     case GN_OPERATION_ADD: return MTLBlendOperationAdd;
     }
@@ -26,7 +26,7 @@ MTLVertexFormat mtlGryphnVertexFormat(gnVertexFormat format) {
     }
 }
 
-gnReturnCode gnCreateGraphicsPipelineFn(struct gnGraphicsPipeline_t* graphicsPipeline, struct gnOutputDevice_t* device, struct gnGraphicsPipelineInfo_t info) {
+gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
 

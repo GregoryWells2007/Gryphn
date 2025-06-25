@@ -1,14 +1,14 @@
-#include "core/present/gryphn_present.h"
-#include "core/instance/metal_instance.h"
-#include "core/surface/metal_surface.h"
-#include "core/devices/metal_output_devices.h"
-#include "core/sync/semaphore/metal_semaphore.h"
-#include "core/presentation_queue/metal_presentation_queue.h"
-#include "core/debugger/gryphn_debugger.h"
-#include "core/texture/metal_texture.h"
+#include "present/gryphn_present.h"
+#include "instance/metal_instance.h"
+#include "surface/metal_surface.h"
+#include "devices/metal_output_devices.h"
+#include "sync/semaphore/metal_semaphore.h"
+#include "presentation_queue/metal_presentation_queue.h"
+#include "debugger/gryphn_debugger.h"
+#include "texture/metal_texture.h"
 #import <QuartzCore/CAMetalLayer.h>
 
-gnReturnCode gnPresentFn(gnOutputDeviceHandle device, struct gnPresentInfo_t info) {
+gnReturnCode gnPresentFn(gnOutputDeviceHandle device, gnPresentInfo info) {
     for (int i = 0; i < info.waitCount; i++) {
         while (!info.waitSemaphores[i]->semaphore->eventTriggered) {}
     }

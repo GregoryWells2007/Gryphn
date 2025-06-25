@@ -1,7 +1,7 @@
 #include "metal_shader_module.h"
 #include "spirv_cross_c.h"
-#include "core/debugger/gryphn_debugger.h"
-#include "core/devices/metal_output_devices.h"
+#include "debugger/gryphn_debugger.h"
+#include "devices/metal_output_devices.h"
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
 
@@ -12,7 +12,7 @@ void mtlSpirVErrorCallback(void *userdata, const char *error) {
     });
 }
 
-gnReturnCode gnCreateShaderModuleFn(struct gnShaderModule_t *module, struct gnOutputDevice_t *device, struct gnShaderModuleInfo_t shaderModuleInfo) {
+gnReturnCode gnCreateShaderModuleFn(gnShaderModule module, gnOutputDevice device, gnShaderModuleInfo shaderModuleInfo) {
     module->shaderModule = malloc(sizeof(struct gnPlatformShaderModule_t));
 
     spvc_context context = NULL;

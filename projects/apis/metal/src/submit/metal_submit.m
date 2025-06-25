@@ -1,10 +1,11 @@
-#include "core/submit/gryphn_submit.h"
-#include "core/sync/semaphore/metal_semaphore.h"
-#include "core/commands/command_buffer/metal_command_buffer.h"
-#include "core/debugger/gryphn_debugger.h"
-#include "core/commands/command_pool/metal_command_pool.h"
+#include "submit/gryphn_submit.h"
+#include "sync/semaphore/metal_semaphore.h"
+#include "commands/command_buffer/metal_command_buffer.h"
+#include "debugger/gryphn_debugger.h"
+#include "commands/command_pool/metal_command_pool.h"
+#include "sync/fence/gryphn_fence.h"
 
-gnReturnCode gnSubmitFn(struct gnOutputDevice_t* device, struct gnSubmitInfo_t info) {
+gnReturnCode gnSubmitFn(gnDevice* device, gnSubmitInfo info) {
     for (int i = 0; i < info.waitCount; i++) {
         while (!info.waitSemaphores[i]->semaphore->eventTriggered) {}
     }

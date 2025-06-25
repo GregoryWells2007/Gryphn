@@ -1,5 +1,5 @@
 #pragma once
-#include "core/sync/fence/gryphn_fence.h"
+#include "sync/fence/gryphn_fence.h"
 #import <Metal/Metal.h>
 #import <Metal/MTLEvent.h>
 

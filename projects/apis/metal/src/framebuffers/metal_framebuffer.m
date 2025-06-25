@@ -1,8 +1,9 @@
 #include "metal_framebuffer.h"
-#include "core/debugger/gryphn_debugger.h"
-#include "core/texture/metal_texture.h"
-#include "core/renderpass/gryphn_render_pass_descriptor.h"
-#include "core/instance/gryphn_instance.h"
+#include "debugger/gryphn_debugger.h"
+#include "texture/metal_texture.h"
+#include "renderpass/gryphn_render_pass_descriptor.h"
+#include "instance/gryphn_instance.h"
+#include "output_device/gryphn_output_device.h"
 
 gnBool isDepthFormat(gnImageFormat format) {
     return gnFalse;
@@ -12,7 +13,7 @@ gnBool isStencilFormat(gnImageFormat format) {
     return gnFalse;
 }
 
-MTLLoadAction mtlGryphnLoadOperation(enum gnLoadOperation_e loadOperation) {
+MTLLoadAction mtlGryphnLoadOperation(gnLoadOperation loadOperation) {
     switch(loadOperation) {
     case GN_LOAD_OPERATION_LOAD: return MTLLoadActionLoad;
     case GN_LOAD_OPERATION_CLEAR: return MTLLoadActionClear;
@@ -20,14 +21,14 @@ MTLLoadAction mtlGryphnLoadOperation(enum gnLoadOperation_e loadOperation) {
     }
 }
 
-MTLStoreAction mtlGryphnStoreOperation(enum gnStoreOperation_e storeOperation) {
+MTLStoreAction mtlGryphnStoreOperation(gnStoreOperation storeOperation) {
     switch (storeOperation) {
     case GN_STORE_OPERATION_STORE: return MTLStoreActionStore;
     case GN_STORE_OPERATION_DONT_CARE: return MTLStoreActionDontCare;
     }
 }
 
-gnReturnCode gnCreateFramebufferFn(struct gnFramebuffer_t* framebuffer, struct gnOutputDevice_t* device, struct gnFramebufferInfo_t info) {
+gnReturnCode gnCreateFramebufferFn(gnFramebuffer framebuffer, gnOutputDevice device, gnFramebufferInfo info) {
     framebuffer->framebuffer = malloc(sizeof(struct gnPlatformFramebuffer_t));
     if (info.attachmentCount != info.renderPassDescriptor->info.attachmentCount) {
         gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){

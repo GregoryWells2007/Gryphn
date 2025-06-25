@@ -1,12 +1,12 @@
-#include "core/command/commands/gryphn_command.h"
-#include "core/framebuffers/metal_framebuffer.h"
-#include "core/commands/command_buffer/metal_command_buffer.h"
-#include "core/pipelines/graphics_pipeline/metal_graphics_pipeline.h"
-#include "core/buffer/metal_buffer.h"
-#include "core/uniforms/metal_uniform.h"
+#include "command/commands/gryphn_command.h"
+#include "framebuffers/metal_framebuffer.h"
+#include "commands/command_buffer/metal_command_buffer.h"
+#include "pipelines/graphics_pipeline/metal_graphics_pipeline.h"
+#include "buffer/metal_buffer.h"
+#include "uniforms/metal_uniform.h"
 #import <Metal/MTLRenderCommandEncoder.h>
 
-void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, struct gnRenderPassInfo_t passInfo) {
+void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, gnRenderPassInfo passInfo) {
     int currentColorAttachment = 0;
     for (int i = 0; i < passInfo.clearValueCount; i++) {
         gnBool wasDepthStencil = gnFalse;
@@ -60,12 +60,12 @@ void gnCommandBindGraphicsPipelineFn(struct gnCommandBuffer_t* buffer, struct gn
 
     buffer->commandBuffer->boundGraphcisPipeline = graphicsPipeline;
 }
-void gnCommandSetViewportFn(struct gnCommandBuffer_t* buffer, struct gnViewport_t viewport) {
+void gnCommandSetViewportFn(struct gnCommandBuffer_t* buffer, gnViewport viewport) {
     MTLViewport vp = {(double)viewport.position.x, (double)viewport.position.y, (double)viewport.size.x, (double)viewport.size.y, viewport.minDepth, viewport.maxDepth};
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setViewport:vp];
 }
-void gnCommandSetScissorFn(struct gnCommandBuffer_t* buffer, struct gnScissor_t scissor) {
+void gnCommandSetScissorFn(struct gnCommandBuffer_t* buffer, gnScissor scissor) {
     MTLScissorRect scissorRect = { scissor.position.x, scissor.position.y, scissor.size.x, scissor.size.y };
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setScissorRect:scissorRect];
@@ -116,12 +116,14 @@ void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int 
 
 void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
-    if (uniform->uniform->type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
-        gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->data;
+    for (int i = 0; i < uniform->uniform->bindingCount; i++) {
+        if (uniform->uniform->bindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
+            gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->bindings[i].data;
 
-        [encoder setVertexBuffer:info.buffer->buffer->buffer
-            offset:info.offset
-            atIndex:(info.binding + 1)
-        ];
+            [encoder setVertexBuffer:info.buffer->buffer->buffer
+                offset:info.offset
+                atIndex:(info.binding + 1)
+            ];
+        }
     }
 }

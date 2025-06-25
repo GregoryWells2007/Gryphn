@@ -1,5 +1,5 @@
 #pragma once
-#include "core/framebuffer/gryphn_framebuffer.h"
+#include "framebuffer/gryphn_framebuffer.h"
 #include "utils/gryphn_bool.h"
 #include "utils/gryphn_image_format.h"
 #import <Metal/Metal.h>

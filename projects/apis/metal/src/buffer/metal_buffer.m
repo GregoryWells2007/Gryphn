@@ -1,7 +1,7 @@
 #include "metal_buffer.h"
-#include "core/buffers/gryphn_buffer.h"
-#include "core/output_device/gryphn_output_device.h"
-#include "core/devices/metal_output_devices.h"
+#include "buffers/gryphn_buffer.h"
+#include "output_device/gryphn_output_device.h"
+#include "devices/metal_output_devices.h"
 
 gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));

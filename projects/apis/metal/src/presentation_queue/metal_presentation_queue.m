@@ -1,11 +1,11 @@
 #include "metal_presentation_queue.h"
-#include "core/surface/metal_surface.h"
-#include "core/devices/metal_output_devices.h"
-#include "core/debugger/gryphn_debugger.h"
-#include "core/texture/metal_texture.h"
-#include "core/sync/semaphore/metal_semaphore.h"
+#include "surface/metal_surface.h"
+#include "devices/metal_output_devices.h"
+#include "debugger/gryphn_debugger.h"
+#include "texture/metal_texture.h"
+#include "sync/semaphore/metal_semaphore.h"
 
-gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, struct gnPresentationQueueInfo_t presentationInfo) {
+gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo) {
     if (presentationInfo.minImageCount > 3) {
         gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
             .message = gnCreateString("On Metal you cannot have more than 3 images in a presentation queue")

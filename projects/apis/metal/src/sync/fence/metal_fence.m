@@ -1,5 +1,5 @@
 #include "metal_fence.h"
-#include "core/devices/metal_output_devices.h"
+#include "devices/metal_output_devices.h"
 
 gnReturnCode gnCreateFenceFn(struct gnFence_t* fence, struct gnOutputDevice_t* device) {
     // fence->fence = malloc(sizeof(gnPlatformFence));

@@ -1,8 +1,14 @@
 #pragma once
-#include "core/uniforms/gryphn_uniform.h"
-#include <core/uniforms/gryphn_uniform_pool.h>
+#include "uniforms/gryphn_uniform.h"
+#include <uniforms/gryphn_uniform_pool.h>
+
+typedef struct metalUniformBinding {
+    gnUniformType type;
+    uint32_t binding;
+    void* data;
+} metalUniformBinding;
 
 typedef struct gnPlatformUniform_t {
-    gnUniformType type;
-    void* data;
+    uint32_t bindingCount;
+    metalUniformBinding* bindings;
 } gnPlatformUniform;

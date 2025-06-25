@@ -1,6 +1,5 @@
 #pragma once
 #include <vulkan/vulkan.h>
-#include <core/uniforms/gryphn_uniform_pool.h>
+#include <uniforms/gryphn_uniform_pool.h>
 
-struct gnPlatformUniformPool_t {
-};
+typedef struct gnPlatformUniformPool_t {} gnPlatformUniformPool;

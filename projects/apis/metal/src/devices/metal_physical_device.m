@@ -1,7 +1,7 @@
-#include <core/output_device/gryphn_physical_output_device.h>
+#include <output_device/gryphn_physical_output_device.h>
 #include <Metal/Metal.h>
 #include "metal_output_devices.h"
-#include "core/window_surface/gryphn_surface.h"
+#include "window_surface/gryphn_surface.h"
 
 gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstanceHandle instance, uint32_t* deviceCount) {
     NSArray *devices = MTLCopyAllDevices();
@@ -34,6 +34,6 @@ gnPhysicalDevice* gnGetPhysicalDevicesFn(gnInstanceHandle instance, uint32_t* de
     return devicesList;
 }
 
-gnBool gnQueueCanPresentToSurfaceFn(const struct gnPhysicalDevice_t device, uint32_t queueIndex, const struct gnWindowSurface_t windowSurface) {
+gnBool gnQueueCanPresentToSurfaceFn(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurface windowSurface) {
     return gnTrue; // I belive that a window should always be able to present to a surface in metal
 }

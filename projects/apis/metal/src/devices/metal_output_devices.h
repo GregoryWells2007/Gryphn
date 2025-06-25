@@ -1,6 +1,6 @@
 #pragma once
-#include "core/instance/gryphn_instance.h"
-#include "core/output_device/gryphn_output_device.h"
+#include "instance/gryphn_instance.h"
+#include "output_device/gryphn_output_device.h"
 #include <Metal/Metal.h>
 #include <MetalKit/MetalKit.h>
 

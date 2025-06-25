@@ -1,5 +1,5 @@
 #include "metal_command_buffer.h"
-#include "core/commands/command_pool/metal_command_pool.h"
+#include "commands/command_pool/metal_command_pool.h"
 #import <Metal/Metal.h>
 
 gnReturnCode gnCommandPoolAllocateCommandBuffersFn(gnCommandBufferHandle* commandBuffers, uint32_t count, struct gnCommandPool_t* pool) {

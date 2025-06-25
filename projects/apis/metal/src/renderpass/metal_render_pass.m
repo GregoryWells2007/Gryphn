@@ -1,6 +1,6 @@
 #include "metal_render_pass.h"
 
-gnReturnCode gnCreateRenderPassDescriptorFn(struct gnRenderPassDescriptor_t* renderPass, struct gnOutputDevice_t* device, struct gnRenderPassDescriptorInfo_t info) {
+gnReturnCode gnCreateRenderPassDescriptorFn(gnRenderPassDescriptor renderPass, gnOutputDevice device, gnRenderPassDescriptorInfo info) {
     renderPass->renderPassDescriptor = malloc(sizeof(gnPlatformRenderPassDescriptor));
     renderPass->renderPassDescriptor->passDescriptor = [[MTLRenderPassDescriptor alloc] init];
 

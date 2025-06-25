@@ -1,11 +1,11 @@
-#include <core/output_device/gryphn_physical_output_device.h>
+#include <output_device/gryphn_physical_output_device.h>
 #include <Metal/Metal.h>
 #include "metal_output_devices.h"
-#include "core/instance/metal_instance.h"
-#include "core/instance/gryphn_instance.h"
-#include <core/debugger/gryphn_debugger.h>
+#include "instance/metal_instance.h"
+#include "instance/gryphn_instance.h"
+#include <debugger/gryphn_debugger.h>
 
-gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, struct gnOutputDeviceInfo_t deviceInfo) {
+gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
     outputDevice->outputDevice->device = deviceInfo.physicalDevice.physicalDevice->device.retain;
     outputDevice->outputDevice->transferQueue = outputDevice->outputDevice->device.newCommandQueue;
