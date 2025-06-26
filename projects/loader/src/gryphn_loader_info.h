@@ -1,7 +1,11 @@
 #pragma once
 #include "gryphn_rendering_api.h"
 
+typedef enum toLoadLayer {
+    no_layer, api_layer
+} toLoadLayer;
+
 typedef struct loaderInfo {
     gnRenderingAPI api;
-    gnBool validateIfLoaded;
+    toLoadLayer layerToLoad;
 } loaderInfo;

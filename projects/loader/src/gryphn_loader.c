@@ -8,7 +8,7 @@
 #endif
 
 // load the speedy API functions or something like that
-gnInstanceFunctions loadAPIFunctions(gnRenderingAPI api) {
+gnInstanceFunctions loadAPIInstanceFunctions(gnRenderingAPI api) {
     switch (api) {
     case GN_RENDERINGAPI_NONE: return (gnInstanceFunctions){ NULL };
 #ifdef GN_API_VULKAN
@@ -26,17 +26,8 @@ gnInstanceFunctions loadAPIFunctions(gnRenderingAPI api) {
     }
 }
 
-gnInstanceFunctions loadInstanceFunctions(loaderInfo info) {
-    gnInstanceFunctions apiFunctions = loadAPIFunctions(info.api);
-
-    if (info.validateIfLoaded)
-        return loadFunctionLoaderInstanceFunctions(&apiFunctions);
-
-    return apiFunctions;
-}
-
-gnDeviceFunctions loadDeviceFunctions(loaderInfo info) {
-    switch (info.api) {
+gnDeviceFunctions loadAPIDeviceFunctions(gnRenderingAPI api) {
+    switch (api) {
     case GN_RENDERINGAPI_NONE: return (gnDeviceFunctions){ NULL };
 #ifdef GN_API_VULKAN
     case GN_RENDERINGAPI_VULKAN: return loadVulkanDeviceFunctions();
@@ -54,8 +45,8 @@ gnDeviceFunctions loadDeviceFunctions(loaderInfo info) {
     }
 }
 
-gnCommandFunctions loadCommandFunctions(loaderInfo info) {
-    switch (info.api) {
+gnCommandFunctions loadAPICommandFunctions(gnRenderingAPI api) {
+    switch (api) {
     case GN_RENDERINGAPI_NONE: return (gnCommandFunctions){ NULL };
 #ifdef GN_API_VULKAN
     case GN_RENDERINGAPI_VULKAN: return loadVulkanCommandFunctions();
@@ -71,4 +62,27 @@ gnCommandFunctions loadCommandFunctions(loaderInfo info) {
 
     default: return (gnCommandFunctions){NULL};
     }
+}
+
+loaderLayer null_layer() {
+    return (loaderLayer){
+        .instanceFunctions = (gnInstanceFunctions){ NULL },
+        .deviceFunctions = (gnDeviceFunctions){ NULL },
+        .commandFunctions = (gnCommandFunctions){ NULL }
+    };
+}
+
+loaderLayer api_loaded_layer(gnRenderingAPI api) {
+    return (loaderLayer){
+        .instanceFunctions = loadAPIInstanceFunctions(api),
+        .deviceFunctions = loadAPIDeviceFunctions(api),
+        .commandFunctions = loadAPICommandFunctions(api)
+    };
+}
+
+loaderLayer loadLayer(loaderInfo info) {
+    if (info.layerToLoad == no_layer) return null_layer();
+    if (info.layerToLoad == api_layer) return api_loaded_layer(info.api);
+
+    return null_layer();
 }
