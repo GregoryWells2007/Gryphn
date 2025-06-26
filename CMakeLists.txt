@@ -27,4 +27,5 @@ endif()
 add_subdirectory(projects/loader) # build gryphn loader
 add_subdirectory(projects/core) # build gryphn core
 add_subdirectory(projects/platform) # build gryphn platform
-target_link_libraries(Gryphn INTERFACE GryphnCore GryphnLoader GryphnPlatform)
+add_subdirectory(projects/validation_layers/function_loader/)
+target_link_libraries(Gryphn INTERFACE GryphnCore GryphnLoader GryphnPlatform GryphnFunctionValidator)

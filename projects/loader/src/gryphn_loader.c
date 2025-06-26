@@ -11,7 +11,9 @@
 gnInstanceFunctions loadAPIFunctions(gnRenderingAPI api) {
     switch (api) {
     case GN_RENDERINGAPI_NONE: return (gnInstanceFunctions){ NULL };
-    case GN_RENDERINGAPI_VULKAN: return loadVulkanInstanceFunctions(info);
+#ifdef GN_API_VULKAN
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanInstanceFunctions();
+#endif
 
     case GN_RENDERINGAPI_SOFTWARE: return (gnInstanceFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX11: return (gnInstanceFunctions){ NULL };
@@ -36,7 +38,9 @@ gnInstanceFunctions loadInstanceFunctions(loaderInfo info) {
 gnDeviceFunctions loadDeviceFunctions(loaderInfo info) {
     switch (info.api) {
     case GN_RENDERINGAPI_NONE: return (gnDeviceFunctions){ NULL };
-    case GN_RENDERINGAPI_VULKAN: return loadVulkanDeviceFunctions(info);
+#ifdef GN_API_VULKAN
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanDeviceFunctions();
+#endif
 
     case GN_RENDERINGAPI_SOFTWARE: return (gnDeviceFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX11: return (gnDeviceFunctions){ NULL };
@@ -53,7 +57,9 @@ gnDeviceFunctions loadDeviceFunctions(loaderInfo info) {
 gnCommandFunctions loadCommandFunctions(loaderInfo info) {
     switch (info.api) {
     case GN_RENDERINGAPI_NONE: return (gnCommandFunctions){ NULL };
-    case GN_RENDERINGAPI_VULKAN: return loadVulkanCommandFunctions(info);
+#ifdef GN_API_VULKAN
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanCommandFunctions();
+#endif
 
     case GN_RENDERINGAPI_SOFTWARE: return (gnCommandFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX11: return (gnCommandFunctions){ NULL };

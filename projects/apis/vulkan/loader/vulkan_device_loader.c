@@ -15,7 +15,7 @@
 #include <submit/vulkan_submit.h>
 #include <output_device/vulkan_output_devices.h>
 
-gnDeviceFunctions loadVulkanDeviceFunctions(loaderInfo info) {
+gnDeviceFunctions loadVulkanDeviceFunctions() {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = createPresentationQueue,
         ._gnPresentationQueueGetImage = getPresentQueueImage,

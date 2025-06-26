@@ -2,7 +2,7 @@
 #include <commands/command_buffer/vulkan_command_buffer.h>
 #include <commands/commands/vulkan_commands.h>
 
-gnCommandFunctions loadVulkanCommandFunctions(loaderInfo info) {
+gnCommandFunctions loadVulkanCommandFunctions() {
     return (gnCommandFunctions){
         ._gnCommandPoolAllocateCommandBuffers = allocateCommandBuffers,
         ._gnBeginCommandBuffer = beginCommandBuffer,

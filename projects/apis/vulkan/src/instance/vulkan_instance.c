@@ -76,7 +76,7 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
     };
 
     #ifdef GN_PLATFORM_MACOS
-    createInfo.createFlags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
+    createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
     #endif
 
     if (instanceInfo.debugger != NULL) {

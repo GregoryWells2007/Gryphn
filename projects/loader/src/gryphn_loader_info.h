@@ -3,4 +3,5 @@
 
 typedef struct loaderInfo {
     gnRenderingAPI api;
+    gnBool validateIfLoaded;
 } loaderInfo;
