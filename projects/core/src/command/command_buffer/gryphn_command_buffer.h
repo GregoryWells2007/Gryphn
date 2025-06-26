@@ -8,6 +8,7 @@
 struct gnCommandBuffer_t {
     struct gnPlatformCommandBuffer_t* commandBuffer;
     gnCommandPoolHandle commandPool;
+    gnInstance instance;
 };
 #endif
 

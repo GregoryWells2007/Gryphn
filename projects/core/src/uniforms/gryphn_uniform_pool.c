@@ -1,17 +1,18 @@
 #include "gryphn_uniform_pool.h"
 #include "output_device/gryphn_output_device.h"
 #include "gryphn_uniform.h"
+#include "instance/gryphn_instance.h"
 #include "stdlib.h"
 
 gnReturnCode gnCreateUniformPool(gnUniformPool* pool, gnDeviceHandle device) {
     *pool = malloc(sizeof(struct gnUniformPool_t));
     (*pool)->device = device;
-    return device->deviceFunctions->_gnCreateUniformPool(*pool, device);
+    return device->instance->callingLayer->deviceFunctions._gnCreateUniformPool(*pool, device);
 }
 
 // you own this memory now
 gnUniformArrayList gnUniformPoolAllocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInfo) {
-    gnUniform* uniforms = pool->device->deviceFunctions->_gnUniformPoolAllocateUniforms(pool, allocInfo);
+    gnUniform* uniforms = pool->device->instance->callingLayer->deviceFunctions._gnUniformPoolAllocateUniforms(pool, allocInfo);
     for (int i = 0; i < allocInfo.setCount; i++)
         uniforms[i]->pool = pool;
 
@@ -22,5 +23,5 @@ gnUniformArrayList gnUniformPoolAllocateUniforms(gnUniformPool pool, gnUniformAl
 }
 
 void gnDestroyUniformPool(gnUniformPool pool) {
-    pool->device->deviceFunctions->_gnDestroyUniformPool(pool);
+    pool->device->instance->callingLayer->deviceFunctions._gnDestroyUniformPool(pool);
 }

@@ -5,12 +5,12 @@
 
 gnReturnCode gnCreateCommandPool(gnCommandPoolHandle* commandPool, gnOutputDeviceHandle device, gnCommandPoolInfo info) {
     *commandPool = malloc(sizeof(struct gnCommandPool_t));
-    (*commandPool)->commandFunctions = &device->instance->commandFunctions;
+    (*commandPool)->instance = device->instance;
 
     (*commandPool)->device = device;
-    return device->deviceFunctions->_gnCreateCommandPool((*commandPool), device, info);
+    return device->instance->callingLayer->deviceFunctions._gnCreateCommandPool((*commandPool), device, info);
 }
 
 void gnDestroyCommandPool(gnCommandPoolHandle commandPool) {
-    commandPool->device->deviceFunctions->_gnDestroyCommandPool(commandPool);
+    commandPool->instance->callingLayer->deviceFunctions._gnDestroyCommandPool(commandPool);
 }

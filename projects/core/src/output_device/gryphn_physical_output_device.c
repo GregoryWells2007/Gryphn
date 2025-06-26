@@ -2,7 +2,7 @@
 #include "instance/gryphn_instance.h"
 
 gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {
-    gnPhysicalDevice* devices = instance->instanceFunctions._gnGetPhysicalDevices(instance, count);
+    gnPhysicalDevice* devices = instance->callingLayer->instanceFunctions._gnGetPhysicalDevices(instance, count);
     for (int i = 0; i < *count; i++) {
         devices[i].instance = instance;
     }
@@ -18,7 +18,7 @@ gnBool gnQueueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueI
     //     );
     //     return gnFalse;
     // }
-    return device.instance->instanceFunctions._gnQueueCanPresentToSurface(device, queueIndex, windowSurface);
+    return device.instance->callingLayer->instanceFunctions._gnQueueCanPresentToSurface(device, queueIndex, windowSurface);
 }
 
 gnBool gnHasGraphicsQueue(const gnPhysicalDevice device) {

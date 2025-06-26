@@ -1,7 +1,7 @@
 #include "gryphn_surface.h"
 
 void gnDestroyWindowSurface(gnWindowSurfaceHandle windowSurface) {
-    windowSurface->instance->instanceFunctions._gnDestroyWindowSurface(windowSurface);
+    windowSurface->instance->callingLayer->instanceFunctions._gnDestroyWindowSurface(windowSurface);
 }
 
 gnSurfaceFormat* gnGetSupportedSurfaceFormats(
@@ -9,7 +9,7 @@ gnSurfaceFormat* gnGetSupportedSurfaceFormats(
     gnPhysicalDevice device,
     uint32_t* formatCount
 ) {
-    gnSurfaceDetails surfaceDetails = windowSurface->instance->instanceFunctions._gnGetSurfaceDetails(windowSurface, device);
+    gnSurfaceDetails surfaceDetails = windowSurface->instance->callingLayer->instanceFunctions._gnGetSurfaceDetails(windowSurface, device);
     *formatCount = surfaceDetails.formatCount;
     return surfaceDetails.formats;
 }
@@ -53,16 +53,16 @@ gnSurfaceFormat gnGetPreferredSurfaceFormat(
 }
 
 uint32_t gnGetMinImageCount(gnWindowSurfaceHandle  surface, gnPhysicalDevice device) {
-    gnSurfaceDetails surfaceDetails = surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device);
+    gnSurfaceDetails surfaceDetails = surface->instance->callingLayer->instanceFunctions._gnGetSurfaceDetails(surface, device);
     return surfaceDetails.minImageCount;
 }
 uint32_t gnGetMaxImageCount(gnWindowSurfaceHandle  surface, gnPhysicalDevice device) {
-    gnSurfaceDetails surfaceDetails = surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device);
+    gnSurfaceDetails surfaceDetails = surface->instance->callingLayer->instanceFunctions._gnGetSurfaceDetails(surface, device);
     return surfaceDetails.maxImageCount;
 }
 
 uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle  surface, gnPhysicalDevice device) {
-    gnSurfaceDetails surfaceDetails = surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device);
+    gnSurfaceDetails surfaceDetails = surface->instance->callingLayer->instanceFunctions._gnGetSurfaceDetails(surface, device);
 
     uint32_t imageCount = surfaceDetails.minImageCount + 1;
     if (surfaceDetails.maxImageCount > 0 && imageCount > surfaceDetails.maxImageCount) {
@@ -71,4 +71,4 @@ uint32_t gnGetPreferredImageCount(gnWindowSurfaceHandle  surface, gnPhysicalDevi
     return imageCount;
 }
 
-gnSurfaceDetails gnGetSurfaceDetails(gnWindowSurfaceHandle surface, gnPhysicalDevice device) { return surface->instance->instanceFunctions._gnGetSurfaceDetails(surface, device); }
+gnSurfaceDetails gnGetSurfaceDetails(gnWindowSurfaceHandle surface, gnPhysicalDevice device) { return surface->instance->callingLayer->instanceFunctions._gnGetSurfaceDetails(surface, device); }

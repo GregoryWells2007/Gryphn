@@ -19,7 +19,6 @@ typedef struct gnOutputDeviceInfo {
 #ifdef GN_REVEAL_IMPL
 struct gnOutputDevice_t {
     struct gnPlatformOutputDevice_t* outputDevice;
-    gnDeviceFunctions* deviceFunctions;
     gnOutputDeviceInfo deviceInfo;
     gnInstanceHandle instance;
     gnPhysicalDevice physicalDevice;
