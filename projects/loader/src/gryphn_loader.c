@@ -1,4 +1,5 @@
 #include "gryphn_loader.h"
+#include <validation_layers/function_loader/loader/function_loader.h>
 #ifdef GN_API_VULKAN
 #include <apis/vulkan/loader/vulkan_loader.h>
 #endif
@@ -6,8 +7,9 @@
 #include <apis/metal/loader/metal_loader.h>
 #endif
 
-gnInstanceFunctions loadInstanceFunctions(loaderInfo info) {
-    switch (info.api) {
+// load the speedy API functions or something like that
+gnInstanceFunctions loadAPIFunctions(gnRenderingAPI api) {
+    switch (api) {
     case GN_RENDERINGAPI_NONE: return (gnInstanceFunctions){ NULL };
     case GN_RENDERINGAPI_VULKAN: return loadVulkanInstanceFunctions(info);
 
@@ -20,6 +22,15 @@ gnInstanceFunctions loadInstanceFunctions(loaderInfo info) {
 #endif
     default: return (gnInstanceFunctions){NULL};
     }
+}
+
+gnInstanceFunctions loadInstanceFunctions(loaderInfo info) {
+    gnInstanceFunctions apiFunctions = loadAPIFunctions(info.api);
+
+    if (info.validateIfLoaded)
+        return loadFunctionLoaderInstanceFunctions(&apiFunctions);
+
+    return apiFunctions;
 }
 
 gnDeviceFunctions loadDeviceFunctions(loaderInfo info) {
