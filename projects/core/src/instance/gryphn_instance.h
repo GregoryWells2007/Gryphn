@@ -3,9 +3,7 @@
 #include "gryphn_handles.h"
 #include "utils/gryphn_version.h"
 #include "utils/gryphn_error_code.h"
-#include "loader/src/gryphn_instance_functions.h"
-#include "loader/src/gryphn_device_functions.h"
-#include "loader/src/gryphn_command_functions.h"
+#include "loader/src/gryphn_loader.h"
 
 typedef struct gnInstanceInfo {
     gnString  applicationName;
@@ -23,9 +21,8 @@ struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnBool valid;
 
-    gnInstanceFunctions instanceFunctions;
-    gnDeviceFunctions deviceFunctions;
-    gnCommandFunctions commandFunctions;
+    loaderLayerArrayList layers;
+    loaderLayer* callingLayer;
 
     gnDebuggerHandle debugger;
 };

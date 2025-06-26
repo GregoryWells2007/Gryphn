@@ -6,9 +6,15 @@
 #include "utils/lists/gryphn_array_list.h"
 
 typedef struct loaderLayer {
+    // idk why I sperate these info different classes, I should really shove them in one bit class
+    // they used to be loaded seperatly but I guess there not anymore
+    // initlization is hard
     gnInstanceFunctions instanceFunctions;
     gnDeviceFunctions deviceFunctions;
     gnCommandFunctions commandFunctions;
+
+    // this index is not set by loadLayer, set by gnCreateInstance
+    uint32_t layerIndex;
 } loaderLayer;
 
 loaderLayer loadLayer(loaderInfo info);

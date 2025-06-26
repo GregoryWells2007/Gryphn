@@ -81,8 +81,6 @@ loaderLayer api_loaded_layer(gnRenderingAPI api) {
 }
 
 loaderLayer loadLayer(loaderInfo info) {
-    if (info.layerToLoad == no_layer) return null_layer();
     if (info.layerToLoad == api_layer) return api_loaded_layer(info.api);
-
     return null_layer();
 }

@@ -6,17 +6,22 @@
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
     *instance = malloc(sizeof(struct gnInstance_t));
 
+    (*instance)->layers = loaderLayerArrayListCreate();
+
+    // load the API layers (this will)
     loaderInfo loadInfo = {
-        .api = info.renderingAPI
+        .api = info.renderingAPI,
+        .layerToLoad = api_layer
     };
 
-    (*instance)->instanceFunctions = loadInstanceFunctions(loadInfo);
-    (*instance)->deviceFunctions = loadDeviceFunctions(loadInfo);
-    (*instance)->commandFunctions = loadCommandFunctions(loadInfo);
+    loaderLayerArrayListAdd(&(*instance)->layers, loadLayer(loadInfo));
+
+    // i hate this line of code but im not fixing it
+    (*instance)->callingLayer = &(*instance)->layers.data[(*instance)->layers.count - 1];
     (*instance)->debugger = info.debugger;
-    return (*instance)->instanceFunctions._gnCreateInstance((*instance), info);
+    return (*instance)->callingLayer->instanceFunctions._gnCreateInstance((*instance), info);
 }
 
 void gnDestroyInstance(gnInstanceHandle instance) {
-    instance->instanceFunctions._gnDestroyInstance(instance);
+    instance->callingLayer->instanceFunctions._gnDestroyInstance(instance);
 }
