@@ -35,7 +35,7 @@ typedef enum gnDebuggerLayer {
 } gnDebuggerLayer;
 
 typedef struct gnDebuggerInfo {
-    gnDebuggerCallback callback;
+    gnDebuggerCallback callback; // instance callback cannot be null
     void* userData;
 
     uint32_t layerCount;

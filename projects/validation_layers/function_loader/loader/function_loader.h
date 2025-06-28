@@ -3,6 +3,6 @@
 #include "loader/src/gryphn_device_functions.h"
 #include "loader/src/gryphn_command_functions.h"
 
-gnInstanceFunctions loadFunctionLoaderInstanceFunctions(gnInstanceFunctions* callbacks);
-gnDeviceFunctions loadFunctionLoaderDeviceFunctions(gnDeviceFunctions* callbacks);
-gnCommandFunctions loadFunctionLoaderCommandFunctions(gnCommandFunctions* callbacks);
+gnInstanceFunctions loadFunctionLoaderInstanceFunctions();
+gnDeviceFunctions loadFunctionLoaderDeviceFunctions();
+gnCommandFunctions loadFunctionLoaderCommandFunctions();

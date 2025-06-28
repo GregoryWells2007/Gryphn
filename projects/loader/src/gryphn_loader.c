@@ -7,6 +7,8 @@
 #include <apis/metal/loader/metal_loader.h>
 #endif
 
+#include "core/src/instance/gryphn_instance.h"
+
 // load the speedy API functions or something like that
 gnInstanceFunctions loadAPIInstanceFunctions(gnRenderingAPI api) {
     switch (api) {
@@ -80,7 +82,30 @@ loaderLayer api_loaded_layer(gnRenderingAPI api) {
     };
 }
 
+loaderLayer function_check_layer() {
+    return (loaderLayer){
+        .instanceFunctions = loadFunctionLoaderInstanceFunctions(),
+        .deviceFunctions = loadFunctionLoaderDeviceFunctions(),
+        .commandFunctions = loadFunctionLoaderCommandFunctions()
+    };
+}
+
 loaderLayer loadLayer(loaderInfo info) {
     if (info.layerToLoad == api_layer) return api_loaded_layer(info.api);
+    if (info.layerToLoad == function_checker_layer) return function_check_layer();
     return null_layer();
+}
+
+loaderLayer* loaderGetNextLayer(gnInstance instance) {
+    instance->currentLayer--;
+    uint32_t nextLayer = instance->currentLayer;
+    if (instance->currentLayer == 0) {
+        nextLayer = 0;
+        resetLayer(instance);
+    }
+    return &instance->layers.data[nextLayer];
+}
+
+void resetLayer(gnInstance instance) {
+    instance->currentLayer = (instance->layers.count - 1);
 }

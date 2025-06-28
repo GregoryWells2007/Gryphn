@@ -23,6 +23,7 @@ struct gnInstance_t {
 
     loaderLayerArrayList layers;
     loaderLayer* callingLayer;
+    uint32_t currentLayer;
 
     gnDebuggerHandle debugger;
 };

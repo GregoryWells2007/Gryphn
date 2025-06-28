@@ -13,9 +13,12 @@ typedef struct loaderLayer {
     gnDeviceFunctions deviceFunctions;
     gnCommandFunctions commandFunctions;
 
-    // this index is not set by loadLayer, set by gnCreateInstance
+    // this index is not set by loadLayer, set by gnCreateInstance, also not used for now
     uint32_t layerIndex;
 } loaderLayer;
 
 loaderLayer loadLayer(loaderInfo info);
 GN_ARRAY_LIST(loaderLayer);
+
+loaderLayer* loaderGetNextLayer(gnInstance instance);
+void resetLayer(gnInstance instance);

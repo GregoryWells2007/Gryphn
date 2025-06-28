@@ -1,0 +1,19 @@
+#pragma once
+#include "core/src/instance/gryphn_instance.h"
+#include <core/src/window_surface/gryphn_surface_create_functions.h>
+
+gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceInfo info);
+void checkDestroyInstance(gnInstance instance);
+
+gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count);
+gnBool checkQueueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
+
+gnReturnCode checkCreateOutputDevice(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
+void checkDestroyOutputDevice(gnOutputDeviceHandle device);
+
+#ifdef GN_PLATFORM_MACOS
+gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);
+#endif
+
+void checkDestroyWindowSurface(gnWindowSurfaceHandle windowSurface);
+gnSurfaceDetails checkGetSurfaceDetails(gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device);
