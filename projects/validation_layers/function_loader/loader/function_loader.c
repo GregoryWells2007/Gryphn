@@ -1,6 +1,7 @@
 #include "function_loader.h"
 #include "instance_functions.h"
 #include "device_functions.h"
+#include "command_functions.h"
 
 gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
     return (gnInstanceFunctions){
@@ -89,6 +90,21 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
 }
 gnCommandFunctions loadFunctionLoaderCommandFunctions() {
     return (gnCommandFunctions){
-        NULL
+        ._gnCommandPoolAllocateCommandBuffers = checkCommandPoolAllocateCommandBuffers,
+        ._gnBeginCommandBuffer = checkBeginCommandBuffer,
+        ._gnResetCommandBuffer = checkResetCommandBuffer,
+        ._gnEndCommandBuffer = checkEndCommandBuffer,
+
+        ._gnCommandBeginRenderPass = checkCommandBeginRenderPass,
+        ._gnCommandEndRenderPass = checkCommandEndRenderPass,
+        ._gnCommandBindGraphicsPipeline = checkCommandBindGraphicsPipeline,
+        ._gnCommandSetViewport = checkCommandSetViewport,
+        ._gnCommandSetScissor = checkCommandSetScissor,
+        ._gnCommandBindUniform = checkCommandBindUniform,
+        ._gnCommandPushConstant = checkCommandPushConstant,
+
+        ._gnCommandBindBuffer = checkCommandBindBuffer,
+        ._gnCommandDraw = checkCommandDraw,
+        ._gnCommandDrawIndexed = checkCommandDrawIndexed,
     };
 }

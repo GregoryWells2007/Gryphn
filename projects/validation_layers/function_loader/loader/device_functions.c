@@ -1,4 +1,5 @@
 #include "device_functions.h"
+#include "loader_utils.h"
 #include "core/src/debugger/gryphn_debugger.h"
 #include "core/src/presentation_queue/gryphn_presentation_queue.h"
 #include "core/src/shader_module/gryphn_shader_module.h"
@@ -67,28 +68,6 @@ void checkDestroyShaderModule(gnShaderModuleHandle module){
     }
     nextLayer->deviceFunctions._gnDestroyShaderModule(module);
 }
-
-#define CHECK_FUNCTION_WITH_RETURN_CODE(instance, function, ...) \
-loaderLayer* nextLayer = loaderGetNextLayer(instance); \
-if (nextLayer->deviceFunctions.function == NULL) { \
-    gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){ \
-        .message = gnCreateString("Failed to load destroy " #function " function") \
-    }); \
-    resetLayer(instance); \
-    return GN_FAILED_TO_LOAD_FUNCTION; \
-} \
-return nextLayer->deviceFunctions.function(__VA_ARGS__);
-
-#define CHECK_VOID_FUNCTION(instance, function, ...) \
-loaderLayer* nextLayer = loaderGetNextLayer(instance); \
-if (nextLayer->deviceFunctions.function == NULL) { \
-    gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){ \
-        .message = gnCreateString("Failed to load destroy " #function " function") \
-    }); \
-    resetLayer(instance); \
-    return; \
-} \
-nextLayer->deviceFunctions.function(__VA_ARGS__);
 
 gnReturnCode checkCreateRenderPassDescriptor(gnRenderPassDescriptorHandle renderPass, gnOutputDeviceHandle device, gnRenderPassDescriptorInfo info) {
     CHECK_FUNCTION_WITH_RETURN_CODE(device->instance, _gnCreateRenderPassDescriptor, renderPass, device, info);
