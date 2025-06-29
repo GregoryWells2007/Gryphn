@@ -16,3 +16,10 @@ struct gnPlatformOutputDevice_t {
     id<MTLCommandQueue> transferQueue;
     // id<MTLRenderPipelineState> framebuffer;
 } gnPlatformOutputDevice;
+
+gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCount);
+gnBool metalCanQueuePresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurface windowSurface);
+
+gnReturnCode createMetalOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
+void waitForMetalDevice(gnOutputDeviceHandle device);
+void destroyMetalOutputDevice(gnOutputDeviceHandle device);

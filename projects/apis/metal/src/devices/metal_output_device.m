@@ -5,7 +5,7 @@
 #include "instance/gryphn_instance.h"
 #include <debugger/gryphn_debugger.h>
 
-gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
+gnReturnCode createMetalOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
     outputDevice->outputDevice->device = deviceInfo.physicalDevice.physicalDevice->device.retain;
     outputDevice->outputDevice->transferQueue = outputDevice->outputDevice->device.newCommandQueue;
@@ -18,11 +18,11 @@ gnReturnCode gnCreateOutputDeviceFn(gnOutputDeviceHandle outputDevice, gnInstanc
     return GN_SUCCESS;
 }
 
-void gnWaitForDeviceFn(gnOutputDeviceHandle device) {
+void waitForMetalDevice(gnOutputDeviceHandle device) {
     [device->outputDevice->executingCommandBuffer waitUntilCompleted];
 }
 
-void gnDestroyOutputDeviceFn(gnOutputDeviceHandle device) {
+void destroyMetalOutputDevice(gnOutputDeviceHandle device) {
     // for (int i = 0; i < device->outputDevice->queueCount; i++) {
     //     [device->outputDevice->queues[i] release];
     // }

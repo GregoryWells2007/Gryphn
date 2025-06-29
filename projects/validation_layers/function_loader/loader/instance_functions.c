@@ -73,7 +73,13 @@ void checkDestroyOutputDevice(gnOutputDeviceHandle device) {
 
 gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
     loaderLayer* nextLayer = loaderGetNextLayer(instance);
-    if (nextLayer->instanceFunctions._gnCreateMacOSWindowSurface == NULL) { return GN_FAILED_TO_LOAD_FUNCTION; }
+    if (nextLayer->instanceFunctions._gnCreateMacOSWindowSurface == NULL) {
+        gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
+            .message = gnCreateString("Failed to load create window surface function")
+        });
+        resetLayer(instance);
+        return GN_FAILED_TO_LOAD_FUNCTION;
+    }
     return nextLayer->instanceFunctions._gnCreateMacOSWindowSurface(windowSurface, instance, createInfo);
 }
 

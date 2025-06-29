@@ -8,17 +8,17 @@
 #import <Metal/Metal.h>
 #import <CoreGraphics/CoreGraphics.h>
 
-gnReturnCode gnCreateMacOSWindowSurfaceFn(struct gnWindowSurface_t* windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
+gnReturnCode createMetalSurface(gnWindowSurface windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     windowSurface->windowSurface->layer = createInfo.layer;
     return GN_SUCCESS;
 }
 
-void gnDestroyWindowSurfaceFn(struct gnWindowSurface_t *windowSurface) {
+void destroyMetalWindowSurface(gnWindowSurface windowSurface) {
     free(windowSurface->windowSurface);
 }
 
-gnSurfaceDetails gnGetSurfaceDetailsFn(
+gnSurfaceDetails getMetalSurfaceDetails(
     gnWindowSurface windowSurface, gnPhysicalDevice device
 ) {
     gnSurfaceDetails surfaceDetails;

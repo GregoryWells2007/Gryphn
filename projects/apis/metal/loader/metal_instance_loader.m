@@ -1,15 +1,18 @@
 #include "metal_loader.h"
+#include "instance/metal_instance.h"
+#include "surface/metal_surface.h"
+#include "devices/metal_output_devices.h"
 
 gnInstanceFunctions loadMetalInstanceFunctions() {
     return (gnInstanceFunctions){
-        ._gnCreateInstance = NULL,
-        ._gnDestroyInstance = NULL,
-        ._gnGetPhysicalDevices = NULL,
-        ._gnQueueCanPresentToSurface = NULL,
-        ._gnCreateOutputDevice = NULL,
-        ._gnDestroyOutputDevice = NULL,
-        ._gnCreateMacOSWindowSurface = NULL,
-        ._gnDestroyWindowSurface = NULL,
-        ._gnGetSurfaceDetails = NULL
+        ._gnCreateInstance = createMetalInstance,
+        ._gnDestroyInstance = destroyMetalInstance,
+        ._gnGetPhysicalDevices = getMetalDevices,
+        ._gnQueueCanPresentToSurface = metalCanQueuePresentToSurface,
+        ._gnCreateOutputDevice = createMetalOutputDevice,
+        ._gnDestroyOutputDevice = destroyMetalOutputDevice,
+        ._gnCreateMacOSWindowSurface = createMetalSurface,
+        ._gnDestroyWindowSurface = destroyMetalWindowSurface,
+        ._gnGetSurfaceDetails = getMetalSurfaceDetails
     };
 }
