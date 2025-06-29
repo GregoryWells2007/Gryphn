@@ -2,6 +2,7 @@
 #include "instance/gryphn_instance.h"
 #include <loader/src/gryphn_instance_functions.h>
 #include "loader/src/gryphn_loader.h"
+#include "debugger/gryphn_debugger.h"
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
     *instance = malloc(sizeof(struct gnInstance_t));
@@ -13,15 +14,17 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
         .layerToLoad = api_layer
     }));
 
-    loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
-        .api = info.renderingAPI,
-        .layerToLoad = function_checker_layer
-    }));
+    gnBool loaderFunctionChecker = gnFalse;
+    for (int i = 0; i < info.debugger->info.layerCount; i++) {
+        if (info.debugger->info.layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) loaderFunctionChecker = gnTrue;
+    }
 
-    loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
-        .api = info.renderingAPI,
-        .layerToLoad = function_checker_layer
-    }));
+    if (loaderFunctionChecker) {
+        loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
+            .api = info.renderingAPI,
+            .layerToLoad = function_checker_layer
+        }));
+    }
 
     (*instance)->currentLayer = ((*instance)->layers.count - 1);
     for (int i = 0; i < (*instance)->layers.count; i++) (*instance)->layers.data[i].layerIndex = i;

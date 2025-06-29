@@ -6,8 +6,11 @@
 gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceInfo info) {
     loaderLayer* nextLayer = loaderGetNextLayer(instance);
     if (nextLayer->instanceFunctions._gnCreateInstance == NULL) {
-        return GN_FAILED_TO_LOAD_FUNCTION;
+        gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
+            .message = gnCreateString("Failed to load create instance function")
+        });
         resetLayer(instance);
+        return GN_FAILED_TO_LOAD_FUNCTION;
     }
     return nextLayer->instanceFunctions._gnCreateInstance(instance, info);
 }
@@ -19,8 +22,9 @@ void checkDestroyInstance(gnInstance instance) {
             .message = gnCreateString("Failed to load destroy instance function")
         });
         resetLayer(instance);
+        return;
     }
-    return nextLayer->instanceFunctions._gnDestroyInstance(instance);
+    nextLayer->instanceFunctions._gnDestroyInstance(instance);
 }
 
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count) {
