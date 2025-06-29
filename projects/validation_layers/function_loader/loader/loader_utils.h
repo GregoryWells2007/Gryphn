@@ -2,7 +2,7 @@
 loaderLayer* nextLayer = loaderGetNextLayer(instance); \
 if (nextLayer->deviceFunctions.function == NULL) { \
     gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){ \
-        .message = gnCreateString("Failed to load destroy " #function " function") \
+        .message = gnCreateString("Failed to load " #function " this indicates a bug within gryphn") \
     }); \
     resetLayer(instance); \
     return GN_FAILED_TO_LOAD_FUNCTION; \
@@ -13,7 +13,7 @@ return nextLayer->deviceFunctions.function(__VA_ARGS__);
 loaderLayer* nextLayer = loaderGetNextLayer(instance); \
 if (nextLayer->commandFunctions.function == NULL) { \
     gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){ \
-        .message = gnCreateString("Failed to load destroy " #function " function") \
+        .message = gnCreateString("Failed to load " #function " this indicates a bug within gryphn") \
     }); \
     resetLayer(instance); \
     return GN_FAILED_TO_LOAD_FUNCTION; \
@@ -24,7 +24,7 @@ return nextLayer->commandFunctions.function(__VA_ARGS__);
 loaderLayer* nextLayer = loaderGetNextLayer(instance); \
 if (nextLayer->deviceFunctions.function == NULL) { \
     gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){ \
-        .message = gnCreateString("Failed to load destroy " #function " function") \
+        .message = gnCreateString("Failed to load " #function "  this indicates a bug within gryphn") \
     }); \
     resetLayer(instance); \
     return; \
@@ -35,7 +35,7 @@ nextLayer->deviceFunctions.function(__VA_ARGS__);
 loaderLayer* nextLayer = loaderGetNextLayer(instance); \
 if (nextLayer->commandFunctions.function == NULL) { \
     gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){ \
-        .message = gnCreateString("Failed to load destroy " #function " function") \
+        .message = gnCreateString("Failed to load " #function " this indicates a bug within gryphn") \
     }); \
     resetLayer(instance); \
     return; \
