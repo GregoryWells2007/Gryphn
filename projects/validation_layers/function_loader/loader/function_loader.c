@@ -1,5 +1,6 @@
 #include "function_loader.h"
 #include "instance_functions.h"
+#include "device_functions.h"
 
 gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
     return (gnInstanceFunctions){
@@ -37,7 +38,53 @@ gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
 }
 gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
     return (gnDeviceFunctions){
-        NULL
+        ._gnCreatePresentationQueue = checkCreatePresentationQueue,
+        ._gnPresentationQueueGetImage = checkPresentationQueueGetImage,
+        ._gnDestroyPresentationQueue = checkDestroyPresentationQueue,
+
+        ._gnCreateShaderModule = checkCreateShaderModule,
+        ._gnDestroyShaderModule = checkDestroyShaderModule,
+
+        ._gnCreateRenderPassDescriptor = checkCreateRenderPassDescriptor,
+        ._gnDestroyRenderPassDescriptor = checkDestroyRenderPassDescriptor,
+
+        ._gnCreateGraphicsPipeline = checkCreateGraphicsPipeline,
+        ._gnDestroyGraphicsPipeline = checkDestroyGraphicsPipeline,
+
+        ._gnCreateFramebuffer = checkCreateFramebuffer,
+        ._gnDestroyFramebuffer = checkDestroyFramebuffer,
+
+        ._gnCreateCommandPool = checkCreateCommandPool,
+        ._gnDestroyCommandPool = checkDestroyCommandPool,
+
+        ._gnCreateSemaphore = checkCreateSemaphore,
+        ._gnDestroySemaphore = checkDestroySemaphore,
+
+        ._gnCreateBuffer = checkCreateBuffer,
+        ._gnBufferData = checkBufferData,
+        ._gnMapBuffer = checkMapBuffer,
+        ._gnDestroyBuffer = checkDestroyBuffer,
+
+        ._gnCreateUniformPool = checkCreateUniformPool,
+        ._gnUniformPoolAllocateUniforms = checkUniformPoolAllocateUniforms,
+        ._gnDestroyUniformPool = checkDestroyUniformPool,
+
+        ._gnUpdateBufferUniform = checkUpdateBufferUniform,
+        ._gnUpdateImageUniform = checkUpdateImageUniform,
+
+        ._gnCreateTexture = checkCreateTexture,
+        ._gnTextureData = checkTextureData,
+        ._gnDestroyTexture = checkDestroyTexture,
+
+        ._gnCreateFence = checkCreateFence,
+        ._gnWaitForFence = checkWaitForFence,
+        ._gnResetFence = checkResetFence,
+        ._gnDestroyFence = checkDestroyFence,
+
+        ._gnSubmit = checkSubmit,
+        ._gnPresent = checkPresent,
+
+        ._gnWaitForDevice = checkWaitForDevice
     };
 }
 gnCommandFunctions loadFunctionLoaderCommandFunctions() {

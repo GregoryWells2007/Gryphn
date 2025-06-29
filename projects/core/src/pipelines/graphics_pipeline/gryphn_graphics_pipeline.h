@@ -5,7 +5,7 @@
 #include <shader_module/gryphn_shader_module.h>
 #include "utils/math/gryphn_vec2.h"
 #include "gryphn_handles.h"
-#include "shader_input/gryphn_shader_layout.h"
+#include "shader_module/gryphn_shader_layout.h"
 
 typedef enum gnDynamicState {
     GN_DYNAMIC_VIEWPORT,

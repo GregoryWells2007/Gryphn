@@ -7,6 +7,7 @@
 #include <core/src/window_surface/gryphn_surface_create_functions.h>
 #include <core/src/presentation_queue/gryphn_presentation_queue.h>
 #include <core/src/shader_module/gryphn_shader_module.h>
+#include <core/src/shader_module/gryphn_shader_layout.h>
 #include <core/src/pipelines/graphics_pipeline/gryphn_graphics_pipeline.h>
 #include <core/src/renderpass/gryphn_render_pass_descriptor.h>
 #include <core/src/framebuffer/gryphn_framebuffer.h>
@@ -19,7 +20,6 @@
 #include <core/src/sync/fence/gryphn_fence.h>
 #include <core/src/submit/gryphn_submit.h>
 #include <core/src/present/gryphn_present.h>
-#include <core/src/shader_input/gryphn_shader_layout.h>
 #include <core/src/buffers/gryphn_buffer.h>
 #include <core/src/uniforms/gryphn_uniform_pool.h>
 #include <core/src/uniforms/gryphn_uniform.h>
