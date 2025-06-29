@@ -4,4 +4,8 @@
 
 typedef struct gnPlatformShaderModule_t {
     id<MTLFunction> function;
+    uint32_t pushConstantIndex;
 } gnPlatformShaderModule;
+
+gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
+void destroyMetalShaderModule(gnShaderModule module);

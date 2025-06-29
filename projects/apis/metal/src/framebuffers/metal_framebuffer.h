@@ -11,3 +11,6 @@ typedef struct gnPlatformFramebuffer_t {
 
 gnBool isDepthFormat(gnImageFormat format);
 gnBool isStencilFormat(gnImageFormat format);
+
+gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice device, gnFramebufferInfo info);
+void destroyMetalFramebuffer(gnFramebuffer framebuffer);

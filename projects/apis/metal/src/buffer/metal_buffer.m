@@ -1,9 +1,6 @@
 #include "metal_buffer.h"
-#include "buffers/gryphn_buffer.h"
-#include "output_device/gryphn_output_device.h"
-#include "devices/metal_output_devices.h"
 
-gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
+gnReturnCode createMetalBuffer(gnBufferHandle buffer, gnDevice device, gnBufferInfo info) {
     buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));
     MTLResourceOptions option;
     buffer->buffer->useStagingBuffer = (info.usage == GN_DYNAMIC_DRAW) ? NO : YES;
@@ -16,7 +13,7 @@ gnReturnCode gnCreateBufferFn(gnBufferHandle buffer, gnOutputDeviceHandle device
     buffer->buffer->buffer = [device->outputDevice->device newBufferWithLength:info.size options:option];
     return GN_SUCCESS;
 }
-void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
+void metalBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
     void* bufferData;
     if (buffer->buffer->useStagingBuffer) {
         memcpy(buffer->buffer->stagingBuffer.contents, data, dataSize);
@@ -29,10 +26,10 @@ void gnBufferDataFn(gnBufferHandle buffer, size_t dataSize, void* data) {
     } else
         memcpy(buffer->buffer->buffer.contents, data, dataSize);
 }
-void* gnMapBufferFn(gnBufferHandle buffer) {
+void* mapMetalBuffer(gnBufferHandle buffer) {
     return buffer->buffer->buffer.contents;
 }
-void gnDestroyBufferFn(gnBufferHandle buffer) {
+void destroyMetalBuffer(gnBufferHandle buffer) {
     if (buffer->buffer->useStagingBuffer)
         [buffer->buffer->stagingBuffer release];
     [buffer->buffer->buffer release];

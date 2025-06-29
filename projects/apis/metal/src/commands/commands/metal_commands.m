@@ -1,12 +1,6 @@
-#include "command/commands/gryphn_command.h"
-#include "framebuffers/metal_framebuffer.h"
-#include "commands/command_buffer/metal_command_buffer.h"
-#include "pipelines/graphics_pipeline/metal_graphics_pipeline.h"
-#include "buffer/metal_buffer.h"
-#include "uniforms/metal_uniform.h"
-#import <Metal/MTLRenderCommandEncoder.h>
+#include "metal_commands.h"
 
-void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, gnRenderPassInfo passInfo) {
+void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
     int currentColorAttachment = 0;
     for (int i = 0; i < passInfo.clearValueCount; i++) {
         gnBool wasDepthStencil = gnFalse;
@@ -32,10 +26,10 @@ void gnCommandBeginRenderPassFn(struct gnCommandBuffer_t* buffer, gnRenderPassIn
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setViewport:vp];
 }
-void gnCommandEndRenderPassFn(struct gnCommandBuffer_t* buffer) {
+void endMetalRenderPass(gnCommandBuffer buffer) {
     [buffer->commandBuffer->encoder endEncoding];
 }
-void gnCommandBindGraphicsPipelineFn(struct gnCommandBuffer_t* buffer, struct gnGraphicsPipeline_t* graphicsPipeline) {
+void bindMetalGraphicsPipeline(gnCommandBuffer buffer, struct gnGraphicsPipeline_t* graphicsPipeline) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setRenderPipelineState:graphicsPipeline->graphicsPipeline->graphicsPipeline];
 
@@ -60,24 +54,24 @@ void gnCommandBindGraphicsPipelineFn(struct gnCommandBuffer_t* buffer, struct gn
 
     buffer->commandBuffer->boundGraphcisPipeline = graphicsPipeline;
 }
-void gnCommandSetViewportFn(struct gnCommandBuffer_t* buffer, gnViewport viewport) {
+void setMetalViewport(gnCommandBuffer buffer, gnViewport viewport) {
     MTLViewport vp = {(double)viewport.position.x, (double)viewport.position.y, (double)viewport.size.x, (double)viewport.size.y, viewport.minDepth, viewport.maxDepth};
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setViewport:vp];
 }
-void gnCommandSetScissorFn(struct gnCommandBuffer_t* buffer, gnScissor scissor) {
+void setMetalScissor(gnCommandBuffer buffer, gnScissor scissor) {
     MTLScissorRect scissorRect = { scissor.position.x, scissor.position.y, scissor.size.x, scissor.size.y };
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setScissorRect:scissorRect];
 }
-void gnCommandBindBufferFn(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
+void bindMetalBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     if (type == GN_VERTEX_BUFFER)
         [encoder setVertexBuffer:bufferToBind->buffer->buffer offset:0 atIndex:0];
     else if (type == GN_INDEX_BUFFER)
         buffer->commandBuffer->indexBuffer = bufferToBind;
 }
-void gnCommandDrawFn(struct gnCommandBuffer_t* buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
+void metalDraw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
     if (buffer->commandBuffer->boundGraphcisPipeline != NULL) {
         id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
         if (buffer->commandBuffer->boundGraphcisPipeline->info.primitiveType == GN_PRIMITIVE_POINTS)
@@ -92,7 +86,7 @@ void gnCommandDrawFn(struct gnCommandBuffer_t* buffer, int vertexCount, int firs
             [encoder drawPrimitives:MTLPrimitiveTypeTriangleStrip vertexStart:firstVertex vertexCount:vertexCount instanceCount:instanceCount baseInstance:firstInstance];
     }
 }
-void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance)  {
+void metalDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance)  {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     MTLPrimitiveType primative;
     switch (buffer->commandBuffer->boundGraphcisPipeline->info.primitiveType) {
@@ -114,7 +108,7 @@ void gnCommandDrawIndexedFn(gnCommandBufferHandle buffer, gnIndexType type, int 
     ];
 }
 
-void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
+void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     for (int i = 0; i < uniform->uniform->bindingCount; i++) {
         if (uniform->uniform->bindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
@@ -124,6 +118,14 @@ void gnCommandBindUniformFn(gnCommandBufferHandle buffer, gnUniform uniform, uin
                 offset:info.offset
                 atIndex:(info.binding + 1)
             ];
+        } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
+            gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
+            [encoder setFragmentTexture:info.texture->texture->texture atIndex:(info.binding + 1)];
         }
     }
+}
+
+void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
+    id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
+        [encoder setVertexBytes:data length:layout.size atIndex:0]; // TODO: fix this
 }

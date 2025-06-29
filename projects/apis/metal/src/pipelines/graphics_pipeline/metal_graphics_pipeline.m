@@ -4,7 +4,7 @@
 #include "shader_module/metal_shader_module.h"
 #include "surface/metal_surface.h"
 
-MTLBlendFactor vkGryphnBlendFactor(gnBlendFactor factor) {
+MTLBlendFactor mtlGryphnBlendFactor(gnBlendFactor factor) {
     switch (factor) {
     case GN_BLEND_FACTOR_ZERO: return MTLBlendFactorZero;
     case GN_BLEND_FACTOR_ONE: return MTLBlendFactorOne;
@@ -13,7 +13,7 @@ MTLBlendFactor vkGryphnBlendFactor(gnBlendFactor factor) {
     }
 }
 
-MTLBlendOperation vkGryphnBlendOperation(gnBlendOperation operation) {
+MTLBlendOperation mtlGryphnBlendOperation(gnBlendOperation operation) {
     switch(operation) {
     case GN_OPERATION_ADD: return MTLBlendOperationAdd;
     }
@@ -26,7 +26,7 @@ MTLVertexFormat mtlGryphnVertexFormat(gnVertexFormat format) {
     }
 }
 
-gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
+gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
 
@@ -43,15 +43,15 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnO
         gnSubpassAttachmentInfo subpassAtt = subpass.colorAttachments[i];
 
         gnRenderPassAttachmentInfo attInfo = info.renderPassDescriptor->info.attachmentInfos[subpassAtt.index];
-        descriptor.colorAttachments[i].pixelFormat = mtlGryphnFormatToVulkanFormat(attInfo.format);
+        descriptor.colorAttachments[i].pixelFormat = mtlGryphnFormatToMetalFormat(attInfo.format);
         if (info.colorBlending.enable == gnTrue) {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = YES;
-            [descriptor.colorAttachments objectAtIndexedSubscript:i].rgbBlendOperation = vkGryphnBlendOperation(info.colorBlending.colorBlendOperation);
-            [descriptor.colorAttachments objectAtIndexedSubscript:i].alphaBlendOperation = vkGryphnBlendOperation(info.colorBlending.alphaBlendOperation);
-            [descriptor.colorAttachments objectAtIndexedSubscript:i].sourceRGBBlendFactor = vkGryphnBlendFactor(info.colorBlending.sourceColorBlendFactor);
-            [descriptor.colorAttachments objectAtIndexedSubscript:i].sourceAlphaBlendFactor = vkGryphnBlendFactor(info.colorBlending.sourceAlphaBlendFactor);
-            [descriptor.colorAttachments objectAtIndexedSubscript:i].destinationRGBBlendFactor = vkGryphnBlendFactor(info.colorBlending.destinationColorBlendFactor);
-            [descriptor.colorAttachments objectAtIndexedSubscript:i].destinationAlphaBlendFactor = vkGryphnBlendFactor(info.colorBlending.destinationAlphaBlendFactor);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].rgbBlendOperation = mtlGryphnBlendOperation(info.colorBlending.colorBlendOperation);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].alphaBlendOperation = mtlGryphnBlendOperation(info.colorBlending.alphaBlendOperation);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].sourceRGBBlendFactor = mtlGryphnBlendFactor(info.colorBlending.sourceColorBlendFactor);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].sourceAlphaBlendFactor = mtlGryphnBlendFactor(info.colorBlending.sourceAlphaBlendFactor);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].destinationRGBBlendFactor = mtlGryphnBlendFactor(info.colorBlending.destinationColorBlendFactor);
+            [descriptor.colorAttachments objectAtIndexedSubscript:i].destinationAlphaBlendFactor = mtlGryphnBlendFactor(info.colorBlending.destinationAlphaBlendFactor);
         } else {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = FALSE;
         }
@@ -97,7 +97,7 @@ gnReturnCode gnCreateGraphicsPipelineFn(gnGraphicsPipeline graphicsPipeline, gnO
     return GN_SUCCESS;
 }
 
-void gnDestroyGraphicsPipelineFn(struct gnGraphicsPipeline_t *graphicsPipeline) {
+void destroyMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline) {
     [graphicsPipeline->graphicsPipeline->graphicsPipeline release];
     free(graphicsPipeline->graphicsPipeline);
 }

@@ -5,3 +5,6 @@
 typedef struct gnPlatformGraphicsPipeline_t {
     id<MTLRenderPipelineState> graphicsPipeline;
 } gnPlatformGraphicsPipeline;
+
+gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info);
+void destroyMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline);

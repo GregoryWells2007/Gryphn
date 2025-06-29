@@ -6,13 +6,13 @@
 #import <Metal/Metal.h>
 
 void mtlSpirVErrorCallback(void *userdata, const char *error) {
-    struct gnDebugger_t* debugger = (struct gnDebugger_t*)userdata;
+    gnDebugger debugger = (gnDebugger)userdata;
     gnDebuggerSetErrorMessage(debugger, (gnMessageData){
         .message = gnCreateString(error)
     });
 }
 
-gnReturnCode gnCreateShaderModuleFn(gnShaderModule module, gnOutputDevice device, gnShaderModuleInfo shaderModuleInfo) {
+gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
     module->shaderModule = malloc(sizeof(struct gnPlatformShaderModule_t));
 
     spvc_context context = NULL;
@@ -42,6 +42,10 @@ gnReturnCode gnCreateShaderModuleFn(gnShaderModule module, gnOutputDevice device
         spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, binding);
     }
 
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_PUSH_CONSTANT, &list, &count);
+    for (int i = 0; i < count; i++) {
+        // TODO: get the buffer index
+    }
 
     spvc_compiler_create_compiler_options(compiler, &options);
     spvc_compiler_options_set_uint(options, SPVC_COMPILER_OPTION_MSL_VERSION, 200);
@@ -96,6 +100,6 @@ gnReturnCode gnCreateShaderModuleFn(gnShaderModule module, gnOutputDevice device
     return GN_SUCCESS;
 }
 
-void gnDestroyShaderModuleFn(struct gnShaderModule_t* module) {
+void destroyMetalShaderModule(gnShaderModule module) {
     free(module->shaderModule);
 }

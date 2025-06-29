@@ -5,3 +5,6 @@
 typedef struct gnPlatformCommandPool_t {
     id<MTLCommandQueue> commandQueue;
 } gnPlatformCommandPool;
+
+gnReturnCode createMetalCommandPool(gnCommandPool commandPool, gnDevice device, gnCommandPoolInfo info);
+void destroyMetalCommandPool(gnCommandPool commandPool);

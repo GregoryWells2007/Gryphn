@@ -2,11 +2,11 @@
 #include <uniforms/gryphn_uniform.h>
 #include "metal_uniform.h"
 
-gnReturnCode gnCreateUniformPoolFn(gnUniformPool pool, gnDeviceHandle device) {
+gnReturnCode createMetalUniformPool(gnUniformPool pool, gnDeviceHandle device) {
     return GN_SUCCESS;
 }
 
-gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, const gnUniformAllocationInfo allocInfo) {
+gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationInfo allocInfo) {
     gnUniform* uniforms = malloc(sizeof(gnUniform) * allocInfo.setCount);
     for (int i = 0; i < allocInfo.setCount; i++) {
         uniforms[i] = malloc(sizeof(struct gnUniform_t));
@@ -20,4 +20,4 @@ gnUniform* gnUniformPoolAllocateUniformsFn(gnUniformPool pool, const gnUniformAl
     return uniforms;
 }
 
-void gnDestroyUniformPoolFn(gnUniformPool pool) { }
+void destroyMetalUniformPool(gnUniformPool pool) { free(pool->uniformPool); }

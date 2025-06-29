@@ -10,3 +10,8 @@ typedef struct gnPlatformCommandBuffer_t {
     struct gnGraphicsPipeline_t* boundGraphcisPipeline;
     gnBufferHandle indexBuffer;
 } gnPlatformCommandBuffer;
+
+gnReturnCode allocateMetalCommandBuffers(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPool pool);
+void resetMetalCommandBuffer(gnCommandBuffer commandBuffer);
+gnReturnCode beginMetalCommandBuffer(gnCommandBuffer commandBuffer);
+gnReturnCode endMetalCommandBuffer(gnCommandBuffer commandBuffer);

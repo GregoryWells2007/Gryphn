@@ -5,7 +5,7 @@
 #include "texture/metal_texture.h"
 #include "sync/semaphore/metal_semaphore.h"
 
-gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo) {
+gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
     if (presentationInfo.minImageCount > 3) {
         gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
             .message = gnCreateString("On Metal you cannot have more than 3 images in a presentation queue")
@@ -22,8 +22,8 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQ
 
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
-    MTLPixelFormat convertedFormat = mtlGryphnFormatToVulkanFormat(presentationInfo.format.format);
-    CGColorSpaceRef convertedColorSpace = mtlGryphnColorSpaceToVulkanColorSpace(presentationInfo.format.colorSpace);
+    MTLPixelFormat convertedFormat = mtlGryphnFormatToMetalFormat(presentationInfo.format.format);
+    CGColorSpaceRef convertedColorSpace = mtlGryphnColorSpaceToMetalColorSpace(presentationInfo.format.colorSpace);
 
     presentationQueue->presentationQueue->textureCount = presentationInfo.minImageCount;
     presentationQueue->presentationQueue->textures = malloc(sizeof(id<MTLTexture>) * presentationInfo.minImageCount);
@@ -47,7 +47,7 @@ gnReturnCode gnCreatePresentationQueueFn(gnPresentationQueueHandle presentationQ
     return GN_SUCCESS;
 }
 
-gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueueHandle presentationQueue, uint64_t timeout, struct gnSemaphore_t* semaphore, uint32_t* imageIndex) {
+gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
     semaphore->semaphore->eventTriggered = gnFalse;
     *imageIndex = presentationQueue->presentationQueue->currentImage;
     presentationQueue->presentationQueue->currentImage++;
@@ -56,7 +56,7 @@ gnReturnCode gnPresentationQueueGetImageFn(gnPresentationQueueHandle presentatio
     return GN_SUCCESS;
 }
 
-void gnDestroyPresentationQueueFn(gnPresentationQueueHandle presentationQueue) {
+void destroyMetalPresentationQueue(gnPresentationQueueHandle presentationQueue) {
     for (int i = 0; i < presentationQueue->imageCount; i++) {
         [presentationQueue->presentationQueue->textures[i] release];
     }

@@ -28,7 +28,7 @@ MTLStoreAction mtlGryphnStoreOperation(gnStoreOperation storeOperation) {
     }
 }
 
-gnReturnCode gnCreateFramebufferFn(gnFramebuffer framebuffer, gnOutputDevice device, gnFramebufferInfo info) {
+gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice device, gnFramebufferInfo info) {
     framebuffer->framebuffer = malloc(sizeof(struct gnPlatformFramebuffer_t));
     if (info.attachmentCount != info.renderPassDescriptor->info.attachmentCount) {
         gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
@@ -74,7 +74,7 @@ gnReturnCode gnCreateFramebufferFn(gnFramebuffer framebuffer, gnOutputDevice dev
     return GN_SUCCESS;
 }
 
-void gnDestroyFramebufferFn(struct gnFramebuffer_t* framebuffer) {
+void destroyMetalFramebuffer(gnFramebuffer framebuffer) {
     [framebuffer->framebuffer->framebuffer release];
     free(framebuffer->framebuffer);
 }

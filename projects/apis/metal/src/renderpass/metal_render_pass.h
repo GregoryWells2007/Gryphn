@@ -5,3 +5,6 @@
 typedef struct gnPlatformRenderPassDescriptor_t {
     MTLRenderPassDescriptor* passDescriptor;
 } gnPlatformRenderPassDescriptor;
+
+gnReturnCode createMetalRenderPass(gnRenderPassDescriptor renderPass, gnDevice device, gnRenderPassDescriptorInfo info);
+void destroyMetalRenderPass(gnRenderPassDescriptor renderPass);

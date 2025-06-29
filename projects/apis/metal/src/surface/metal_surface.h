@@ -7,8 +7,8 @@ typedef struct gnPlatformWindowSurface_t {
 } gnPlatformWindowSurface;
 
 
-MTLPixelFormat mtlGryphnFormatToVulkanFormat(gnImageFormat format);
-CGColorSpaceRef mtlGryphnColorSpaceToVulkanColorSpace(gnColorSpace colorSpace);
+MTLPixelFormat mtlGryphnFormatToMetalFormat(gnImageFormat format);
+CGColorSpaceRef mtlGryphnColorSpaceToMetalColorSpace(gnColorSpace colorSpace);
 
 gnReturnCode createMetalSurface(gnWindowSurface windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);
 gnSurfaceDetails getMetalSurfaceDetails(gnWindowSurface windowSurface, gnPhysicalDevice device);
