@@ -5,7 +5,7 @@
 
 typedef struct gnPlatformGraphicsPipeline_t {
     id<MTLRenderPipelineState> graphicsPipeline;
-    metalBindingMaps fragmentShaderMaps;
+    metalBindingMaps vertexShaderMaps, fragmentShaderMaps;
 } gnPlatformGraphicsPipeline;
 
 gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info);

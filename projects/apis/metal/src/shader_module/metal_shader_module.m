@@ -35,6 +35,35 @@ metalBindingMapArrayList loadTextureBindingInformation(spvc_resources resources,
     return bindings;
 }
 
+metalBindingMapArrayList loadUniformBufferInformation(spvc_resources resources, spvc_compiler compiler, gnShaderModuleStage stage) {
+    metalBindingMapArrayList bindings = metalBindingMapArrayListCreate();
+
+    const spvc_reflected_resource *list = NULL;
+    size_t count;
+
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_UNIFORM_BUFFER, &list, &count);
+
+    for (int i = 0; i < count; i++){
+        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
+                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
+
+        uint32_t realBinding = binding;
+
+        // if ((stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE)
+            realBinding += 1;
+
+        metalBindingMap map = {
+            .set = set, .binding = binding,
+            .metalBindingIndex = realBinding
+        };
+        metalBindingMapArrayListAdd(&bindings, map);
+
+        spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
+        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, realBinding);
+    }
+    return bindings;
+}
+
 gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
     module->shaderModule = malloc(sizeof(struct gnPlatformShaderModule_t));
 
@@ -53,23 +82,13 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     spvc_context_create_compiler(context, SPVC_BACKEND_MSL, ir, SPVC_CAPTURE_MODE_COPY, &compiler);
 
     spvc_compiler_create_shader_resources(compiler, &resources);
-    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_UNIFORM_BUFFER, &list, &count);
-
-    for (int i = 0; i < count; i++){
-        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
-                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
-
-        if ((shaderModuleInfo.stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE)
-            binding += 1;
-        spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
-        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, binding);
-    }
 
     spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_PUSH_CONSTANT, &list, &count);
     for (int i = 0; i < count; i++) {
         // TODO: get the buffer index
     }
 
+    module->shaderModule->maps.uniformBufferMaps = loadUniformBufferInformation(resources, compiler, shaderModuleInfo.stage);
     module->shaderModule->maps.textureMaps = loadTextureBindingInformation(resources, compiler);
 
     spvc_compiler_create_compiler_options(compiler, &options);
@@ -115,6 +134,9 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
         });
         return GN_FAILED_TO_FIND_ENTRY_POINT;
     }
+
+    printf("%s", result);
+
 
     NSString* functionName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
     module->shaderModule->function = [shaderLib newFunctionWithName:functionName];

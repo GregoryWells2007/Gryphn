@@ -11,6 +11,7 @@ typedef struct metalBindingMap {
 GN_ARRAY_LIST(metalBindingMap);
 
 typedef struct metalBindingMaps {
+    metalBindingMapArrayList uniformBufferMaps;
     metalBindingMapArrayList textureMaps;
 } metalBindingMaps;
 

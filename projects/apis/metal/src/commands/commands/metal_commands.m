@@ -115,10 +115,16 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
         if (uniform->uniform->bindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
             gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->bindings[i].data;
 
-            [encoder setVertexBuffer:info.buffer->buffer->buffer
-                offset:info.offset
-                atIndex:(info.binding + 1)
-            ];
+            for (int c = 0; c < buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.uniformBufferMaps.count; c++) {
+                metalBindingMap map = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.uniformBufferMaps.data[c];
+                if (map.set == set && map.binding == uniform->uniform->bindings[i].binding) {
+                    [encoder setVertexBuffer:info.buffer->buffer->buffer
+                        offset:info.offset
+                        atIndex:1
+                    ];
+                    break;
+                }
+            }
         } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
             for (int c = 0; c < buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.textureMaps.count; c++) {
                 metalBindingMap map = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.textureMaps.data[c];
