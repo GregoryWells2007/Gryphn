@@ -8,6 +8,7 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
     textureDescriptor.pixelFormat = mtlGryphnFormatToMetalFormat(info.format);
     textureDescriptor.width = info.width;
     textureDescriptor.height = info.height;
+
     texture->texture->texture = [device->outputDevice->device newTextureWithDescriptor:textureDescriptor];
     [textureDescriptor release];
     return GN_SUCCESS;

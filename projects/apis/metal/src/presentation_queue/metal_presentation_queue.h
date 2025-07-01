@@ -2,11 +2,12 @@
 #import <Metal/Metal.h>
 #include "presentation_queue/gryphn_presentation_queue.h"
 
-typedef struct gnPlatformPresentationQueue_t {
-    int textureCount;
-    id<MTLTexture>* textures;
+typedef id<MTLTexture> metalTexture;
+GN_ARRAY_LIST(metalTexture);
 
-    uint32_t currentImage;
+typedef struct gnPlatformPresentationQueue_t {
+    metalTextureArrayList textures;
+    uint32_tArrayList avaliableTextures;
 } gnPlatformPresentationQueue;
 
 gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo);

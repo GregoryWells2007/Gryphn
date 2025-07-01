@@ -27,7 +27,6 @@ gnSurfaceDetails getMetalSurfaceDetails(
     surfaceDetails.minImageCount = 2;
     surfaceDetails.maxImageCount = 3;
     CGSize size = windowSurface->windowSurface->layer.drawableSize;
-    printf("Size: %f %f\n", size.width, size.height);
     surfaceDetails.minImageSize = surfaceDetails.maxImageSize = surfaceDetails.currentSize = (gnUInt2){size.width, size.height};
     return surfaceDetails;
 }

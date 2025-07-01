@@ -15,6 +15,7 @@ typedef void MTKView;
 // MTKView* gnCreateMTKView(NSWindow* window);
 // void gnWindowSetMTKView(NSWindow* window, MTKView* view);
 CAMetalLayer* gnCreateCAMetalLayer(NSWindow* window);
+void gnResizeCAMetalLayer(NSWindow* window);
 // CAMetalLayer* gnGetCAMetalLayer(NSWindow* window);
 // void gnAttachMetalLayer(NSWindow* window, CAMetalLayer* layer);
 

@@ -137,8 +137,6 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
         return GN_FAILED_TO_FIND_ENTRY_POINT;
     }
 
-    printf("%s", result);
-
 
     NSString* functionName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
     module->shaderModule->function = [shaderLib newFunctionWithName:functionName];

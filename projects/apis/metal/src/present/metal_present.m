@@ -8,19 +8,15 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
     for (int i =0 ; i < info.presentationQueueCount; i++) {
     info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
     id<CAMetalDrawable> drawable = [info.presentationQueues[i]->info.surface->windowSurface->layer nextDrawable];
-    if (drawable == nil) {
-        return GN_FAILED_TO_CREATE_FRAMEBUFFER;
-    }
+    if (drawable == nil) return GN_FAILED_TO_CREATE_FRAMEBUFFER;
+
+    __block gnPresentationQueue presentationQueue = info.presentationQueues[i];
+    __block uint32_t imageIndex = info.imageIndices[i];
 
     id<MTLCommandBuffer> commandBuffer = [device->outputDevice->transferQueue commandBuffer];
-
-    MTLRenderPassDescriptor* passDesc = [MTLRenderPassDescriptor renderPassDescriptor];
-    passDesc.colorAttachments[0].texture = drawable.texture;
-    passDesc.colorAttachments[0].loadAction = MTLLoadActionClear;
-    passDesc.colorAttachments[0].storeAction = MTLStoreActionStore;
-    passDesc.colorAttachments[0].clearColor = MTLClearColorMake(1.0f, 0, 0, 1.0f);
-    id<MTLRenderCommandEncoder> render = [commandBuffer renderCommandEncoderWithDescriptor:passDesc];
-    [render endEncoding];
+    [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+        uint32_tArrayListAdd(&presentationQueue->presentationQueue->avaliableTextures, imageIndex);
+    }];
 
         id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
 

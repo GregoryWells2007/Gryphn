@@ -15,8 +15,8 @@ gnReturnCode metalSubmit(gnOutputDevice device, gnSubmitInfo info) {
             for (int c = 0; c < semsToSignalCount; c++) {
                 semsToSignal[c]->semaphore->eventTriggered = gnTrue;
             }
+            fenceToSignal->signaled = gnTrue;
         }];
-        fenceToSignal->signaled = gnTrue;
 
         [commandBuffer commit];
     }

@@ -100,9 +100,8 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     }
 
     MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
-    depthStencilDesc.depthWriteEnabled = info.depthStencil.depthWriteEnable,
-    depthStencilDesc.depthCompareFunction = info.depthStencil.depthWriteEnable,
-    depthStencilDesc.depthCompareFunction = mtlGrypnCompareOperation(info.depthStencil.operation),
+    depthStencilDesc.depthWriteEnabled = info.depthStencil.depthWriteEnable;
+    depthStencilDesc.depthCompareFunction = MTLCompareFunctionLess;
 
     graphicsPipeline->graphicsPipeline->depthState = [device->outputDevice->device newDepthStencilStateWithDescriptor:depthStencilDesc];
 
