@@ -1,5 +1,5 @@
 #pragma once
-#include <platform/gryphn_platform_include.h>
+#include <gryphn_platform_include.h>
 #include <gryphn_handles.h>
 #include <utils/gryphn_error_code.h>
 

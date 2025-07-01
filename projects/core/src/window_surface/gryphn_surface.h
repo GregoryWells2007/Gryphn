@@ -1,5 +1,5 @@
 #pragma once
-#include <platform/gryphn_platform_include.h>
+#include <gryphn_platform_include.h>
 #include <utils/gryphn_image_format.h>
 #include <instance/gryphn_instance.h>
 #include "output_device/gryphn_physical_output_device.h"
