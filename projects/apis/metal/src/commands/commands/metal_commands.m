@@ -33,6 +33,7 @@ void endMetalRenderPass(gnCommandBuffer buffer) {
 void bindMetalGraphicsPipeline(gnCommandBuffer buffer, struct gnGraphicsPipeline_t* graphicsPipeline) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setRenderPipelineState:graphicsPipeline->graphicsPipeline->graphicsPipeline];
+    [encoder setDepthStencilState:graphicsPipeline->graphicsPipeline->depthState];
 
     if (graphicsPipeline->info.cullMode.face == GN_CULL_FACE_BACK)
         [encoder setCullMode:MTLCullModeBack];

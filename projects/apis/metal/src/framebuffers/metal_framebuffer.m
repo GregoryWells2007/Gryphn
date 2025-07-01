@@ -6,11 +6,11 @@
 #include "output_device/gryphn_output_device.h"
 
 gnBool isDepthFormat(gnImageFormat format) {
-    return gnFalse;
+    return (format == GN_FORMAT_D24S8_UINT) || (format == GN_FORMAT_D32S8_UINT);
 }
 
 gnBool isStencilFormat(gnImageFormat format) {
-    return gnFalse;
+    return (format == GN_FORMAT_D24S8_UINT) || (format == GN_FORMAT_D32S8_UINT);
 }
 
 MTLLoadAction mtlGryphnLoadOperation(gnLoadOperation loadOperation) {
@@ -45,9 +45,11 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
     for (int i = 0; i < info.renderPassDescriptor->info.attachmentCount; i++) {
         gnBool wasDepthStencil = gnFalse;
         if (isDepthFormat(info.renderPassDescriptor->info.attachmentInfos[i].format)) {
-            gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-                .message = gnCreateString("Depth attachments are not currently supported in metal (get on this)")
-            });
+            MTLRenderPassDepthAttachmentDescriptor* depthAttachment = framebuffer->framebuffer->framebuffer.depthAttachment;
+            depthAttachment.texture = info.attachments[i]->texture->texture;
+            depthAttachment.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[i].loadOperation);
+            depthAttachment.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[i].storeOperation);
+            depthAttachment.clearDepth = 1.0f;
             wasDepthStencil = gnTrue;
         }
         if (isStencilFormat(info.renderPassDescriptor->info.attachmentInfos[i].format)) {

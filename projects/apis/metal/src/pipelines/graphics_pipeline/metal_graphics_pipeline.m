@@ -28,6 +28,19 @@ MTLVertexFormat mtlGryphnVertexFormat(gnVertexFormat format) {
     }
 }
 
+MTLCompareFunction mtlGrypnCompareOperation(gnCompareOperation operation) {
+    switch(operation) {
+    case GN_COMPARE_NEVER: return MTLCompareFunctionNever;
+    case GN_COMPARE_LESS: return MTLCompareFunctionLess;
+    case GN_COMPARE_EQUAL: return MTLCompareFunctionEqual;
+    case GN_COMPARE_LESS_OR_EQUAL: return MTLCompareFunctionLessEqual;
+    case GN_COMPARE_GREATER: return MTLCompareFunctionGreater;
+    case GN_COMPARE_NOT_EQUAL: return MTLCompareFunctionNotEqual;
+    case GN_COMPARE_GREATER_OR_EQUAL: return MTLCompareFunctionGreaterEqual;
+    case GN_COMPARE_ALWAYS: return MTLCompareFunctionAlways;
+    }
+}
+
 gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
@@ -75,10 +88,6 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     MTLVertexAttributeDescriptorArray* attributes = vertexDescriptor.attributes;
     MTLVertexBufferLayoutDescriptorArray* buffers = vertexDescriptor.layouts;
 
-    // layout(location = 0) in vec3 inPosition;
-    // layout(location = 1) in vec2 inUV;
-    // layout(location = 2) in vec3 inColor;
-
     int k = 0;
     for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
         [[buffers objectAtIndexedSubscript:info.shaderInputLayout.bufferAttributes[i].binding] setStride:info.shaderInputLayout.bufferAttributes[i].size];
@@ -89,6 +98,13 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
             k++;
         }
     }
+
+    MTLDepthStencilDescriptor* depthStencilDesc = [[MTLDepthStencilDescriptor alloc] init];
+    depthStencilDesc.depthWriteEnabled = info.depthStencil.depthWriteEnable,
+    depthStencilDesc.depthCompareFunction = info.depthStencil.depthWriteEnable,
+    depthStencilDesc.depthCompareFunction = mtlGrypnCompareOperation(info.depthStencil.operation),
+
+    graphicsPipeline->graphicsPipeline->depthState = [device->outputDevice->device newDepthStencilStateWithDescriptor:depthStencilDesc];
 
     [descriptor setVertexDescriptor:vertexDescriptor];
     NSError* error = nil;
