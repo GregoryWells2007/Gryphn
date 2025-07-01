@@ -120,7 +120,7 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
                 if (map.set == set && map.binding == uniform->uniform->bindings[i].binding) {
                     [encoder setVertexBuffer:info.buffer->buffer->buffer
                         offset:info.offset
-                        atIndex:1
+                        atIndex:map.metalBindingIndex
                     ];
                     break;
                 }
@@ -140,5 +140,5 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
 
 void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
-        // [encoder setVertexBytes:data length:layout.size atIndex:0]; // TODO: fix this
+        [encoder setVertexBytes:data length:layout.size atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.pushConstantIndex]; // TODO: fix this
 }

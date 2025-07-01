@@ -12,6 +12,7 @@ GN_ARRAY_LIST(metalBindingMap);
 
 typedef struct metalBindingMaps {
     metalBindingMapArrayList uniformBufferMaps;
+    uint32_t pushConstantIndex;
     metalBindingMapArrayList textureMaps;
 } metalBindingMaps;
 

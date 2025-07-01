@@ -83,13 +83,15 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
 
     spvc_compiler_create_shader_resources(compiler, &resources);
 
-    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_PUSH_CONSTANT, &list, &count);
-    for (int i = 0; i < count; i++) {
-        // TODO: get the buffer index
-    }
-
     module->shaderModule->maps.uniformBufferMaps = loadUniformBufferInformation(resources, compiler, shaderModuleInfo.stage);
     module->shaderModule->maps.textureMaps = loadTextureBindingInformation(resources, compiler);
+
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_PUSH_CONSTANT, &list, &count);
+    for (int i = 0; i < count; i++) {
+        spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
+        module->shaderModule->maps.pushConstantIndex = module->shaderModule->maps.uniformBufferMaps.data[module->shaderModule->maps.uniformBufferMaps.count - 1].metalBindingIndex + 1;
+        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, module->shaderModule->maps.pushConstantIndex);
+    }
 
     spvc_compiler_create_compiler_options(compiler, &options);
     spvc_compiler_options_set_uint(options, SPVC_COMPILER_OPTION_MSL_VERSION, 200);
