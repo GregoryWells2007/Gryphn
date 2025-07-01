@@ -12,6 +12,29 @@ void mtlSpirVErrorCallback(void *userdata, const char *error) {
     });
 }
 
+metalBindingMapArrayList loadTextureBindingInformation(spvc_resources resources, spvc_compiler compiler) {
+    metalBindingMapArrayList bindings = metalBindingMapArrayListCreate();
+
+    const spvc_reflected_resource *list = NULL;
+    size_t count;
+
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_SAMPLED_IMAGE, &list, &count);
+
+
+    for (int i = 0; i < count; i++) {
+        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
+                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
+
+        metalBindingMap map = {
+            .set = set, .binding = binding,
+            .metalBindingIndex = i
+        };
+        metalBindingMapArrayListAdd(&bindings, map);
+    }
+
+    return bindings;
+}
+
 gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
     module->shaderModule = malloc(sizeof(struct gnPlatformShaderModule_t));
 
@@ -47,6 +70,8 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
         // TODO: get the buffer index
     }
 
+    module->shaderModule->maps.textureMaps = loadTextureBindingInformation(resources, compiler);
+
     spvc_compiler_create_compiler_options(compiler, &options);
     spvc_compiler_options_set_uint(options, SPVC_COMPILER_OPTION_MSL_VERSION, 200);
     spvc_compiler_options_set_bool(options, SPVC_COMPILER_OPTION_MSL_ENABLE_DECORATION_BINDING, true);
@@ -59,8 +84,6 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     spvc_result res = spvc_compiler_compile(compiler, &result);
     if (res != SPVC_SUCCESS)
         return GN_FAILED_TO_CONVERT_SHADER_CODE;
-
-    printf("Shader Module code: %s\n", result);
 
     NSError* error = nil;
     MTLCompileOptions* mtloptions = nil;

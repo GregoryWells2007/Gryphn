@@ -1,4 +1,5 @@
 #include "metal_commands.h"
+#include "shader_module/metal_shader_module.h"
 
 void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
     int currentColorAttachment = 0;
@@ -119,8 +120,14 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
                 atIndex:(info.binding + 1)
             ];
         } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
-            gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
-            [encoder setFragmentTexture:info.texture->texture->texture atIndex:0];
+            for (int c = 0; c < buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.textureMaps.count; c++) {
+                metalBindingMap map = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.textureMaps.data[c];
+                if (map.set == set && map.binding == uniform->uniform->bindings[i].binding) {
+                    gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
+                    [encoder setFragmentTexture:info.texture->texture->texture atIndex:map.metalBindingIndex];
+                    break;
+                }
+            }
         }
     }
 }

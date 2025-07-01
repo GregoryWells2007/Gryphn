@@ -64,6 +64,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
             [descriptor setVertexFunction:info.shaderModules[i]->shaderModule->function];
         } else if (info.shaderModules[i]->info.stage == GN_FRAGMENT_SHADER_MODULE) {
             [descriptor setFragmentFunction:info.shaderModules[i]->shaderModule->function];
+            graphicsPipeline->graphicsPipeline->fragmentShaderMaps = info.shaderModules[i]->shaderModule->maps;
         } else {
             return GN_UNSUPPORTED_SHADER_MODULE;
         }
@@ -77,28 +78,16 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     // layout(location = 1) in vec2 inUV;
     // layout(location = 2) in vec3 inColor;
 
-
-    [attributes[0] setFormat:MTLVertexFormatFloat3];
-    [attributes[0] setOffset:0];
-    [attributes[0] setBufferIndex:0];
-    [attributes[1] setFormat:MTLVertexFormatFloat2];
-    [attributes[1] setOffset:(sizeof(float) * 3)];
-    [attributes[1] setBufferIndex:0];
-    [attributes[2] setFormat:MTLVertexFormatFloat3];
-    [attributes[2] setOffset:(sizeof(float) * 5)];
-    [attributes[2] setBufferIndex:0];
-    [buffers[0] setStride:(sizeof(float) * 8)];
-
-    // int k = 0;
-    // for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
-    //     [[buffers objectAtIndexedSubscript:info.shaderInputLayout.bufferAttributes[i].binding] setStride:info.shaderInputLayout.bufferAttributes[i].size];
-    //     for (int j = 0; j < info.shaderInputLayout.bufferAttributes[i].attributeCount; j++) {
-    //         attributes[k].bufferIndex = i;
-    //         attributes[k].offset = info.shaderInputLayout.bufferAttributes[i].attributes[j].offset;
-    //         attributes[k].format = mtlGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[i].attributes[j].format);
-    //         k++;
-    //     }
-    // }
+    int k = 0;
+    for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
+        [[buffers objectAtIndexedSubscript:info.shaderInputLayout.bufferAttributes[i].binding] setStride:info.shaderInputLayout.bufferAttributes[i].size];
+        for (int j = 0; j < info.shaderInputLayout.bufferAttributes[i].attributeCount; j++) {
+            attributes[k].bufferIndex = i;
+            attributes[k].offset = info.shaderInputLayout.bufferAttributes[i].attributes[j].offset;
+            attributes[k].format = mtlGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[i].attributes[j].format);
+            k++;
+        }
+    }
 
     [descriptor setVertexDescriptor:vertexDescriptor];
     NSError* error = nil;
