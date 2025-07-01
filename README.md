@@ -22,7 +22,7 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
 - Devices:
   - Provides a list of system devices, or in OpenGL it fakes a generic "OpenGL device" and then you create your output device with the specified features.
 - Presentation Queues:
-  - vulkan swapchain wrapper or in other APIs it just creates a fixed about of textures and swaps between them.<br />
+  - vulkan swapchain wrapper or in other APIs it just creates a fixed about of textures and swaps between them with a list of unused textures.<br />
 - Render Passes and framebuffers.
   - A Render Pass descriptor is an object that is used to tell the GPU how your objects are going to be rendered and the framebuffer is where they are output to.<br />
 - Graphics Pipelines:
@@ -38,14 +38,16 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
 - Textures:
   - Store image data so that it can be sampled in shaders <br />
 
+# Validation
+Gryphn its an interesting API to work with so ive attempted to put together a somewhat comprehensive set of validation tools that will tell you what you (or I) am doing wrong. Gryphn currently has support for 2 validation layers but I plan to support more in the future <br />
+Gryphn validation layers are meant to be more specific so there are certain ones for just checking if handles are valid or if you passed in properly supported features
+#### Supported layers: <br />
+- GN_DEBUGGER_LAYER_PLATFORM, this only does anything on vulkan for the time being, metal currently doesnt allow you to disable its validation but that API has a lot more problems when working with it so im fine with that for the time being, it will do things like enable vulkan validation layers or it will also allow the APIs to load there specific validation layers
+- GN_DEBUGGER_LAYER_FUNCTIONS, this is more for my own sake but when I am writing new backends or layers I may tend to forget to implement a specific function so this layer will just check to make sure that every function is loaded properly.
 # Plans
-#### Improved Loading Scheme <br />
-- Instead of loading everything from DLLS I am just going to compile everything into one single big static library and do something that I found when browsing the GLFW source code to load all of the functions so I can get rid of the DLLs classes<br />
 #### Improved Validation <br />
-- More layers, I want to have 3 layers for now
+- More layers
   - The Gryphn Validation layer which will check to make sure object passed in have proper gryphn handles and such
-  - The Gryphn function validator, this will run a sanity check to make sure all of the functions have been loaded from the loader properly and will also run for every extra layer that has been run to make sure all of the functions are implemented all of the way down.
-  - The Gryphn Platform validator, this will only be enabled on APIs like vulkan and it will enable vulkan validation layers.
 - Improved performance
   - Validation layers are slow right now and theres not much I can do on the vulkan side to speed them up but I want to work on the gryphn side to make sure they are as performant as possible<br />
 - Improved return codes
@@ -55,6 +57,8 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
 #### Performace
 - Pass info structs in by reference instead of by copy
 - Remove validation code from certain platform functions, add in validated functions for those cases
+#### Extensions/Supports
+- APIs like OpenGL dont support the full capabilities of vulkan so things like syncronization 
 # Utils library
 Gryphn comes with its own utlity library, aptly named Gryphn Utils, its written in C with some helper code in C++ that can be enabled by defining GN_UTILS_CPP, more information can be found on the gryphn utils github page, gryphn make extensive use of features in the utils library like Array Lists and 2d/3d types.
 # Usage
