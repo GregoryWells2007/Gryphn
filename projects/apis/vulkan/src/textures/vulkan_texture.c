@@ -163,8 +163,9 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
     else
         imageInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
-    if (vkCreateImage(device->outputDevice->device, &imageInfo, NULL, &texture->texture->image.image) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_IMAGE;
+    VkResult res = vkCreateImage(device->outputDevice->device, &imageInfo, NULL, &texture->texture->image.image);
+    if (res == VK_ERROR_FORMAT_NOT_SUPPORTED) return GN_UNSUPPORTED_IMAGE_FORMAT;
+    else if (res != VK_SUCCESS) return GN_FAILED_TO_CREATE_IMAGE;
 
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(device->outputDevice->device, texture->texture->image.image, &memRequirements);
