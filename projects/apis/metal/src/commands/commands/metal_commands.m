@@ -120,12 +120,12 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
             ];
         } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
             gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
-            [encoder setFragmentTexture:info.texture->texture->texture atIndex:(info.binding + 1)];
+            [encoder setFragmentTexture:info.texture->texture->texture atIndex:0];
         }
     }
 }
 
 void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
-        [encoder setVertexBytes:data length:layout.size atIndex:0]; // TODO: fix this
+        // [encoder setVertexBytes:data length:layout.size atIndex:0]; // TODO: fix this
 }

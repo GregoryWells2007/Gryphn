@@ -4,6 +4,8 @@
 #include "shader_module/metal_shader_module.h"
 #include "surface/metal_surface.h"
 
+#include "utils/math/gryphn_vec3.h"
+
 MTLBlendFactor mtlGryphnBlendFactor(gnBlendFactor factor) {
     switch (factor) {
     case GN_BLEND_FACTOR_ZERO: return MTLBlendFactorZero;
@@ -71,16 +73,32 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     MTLVertexAttributeDescriptorArray* attributes = vertexDescriptor.attributes;
     MTLVertexBufferLayoutDescriptorArray* buffers = vertexDescriptor.layouts;
 
-    int k = 0;
-    for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
-        [[buffers objectAtIndexedSubscript:info.shaderInputLayout.bufferAttributes[i].binding] setStride:info.shaderInputLayout.bufferAttributes[i].size];
-        for (int j = 0; j < info.shaderInputLayout.bufferAttributes[i].attributeCount; j++) {
-            attributes[k].bufferIndex = i;
-            attributes[k].offset = info.shaderInputLayout.bufferAttributes[i].attributes[j].offset;
-            attributes[k].format = mtlGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[i].attributes[j].format);
-            k++;
-        }
-    }
+    // layout(location = 0) in vec3 inPosition;
+    // layout(location = 1) in vec2 inUV;
+    // layout(location = 2) in vec3 inColor;
+
+
+    [attributes[0] setFormat:MTLVertexFormatFloat3];
+    [attributes[0] setOffset:0];
+    [attributes[0] setBufferIndex:0];
+    [attributes[1] setFormat:MTLVertexFormatFloat2];
+    [attributes[1] setOffset:(sizeof(float) * 3)];
+    [attributes[1] setBufferIndex:0];
+    [attributes[2] setFormat:MTLVertexFormatFloat3];
+    [attributes[2] setOffset:(sizeof(float) * 5)];
+    [attributes[2] setBufferIndex:0];
+    [buffers[0] setStride:(sizeof(float) * 8)];
+
+    // int k = 0;
+    // for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
+    //     [[buffers objectAtIndexedSubscript:info.shaderInputLayout.bufferAttributes[i].binding] setStride:info.shaderInputLayout.bufferAttributes[i].size];
+    //     for (int j = 0; j < info.shaderInputLayout.bufferAttributes[i].attributeCount; j++) {
+    //         attributes[k].bufferIndex = i;
+    //         attributes[k].offset = info.shaderInputLayout.bufferAttributes[i].attributes[j].offset;
+    //         attributes[k].format = mtlGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[i].attributes[j].format);
+    //         k++;
+    //     }
+    // }
 
     [descriptor setVertexDescriptor:vertexDescriptor];
     NSError* error = nil;

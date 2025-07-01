@@ -11,6 +11,7 @@ gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationIn
     for (int i = 0; i < allocInfo.setCount; i++) {
         uniforms[i] = malloc(sizeof(struct gnUniform_t));
         uniforms[i]->uniform = malloc(sizeof(gnPlatformUniform));
+        uniforms[i]->uniform->bindingCount = allocInfo.sets[i].uniformBindingCount;
         uniforms[i]->uniform->bindings = malloc(sizeof(metalUniformBinding) * allocInfo.sets[i].uniformBindingCount);
         for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
             uniforms[i]->uniform->bindings[c].type = allocInfo.sets[i].uniformBindings[c].type;

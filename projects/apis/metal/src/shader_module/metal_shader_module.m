@@ -60,6 +60,8 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     if (res != SPVC_SUCCESS)
         return GN_FAILED_TO_CONVERT_SHADER_CODE;
 
+    printf("Shader Module code: %s\n", result);
+
     NSError* error = nil;
     MTLCompileOptions* mtloptions = nil;
     NSString* sourceCode = [NSString stringWithCString:result encoding:NSUTF8StringEncoding];

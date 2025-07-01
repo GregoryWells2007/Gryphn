@@ -23,6 +23,10 @@ CAMetalLayer* gnCreateCAMetalLayer(NSWindow* window) {
     [layer setFramebufferOnly:YES];
     [view setLayer:layer];
     [view setWantsLayer:YES];
+    CGSize viewSize = view.bounds.size;
+    CGFloat scale = view.window.screen.backingScaleFactor;
+    layer.drawableSize = CGSizeMake(viewSize.width * scale,
+                                         viewSize.height * scale);
     return layer;
 }
 

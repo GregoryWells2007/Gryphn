@@ -26,7 +26,8 @@ gnSurfaceDetails getMetalSurfaceDetails(
     surfaceDetails.formats = (gnSurfaceFormat[]){ { GN_FORMAT_BGRA8_SRGB, GN_COLOR_SPACE_SRGB_NONLINEAR } };
     surfaceDetails.minImageCount = 2;
     surfaceDetails.maxImageCount = 3;
-    CGSize size = windowSurface->windowSurface->layer.visibleRect.size;
+    CGSize size = windowSurface->windowSurface->layer.drawableSize;
+    printf("Size: %f %f\n", size.width, size.height);
     surfaceDetails.minImageSize = surfaceDetails.maxImageSize = surfaceDetails.currentSize = (gnUInt2){size.width, size.height};
     return surfaceDetails;
 }
@@ -35,7 +36,7 @@ MTLPixelFormat mtlGryphnFormatToMetalFormat(gnImageFormat format) {
     switch (format) {
     case GN_FORMAT_NONE: return MTLPixelFormatInvalid;
     case GN_FORMAT_BGRA8_SRGB: return MTLPixelFormatBGRA8Unorm_sRGB;
-    case GN_FORMAT_RGBA8_SRGB: return MTLPixelFormatRG8Unorm_sRGB;
+    case GN_FORMAT_RGBA8_SRGB: return MTLPixelFormatRGBA8Unorm_sRGB;
     case GN_FORMAT_D24S8_UINT: return MTLPixelFormatDepth24Unorm_Stencil8;
     case GN_FORMAT_D32S8_UINT: return MTLPixelFormatDepth32Float_Stencil8;
     }
