@@ -6,8 +6,9 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
     MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
     textureDescriptor.pixelFormat = mtlGryphnFormatToMetalFormat(info.format);
-    textureDescriptor.width = info.width;
-    textureDescriptor.height = info.height;
+    textureDescriptor.width = info.extent.width;
+    textureDescriptor.height = info.extent.height;
+    textureDescriptor.depth = info.extent.depth;
 
     texture->texture->texture = [device->outputDevice->device newTextureWithDescriptor:textureDescriptor];
     [textureDescriptor release];
@@ -17,10 +18,10 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
 void metalTextureData(gnTextureHandle texture, void* pixelData) {
     MTLRegion region = {
         { 0, 0, 0 },
-        {texture->info.width, texture->info.height, 1}
+        {texture->info.extent.width, texture->info.extent.width, texture->info.extent.depth}
     };
 
-    NSUInteger bytesPerRow = 4 * texture->info.width; // TODO: fix this should not be set to 4
+    NSUInteger bytesPerRow = 4 * texture->info.extent.width; // TODO: fix this should not be set to 4
     [texture->texture->texture replaceRegion:region
                 mipmapLevel:0
                   withBytes:pixelData

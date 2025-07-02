@@ -16,7 +16,6 @@ typedef struct gnPlatformTexture_t {
     VkSampler sampler;
 
     size_t size;
-    uint32_t width, height;
     gnBool beenWrittenToo;
 } gnPlatformTexture;
 

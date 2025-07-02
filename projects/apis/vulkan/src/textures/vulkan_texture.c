@@ -94,7 +94,7 @@ void VkTransitionImageLayout(gnDevice device, VkImage image, gnImageFormat forma
     gnEndVulkanTransferOperation(device, transferBuffer);
 }
 
-void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, uint32_t width, uint32_t height, gnDevice device) {
+void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, gnExtent3D extent, gnDevice device) {
     VkCommandBuffer transferBuffer = gnBeginVulkanTransferOperation(device);
 
     VkBufferImageCopy region = {
@@ -109,9 +109,9 @@ void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, uint32_t wi
 
         .imageOffset = (VkOffset3D){0, 0, 0},
         .imageExtent = (VkExtent3D){
-            width,
-            height,
-            1
+            extent.width,
+            extent.height,
+            extent.depth
         }
     };
 
@@ -130,7 +130,7 @@ void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, uint32_t wi
 gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
 
-    size_t imageSize = info.width * info.height;
+    size_t imageSize = info.extent.width * info.extent.height;
     if (info.format == GN_FORMAT_BGRA8_SRGB) { imageSize *= 4; }
     if (info.format == GN_FORMAT_RGBA8_SRGB) { imageSize *= 4; }
 
@@ -148,9 +148,9 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
         .samples = VK_SAMPLE_COUNT_1_BIT,
         .extent = {
-            .width = info.width,
-            .height = info.height,
-            .depth = 1
+            .width = info.extent.width,
+            .height = info.extent.height,
+            .depth = info.extent.depth
         },
         .mipLevels = 1,
         .arrayLayers = 1,
@@ -182,9 +182,6 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         return GN_FAILED_TO_ALLOCATE_MEMORY;
 
     vkBindImageMemory(device->outputDevice->device, texture->texture->image.image, texture->texture->image.memory, 0);
-
-    texture->texture->width = info.width;
-    texture->texture->height = info.height;
 
     texture->texture->beenWrittenToo = gnFalse;
 
@@ -247,7 +244,7 @@ void textureData(gnTextureHandle texture, void* pixelData) {
 
     //gnDevice device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout
     VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-    VkCopyBufferToImage(texture->texture->buffer, texture->texture->image, texture->texture->width, texture->texture->height, texture->device);
+    VkCopyBufferToImage(texture->texture->buffer, texture->texture->image, texture->info.extent, texture->device);
     VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     texture->texture->beenWrittenToo = gnTrue;

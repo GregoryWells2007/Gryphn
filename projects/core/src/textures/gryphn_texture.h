@@ -1,7 +1,7 @@
 #pragma once
-#include "stdint.h"
 #include "utils/gryphn_image_format.h"
 #include "utils/gryphn_error_code.h"
+#include "utils/math/gryphn_vec3.h"
 #include <gryphn_handles.h>
 
 typedef enum gnTextureType {
@@ -17,8 +17,7 @@ typedef enum gnTextureWrap {
 } gnTextureWrap;
 
 typedef struct gnTextureInfo {
-    uint32_t width;
-    uint32_t height;
+    gnExtent3D extent;
     gnTextureType type;
     gnImageFormat format;
     gnTextureFilter minFilter, magFilter;
