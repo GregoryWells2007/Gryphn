@@ -8,3 +8,4 @@ target_include_directories(GryphnFunctionValidator PUBLIC ${CMAKE_CURRENT_SOURCE
 target_include_directories(GryphnFunctionValidator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../)
 target_include_directories(GryphnFunctionValidator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../core/src/)
 target_include_directories(GryphnFunctionValidator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../platform/)
+target_include_directories(GryphnFunctionValidator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/)

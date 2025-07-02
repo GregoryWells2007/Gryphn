@@ -15,6 +15,7 @@ typedef struct gnCommandFunctions_t {
     gnReturnCode (*_gnBeginCommandBuffer)(gnCommandBufferHandle commandBuffer);
     void (*_gnResetCommandBuffer)(gnCommandBufferHandle commandBuffer);
     gnReturnCode (*_gnEndCommandBuffer)(gnCommandBufferHandle commandBuffer);
+    void (*_gnDestroyCommandBuffer)(gnCommandBufferHandle commandBuffer);
 
     void (*_gnCommandBeginRenderPass)(gnCommandBufferHandle buffer, gnRenderPassInfo passInfo);
     void (*_gnCommandEndRenderPass)(gnCommandBufferHandle buffer);

@@ -4,6 +4,7 @@ gnReturnCode checkCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* comma
 gnReturnCode checkBeginCommandBuffer(gnCommandBufferHandle commandBuffer);
 void checkResetCommandBuffer(gnCommandBufferHandle commandBuffer);
 gnReturnCode checkEndCommandBuffer(gnCommandBufferHandle commandBuffer);
+void checkDestroyCommandBuffer(gnCommandBufferHandle commandBuffer);
 
 void checkCommandBeginRenderPass(gnCommandBufferHandle buffer, gnRenderPassInfo passInfo);
 void checkCommandEndRenderPass(gnCommandBufferHandle buffer);

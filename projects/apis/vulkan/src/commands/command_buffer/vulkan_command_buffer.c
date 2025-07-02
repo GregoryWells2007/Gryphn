@@ -78,3 +78,7 @@ void VkEndTransferOperation(VkCommandBuffer transferBuffer, VkCommandPool pool, 
     vkQueueWaitIdle(syncQueue);
     vkFreeCommandBuffers(device, pool, 1, &transferBuffer);
 }
+
+void destroyVulkanCommandBuffer(gnCommandBufferHandle commandBuffer) {
+    vkFreeCommandBuffers(commandBuffer->commandPool->device->outputDevice->device, commandBuffer->commandPool->commandPool->commandPool, 1, &commandBuffer->commandBuffer->buffer);
+}

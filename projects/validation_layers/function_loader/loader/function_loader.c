@@ -1,7 +1,7 @@
 #include "function_loader.h"
-#include "instance_functions.h"
-#include "device_functions.h"
-#include "command_functions.h"
+#include "src/instance_functions.h"
+#include "src/device_functions.h"
+#include "src/command_functions.h"
 
 gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
     return (gnInstanceFunctions){
@@ -94,6 +94,7 @@ gnCommandFunctions loadFunctionLoaderCommandFunctions() {
         ._gnBeginCommandBuffer = checkBeginCommandBuffer,
         ._gnResetCommandBuffer = checkResetCommandBuffer,
         ._gnEndCommandBuffer = checkEndCommandBuffer,
+        ._gnDestroyCommandBuffer = checkDestroyCommandBuffer,
 
         ._gnCommandBeginRenderPass = checkCommandBeginRenderPass,
         ._gnCommandEndRenderPass = checkCommandEndRenderPass,

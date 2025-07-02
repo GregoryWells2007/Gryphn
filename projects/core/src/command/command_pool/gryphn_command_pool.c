@@ -8,6 +8,7 @@ gnReturnCode gnCreateCommandPool(gnCommandPoolHandle* commandPool, gnOutputDevic
     (*commandPool)->instance = device->instance;
 
     (*commandPool)->device = device;
+    (*commandPool)->info = info;
     return device->instance->callingLayer->deviceFunctions._gnCreateCommandPool((*commandPool), device, info);
 }
 

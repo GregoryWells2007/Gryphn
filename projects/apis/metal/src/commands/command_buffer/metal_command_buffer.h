@@ -5,7 +5,9 @@
 #import <Metal/MTLCommandEncoder.h>
 
 typedef struct gnPlatformCommandBuffer_t {
+    gnBool isIndirectCommandBuffer;
     id<MTLCommandBuffer> commandBuffer;
+
     id<MTLCommandEncoder> encoder;
     gnGraphicsPipeline boundGraphcisPipeline;
     gnBufferHandle indexBuffer;
@@ -13,5 +15,7 @@ typedef struct gnPlatformCommandBuffer_t {
 
 gnReturnCode allocateMetalCommandBuffers(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPool pool);
 void resetMetalCommandBuffer(gnCommandBuffer commandBuffer);
+void resetMetalCommandBuffer_validated(gnCommandBuffer commandBuffer);
 gnReturnCode beginMetalCommandBuffer(gnCommandBuffer commandBuffer);
 gnReturnCode endMetalCommandBuffer(gnCommandBuffer commandBuffer);
+void destroyMetalCommandBuffer(gnCommandBuffer commandBuffer);

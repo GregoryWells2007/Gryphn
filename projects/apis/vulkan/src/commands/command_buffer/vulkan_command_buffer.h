@@ -19,3 +19,4 @@ gnReturnCode allocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint3
 gnReturnCode beginCommandBuffer(gnCommandBufferHandle commandBuffer);
 void resetCommandBuffer(gnCommandBufferHandle commandBuffer);
 gnReturnCode endCommandBuffer(gnCommandBufferHandle commandBuffer);
+void destroyVulkanCommandBuffer(gnCommandBufferHandle commandBuffer);

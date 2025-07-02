@@ -30,3 +30,7 @@ gnReturnCode gnBeginCommandBuffer(gnCommandBufferHandle commandBuffer) {
 gnReturnCode gnEndCommandBuffer(gnCommandBufferHandle commandBuffer) {
     return commandBuffer->commandPool->instance->callingLayer->commandFunctions._gnEndCommandBuffer(commandBuffer);
 }
+
+void gnDestroyCommandBuffer(gnCommandBufferHandle commandBuffer) {
+    commandBuffer->commandPool->instance->callingLayer->commandFunctions._gnDestroyCommandBuffer(commandBuffer);
+}

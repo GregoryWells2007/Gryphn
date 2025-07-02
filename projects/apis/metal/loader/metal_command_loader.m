@@ -8,6 +8,7 @@ gnCommandFunctions loadMetalCommandFunctions() {
         ._gnBeginCommandBuffer = beginMetalCommandBuffer,
         ._gnResetCommandBuffer = resetMetalCommandBuffer,
         ._gnEndCommandBuffer = endMetalCommandBuffer,
+        ._gnDestroyCommandBuffer = destroyMetalCommandBuffer,
 
         ._gnCommandBeginRenderPass = metelBeginRenderPass,
         ._gnCommandEndRenderPass = endMetalRenderPass,

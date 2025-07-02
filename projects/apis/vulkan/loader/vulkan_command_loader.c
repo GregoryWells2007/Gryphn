@@ -8,6 +8,7 @@ gnCommandFunctions loadVulkanCommandFunctions() {
         ._gnBeginCommandBuffer = beginCommandBuffer,
         ._gnResetCommandBuffer = resetCommandBuffer,
         ._gnEndCommandBuffer = endCommandBuffer,
+        ._gnDestroyCommandBuffer = destroyVulkanCommandBuffer,
 
         ._gnCommandBeginRenderPass = beginRenderPass,
         ._gnCommandEndRenderPass = endRenderPass,

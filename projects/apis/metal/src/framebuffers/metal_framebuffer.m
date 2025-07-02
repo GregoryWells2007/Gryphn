@@ -53,9 +53,8 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
             wasDepthStencil = gnTrue;
         }
         if (isStencilFormat(info.renderPassDescriptor->info.attachmentInfos[i].format)) {
-            gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-                .message = gnCreateString("Stencil attachments are not currently supported in metal (get on this)")
-            });
+            MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = framebuffer->framebuffer->framebuffer.stencilAttachment;
+            stencilAttachment.texture = info.attachments[i]->texture->texture;
             wasDepthStencil = gnTrue;
         }
 

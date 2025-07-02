@@ -27,3 +27,4 @@ gnReturnCode gnCommandPoolAllocateCommandBuffersFromList(gnCommandBufferArrayLis
 void gnResetCommandBuffer(gnCommandBufferHandle commandBuffer);
 gnReturnCode gnBeginCommandBuffer(gnCommandBufferHandle commandBuffer);
 gnReturnCode gnEndCommandBuffer(gnCommandBufferHandle commandBuffer);
+void gnDestroyCommandBuffer(gnCommandBufferHandle commandBuffer);

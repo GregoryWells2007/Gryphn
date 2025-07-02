@@ -21,6 +21,9 @@ void checkResetCommandBuffer(gnCommandBufferHandle commandBuffer) {
 gnReturnCode checkEndCommandBuffer(gnCommandBufferHandle commandBuffer) {
     CHECK_FUNCTION_WITH_RETURN_CODE_COMMAND(commandBuffer->instance, _gnEndCommandBuffer, commandBuffer);
 }
+void checkDestroyCommandBuffer(gnCommandBufferHandle buffer) {
+    CHECK_VOID_FUNCTION_COMMAND(buffer->instance, _gnDestroyCommandBuffer, buffer);
+}
 
 void checkCommandBeginRenderPass(gnCommandBufferHandle buffer, gnRenderPassInfo passInfo) {
     CHECK_VOID_FUNCTION_COMMAND(buffer->instance, _gnCommandBeginRenderPass, buffer, passInfo);
