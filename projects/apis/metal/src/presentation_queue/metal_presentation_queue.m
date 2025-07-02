@@ -35,6 +35,7 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     presentationQueue->imageCount = presentationInfo.minImageCount;
     presentationQueue->images = malloc(sizeof(gnTexture) * presentationInfo.minImageCount);
     presentationQueue->presentationQueue->textures = metalTextureArrayListCreate();
+    presentationQueue->presentationQueue->avaliableTextures = uint32_tArrayListCreate();
     for (int i = 0; i < presentationInfo.minImageCount; i++) {
         presentationQueue->images[i] = malloc(sizeof(struct gnTexture_t));
         presentationQueue->images[i]->texture = malloc(sizeof(gnPlatformTexture));
@@ -42,12 +43,12 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
         metalTextureArrayListAdd(&presentationQueue->presentationQueue->textures, presentationQueue->images[i]->texture->texture);
         uint32_tArrayListAdd(&presentationQueue->presentationQueue->avaliableTextures, i);
     }
+    [textureDescriptor release];
 
     return GN_SUCCESS;
 }
 
 gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
-    semaphore->semaphore->eventTriggered = gnFalse;
     while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
     *imageIndex = presentationQueue->presentationQueue->avaliableTextures.data[0];
     uint32_tArrayListPopHead(&presentationQueue->presentationQueue->avaliableTextures);
@@ -58,7 +59,10 @@ gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQue
 void destroyMetalPresentationQueue(gnPresentationQueueHandle presentationQueue) {
     free(presentationQueue->presentationQueue->avaliableTextures.data);
     presentationQueue->presentationQueue->avaliableTextures.count = 0;
-    for (int i = 0; i < presentationQueue->imageCount; i++)
+    for (int i = 0; i < presentationQueue->imageCount; i++) {
         [presentationQueue->images[i]->texture->texture release];
+        free(presentationQueue->images[i]->texture);
+        free(presentationQueue->images[i]);
+    }
     free(presentationQueue->presentationQueue);
 }
