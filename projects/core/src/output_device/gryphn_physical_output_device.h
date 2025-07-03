@@ -17,10 +17,10 @@ typedef struct gnPhysicalDeviceFeatures {
 } gnPhysicalDeviceFeatures;
 
 typedef enum gnQueueTypeFlags {
-    GN_QUEUE_GRAPHICS = 0x00000001,
-    GN_QUEUE_COMPUTE = 0x00000002,
-    GN_QUEUE_TRANSFER = 0x00000004,
-    GN_QUEUE_SPARSE_BINDING = 0x00000008
+    GN_QUEUE_GRAPHICS = 1,
+    GN_QUEUE_COMPUTE = 2,
+    GN_QUEUE_TRANSFER = 4,
+    GN_QUEUE_SPARSE_BINDING = 8
 } gnQueueTypeFlags;
 
 typedef struct gnQueueProperties {

@@ -1,7 +1,6 @@
 #pragma once
 #include <output_device/gryphn_physical_output_device.h>
 #include <utils/gryphn_error_code.h>
-#include "loader/src/gryphn_device_functions.h"
 
 typedef struct gnDeviceQueueInfo {
     int queueIndex;

@@ -18,6 +18,7 @@ typedef enum gnTextureWrap {
 
 typedef struct gnTextureInfo {
     gnExtent3D extent;
+    uint32_t mipmapLevels;
     gnTextureType type;
     gnImageFormat format;
     gnTextureFilter minFilter, magFilter;

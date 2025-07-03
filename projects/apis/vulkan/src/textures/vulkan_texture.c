@@ -35,6 +35,8 @@ VkImageAspectFlags vkGryphnGetAspectFlags(gnImageFormat format) {
 
 gnBool vkGryphnIsDepthStencil(gnImageFormat format) { return (format == GN_FORMAT_D32S8_UINT || format == GN_FORMAT_D24S8_UINT); }
 
+
+
 void VkTransitionImageLayout(gnDevice device, VkImage image, gnImageFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
     VkCommandBuffer transferBuffer = gnBeginVulkanTransferOperation(device);
 
@@ -124,8 +126,6 @@ void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, gnExtent3D 
 
     gnEndVulkanTransferOperation(device, transferBuffer);
 }
-
-#include "stdio.h"
 
 gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
