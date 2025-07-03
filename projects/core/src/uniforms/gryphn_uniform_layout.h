@@ -4,6 +4,7 @@
 
 typedef enum gnUniformType {
     GN_UNIFORM_BUFFER_DESCRIPTOR,
+    GN_SHADER_STORE_BUFFER_DESCRIPTOR,
     GN_IMAGE_DESCRIPTOR,
     GN_UNIFORM_TYPE_MAX
 } gnUniformType;

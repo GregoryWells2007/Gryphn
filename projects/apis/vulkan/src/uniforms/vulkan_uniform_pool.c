@@ -50,40 +50,26 @@ gnUniform* allocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInf
         };
 
         // TODO: redo this, its not warning me IDK why cuz its totally wrong
-        VkDescriptorPoolSize uniformBufferSize = {
-            .type = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER,
-            .descriptorCount = 0
-        };
-
-        VkDescriptorPoolSize imageSize = {
-            .type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER,
-            .descriptorCount = 0
-        };
-
+        VkDescriptorPoolSize poolSizes[GN_UNIFORM_TYPE_MAX];
         for (int i = 0; i < allocInfo.setCount; i++) {
             for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
-                if (allocInfo.sets[i].uniformBindings[c].type == GN_UNIFORM_BUFFER_DESCRIPTOR) uniformBufferSize.descriptorCount++;
-                if (allocInfo.sets[i].uniformBindings[c].type == GN_IMAGE_DESCRIPTOR) imageSize.descriptorCount++;
+                poolSizes[allocInfo.sets[i].uniformBindings[c].type].descriptorCount++;
             }
         }
 
         uint32_t count = 0;
-        VkDescriptorPoolSize poolSizes[2] = {};
+        VkDescriptorPoolSize realPoolSize[GN_UNIFORM_TYPE_MAX] = {};
 
-        if (uniformBufferSize.descriptorCount > 0) {
-            poolSizes[count] = uniformBufferSize;
-            count++;
-        }
-
-        if (imageSize.descriptorCount > 0) {
-            poolSizes[count] = imageSize;
+        for (int i = 0; i < GN_UNIFORM_TYPE_MAX; i++) {
+            if (poolSizes[i].descriptorCount <= 0) continue;
+            realPoolSize[count] = poolSizes[i];
             count++;
         }
 
         VkDescriptorPoolCreateInfo poolInfo = {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
             .poolSizeCount = count,
-            .pPoolSizes = poolSizes,
+            .pPoolSizes = realPoolSize,
             .maxSets = allocInfo.setCount
         };
 
