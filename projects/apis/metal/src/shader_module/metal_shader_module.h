@@ -3,23 +3,21 @@
 #include "utils/lists/gryphn_array_list.h"
 #import <Metal/Metal.h>
 
-typedef struct metalBindingMap {
-    uint32_t set;
-    uint32_t binding;
-    uint32_t metalBindingIndex;
-} metalBindingMap;
-GN_ARRAY_LIST(metalBindingMap);
+#define METAL_MAX_SET_COUNT 16
+#define METAL_MAX_BINDING_COUNT 16
 
-typedef struct metalBindingMaps {
-    metalBindingMapArrayList uniformBufferMaps;
-    uint32_t pushConstantIndex;
-    metalBindingMapArrayList textureMaps;
-} metalBindingMaps;
+typedef struct metalSetMap {
+    uint32_t bindings[METAL_MAX_BINDING_COUNT];
+} metalSetMap;
+
+typedef struct metalShaderMap {
+    metalSetMap sets[METAL_MAX_SET_COUNT];
+    uint32_t pushConstantBufferIndex;
+} metalShaderMap;
 
 typedef struct gnPlatformShaderModule_t {
     id<MTLFunction> function;
-    uint32_t pushConstantIndex;
-    metalBindingMaps maps;
+    metalShaderMap map;
 } gnPlatformShaderModule;
 
 gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);

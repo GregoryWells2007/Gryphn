@@ -48,6 +48,7 @@ gnDeviceFunctions loadMetalDeviceFunctions() {
         ._gnDestroyUniformPool = destroyMetalUniformPool,
 
         ._gnUpdateBufferUniform = updateMetalBufferUniform,
+        ._gnUpdateStorageUniform = updateMetalStorageUniform,
         ._gnUpdateImageUniform = updateMetalImageUniform,
 
         ._gnCreateTexture = createMetalTexture,

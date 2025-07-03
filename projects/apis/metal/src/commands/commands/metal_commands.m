@@ -115,31 +115,25 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
     for (int i = 0; i < uniform->uniform->bindingCount; i++) {
         if (uniform->uniform->bindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
             gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->bindings[i].data;
-
-            for (int c = 0; c < buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.uniformBufferMaps.count; c++) {
-                metalBindingMap map = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.uniformBufferMaps.data[c];
-                if (map.set == set && map.binding == uniform->uniform->bindings[i].binding) {
-                    [encoder setVertexBuffer:info.buffer->buffer->buffer
-                        offset:info.offset
-                        atIndex:map.metalBindingIndex
-                    ];
-                    break;
-                }
-            }
+            [encoder setVertexBuffer:info.buffer->buffer->buffer
+                offset:info.offset
+                atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.sets[set].bindings[info.binding]
+            ];
+        } else if (uniform->uniform->bindings[i].type == GN_SHADER_STORE_BUFFER_DESCRIPTOR) {
+            gnStorageUniformInfo info = *(gnStorageUniformInfo*)uniform->uniform->bindings[i].data;
+            [encoder setVertexBuffer:info.buffer->buffer->buffer
+                offset:info.offset
+                atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.sets[set].bindings[info.binding]
+            ];
         } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
-            for (int c = 0; c < buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.textureMaps.count; c++) {
-                metalBindingMap map = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.textureMaps.data[c];
-                if (map.set == set && map.binding == uniform->uniform->bindings[i].binding) {
-                    gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
-                    [encoder setFragmentTexture:info.texture->texture->texture atIndex:map.metalBindingIndex];
-                    break;
-                }
-            }
+            gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
+            [encoder setFragmentTexture:info.texture->texture->texture atIndex:
+            buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.sets[set].bindings[info.binding]];
         }
     }
 }
 
 void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
-        [encoder setVertexBytes:data length:layout.size atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.pushConstantIndex]; // TODO: fix this
+        [encoder setVertexBytes:data length:layout.size atIndex:1]; // TODO: fix this
 }

@@ -14,4 +14,5 @@ typedef struct gnPlatformUniform_t {
 } gnPlatformUniform;
 
 void updateMetalBufferUniform(gnUniform uniform, gnBufferUniformInfo* info);
+void updateMetalStorageUniform(gnUniform uniform, gnStorageUniformInfo* info);
 void updateMetalImageUniform(gnUniform uniform, gnImageUniformInfo* info);

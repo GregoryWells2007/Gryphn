@@ -75,10 +75,10 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     for (int i = 0; i < info.shaderModuleCount; i++) {
         if (info.shaderModules[i]->info.stage == GN_VERTEX_SHADER_MODULE) {
             [descriptor setVertexFunction:info.shaderModules[i]->shaderModule->function];
-            graphicsPipeline->graphicsPipeline->vertexShaderMaps = info.shaderModules[i]->shaderModule->maps;
+            graphicsPipeline->graphicsPipeline->vertexShaderMaps = info.shaderModules[i]->shaderModule->map;
         } else if (info.shaderModules[i]->info.stage == GN_FRAGMENT_SHADER_MODULE) {
             [descriptor setFragmentFunction:info.shaderModules[i]->shaderModule->function];
-            graphicsPipeline->graphicsPipeline->fragmentShaderMaps = info.shaderModules[i]->shaderModule->maps;
+            graphicsPipeline->graphicsPipeline->fragmentShaderMaps = info.shaderModules[i]->shaderModule->map;
         } else {
             return GN_UNSUPPORTED_SHADER_MODULE;
         }

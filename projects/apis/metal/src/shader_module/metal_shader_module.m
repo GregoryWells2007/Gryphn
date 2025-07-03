@@ -8,60 +8,8 @@
 void mtlSpirVErrorCallback(void *userdata, const char *error) {
     gnDebugger debugger = (gnDebugger)userdata;
     gnDebuggerSetErrorMessage(debugger, (gnMessageData){
-        .message = gnCreateString(error)
+        .message = gnCombineStrings(gnCreateString("shader compilation error MSL "), gnCreateString(error))
     });
-}
-
-metalBindingMapArrayList loadTextureBindingInformation(spvc_resources resources, spvc_compiler compiler) {
-    metalBindingMapArrayList bindings = metalBindingMapArrayListCreate();
-
-    const spvc_reflected_resource *list = NULL;
-    size_t count;
-
-    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_SAMPLED_IMAGE, &list, &count);
-
-
-    for (int i = 0; i < count; i++) {
-        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
-                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
-
-        metalBindingMap map = {
-            .set = set, .binding = binding,
-            .metalBindingIndex = i
-        };
-        metalBindingMapArrayListAdd(&bindings, map);
-    }
-
-    return bindings;
-}
-
-metalBindingMapArrayList loadUniformBufferInformation(spvc_resources resources, spvc_compiler compiler, gnShaderModuleStage stage) {
-    metalBindingMapArrayList bindings = metalBindingMapArrayListCreate();
-
-    const spvc_reflected_resource *list = NULL;
-    size_t count;
-
-    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_UNIFORM_BUFFER, &list, &count);
-
-    for (int i = 0; i < count; i++){
-        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
-                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
-
-        uint32_t realBinding = binding;
-
-        // if ((stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE)
-            realBinding += 1;
-
-        metalBindingMap map = {
-            .set = set, .binding = binding,
-            .metalBindingIndex = realBinding
-        };
-        metalBindingMapArrayListAdd(&bindings, map);
-
-        spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
-        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, realBinding);
-    }
-    return bindings;
 }
 
 gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
@@ -83,14 +31,50 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
 
     spvc_compiler_create_shader_resources(compiler, &resources);
 
-    module->shaderModule->maps.uniformBufferMaps = loadUniformBufferInformation(resources, compiler, shaderModuleInfo.stage);
-    module->shaderModule->maps.textureMaps = loadTextureBindingInformation(resources, compiler);
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_SHADER_RECORD_BUFFER, &list, &count);
+    for (int i = 0; i < count; i++) {
+        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
+                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding),
+        mslBinding = spvc_compiler_msl_get_automatic_resource_binding(compiler, list[i].id);
+        printf("%s: set %ui, binding %ui, mslBinding %ui\n", list[i].name, set, binding, mslBinding);
+    }
+
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_UNIFORM_BUFFER, &list, &count);
+    // [[buffer(0)]] is reserved for stage_in, [[buffer(1)]] is reserved for push_constant
+    uint32_t currentBufferBinding = 2, currentTextureBinding = 0;
+    for (int i = 0; i < count; i++) {
+        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
+                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
+        spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
+        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, currentBufferBinding);
+        module->shaderModule->map.sets[set].bindings[binding] = currentBufferBinding;
+        currentBufferBinding++;
+    }
+
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_SAMPLED_IMAGE, &list, &count);
+    for (int i = 0; i < count; i++) {
+        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
+                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
+        spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
+        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, currentTextureBinding);
+        module->shaderModule->map.sets[set].bindings[binding] = currentTextureBinding;
+        currentTextureBinding++;
+    }
+
+    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_STORAGE_BUFFER, &list, &count);
+    for (int i = 0; i < count; i++) {
+        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
+                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding);
+        spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
+        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, currentBufferBinding);
+        module->shaderModule->map.sets[set].bindings[binding] = currentBufferBinding;
+        currentBufferBinding++;
+    }
 
     spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_PUSH_CONSTANT, &list, &count);
     for (int i = 0; i < count; i++) {
         spvc_compiler_unset_decoration(compiler, list[i].id, SpvDecorationBinding);
-        module->shaderModule->maps.pushConstantIndex = module->shaderModule->maps.uniformBufferMaps.data[module->shaderModule->maps.uniformBufferMaps.count - 1].metalBindingIndex + 1;
-        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, module->shaderModule->maps.pushConstantIndex);
+        spvc_compiler_set_decoration(compiler, list[i].id, SpvDecorationBinding, 1);
     }
 
     spvc_compiler_create_compiler_options(compiler, &options);
@@ -142,6 +126,8 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     module->shaderModule->function = [shaderLib newFunctionWithName:functionName];
 
     [shaderLib release];
+
+    printf("%s\n", result);
 
     spvc_context_destroy(context);
     return GN_SUCCESS;
