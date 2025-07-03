@@ -11,6 +11,9 @@ gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device,
 void gnBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
     buffer->device->instance->callingLayer->deviceFunctions._gnBufferData(buffer, dataSize, data);
 }
+void gnBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, gnBufferMemory data) {
+    buffer->device->instance->callingLayer->deviceFunctions._gnBufferSubData(buffer, offset, dataSize, data);
+}
 void* gnMapBuffer(gnBufferHandle buffer) {
     if (buffer->info.usage == GN_STATIC_DRAW) return NULL;
     return buffer->device->instance->callingLayer->deviceFunctions._gnMapBuffer(buffer);

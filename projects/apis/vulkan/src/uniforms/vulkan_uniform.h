@@ -7,4 +7,5 @@ typedef struct gnPlatformUniform_t {
 } gnPlatformUniform;
 
 void updateBufferUniform(gnUniform uniform, gnBufferUniformInfo* info);
+void updateVulkanStorageUniform(gnUniform uniform, gnStorageUniformInfo* info);
 void updateImageUniform(gnUniform uniform, gnImageUniformInfo* info);

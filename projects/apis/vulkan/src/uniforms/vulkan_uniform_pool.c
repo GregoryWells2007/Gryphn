@@ -50,26 +50,26 @@ gnUniform* allocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInf
         };
 
         // TODO: redo this, its not warning me IDK why cuz its totally wrong
-        VkDescriptorPoolSize poolSizes[GN_UNIFORM_TYPE_MAX];
-        for (int i = 0; i < allocInfo.setCount; i++) {
-            for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
+        VkDescriptorPoolSize poolSizes[GN_UNIFORM_TYPE_MAX] = { };
+        for (int i = 0; i < allocInfo.setCount; i++)
+            for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++)
                 poolSizes[allocInfo.sets[i].uniformBindings[c].type].descriptorCount++;
-            }
-        }
 
         uint32_t count = 0;
-        VkDescriptorPoolSize realPoolSize[GN_UNIFORM_TYPE_MAX] = {};
+        VkDescriptorPoolSize realPoolSizes[GN_UNIFORM_TYPE_MAX] = {};
 
         for (int i = 0; i < GN_UNIFORM_TYPE_MAX; i++) {
-            if (poolSizes[i].descriptorCount <= 0) continue;
-            realPoolSize[count] = poolSizes[i];
-            count++;
+            poolSizes[i].type = vkGryphnUniformType(i);
+            if (poolSizes[i].descriptorCount > 0) {
+                realPoolSizes[count] = poolSizes[i];
+                count++;
+            }
         }
 
         VkDescriptorPoolCreateInfo poolInfo = {
             .sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO,
             .poolSizeCount = count,
-            .pPoolSizes = realPoolSize,
+            .pPoolSizes = realPoolSizes,
             .maxSets = allocInfo.setCount
         };
 

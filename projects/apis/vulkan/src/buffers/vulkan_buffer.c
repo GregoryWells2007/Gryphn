@@ -11,6 +11,7 @@ VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
     case GN_VERTEX_BUFFER: usageFlags |= VK_BUFFER_USAGE_VERTEX_BUFFER_BIT; break;
     case GN_INDEX_BUFFER: usageFlags |= VK_BUFFER_USAGE_INDEX_BUFFER_BIT; break;
     case GN_UNIFORM_BUFFER: usageFlags |= VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT; break;
+    case GN_STORAGE_BUFFER: usageFlags |= VK_BUFFER_USAGE_STORAGE_BUFFER_BIT; break;
     }
     return usageFlags;
 }
@@ -111,6 +112,22 @@ void bufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
     } else {
         vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, dataSize, 0, &bufferData);
         memcpy(bufferData, data, dataSize);
+        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory);
+    }
+}
+void vulkanBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, void* data) {
+    void* bufferData;
+    if (buffer->buffer->useStagingBuffer) {
+        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory, 0, dataSize, 0, &bufferData);
+        memcpy(bufferData + offset, data, dataSize);
+        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory);
+        VkCopyBuffer(
+            buffer->buffer->stagingBuffer.buffer, buffer->buffer->buffer.buffer, dataSize,
+            buffer->device->outputDevice->transferCommandPool, buffer->device->outputDevice->device,
+            buffer->device->outputDevice->transferQueue);
+    } else {
+        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, dataSize, 0, &bufferData);
+        memcpy(bufferData + offset, data, dataSize);
         vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory);
     }
 }

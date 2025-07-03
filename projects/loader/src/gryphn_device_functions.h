@@ -13,6 +13,7 @@ typedef struct gnCommandPoolInfo gnCommandPoolInfo;
 typedef struct gnBufferInfo gnBufferInfo;
 typedef struct gnUniformAllocationInfo gnUniformAllocationInfo;
 typedef struct gnBufferUniformInfo gnBufferUniformInfo;
+typedef struct gnStorageUniformInfo gnStorageUniformInfo;
 typedef struct gnImageUniformInfo gnImageUniformInfo;
 typedef struct gnTextureInfo gnTextureInfo;
 typedef struct gnSubmitInfo gnSubmitInfo;
@@ -43,6 +44,7 @@ typedef struct gnDeviceFunctions {
 
     gnReturnCode (*_gnCreateBuffer)(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
     void (*_gnBufferData)(gnBufferHandle buffer, size_t size, void* data);
+    void (*_gnBufferSubData)(gnBufferHandle buffer, size_t offset, size_t dataSize, void* data);
     void* (*_gnMapBuffer)(gnBufferHandle buffer);
     void (*_gnDestroyBuffer)(gnBufferHandle buffer);
 
@@ -51,6 +53,7 @@ typedef struct gnDeviceFunctions {
     void (*_gnDestroyUniformPool)(gnUniformPool pool);
 
     void (*_gnUpdateBufferUniform)(gnUniform uniform, gnBufferUniformInfo* bufferInfo);
+    void (*_gnUpdateStorageUniform)(gnUniform uniform, gnStorageUniformInfo* storageInfo);
     void (*_gnUpdateImageUniform)(gnUniform uniform, gnImageUniformInfo* imageInfo);
 
     gnReturnCode (*_gnCreateTexture)(gnTexture texture, gnDevice device, const gnTextureInfo info);

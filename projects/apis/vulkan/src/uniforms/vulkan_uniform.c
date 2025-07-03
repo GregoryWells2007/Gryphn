@@ -24,6 +24,26 @@ void updateBufferUniform(gnUniform uniform, gnBufferUniformInfo* info) {
     vkUpdateDescriptorSets(uniform->pool->device->outputDevice->device, 1, &write, 0, NULL);
 }
 
+void updateVulkanStorageUniform(gnUniform uniform, gnStorageUniformInfo* info) {
+    VkDescriptorBufferInfo bufferInfo = {
+        .buffer = info->buffer->buffer->buffer.buffer,
+        .offset = info->offset,
+        .range = info->size
+    };
+
+    VkWriteDescriptorSet write = {
+        .sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET,
+        .descriptorType = VK_DESCRIPTOR_TYPE_STORAGE_BUFFER,
+        .descriptorCount = 1,
+        .pBufferInfo = &bufferInfo,
+        .dstSet = uniform->uniform->set,
+        .dstBinding = info->binding,
+        .dstArrayElement = 0
+    };
+
+    vkUpdateDescriptorSets(uniform->pool->device->outputDevice->device, 1, &write, 0, NULL);
+}
+
 void updateImageUniform(gnUniform uniform, gnImageUniformInfo* info) {
     VkDescriptorImageInfo imageInfo = {
         .imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL,

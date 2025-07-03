@@ -7,6 +7,10 @@ void gnUpdateBufferUniform(gnUniform uniform, gnBufferUniformInfo bufferInfo) {
     uniform->pool->device->instance->callingLayer->deviceFunctions._gnUpdateBufferUniform(uniform, &bufferInfo);
 }
 
+void gnUpdateStorageUniform(gnUniform uniform, gnStorageUniformInfo storageInfo) {
+    uniform->pool->device->instance->callingLayer->deviceFunctions._gnUpdateStorageUniform(uniform, &storageInfo);
+}
+
 void gnUpdateImageUniform(gnUniform uniform, gnImageUniformInfo imageInfo) {
     uniform->pool->device->instance->callingLayer->deviceFunctions._gnUpdateImageUniform(uniform, &imageInfo);
 }

@@ -63,6 +63,7 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
 
         ._gnCreateBuffer = checkCreateBuffer,
         ._gnBufferData = checkBufferData,
+        ._gnBufferSubData = checkBufferSubData,
         ._gnMapBuffer = checkMapBuffer,
         ._gnDestroyBuffer = checkDestroyBuffer,
 
@@ -71,6 +72,7 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
         ._gnDestroyUniformPool = checkDestroyUniformPool,
 
         ._gnUpdateBufferUniform = checkUpdateBufferUniform,
+        ._gnUpdateStorageUniform = checkUpdateStorageUniform,
         ._gnUpdateImageUniform = checkUpdateImageUniform,
 
         ._gnCreateTexture = checkCreateTexture,

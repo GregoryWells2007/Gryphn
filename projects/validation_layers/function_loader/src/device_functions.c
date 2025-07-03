@@ -110,6 +110,9 @@ gnReturnCode checkCreateBuffer(gnBufferHandle buffer, gnDeviceHandle device, gnB
 void checkBufferData(gnBufferHandle buffer, size_t size, void* data) {
     CHECK_VOID_FUNCTION(buffer->device->instance, _gnBufferData, buffer, size, data);
 }
+void checkBufferSubData(gnBufferHandle buffer, size_t offset, size_t size, void* data) {
+    CHECK_VOID_FUNCTION(buffer->device->instance, _gnBufferSubData, buffer, offset, size, data);
+}
 void* checkMapBuffer(gnBufferHandle buffer) {
     loaderLayer* nextLayer = loaderGetNextLayer(buffer->device->instance);
     if (nextLayer->deviceFunctions._gnMapBuffer == NULL) {
@@ -145,6 +148,9 @@ void checkDestroyUniformPool(gnUniformPool pool) {
 
 void checkUpdateBufferUniform(gnUniform uniform, gnBufferUniformInfo* bufferInfo) {
     CHECK_VOID_FUNCTION(uniform->pool->device->instance, _gnUpdateBufferUniform, uniform, bufferInfo);
+}
+void checkUpdateStorageUniform(gnUniform uniform, gnStorageUniformInfo* storageInfo) {
+    CHECK_VOID_FUNCTION(uniform->pool->device->instance, _gnUpdateStorageUniform, uniform, storageInfo);
 }
 void checkUpdateImageUniform(gnUniform uniform, gnImageUniformInfo* imageInfo) {
     CHECK_VOID_FUNCTION(uniform->pool->device->instance, _gnUpdateImageUniform, uniform, imageInfo);

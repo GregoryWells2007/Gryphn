@@ -24,6 +24,7 @@ void checkDestroySemaphore(gnSemaphoreHandle semaphore);
 
 gnReturnCode checkCreateBuffer(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
 void checkBufferData(gnBufferHandle buffer, size_t size, void* data);
+void checkBufferSubData(gnBufferHandle buffer, size_t offset, size_t size, void* data);
 void* checkMapBuffer(gnBufferHandle buffer);
 void checkDestroyBuffer(gnBufferHandle buffer);
 
@@ -32,6 +33,7 @@ gnUniform* checkUniformPoolAllocateUniforms(gnUniformPool pool, gnUniformAllocat
 void checkDestroyUniformPool(gnUniformPool pool);
 
 void checkUpdateBufferUniform(gnUniform uniform, gnBufferUniformInfo* bufferInfo);
+void checkUpdateStorageUniform(gnUniform uniform, gnStorageUniformInfo* storageInfo);
 void checkUpdateImageUniform(gnUniform uniform, gnImageUniformInfo* imageInfo);
 
 gnReturnCode checkCreateTexture(gnTexture texture, gnDevice device, const gnTextureInfo info);

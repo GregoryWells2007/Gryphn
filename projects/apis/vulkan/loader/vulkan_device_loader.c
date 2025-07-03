@@ -41,6 +41,7 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
 
         ._gnCreateBuffer = createBuffer,
         ._gnBufferData = bufferData,
+        ._gnBufferSubData = vulkanBufferSubData,
         ._gnMapBuffer = mapBuffer,
         ._gnDestroyBuffer = destroyBuffer,
 
@@ -49,6 +50,7 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
         ._gnDestroyUniformPool = destroyUniformPool,
 
         ._gnUpdateBufferUniform = updateBufferUniform,
+        ._gnUpdateStorageUniform = updateVulkanStorageUniform,
         ._gnUpdateImageUniform = updateImageUniform,
 
         ._gnCreateTexture = createTexture,
