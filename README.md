@@ -31,6 +31,10 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
   - allocated from a command pool, you record your render commnands to it and then submit it. <br />
 - Uniform pools:
   - dynamic descriptor pools, on nvidia they use the "VK_NV_descriptor_pool_overallocation" to allow for this behavior, and on other cards they just hold a big list of internal descriptor pools. <br />
+- Uniforms:
+  - Uniform Buffers: can be used to hold smaller data like camera indicies at that type of stuff <br />
+  - SSBOs: used for instanced rendering, big buffers that can be bound <br />
+  - Image: textures that can be bound so they can be used <br />
 - Synchronization:
   - Fences and Semaphores allow work to be submitted to the GPU and not block CPU side behavior. <br />
 - Buffers:
@@ -58,7 +62,7 @@ Gryphn validation layers are meant to be more specific so there are certain ones
 - Pass info structs in by reference instead of by copy
 - Remove validation code from certain platform functions, add in validated functions for those cases
 #### Extensions/Supports
-- APIs like OpenGL dont support the full capabilities of vulkan so things like syncronization 
+- APIs like OpenGL dont support the full capabilities of vulkan so things like syncronization
 # Utils library
 Gryphn comes with its own utlity library, aptly named Gryphn Utils, its written in C with some helper code in C++ that can be enabled by defining GN_UTILS_CPP, more information can be found on the gryphn utils github page, gryphn make extensive use of features in the utils library like Array Lists and 2d/3d types.
 # Usage
