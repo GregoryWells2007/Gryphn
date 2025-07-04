@@ -7,6 +7,7 @@
 #include <apis/metal/loader/metal_loader.h>
 #endif
 
+#include "stdio.h"
 #include "core/src/instance/gryphn_instance.h"
 
 // load the speedy API functions or something like that

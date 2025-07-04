@@ -1,6 +1,6 @@
 #pragma once
-#include "gryphn_rendering_api.h"
-#include "gryphn_handles.h"
+#include "core/src/gryphn_rendering_api.h"
+#include "core/src/gryphn_handles.h"
 #include "utils/gryphn_version.h"
 #include "utils/gryphn_error_code.h"
 #include "loader/src/gryphn_loader.h"

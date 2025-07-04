@@ -3,7 +3,7 @@ project(GryphnVulkanImpl)
 add_compile_definitions(GN_REVEAL_IMPL)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.h")
-file(GLOB_RECURSE LOADER_FILES CONFIGURE_DEPENDS "loader/*.c" "loader/*.h")
+file(GLOB_RECURSE LOADER_FILES CONFIGURE_DEPENDS "loader/*.c")
 if (APPLE)
     file(GLOB_RECURSE METAL_FILES CONFIGURE_DEPENDS "src/*.m")
 endif()
