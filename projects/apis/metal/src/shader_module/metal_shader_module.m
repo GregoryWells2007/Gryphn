@@ -127,8 +127,6 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
 
     [shaderLib release];
 
-    printf("%s\n", result);
-
     spvc_context_destroy(context);
     return GN_SUCCESS;
 }
