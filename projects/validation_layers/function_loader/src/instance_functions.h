@@ -14,6 +14,11 @@ void checkDestroyOutputDevice(gnOutputDeviceHandle device);
 #ifdef GN_PLATFORM_MACOS
 gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);
 #endif
+#ifdef GN_PLATFORM_LINUX
+#ifdef GN_WINDOW_X11
+gnReturnCode checkCreateX11WindowSurface(gnWindowSurface surface, gnInstance instance, gnX11WindowSurfaceInfo info);
+#endif
+#endif
 
 void checkDestroyWindowSurface(gnWindowSurfaceHandle windowSurface);
 gnSurfaceDetails checkGetSurfaceDetails(gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device);

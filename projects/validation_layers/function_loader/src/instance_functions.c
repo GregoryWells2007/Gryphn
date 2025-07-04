@@ -71,6 +71,7 @@ void checkDestroyOutputDevice(gnOutputDeviceHandle device) {
     return nextLayer->instanceFunctions._gnDestroyOutputDevice(device);
 }
 
+#ifdef GN_PLATFORM_MACOS
 gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
     loaderLayer* nextLayer = loaderGetNextLayer(instance);
     if (nextLayer->instanceFunctions._gnCreateMacOSWindowSurface == NULL) {
@@ -82,6 +83,22 @@ gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInst
     }
     return nextLayer->instanceFunctions._gnCreateMacOSWindowSurface(windowSurface, instance, createInfo);
 }
+#endif
+#ifdef GN_PLATFORM_LINUX
+#ifdef GN_WINDOW_X11
+gnReturnCode checkCreateX11WindowSurface(gnWindowSurface surface, gnInstance instance, gnX11WindowSurfaceInfo info) {
+    loaderLayer* nextLayer = loaderGetNextLayer(instance);
+    if (nextLayer->instanceFunctions._gnCreateX11WindowSurface == NULL) {
+        gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
+            .message = gnCreateString("Failed to load _gnCreateX11WindowSurface this may indicate a bug within gryphn")
+        });
+        resetLayer(instance);
+        return GN_FAILED_TO_LOAD_FUNCTION;
+    }
+    return nextLayer->instanceFunctions._gnCreateX11WindowSurface(surface, instance, info);
+}
+#endif
+#endif
 
 void checkDestroyWindowSurface(gnWindowSurfaceHandle windowSurface) {
     loaderLayer* nextLayer = loaderGetNextLayer(windowSurface->instance);
