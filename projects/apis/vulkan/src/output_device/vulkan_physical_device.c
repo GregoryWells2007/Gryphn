@@ -3,6 +3,23 @@
 #include <output_device/vulkan_device_extensions.h>
 #include <vulkan_surface/vulkan_surface.h>
 
+gnMultisampleCountFlags getVulkanSampleCount(VkPhysicalDevice device) {
+    VkPhysicalDeviceProperties physicalDeviceProperties;
+    vkGetPhysicalDeviceProperties(device, &physicalDeviceProperties);
+    VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+
+    gnMultisampleCountFlags sampleCount = GN_SAMPLES_NONE;
+    if (counts & VK_SAMPLE_COUNT_64_BIT) { sampleCount |= GN_SAMPLE_BIT_64; }
+    if (counts & VK_SAMPLE_COUNT_32_BIT) { sampleCount |= GN_SAMPLE_BIT_32; }
+    if (counts & VK_SAMPLE_COUNT_16_BIT) { sampleCount |= GN_SAMPLE_BIT_16; }
+    if (counts & VK_SAMPLE_COUNT_8_BIT) { sampleCount |= GN_SAMPLE_BIT_8; }
+    if (counts & VK_SAMPLE_COUNT_4_BIT) { sampleCount |= GN_SAMPLE_BIT_4; }
+    if (counts & VK_SAMPLE_COUNT_2_BIT) { sampleCount |= GN_SAMPLE_BIT_2; }
+    if (counts & VK_SAMPLE_COUNT_1_BIT) { sampleCount |= GN_SAMPLE_BIT_1; }
+
+    return sampleCount;
+}
+
 gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* deviceCount) {
     vkEnumeratePhysicalDevices(instance->instance->vk_instance, deviceCount, NULL);
     if (deviceCount == 0)
@@ -43,6 +60,8 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
             if (queueFamilies[i].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT) finalQueueType |= GN_QUEUE_SPARSE_BINDING;
             outputDevices[i].queueProperties.queueProperties[i].queueType = finalQueueType;
         }
+
+        outputDevices[i].features.avaliableSamples = getVulkanSampleCount(physicalDevices[i]);
     }
     free(physicalDevices);
 

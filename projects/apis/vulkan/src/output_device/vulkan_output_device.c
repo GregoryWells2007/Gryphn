@@ -22,8 +22,6 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         .samplerAnisotropy = VK_TRUE
     };
 
-
-
     VkDeviceCreateInfo deviceCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
         .queueCreateInfoCount = deviceInfo.queueInfoCount,
