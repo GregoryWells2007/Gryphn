@@ -2,6 +2,17 @@
 #include "surface/metal_surface.h"
 #include "devices/metal_output_devices.h"
 
+NSUInteger mtlSampleCount(gnMultisampleCountFlags flags) {
+    if ((flags & GN_SAMPLE_BIT_64) == GN_SAMPLE_BIT_64) { return 64; }
+    if ((flags & GN_SAMPLE_BIT_32) == GN_SAMPLE_BIT_32) { return 32; }
+    if ((flags & GN_SAMPLE_BIT_16) == GN_SAMPLE_BIT_16) { return 16; }
+    if ((flags & GN_SAMPLE_BIT_8) == GN_SAMPLE_BIT_8) { return 8; }
+    if ((flags & GN_SAMPLE_BIT_4) == GN_SAMPLE_BIT_4) { return 4; }
+    if ((flags & GN_SAMPLE_BIT_2) == GN_SAMPLE_BIT_2) { return 2; }
+    if ((flags & GN_SAMPLE_BIT_1) == GN_SAMPLE_BIT_1) { return 1; }
+    return 0;
+}
+
 gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
     MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
@@ -9,6 +20,11 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
     textureDescriptor.width = info.extent.width;
     textureDescriptor.height = info.extent.height;
     textureDescriptor.depth = info.extent.depth;
+    textureDescriptor.sampleCount = mtlSampleCount(info.samples);
+    if (textureDescriptor.sampleCount >= 2)
+        textureDescriptor.textureType = MTLTextureType2DMultisample;
+    else
+        textureDescriptor.textureType = MTLTextureType2D;
 
     texture->texture->texture = [device->outputDevice->device newTextureWithDescriptor:textureDescriptor];
     [textureDescriptor release];
