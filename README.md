@@ -63,6 +63,8 @@ Gryphn validation layers are meant to be more specific so there are certain ones
 - Remove validation code from certain platform functions, add in validated functions for those cases
 #### Extensions/Supports
 - APIs like OpenGL dont support the full capabilities of vulkan so things like syncronization
+#### Other APIs
+- I still need to write backends for the Other APIs gryphn is going to support
 # Utils library
 Gryphn comes with its own utlity library, aptly named Gryphn Utils, its written in C with some helper code in C++ that can be enabled by defining GN_UTILS_CPP, more information can be found on the gryphn utils github page, gryphn make extensive use of features in the utils library like Array Lists and 2d/3d types.
 # Usage
