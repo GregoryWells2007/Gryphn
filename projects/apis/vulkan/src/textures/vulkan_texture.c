@@ -24,6 +24,18 @@ VkSamplerAddressMode vkGryphnTextureWrap(gnTextureWrap wrap) {
     }
 }
 
+VkImageUsageFlags gnImageUsageToVulkan(gnTextureUsageFlags flags) {
+    VkImageUsageFlags vkFlags = 0;
+
+    if ((flags & GN_TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT) == GN_TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT) vkFlags |= VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
+    if ((flags & GN_TEXTURE_USAGE_COLOR_ATTACHMENT) == GN_TEXTURE_USAGE_COLOR_ATTACHMENT) vkFlags |= VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    if ((flags & GN_TEXTURE_USAGE_SAMPLED) == GN_TEXTURE_USAGE_SAMPLED) vkFlags |= VK_IMAGE_USAGE_SAMPLED_BIT;
+    if ((flags & GN_TEXTURE_USAGE_WRITE_TARGET) == GN_TEXTURE_USAGE_WRITE_TARGET) vkFlags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT;
+    if ((flags & GN_TEXTURE_RESOLVE_ATTACHMENT) == GN_TEXTURE_RESOLVE_ATTACHMENT) vkFlags |= VK_IMAGE_USAGE_TRANSIENT_ATTACHMENT_BIT;
+
+    return vkFlags;
+}
+
 VkImageAspectFlags vkGryphnGetAspectFlags(gnImageFormat format) {
     VkImageAspectFlags aspectMask = 0;
 
@@ -147,6 +159,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         .tiling = VK_IMAGE_TILING_OPTIMAL,
         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
         .samples = gnSampleCountToVulkan(info.samples),
+        .usage = gnImageUsageToVulkan(info.usage),
         .extent = {
             .width = info.extent.width,
             .height = info.extent.height,
@@ -157,11 +170,6 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         .imageType = vkGryphnTextureType(info.type),
         .format = vkGryphnFormatToVulkanFormat(info.format)
     };
-
-    if (vkGryphnIsDepthStencil(info.format))
-        imageInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
-    else
-        imageInfo.usage = VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT;
 
     VkResult res = vkCreateImage(device->outputDevice->device, &imageInfo, NULL, &texture->texture->image.image);
     if (res == VK_ERROR_FORMAT_NOT_SUPPORTED) return GN_UNSUPPORTED_IMAGE_FORMAT;

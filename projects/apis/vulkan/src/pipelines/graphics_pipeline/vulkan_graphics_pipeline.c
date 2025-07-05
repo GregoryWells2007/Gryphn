@@ -1,8 +1,10 @@
 #include "vulkan_graphics_pipeline.h"
 #include "output_device/vulkan_output_devices.h"
+#include "output_device/vulkan_physical_device.h"
 #include "shader_module/vulkan_shader_module.h"
 #include "renderpass/vulkan_render_pass_descriptor.h"
 #include "uniforms/vulkan_uniform_layout.h"
+
 
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(gnDynamicState state) {
     switch (state) {
@@ -177,7 +179,7 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
     VkPipelineMultisampleStateCreateInfo multisampling = {
         .sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO,
         .sampleShadingEnable = VK_FALSE,
-        .rasterizationSamples = VK_SAMPLE_COUNT_1_BIT
+        .rasterizationSamples = gnSampleCountToVulkan(info.multisample.samples)
     };
 
     graphicsPipeline->graphicsPipeline->colorBlendAttachment = (VkPipelineColorBlendAttachmentState){

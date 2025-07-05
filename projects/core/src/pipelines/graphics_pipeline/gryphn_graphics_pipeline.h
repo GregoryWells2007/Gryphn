@@ -46,6 +46,10 @@ typedef struct gnScissor {
     gnUInt2 size;
 } gnScissor;
 
+typedef struct gnMultisample {
+    gnMultisampleCountFlags samples;
+} gnMultisample;
+
 typedef enum gnFillMode {
     GN_FILL_MODE_FILL, GN_FILL_MODE_LINE, GN_FILL_MODE_POINT
 } gnFillMode;
@@ -118,6 +122,8 @@ typedef struct gnGraphicsPipelineInfo {
     gnShaderInputLayout shaderInputLayout;
 
     gnUniformLayout uniformLayout;
+
+    gnMultisample multisample;
 } gnGraphicsPipelineInfo;
 
 #ifdef GN_REVEAL_IMPL
