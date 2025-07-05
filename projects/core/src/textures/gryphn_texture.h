@@ -2,6 +2,7 @@
 #include "utils/gryphn_image_format.h"
 #include "utils/gryphn_error_code.h"
 #include "utils/math/gryphn_vec3.h"
+#include "core/src/output_device/gryphn_physical_output_device.h"
 #include <gryphn_handles.h>
 
 typedef enum gnTextureType {
@@ -18,6 +19,7 @@ typedef enum gnTextureWrap {
 
 typedef struct gnTextureInfo {
     gnExtent3D extent;
+    gnMultisampleCountFlags samples;
     uint32_t mipmapLevels;
     gnTextureType type;
     gnImageFormat format;

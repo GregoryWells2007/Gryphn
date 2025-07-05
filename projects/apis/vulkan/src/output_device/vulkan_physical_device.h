@@ -8,3 +8,7 @@ typedef struct gnPlatformPhysicalDevice_t {
 
 gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* deviceCount);
 gnBool queueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface);
+
+
+gnMultisampleCountFlags vkSampleCountToGryphn(VkSampleCountFlags counts);
+VkSampleCountFlags gnSampleCountToVulkan(gnMultisampleCountFlags counts);

@@ -2,6 +2,7 @@
 #include "stdint.h"
 #include "utils/gryphn_image_format.h"
 #include "utils/gryphn_error_code.h"
+#include "core/src/output_device/gryphn_physical_output_device.h"
 #include "gryphn_handles.h"
 
 typedef enum gnRenderPassStage {
@@ -32,6 +33,8 @@ typedef struct gnRenderPassAttachmentInfo_t {
 
     gnImageLayout initialLayout;
     gnImageLayout finalLayout;
+
+    gnMultisampleCountFlags samples;
 } gnRenderPassAttachmentInfo;
 
 typedef struct gnSubpassAttachmentInfo_t {
@@ -42,7 +45,11 @@ typedef struct gnSubpassAttachmentInfo_t {
 typedef struct gnSubpassInfo_t {
     uint32_t colorAttachmentCount;
     gnSubpassAttachmentInfo* colorAttachments;
+
     gnSubpassAttachmentInfo* depthAttachment;
+
+    uint32_t resolveAttachmentCount;
+    gnSubpassAttachmentInfo* resolveAttachments;
 } gnSubpassInfo;
 
 #define GN_SUBPASS_EXTERNAL -1

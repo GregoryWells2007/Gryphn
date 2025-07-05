@@ -3,12 +3,8 @@
 #include <output_device/vulkan_device_extensions.h>
 #include <vulkan_surface/vulkan_surface.h>
 
-gnMultisampleCountFlags getVulkanSampleCount(VkPhysicalDevice device) {
-    VkPhysicalDeviceProperties physicalDeviceProperties;
-    vkGetPhysicalDeviceProperties(device, &physicalDeviceProperties);
-    VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
-
-    gnMultisampleCountFlags sampleCount = GN_SAMPLES_NONE;
+gnMultisampleCountFlags vkSampleCountToGryphn(VkSampleCountFlags counts) {
+    gnMultisampleCountFlags sampleCount = 0;
     if (counts & VK_SAMPLE_COUNT_64_BIT) { sampleCount |= GN_SAMPLE_BIT_64; }
     if (counts & VK_SAMPLE_COUNT_32_BIT) { sampleCount |= GN_SAMPLE_BIT_32; }
     if (counts & VK_SAMPLE_COUNT_16_BIT) { sampleCount |= GN_SAMPLE_BIT_16; }
@@ -16,6 +12,21 @@ gnMultisampleCountFlags getVulkanSampleCount(VkPhysicalDevice device) {
     if (counts & VK_SAMPLE_COUNT_4_BIT) { sampleCount |= GN_SAMPLE_BIT_4; }
     if (counts & VK_SAMPLE_COUNT_2_BIT) { sampleCount |= GN_SAMPLE_BIT_2; }
     if (counts & VK_SAMPLE_COUNT_1_BIT) { sampleCount |= GN_SAMPLE_BIT_1; }
+    return sampleCount;
+}
+
+#include <stdio.h>
+
+VkSampleCountFlags gnSampleCountToVulkan(gnMultisampleCountFlags counts) {
+    VkSampleCountFlags sampleCount = 0;
+
+    if ((counts & GN_SAMPLE_BIT_64) == GN_SAMPLE_BIT_64) { sampleCount |= VK_SAMPLE_COUNT_64_BIT; }
+    if ((counts & GN_SAMPLE_BIT_32) == GN_SAMPLE_BIT_32) { sampleCount |= VK_SAMPLE_COUNT_32_BIT; }
+    if ((counts & GN_SAMPLE_BIT_16) == GN_SAMPLE_BIT_16) { sampleCount |= VK_SAMPLE_COUNT_16_BIT; }
+    if ((counts & GN_SAMPLE_BIT_8) == GN_SAMPLE_BIT_8) { sampleCount |= VK_SAMPLE_COUNT_8_BIT; }
+    if ((counts & GN_SAMPLE_BIT_4) == GN_SAMPLE_BIT_4) { sampleCount |= VK_SAMPLE_COUNT_4_BIT; }
+    if ((counts & GN_SAMPLE_BIT_2) == GN_SAMPLE_BIT_2) { sampleCount |= VK_SAMPLE_COUNT_2_BIT; }
+    if ((counts & GN_SAMPLE_BIT_1) == GN_SAMPLE_BIT_1) { sampleCount |= VK_SAMPLE_COUNT_1_BIT; }
 
     return sampleCount;
 }
@@ -61,7 +72,11 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
             outputDevices[i].queueProperties.queueProperties[i].queueType = finalQueueType;
         }
 
-        outputDevices[i].features.avaliableSamples = getVulkanSampleCount(physicalDevices[i]);
+        VkPhysicalDeviceProperties physicalDeviceProperties;
+        vkGetPhysicalDeviceProperties(physicalDevices[i], &physicalDeviceProperties);
+        VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
+
+        outputDevices[i].features.avaliableSamples = vkSampleCountToGryphn(counts);
     }
     free(physicalDevices);
 

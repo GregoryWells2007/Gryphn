@@ -1,6 +1,7 @@
 #include "vulkan_render_pass_descriptor.h"
 #include "vulkan_surface/vulkan_surface.h"
 #include "output_device/vulkan_output_devices.h"
+#include <output_device/vulkan_physical_device.h>
 #include "stdio.h"
 
 VkAttachmentLoadOp vkGryphnLoadOperation(gnLoadOperation loadOperation) {
@@ -50,7 +51,7 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
     for (int i = 0; i < info.attachmentCount; i++) {
         renderPass->renderPassDescriptor->attachments[i].format = vkGryphnFormatToVulkanFormat(info.attachmentInfos[i].format);
         renderPass->renderPassDescriptor->attachments[i].flags = 0;
-        renderPass->renderPassDescriptor->attachments[i].samples = VK_SAMPLE_COUNT_1_BIT;
+        renderPass->renderPassDescriptor->attachments[i].samples = gnSampleCountToVulkan(info.attachmentInfos[i].samples);
 
         renderPass->renderPassDescriptor->attachments[i].loadOp = vkGryphnLoadOperation(info.attachmentInfos[i].loadOperation);
         renderPass->renderPassDescriptor->attachments[i].storeOp = vkGryphnStoreOperation(info.attachmentInfos[i].storeOperation);
@@ -66,9 +67,12 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
     renderPass->renderPassDescriptor->subpasses = malloc(sizeof(VkSubpassDescription) * info.subpassCount);
     renderPass->renderPassDescriptor->colorAttachments = malloc(sizeof(VkAttachmentReference*) * info.subpassCount);
     renderPass->renderPassDescriptor->depthAttachments = malloc(sizeof(VkAttachmentReference) * info.subpassCount);
+    renderPass->renderPassDescriptor->resolveAttachments = malloc(sizeof(VkAttachmentReference*) * info.subpassCount);
+
 
     for (int i = 0; i < info.subpassCount; i++) {
         renderPass->renderPassDescriptor->colorAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
+        renderPass->renderPassDescriptor->resolveAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].resolveAttachmentCount);
 
         for (int c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
             renderPass->renderPassDescriptor->colorAttachments[i][c] = (VkAttachmentReference){
@@ -77,11 +81,19 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
             };
         }
 
+        for (int c = 0; c < info.subpassInfos[i].resolveAttachmentCount; c++) {
+            renderPass->renderPassDescriptor->resolveAttachments[i][c] = (VkAttachmentReference){
+                .attachment = info.subpassInfos[i].resolveAttachments[c].index,
+                .layout = vkGryphnImageLayout(info.subpassInfos[i].resolveAttachments[c].imageLayout)
+            };
+        }
+
         renderPass->renderPassDescriptor->subpasses[i] = (VkSubpassDescription){
             .flags = 0,
             .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
             .colorAttachmentCount = info.subpassInfos[i].colorAttachmentCount,
-            .pColorAttachments = renderPass->renderPassDescriptor->colorAttachments[i]
+            .pColorAttachments = renderPass->renderPassDescriptor->colorAttachments[i],
+            .pResolveAttachments = renderPass->renderPassDescriptor->resolveAttachments[i]
         };
 
         if (info.subpassInfos[i].depthAttachment != NULL) {

@@ -146,7 +146,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
         .tiling = VK_IMAGE_TILING_OPTIMAL,
         .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-        .samples = VK_SAMPLE_COUNT_1_BIT,
+        .samples = gnSampleCountToVulkan(info.samples),
         .extent = {
             .width = info.extent.width,
             .height = info.extent.height,

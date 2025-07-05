@@ -8,7 +8,6 @@ typedef enum gnDeviceType {
 } gnDeviceType;
 
 typedef enum gnMultisampleCountFlags {
-    GN_SAMPLES_NONE = 0,
     GN_SAMPLE_BIT_1  = 1 << 0, // 0x01
     GN_SAMPLE_BIT_2  = 1 << 1, // 0x02
     GN_SAMPLE_BIT_4  = 1 << 2, // 0x04
