@@ -10,6 +10,8 @@ gnReturnCode createCommandPool(gnCommandPool commandPool, gnDevice device, gnCom
         .queueFamilyIndex = info.queueIndex,
     };
 
+    if ((info.flags & GN_REUSE_COMMAND_BUFFERS) != GN_REUSE_COMMAND_BUFFERS) poolInfo.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+
     if (vkCreateCommandPool(device->outputDevice->device, &poolInfo, NULL, &commandPool->commandPool->commandPool) != VK_SUCCESS) {
         return GN_FAILED_TO_CREATE_COMMAND_POOL;
     }
