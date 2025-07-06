@@ -30,8 +30,12 @@ void resetCommandBuffer(gnCommandBufferHandle commandBuffer) {
 
 gnReturnCode beginCommandBuffer(gnCommandBufferHandle commandBuffer) {
     VkCommandBufferBeginInfo beginInfo = {
-        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+        .flags = 0
     };
+
+    if ((commandBuffer->commandPool->info.flags & GN_REUSE_COMMAND_BUFFERS) != GN_REUSE_COMMAND_BUFFERS)
+        beginInfo.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
     if (vkBeginCommandBuffer(commandBuffer->commandBuffer->buffer, &beginInfo) != VK_SUCCESS) {
         return GN_FAILED_TO_BEGIN_RECORDING;
