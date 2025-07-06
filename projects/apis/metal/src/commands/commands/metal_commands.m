@@ -13,7 +13,7 @@ void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
         }
 
         if(!wasDepthStencil) {
-            MTLRenderPassColorAttachmentDescriptor* color = passInfo.framebuffer->framebuffer->framebuffer.colorAttachments[i];
+            MTLRenderPassColorAttachmentDescriptor* color = passInfo.framebuffer->framebuffer->subpasses[i].colorAttachments[i];
             color.clearColor = MTLClearColorMake(
                 passInfo.clearValues[i].red,
                 passInfo.clearValues[i].green,
@@ -22,7 +22,7 @@ void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
             );
         }
     }
-    buffer->commandBuffer->encoder = [buffer->commandBuffer->commandBuffer renderCommandEncoderWithDescriptor:passInfo.framebuffer->framebuffer->framebuffer];
+    buffer->commandBuffer->encoder = [buffer->commandBuffer->commandBuffer renderCommandEncoderWithDescriptor:passInfo.framebuffer->framebuffer->subpasses[0]];
     MTLViewport vp = {(double)passInfo.offset.x, (double)passInfo.offset.y, (double)passInfo.size.x, (double)passInfo.size.y, 0.0f, 1.0f};
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
     [encoder setViewport:vp];

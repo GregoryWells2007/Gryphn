@@ -37,38 +37,36 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
         return GN_DIVERGENT_RENDERPASS;
     }
 
-    framebuffer->framebuffer->framebuffer = [[MTLRenderPassDescriptor alloc] init];
-    [framebuffer->framebuffer->framebuffer setRenderTargetWidth:info.size.x];
-    [framebuffer->framebuffer->framebuffer setRenderTargetHeight:info.size.y];
+    framebuffer->framebuffer->subpassCount = info.renderPassDescriptor->info.subpassCount;
+    framebuffer->framebuffer->subpasses = malloc(sizeof(mtlSubpass) * framebuffer->framebuffer->subpassCount);
 
-    int colorAttachment = 0;
-    for (int i = 0; i < info.renderPassDescriptor->info.attachmentCount; i++) {
-        gnBool wasDepthStencil = gnFalse;
-        if (isDepthFormat(info.renderPassDescriptor->info.attachmentInfos[i].format)) {
-            MTLRenderPassDepthAttachmentDescriptor* depthAttachment = framebuffer->framebuffer->framebuffer.depthAttachment;
-            depthAttachment.texture = info.attachments[i]->texture->texture;
-            depthAttachment.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[i].loadOperation);
-            depthAttachment.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[i].storeOperation);
-            depthAttachment.clearDepth = 1.0f;
-            wasDepthStencil = gnTrue;
-        }
-        if (isStencilFormat(info.renderPassDescriptor->info.attachmentInfos[i].format)) {
-            MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = framebuffer->framebuffer->framebuffer.stencilAttachment;
-            stencilAttachment.texture = info.attachments[i]->texture->texture;
-            wasDepthStencil = gnTrue;
-        }
+    for (int i = 0; i < info.renderPassDescriptor->info.subpassCount; i++) {
+        framebuffer->framebuffer->subpasses[i] = [[MTLRenderPassDescriptor alloc] init];
+        [framebuffer->framebuffer->subpasses[i] setRenderTargetWidth:info.size.x];
+        [framebuffer->framebuffer->subpasses[i] setRenderTargetHeight:info.size.y];
 
-        if(!wasDepthStencil) {
-            MTLRenderPassColorAttachmentDescriptor* color = framebuffer->framebuffer->framebuffer.colorAttachments[colorAttachment];
-            color.texture = info.attachments[i]->texture->texture;
+        for (int c = 0; c < info.renderPassDescriptor->info.subpassInfos[i].colorAttachmentCount; c++) {
+            uint32_t attachmentIndex = info.renderPassDescriptor->info.subpassInfos[i].colorAttachments[i].index;
+            MTLRenderPassColorAttachmentDescriptor* color = framebuffer->framebuffer->subpasses[i].colorAttachments[c];
+            color.texture = info.attachments[attachmentIndex]->texture->texture;
 
-            color.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[i].loadOperation);
-            color.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[i].storeOperation);
+            color.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].loadOperation);
+            color.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].storeOperation);
 
             if (color.loadAction == MTLLoadActionClear)
                 color.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
+        }
 
-            colorAttachment++;
+        if (info.renderPassDescriptor->info.subpassInfos[i].depthAttachment != NULL) {
+            MTLRenderPassDepthAttachmentDescriptor* depthAttachment = framebuffer->framebuffer->subpasses[i].depthAttachment;
+            uint32_t attachmentIndex = info.renderPassDescriptor->info.subpassInfos[i].depthAttachment->index;
+            depthAttachment.texture = info.attachments[attachmentIndex]->texture->texture;
+            depthAttachment.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].loadOperation);
+            depthAttachment.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].storeOperation);
+            depthAttachment.clearDepth = 1.0f;
+
+            MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = framebuffer->framebuffer->subpasses[attachmentIndex].stencilAttachment;
+            stencilAttachment.texture = info.attachments[i]->texture->texture;
         }
     }
 
@@ -76,6 +74,7 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
 }
 
 void destroyMetalFramebuffer(gnFramebuffer framebuffer) {
-    [framebuffer->framebuffer->framebuffer release];
+    for (int i = 0; i < framebuffer->framebuffer->subpassCount; i++) [framebuffer->framebuffer->subpasses[i] release];
+    free(framebuffer->framebuffer->subpasses);
     free(framebuffer->framebuffer);
 }

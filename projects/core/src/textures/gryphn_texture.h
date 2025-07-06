@@ -18,11 +18,11 @@ typedef enum gnTextureWrap {
 } gnTextureWrap;
 
 typedef enum gnTextureUsageFlags {
-    GN_TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT = 1 << 0,
-    GN_TEXTURE_USAGE_COLOR_ATTACHMENT         = 1 << 1,
-    GN_TEXTURE_USAGE_SAMPLED                  = 1 << 2,
-    GN_TEXTURE_USAGE_WRITE_TARGET             = 1 << 3,
-    GN_TEXTURE_RESOLVE_ATTACHMENT             = 1 << 4
+    GN_TEXTURE_USAGE_COLOR_ATTACHMENT         = 1 << 0,
+    GN_TEXTURE_USAGE_DEPTH_STENCIL_ATTACHMENT = 1 << 1,
+    GN_TEXTURE_RESOLVE_ATTACHMENT             = 1 << 2,
+    GN_TEXTURE_USAGE_SAMPLED                  = 1 << 3,
+    GN_TEXTURE_USAGE_WRITE_TARGET             = 1 << 4,
 } gnTextureUsageFlags;
 
 typedef struct gnTextureInfo {
