@@ -45,11 +45,9 @@ typedef struct gnSubpassAttachmentInfo_t {
 typedef struct gnSubpassInfo_t {
     uint32_t colorAttachmentCount;
     gnSubpassAttachmentInfo* colorAttachments;
+    gnSubpassAttachmentInfo* resolveAttachments;
 
     gnSubpassAttachmentInfo* depthAttachment;
-
-    uint32_t resolveAttachmentCount;
-    gnSubpassAttachmentInfo* resolveAttachments;
 } gnSubpassInfo;
 
 #define GN_SUBPASS_EXTERNAL -1
