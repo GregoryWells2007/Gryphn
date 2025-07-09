@@ -40,7 +40,7 @@ gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
 gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = checkCreatePresentationQueue,
-        ._gnPresentationQueueGetImageAsync = checkPresentationQueueGetImageAsync,
+        // ._gnPresentationQueueGetImageAsync = checkPresentationQueueGetImageAsync,
         ._gnPresentationQueueGetImage = checkPresentationQueueGetImage,
         ._gnDestroyPresentationQueue = checkDestroyPresentationQueue,
 
@@ -59,8 +59,8 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
         ._gnCreateCommandPool = checkCreateCommandPool,
         ._gnDestroyCommandPool = checkDestroyCommandPool,
 
-        ._gnCreateSemaphore = checkCreateSemaphore,
-        ._gnDestroySemaphore = checkDestroySemaphore,
+        // ._gnCreateSemaphore = checkCreateSemaphore,
+        // ._gnDestroySemaphore = checkDestroySemaphore,
 
         ._gnCreateBuffer = checkCreateBuffer,
         ._gnBufferData = checkBufferData,
@@ -80,10 +80,10 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
         ._gnTextureData = checkTextureData,
         ._gnDestroyTexture = checkDestroyTexture,
 
-        ._gnCreateFence = checkCreateFence,
-        ._gnWaitForFence = checkWaitForFence,
-        ._gnResetFence = checkResetFence,
-        ._gnDestroyFence = checkDestroyFence,
+        // ._gnCreateFence = checkCreateFence,
+        // ._gnWaitForFence = checkWaitForFence,
+        // ._gnResetFence = checkResetFence,
+        // ._gnDestroyFence = checkDestroyFence,
 
         ._gnSubmit = checkSubmit,
         ._gnPresent = checkPresent,

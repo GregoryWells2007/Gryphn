@@ -18,7 +18,7 @@
 gnDeviceFunctions loadVulkanDeviceFunctions() {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = createPresentationQueue,
-        ._gnPresentationQueueGetImageAsync = getPresentQueueImageAsync,
+        // ._gnPresentationQueueGetImageAsync = getPresentQueueImageAsync,
         ._gnDestroyPresentationQueue = destroyPresentationQueue,
 
         ._gnCreateShaderModule = createShaderModule,
@@ -36,8 +36,8 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
         ._gnCreateCommandPool = createCommandPool,
         ._gnDestroyCommandPool = destroyCommandPool,
 
-        ._gnCreateSemaphore = createSemaphore,
-        ._gnDestroySemaphore = destroySemaphore,
+        // ._gnCreateSemaphore = createSemaphore,
+        // ._gnDestroySemaphore = destroySemaphore,
 
         ._gnCreateBuffer = createBuffer,
         ._gnBufferData = bufferData,
@@ -57,10 +57,10 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
         ._gnTextureData = textureData,
         ._gnDestroyTexture = destroyTexture,
 
-        ._gnCreateFence = createFence,
-        ._gnWaitForFence = waitForFence,
-        ._gnResetFence = resetFence,
-        ._gnDestroyFence = destroyFence,
+        // ._gnCreateFence = createFence,
+        // ._gnWaitForFence = waitForFence,
+        // ._gnResetFence = resetFence,
+        // ._gnDestroyFence = destroyFence,
 
         ._gnSubmit = submit,
         ._gnPresent = present,

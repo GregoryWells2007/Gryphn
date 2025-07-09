@@ -20,9 +20,7 @@ typedef struct gnSubmitInfo gnSubmitInfo;
 typedef struct gnPresentInfo gnPresentInfo;
 
 typedef struct gnDeviceFunctions {
-    gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);
-    gnReturnCode (*_gnPresentationQueueGetImageAsync)(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
-    gnReturnCode (*_gnPresentationQueueGetImage)(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex);
+    gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);    gnReturnCode (*_gnPresentationQueueGetImage)(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex);
     void (*_gnDestroyPresentationQueue)(gnPresentationQueueHandle presentationQueue);
 
     gnReturnCode (*_gnCreateShaderModule)(gnShaderModuleHandle module, gnOutputDeviceHandle device, gnShaderModuleInfo shaderModuleInfo);
@@ -39,9 +37,6 @@ typedef struct gnDeviceFunctions {
 
     gnReturnCode (*_gnCreateCommandPool)(gnCommandPoolHandle commandPool, gnOutputDeviceHandle device, gnCommandPoolInfo info);
     void (*_gnDestroyCommandPool)(gnCommandPoolHandle commandPool);
-
-    gnReturnCode (*_gnCreateSemaphore)(gnSemaphoreHandle semaphore, gnOutputDeviceHandle device);
-    void (*_gnDestroySemaphore)(gnSemaphoreHandle semaphore);
 
     gnReturnCode (*_gnCreateBuffer)(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
     void (*_gnBufferData)(gnBufferHandle buffer, size_t size, void* data);
@@ -60,11 +55,6 @@ typedef struct gnDeviceFunctions {
     gnReturnCode (*_gnCreateTexture)(gnTexture texture, gnDevice device, const gnTextureInfo info);
     void (*_gnTextureData)(gnTextureHandle texture, void* pixelData);
     void (*_gnDestroyTexture)(gnTexture texture);
-
-    gnReturnCode (*_gnCreateFence)(gnFenceHandle fence, gnOutputDeviceHandle device);
-    void (*_gnWaitForFence)(gnFenceHandle fence, uint64_t timeout);
-    void (*_gnResetFence)(gnFenceHandle fence);
-    void (*_gnDestroyFence)(gnFenceHandle fence);
 
     gnReturnCode (*_gnSubmit)(gnOutputDeviceHandle device, gnSubmitInfo submit);
     gnReturnCode (*_gnPresent)(gnOutputDeviceHandle device, gnPresentInfo info);
