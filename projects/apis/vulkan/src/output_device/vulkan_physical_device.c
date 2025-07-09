@@ -78,7 +78,7 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
 
         outputDevices[i].features.avaliableSamples = vkSampleCountToGryphn(counts);
         outputDevices[i].features.maxMemoryAllocations = physicalDeviceProperties.limits.maxMemoryAllocationCount;
-        // outputDevices[i].features.maxMemoryAllocations = 4096;
+        outputDevices[i].features.maxPushConstantSize = physicalDeviceProperties.limits.maxPushConstantsSize;
     }
     free(physicalDevices);
 
