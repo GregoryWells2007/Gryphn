@@ -13,11 +13,15 @@ typedef enum gnBufferType {
     GN_INDEX_BUFFER   = 0x00000002,
     GN_UNIFORM_BUFFER = 0x00000004,
     GN_STORAGE_BUFFER = 0x00000008
-} gnBufferType;
+} gnBufferType; // I need to support more buffer types
 
+// i love that OpenGL does this so im stealing it
+// at some point GN_STAGING_BUFFER will be a buffer type so you can do all this manually
+// and then I think that I will find a way to allow for mapping of GN_STATIC_DRAW
+// I might do that by just making GN_STATIC_DRAW do nothing on vulkan/directx/metal
 typedef enum gnBufferUsage {
     GN_STATIC_DRAW, GN_DYNAMIC_DRAW
-} gnBufferUsage; // i love that OpenGL does this so im stealing it
+} gnBufferUsage;
 
 typedef struct gnBufferInfo {
     size_t size;
