@@ -1,6 +1,7 @@
 #pragma once
 #include <vulkan/vulkan.h>
 #include <output_device/gryphn_output_device.h>
+#include "buffers/vulkan_buffer.h"
 
 typedef struct gnPlatformOutputDevice_t {
     VkDevice device;
@@ -9,6 +10,8 @@ typedef struct gnPlatformOutputDevice_t {
 
     VkQueue transferQueue;
     VkCommandPool transferCommandPool;
+
+    VkGryphnBuffer stagingBuffer;
 
     gnBool enabledOversizedDescriptorPools;
 } gnPlatformOutputDevice;
