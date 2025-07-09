@@ -44,6 +44,8 @@ VkAccessFlags vkGryphnRenderPassAccess(gnRenderPassAccess access) {
 }
 
 gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device, gnRenderPassDescriptorInfo info) {
+
+
     renderPass->renderPassDescriptor = malloc(sizeof(gnPlatformRenderPassDescriptor));
 
     renderPass->renderPassDescriptor->attachmentCount = info.attachmentCount;
@@ -79,9 +81,7 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
                 .attachment = info.subpassInfos[i].colorAttachments[c].index,
                 .layout = vkGryphnImageLayout(info.subpassInfos[i].colorAttachments[c].imageLayout)
             };
-        }
-
-        for (int c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
+            if (info.subpassInfos[i].resolveAttachments != NULL)
             renderPass->renderPassDescriptor->resolveAttachments[i][c] = (VkAttachmentReference){
                 .attachment = info.subpassInfos[i].resolveAttachments[c].index,
                 .layout = vkGryphnImageLayout(info.subpassInfos[i].resolveAttachments[c].imageLayout)
@@ -93,8 +93,10 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
             .pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS,
             .colorAttachmentCount = info.subpassInfos[i].colorAttachmentCount,
             .pColorAttachments = renderPass->renderPassDescriptor->colorAttachments[i],
-            .pResolveAttachments = renderPass->renderPassDescriptor->resolveAttachments[i]
         };
+
+        if (info.subpassInfos[i].resolveAttachments != NULL)
+            renderPass->renderPassDescriptor->subpasses[i].pResolveAttachments = renderPass->renderPassDescriptor->resolveAttachments[i];
 
         if (info.subpassInfos[i].depthAttachment != NULL) {
             renderPass->renderPassDescriptor->depthAttachments[i] = (VkAttachmentReference){

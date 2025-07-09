@@ -24,6 +24,7 @@ typedef struct gnPhysicalDeviceProperties {
 
 typedef struct gnPhysicalDeviceFeatures {
     gnMultisampleCountFlags avaliableSamples;
+    uint32_t maxMemoryAllocations;
 } gnPhysicalDeviceFeatures;
 
 typedef enum gnQueueTypeFlags {
