@@ -2,25 +2,25 @@
 Cross platform high performace abstracted rendering api
 
 # Info
-Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12, OpenGL, Software) with its own API that aims to mimic the Vulkan API while simplifying away some of its quirks<br />
+Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12, OpenGL, Software) with its own API that aims to mimic the OpenGL API but with the use of exensions you can make it function simmilar to Vulkan so you can have the performance<br />
 # Supported APIs
 
 - [x] Vulkan
-- [x] Metal*
+- [x] Metal
 - [ ] Direct 3D 11
 - [ ] Direct 3D 12
 - [ ] OpenGL
 - [ ] Software
 
-*Metal support is a little iffy, it works for the most part
-
 # Features
+#### Application objects
 - Instance:
   - This loads all of your functions into the runtime and allows them to be called, it takes in the underlying rendering API it wants to use<br />
 - Debugger:
   - A debugger, which functions more as a validatior, loads different loaders for Gryphn and overrides function calls to make sure they have the correct arguments passed in.<br />
 - Devices:
   - Provides a list of system devices, or in OpenGL it fakes a generic "OpenGL device" and then you create your output device with the specified features.
+#### Rendering Objects
 - Presentation Queues:
   - vulkan swapchain wrapper or in other APIs it just creates a fixed about of textures and swaps between them with a list of unused textures.<br />
 - Render Passes and framebuffers.
@@ -50,21 +50,22 @@ Gryphn validation layers are meant to be more specific so there are certain ones
 - GN_DEBUGGER_LAYER_FUNCTIONS, this is more for my own sake but when I am writing new backends or layers I may tend to forget to implement a specific function so this layer will just check to make sure that every function is loaded properly.
 # Plans
 #### Improved Validation <br />
-- More layers
-  - The Gryphn Validation layer which will check to make sure object passed in have proper gryphn handles and such
-- Improved performance
-  - Validation layers are slow right now and theres not much I can do on the vulkan side to speed them up but I want to work on the gryphn side to make sure they are as performant as possible<br />
+- More/Improved validation layers
+  - GN_DEBUGGER_LAYER_HANDLES, will check to make sure that handles are valid and you dont do something like attempt to pass something like a gnBuffer handle into a gnDevice handle
 - Improved return codes
   - Gryphn return codes are not super specific to the error that has ocurred more of the time returning a GN_FAIlED_TO_CREATE_XXXX value, instead they should look at the APIs error code and return something simmilar.
-#### Device Features <br />
-- Physical Devices dont report features that they support at all so the developer can't chose them based on features<br />
 #### Performace
 - Pass info structs in by reference instead of by copy
 - Remove validation code from certain platform functions, add in validated functions for those cases
 #### Extensions/Supports
-- APIs like OpenGL dont support the full capabilities of vulkan so things like syncronization
-#### Other APIs
-- I still need to write backends for the Other APIs gryphn is going to support
+- APIs like OpenGL dont support the full capabilities of vulkan so things like synchronization
+I currently am planning to move synchronization primatives to be an extension.
+Planned extensions: <br />
+  - GN_EXT_SYNCHRONIZATION, my only problem with this extension is that I might be able to fake support for things like semaphores in OpenGL, im not 100% sure yet<br />
+  - GN_EXT_COMPUTE, while compute pipelines might be a vulkan standard they are not an OpenGL standard so this does need to be an exension <br /><br />
+- I will add more exensions as Gryphn grows in complexity, my current biggest task is going to be moving synchronization primatives over into extension land and not a core part of the Gryphn standard. My biggest problem with exentensions is that I don't want them to be something like, this feature is only supported on Vulkan which I think removes part of the reason for my making this project.
+#### Standardization
+I currently don't write out a gryphn standard for myself but I am planning on creating that before I attempt to implement new features. This is something I should have done from the start.
 # Utils library
 Gryphn comes with its own utlity library, aptly named Gryphn Utils, its written in C with some helper code in C++ that can be enabled by defining GN_UTILS_CPP, more information can be found on the gryphn utils github page, gryphn make extensive use of features in the utils library like Array Lists and 2d/3d types.
 # Usage
