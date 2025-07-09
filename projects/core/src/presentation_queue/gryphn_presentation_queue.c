@@ -7,8 +7,8 @@ gnReturnCode gnCreatePresentationQueue(gnPresentationQueueHandle* presentationQu
     return device->instance->callingLayer->deviceFunctions._gnCreatePresentationQueue(*presentationQueue, device, presentationInfo);
 }
 
-gnReturnCode gnPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex) {
-    return presentationQueue->outputDevice->instance->callingLayer->deviceFunctions._gnPresentationQueueGetImage(presentationQueue, timeout, semaphore, imageIndex);
+gnReturnCode gnPresentationQueueGetImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex) {
+    return presentationQueue->outputDevice->instance->callingLayer->deviceFunctions._gnPresentationQueueGetImageAsync(presentationQueue, timeout, semaphore, imageIndex);
 }
 uint32_t gnGetPresentationQueueImageCount(gnPresentationQueueHandle presentationQueue) { return presentationQueue->imageCount; }
 gnTextureHandle gnGetPresentationQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t index) {

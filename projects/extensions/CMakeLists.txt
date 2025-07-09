@@ -1,0 +1,10 @@
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
+project(GryphnExtensions)
+add_compile_definitions(GN_REVEAL_IMPL)
+
+file(GLOB_RECURSE SYNC_EXT_SRC CONFIGURE_DEPENDS "synchronization/*.c")
+add_library(GryphnExtensions ${SYNC_EXT_SRC})
+target_include_directories(GryphnExtensions PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../utils/)
+target_include_directories(GryphnExtensions PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../core/)
+target_include_directories(GryphnExtensions PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../core/src/)
+target_include_directories(GryphnExtensions PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)

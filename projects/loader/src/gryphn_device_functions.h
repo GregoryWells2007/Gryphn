@@ -21,7 +21,8 @@ typedef struct gnPresentInfo gnPresentInfo;
 
 typedef struct gnDeviceFunctions {
     gnReturnCode (*_gnCreatePresentationQueue)(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);
-    gnReturnCode (*_gnPresentationQueueGetImage)(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
+    gnReturnCode (*_gnPresentationQueueGetImageAsync)(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
+    gnReturnCode (*_gnPresentationQueueGetImage)(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex);
     void (*_gnDestroyPresentationQueue)(gnPresentationQueueHandle presentationQueue);
 
     gnReturnCode (*_gnCreateShaderModule)(gnShaderModuleHandle module, gnOutputDeviceHandle device, gnShaderModuleInfo shaderModuleInfo);

@@ -10,7 +10,8 @@
 #include "core/src/buffers/gryphn_buffer.h"
 #include "core/src/uniforms/gryphn_uniform_pool.h"
 #include "core/src/textures/gryphn_texture.h"
-#include "core/src/sync/fence/gryphn_fence.h"
+#include "synchronization/fence/gryphn_fence.h"
+#include "synchronization/semaphore/gryphn_semaphore.h"
 #include "core/src/submit/gryphn_submit.h"
 #include "core/src/present/gryphn_present.h"
 
@@ -25,16 +26,11 @@ gnReturnCode checkCreatePresentationQueue(gnPresentationQueueHandle presentation
     }
     return nextLayer->deviceFunctions._gnCreatePresentationQueue(presentationQueue, device, presentationInfo);
 }
-gnReturnCode checkPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex) {
-    loaderLayer* nextLayer = loaderGetNextLayer(presentationQueue->outputDevice->instance);
-    if (nextLayer->deviceFunctions._gnPresentationQueueGetImage == NULL) {
-        gnDebuggerSetErrorMessage(presentationQueue->outputDevice->instance->debugger, (gnMessageData){
-            .message = gnCreateString("Failed to load presentation queue get image function")
-        });
-        resetLayer(presentationQueue->outputDevice->instance);
-        return GN_FAILED_TO_LOAD_FUNCTION;
-    }
-    return nextLayer->deviceFunctions._gnPresentationQueueGetImage(presentationQueue, timeout, semaphore, imageIndex);
+gnReturnCode checkPresentationQueueGetImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex) {
+    CHECK_FUNCTION_WITH_RETURN_CODE(presentationQueue->outputDevice->instance, _gnPresentationQueueGetImageAsync, presentationQueue, timeout, semaphore, imageIndex);
+}
+gnReturnCode checkPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint32_t *imageIndex) {
+    CHECK_FUNCTION_WITH_RETURN_CODE(presentationQueue->outputDevice->instance, _gnPresentationQueueGetImage, presentationQueue, imageIndex);
 }
 void checkDestroyPresentationQueue(gnPresentationQueueHandle presentationQueue) {
     loaderLayer* nextLayer = loaderGetNextLayer(presentationQueue->outputDevice->instance);

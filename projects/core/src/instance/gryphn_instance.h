@@ -3,7 +3,8 @@
 #include "core/src/gryphn_handles.h"
 #include "utils/gryphn_version.h"
 #include "utils/gryphn_error_code.h"
-#include "loader/src/gryphn_loader.h"
+#include <loader/src/gryphn_loader.h>
+#include <gryphn_extensions.h>
 
 typedef struct gnInstanceInfo {
     gnString  applicationName;
@@ -14,6 +15,9 @@ typedef struct gnInstanceInfo {
 
     gnRenderingAPI renderingAPI;
     gnDebuggerHandle debugger;
+
+    uint32_t extensionCount;
+    gnExtension* extensions;
 } gnInstanceInfo;
 
 #ifdef GN_REVEAL_IMPL

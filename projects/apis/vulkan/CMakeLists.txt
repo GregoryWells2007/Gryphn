@@ -16,6 +16,8 @@ target_include_directories(GryphnVulkanImpl PUBLIC
     ${Vulkan_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../extensions/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../utils/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../platform/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../

@@ -40,6 +40,7 @@ gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
 gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = checkCreatePresentationQueue,
+        ._gnPresentationQueueGetImageAsync = checkPresentationQueueGetImageAsync,
         ._gnPresentationQueueGetImage = checkPresentationQueueGetImage,
         ._gnDestroyPresentationQueue = checkDestroyPresentationQueue,
 

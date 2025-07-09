@@ -28,9 +28,10 @@ if (APPLE)
 endif()
 add_subdirectory(projects/loader) # build gryphn loader
 add_subdirectory(projects/core) # build gryphn core
+add_subdirectory(projects/extensions)
 add_subdirectory(projects/platform) # build gryphn platform
 add_subdirectory(projects/validation_layers/function_loader/)
-target_link_libraries(Gryphn INTERFACE GryphnCore GryphnLoader GryphnPlatform GryphnFunctionValidator)
+target_link_libraries(Gryphn INTERFACE GryphnCore GryphnLoader GryphnPlatform GryphnFunctionValidator GryphnExtensions)
 
 if (VULKAN_BUILT)
     target_link_libraries(Gryphn INTERFACE GryphnVulkanImpl)

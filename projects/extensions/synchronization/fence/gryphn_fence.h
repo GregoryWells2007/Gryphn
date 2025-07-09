@@ -1,5 +1,4 @@
 #pragma once
-#include "stdint.h"
 #include <utils/gryphn_bool.h>
 #include "utils/gryphn_error_code.h"
 #include "utils/lists/gryphn_array_list.h"

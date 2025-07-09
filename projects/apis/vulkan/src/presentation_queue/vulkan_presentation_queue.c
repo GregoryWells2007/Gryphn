@@ -81,7 +81,7 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
     return GN_SUCCESS;
 }
 
-gnReturnCode getPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
+gnReturnCode getPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
     VkResult result = vkAcquireNextImageKHR(
         presentationQueue->outputDevice->outputDevice->device,
         presentationQueue->presentationQueue->swapChain,

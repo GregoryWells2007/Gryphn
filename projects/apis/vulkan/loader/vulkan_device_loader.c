@@ -18,7 +18,7 @@
 gnDeviceFunctions loadVulkanDeviceFunctions() {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = createPresentationQueue,
-        ._gnPresentationQueueGetImage = getPresentQueueImage,
+        ._gnPresentationQueueGetImageAsync = getPresentQueueImageAsync,
         ._gnDestroyPresentationQueue = destroyPresentationQueue,
 
         ._gnCreateShaderModule = createShaderModule,

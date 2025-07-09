@@ -1,7 +1,8 @@
 #include "loader/src/gryphn_device_functions.h"
 
 gnReturnCode checkCreatePresentationQueue(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);
-gnReturnCode checkPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
+gnReturnCode checkPresentationQueueGetImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
+gnReturnCode checkPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint32_t *imageIndex);
 void checkDestroyPresentationQueue(gnPresentationQueueHandle presentationQueue);
 
 gnReturnCode checkCreateShaderModule(gnShaderModuleHandle module, gnOutputDeviceHandle device, gnShaderModuleInfo shaderModuleInfo);
