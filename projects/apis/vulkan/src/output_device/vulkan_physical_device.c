@@ -77,6 +77,8 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
         VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
 
         outputDevices[i].features.avaliableSamples = vkSampleCountToGryphn(counts);
+        outputDevices[i].features.maxMemoryAllocations = physicalDeviceProperties.limits.maxMemoryAllocationCount;
+        // outputDevices[i].features.maxMemoryAllocations = 4096;
     }
     free(physicalDevices);
 
