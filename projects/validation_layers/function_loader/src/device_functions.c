@@ -16,9 +16,6 @@
 gnReturnCode checkCreatePresentationQueue(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo){
     CHECK_FUNCTION_WITH_RETURN_CODE(presentationQueue->outputDevice->instance, _gnCreatePresentationQueue, deviceFunctions, presentationQueue, device, presentationInfo);
 }
-// gnReturnCode checkPresentationQueueGetImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex) {
-//     CHECK_FUNCTION_WITH_RETURN_CODE(presentationQueue->outputDevice->instance, _gnPresentationQueueGetImageAsync, presentationQueue, timeout, semaphore, imageIndex);
-// }
 gnReturnCode checkPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint32_t *imageIndex) {
     CHECK_FUNCTION_WITH_RETURN_CODE(presentationQueue->outputDevice->instance, _gnPresentationQueueGetImage, deviceFunctions, presentationQueue, imageIndex);
 }
@@ -60,13 +57,6 @@ gnReturnCode checkCreateCommandPool(gnCommandPoolHandle commandPool, gnOutputDev
 void checkDestroyCommandPool(gnCommandPoolHandle commandPool) {
     CHECK_VOID_FUNCTION(commandPool->device->instance, _gnDestroyCommandPool, deviceFunctions, commandPool);
 }
-
-// gnReturnCode checkCreateSemaphore(gnSemaphoreHandle semaphore, gnOutputDeviceHandle device) {
-//     CHECK_FUNCTION_WITH_RETURN_CODE(device->instance, _gnCreateSemaphore, semaphore, device);
-// }
-// void checkDestroySemaphore(gnSemaphoreHandle semaphore) {
-//     CHECK_VOID_FUNCTION(semaphore->device->instance, _gnDestroySemaphore, semaphore);
-// }
 
 gnReturnCode checkCreateBuffer(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info) {
     CHECK_FUNCTION_WITH_RETURN_CODE(device->instance, _gnCreateBuffer, deviceFunctions, buffer, device, info);
@@ -113,19 +103,6 @@ void checkTextureData(gnTextureHandle texture, void* pixelData) {
 void checkDestroyTexture(gnTexture texture) {
     CHECK_VOID_FUNCTION(texture->device->instance, _gnDestroyTexture, deviceFunctions, texture);
 }
-
-// gnReturnCode checkCreateFence(gnFenceHandle fence, gnOutputDeviceHandle device) {
-//     CHECK_FUNCTION_WITH_RETURN_CODE(device->instance, _gnCreateFence, fence, device);
-// }
-// void checkWaitForFence(gnFenceHandle fence, uint64_t timeout) {
-//     CHECK_VOID_FUNCTION(fence->device->instance, _gnWaitForFence, fence, timeout);
-// }
-// void checkResetFence(gnFenceHandle fence) {
-//     CHECK_VOID_FUNCTION(fence->device->instance, _gnResetFence, fence);
-// }
-// void checkDestroyFence(gnFenceHandle fence) {
-//     CHECK_VOID_FUNCTION(fence->device->instance, _gnDestroyFence, fence);
-// }
 
 gnReturnCode checkSubmit(gnOutputDeviceHandle device, gnSubmitInfo info) {
     CHECK_FUNCTION_WITH_RETURN_CODE(device->instance, _gnSubmit, deviceFunctions, device, info);
