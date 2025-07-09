@@ -14,7 +14,6 @@ struct gnPlatformOutputDevice_t {
 
     id<MTLCommandBuffer> executingCommandBuffer;
     id<MTLCommandQueue> transferQueue;
-    // id<MTLRenderPipelineState> framebuffer;
 } gnPlatformOutputDevice;
 
 gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCount);

@@ -75,12 +75,13 @@ gnSurfaceFormat* vkGetSurfaceFormats(
         for (int i = 0; i < *formatCount; i++) {
             switch (vkFormats[i].format) {
             case VK_FORMAT_B8G8R8A8_SRGB: { formats[i].format = GN_FORMAT_BGRA8_SRGB; break; }
-            default: break;
+            case VK_FORMAT_B8G8R8A8_UNORM: { formats[i].format = GN_FORMAT_BGRA8; break; }
+            default: { formats[i].format = GN_FORMAT_NONE; break; }
             }
 
             switch (vkFormats[i].colorSpace) {
             case VK_COLOR_SPACE_SRGB_NONLINEAR_KHR: { formats[i].colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR; break; }
-            default: break;
+            default: { formats[i].colorSpace = GN_COLOR_SPACE_NONE; break; };
             }
         }
     }
@@ -112,6 +113,7 @@ VkFormat vkGryphnFormatToVulkanFormat(gnImageFormat format) {
     switch (format) {
     case GN_FORMAT_NONE: return VK_FORMAT_UNDEFINED;
     case GN_FORMAT_BGRA8_SRGB: return VK_FORMAT_B8G8R8A8_SRGB;
+    case GN_FORMAT_BGRA8: return VK_FORMAT_B8G8R8A8_UNORM;
     case GN_FORMAT_RGBA8_SRGB: return VK_FORMAT_R8G8B8A8_SRGB;
     case GN_FORMAT_D32S8_UINT: return VK_FORMAT_D32_SFLOAT_S8_UINT;
     case GN_FORMAT_D24S8_UINT: return VK_FORMAT_D24_UNORM_S8_UINT;
@@ -119,6 +121,7 @@ VkFormat vkGryphnFormatToVulkanFormat(gnImageFormat format) {
 }
 VkColorSpaceKHR vkGryphnColorSpaceToVulkanColorSpace(gnColorSpace colorSpace) {
     switch (colorSpace) {
+    case GN_COLOR_SPACE_NONE: { return VK_COLOR_SPACE_SRGB_NONLINEAR_KHR; }; // this is a problem if we are trying to convert it
     case GN_COLOR_SPACE_SRGB_NONLINEAR: { return VK_COLOR_SPACE_SRGB_NONLINEAR_KHR; }
     }
 }

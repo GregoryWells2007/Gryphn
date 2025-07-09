@@ -16,18 +16,30 @@ NSUInteger mtlSampleCount(gnMultisampleCountFlags flags) {
 gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
     MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
-    textureDescriptor.pixelFormat = mtlGryphnFormatToMetalFormat(info.format);
     textureDescriptor.width = info.extent.width;
     textureDescriptor.height = info.extent.height;
     textureDescriptor.depth = info.extent.depth;
     textureDescriptor.sampleCount = mtlSampleCount(info.samples);
-    if (textureDescriptor.sampleCount >= 2)
+    textureDescriptor.pixelFormat = mtlGryphnFormatToMetalFormat(info.format);
+    textureDescriptor.usage = MTLTextureUsageRenderTarget;
+    if (textureDescriptor.sampleCount >= 2) {
         textureDescriptor.textureType = MTLTextureType2DMultisample;
-    else
+    }
+    else {
         textureDescriptor.textureType = MTLTextureType2D;
+    }
 
+    MTLSamplerDescriptor *samplerDesc = [[MTLSamplerDescriptor alloc] init];
+    samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
+    samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+    samplerDesc.mipFilter = MTLSamplerMipFilterNotMipmapped;
+    samplerDesc.sAddressMode = MTLSamplerAddressModeClampToEdge;
+    samplerDesc.tAddressMode = MTLSamplerAddressModeClampToEdge;
+    samplerDesc.normalizedCoordinates = YES;
+    texture->texture->sampler = [device->outputDevice->device newSamplerStateWithDescriptor:samplerDesc];
     texture->texture->texture = [device->outputDevice->device newTextureWithDescriptor:textureDescriptor];
     [textureDescriptor release];
+    [samplerDesc release];
     return GN_SUCCESS;
 }
 

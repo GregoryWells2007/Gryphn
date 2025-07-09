@@ -9,12 +9,6 @@ gnReturnCode createMetalOutputDevice(gnOutputDeviceHandle outputDevice, gnInstan
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
     outputDevice->outputDevice->device = deviceInfo.physicalDevice.physicalDevice->device.retain;
     outputDevice->outputDevice->transferQueue = outputDevice->outputDevice->device.newCommandQueue;
-    // outputDevice->outputDevice->queueCount = deviceInfo.queueInfoCount;
-    // outputDevice->outputDevice->queues = malloc(sizeof(id<MTLCommandQueue>) * deviceInfo.queueInfoCount);
-    // for (int i = 0; i < deviceInfo.queueInfoCount; i++) {
-    //     outputDevice->outputDevice->queues[i] = outputDevice->outputDevice->device.newCommandQueue;
-    // }
-
     return GN_SUCCESS;
 }
 

@@ -28,6 +28,13 @@ MTLStoreAction mtlGryphnStoreOperation(gnStoreOperation storeOperation) {
     }
 }
 
+MTLStoreAction mtlGryphnStoreOperationResolve(gnStoreOperation storeOperation) {
+    switch (storeOperation) {
+    case GN_STORE_OPERATION_STORE: return MTLStoreActionStoreAndMultisampleResolve;
+    case GN_STORE_OPERATION_DONT_CARE: return MTLStoreActionDontCare;
+    }
+}
+
 gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice device, gnFramebufferInfo info) {
     framebuffer->framebuffer = malloc(sizeof(struct gnPlatformFramebuffer_t));
     if (info.attachmentCount != info.renderPassDescriptor->info.attachmentCount) {
@@ -45,13 +52,20 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
         [framebuffer->framebuffer->subpasses[i] setRenderTargetWidth:info.size.x];
         [framebuffer->framebuffer->subpasses[i] setRenderTargetHeight:info.size.y];
 
+        gnBool resolve = !(info.renderPassDescriptor->info.subpassInfos[i].resolveAttachments == NULL);
+
         for (int c = 0; c < info.renderPassDescriptor->info.subpassInfos[i].colorAttachmentCount; c++) {
-            uint32_t attachmentIndex = info.renderPassDescriptor->info.subpassInfos[i].colorAttachments[i].index;
+            uint32_t attachmentIndex = info.renderPassDescriptor->info.subpassInfos[i].colorAttachments[c].index, resolveAttachemntIndex = 0;
             MTLRenderPassColorAttachmentDescriptor* color = framebuffer->framebuffer->subpasses[i].colorAttachments[c];
             color.texture = info.attachments[attachmentIndex]->texture->texture;
-
+            if (resolve) {
+                resolveAttachemntIndex = info.renderPassDescriptor->info.subpassInfos[i].resolveAttachments[c].index;
+                color.resolveTexture = info.attachments[resolveAttachemntIndex]->texture->texture;
+                color.storeAction = mtlGryphnStoreOperationResolve(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].storeOperation);
+            } else {
+                color.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].storeOperation);
+            }
             color.loadAction  = mtlGryphnLoadOperation(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].loadOperation);
-            color.storeAction = mtlGryphnStoreOperation(info.renderPassDescriptor->info.attachmentInfos[attachmentIndex].storeOperation);
 
             if (color.loadAction == MTLLoadActionClear)
                 color.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
@@ -66,7 +80,7 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
             depthAttachment.clearDepth = 1.0f;
 
             MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = framebuffer->framebuffer->subpasses[attachmentIndex].stencilAttachment;
-            stencilAttachment.texture = info.attachments[i]->texture->texture;
+            stencilAttachment.texture = info.attachments[attachmentIndex]->texture->texture;
         }
     }
 

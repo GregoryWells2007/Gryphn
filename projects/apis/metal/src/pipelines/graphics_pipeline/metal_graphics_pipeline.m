@@ -3,6 +3,7 @@
 #include "debugger/gryphn_debugger.h"
 #include "shader_module/metal_shader_module.h"
 #include "surface/metal_surface.h"
+#include "texture/metal_texture.h"
 
 #include "utils/math/gryphn_vec3.h"
 
@@ -44,6 +45,7 @@ MTLCompareFunction mtlGrypnCompareOperation(gnCompareOperation operation) {
 gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
+    descriptor.rasterSampleCount = mtlSampleCount(info.multisample.samples);
 
     if (info.subpassIndex >= info.renderPassDescriptor->info.subpassCount) {
         gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){

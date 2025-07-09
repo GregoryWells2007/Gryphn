@@ -19,7 +19,6 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
     }];
 
         id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
-
         [blit copyFromTexture:info.presentationQueues[i]->images[info.imageIndices[i]]->texture->texture
                 sourceSlice:0
                 sourceLevel:0

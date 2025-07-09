@@ -18,6 +18,11 @@ void destroyMetalWindowSurface(gnWindowSurface windowSurface) {
     free(windowSurface->windowSurface);
 }
 
+gnImageFormat mtlMetalFormatToGryphn(MTLPixelFormat format) {
+    if (format == MTLPixelFormatBGRA8Unorm_sRGB) return GN_FORMAT_BGRA8_SRGB;
+    return GN_FORMAT_NONE;
+}
+
 gnSurfaceDetails getMetalSurfaceDetails(
     gnWindowSurface windowSurface, gnPhysicalDevice device
 ) {
@@ -35,6 +40,7 @@ MTLPixelFormat mtlGryphnFormatToMetalFormat(gnImageFormat format) {
     switch (format) {
     case GN_FORMAT_NONE: return MTLPixelFormatInvalid;
     case GN_FORMAT_BGRA8_SRGB: return MTLPixelFormatBGRA8Unorm_sRGB;
+    case GN_FORMAT_BGRA8: return MTLPixelFormatBGRA8Unorm;
     case GN_FORMAT_RGBA8_SRGB: return MTLPixelFormatRGBA8Unorm_sRGB;
     case GN_FORMAT_D24S8_UINT: return MTLPixelFormatDepth24Unorm_Stencil8;
     case GN_FORMAT_D32S8_UINT: return MTLPixelFormatDepth32Float_Stencil8;
@@ -43,6 +49,7 @@ MTLPixelFormat mtlGryphnFormatToMetalFormat(gnImageFormat format) {
 
 CGColorSpaceRef mtlGryphnColorSpaceToMetalColorSpace(gnColorSpace colorSpace) {
     switch (colorSpace) {
+    case GN_COLOR_SPACE_NONE: { return CGColorSpaceCreateWithName(kCGColorSpaceSRGB); } // very bad if here
     case GN_COLOR_SPACE_SRGB_NONLINEAR: { return CGColorSpaceCreateWithName(kCGColorSpaceSRGB); }
     }
 }

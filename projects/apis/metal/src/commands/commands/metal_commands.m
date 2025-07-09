@@ -1,5 +1,7 @@
 #include "metal_commands.h"
 #include "shader_module/metal_shader_module.h"
+#include "renderpass/metal_render_pass.h"
+#include "utils/math/gryphn_math.h"
 
 void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
     int currentColorAttachment = 0;
@@ -127,8 +129,9 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
             ];
         } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
             gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
-            [encoder setFragmentTexture:info.texture->texture->texture atIndex:
-            buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.sets[set].bindings[info.binding]];
+            uint32_t index = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.sets[set].bindings[info.binding];
+            [encoder setFragmentTexture:info.texture->texture->texture atIndex:index];
+            [encoder setFragmentSamplerState:info.texture->texture->sampler atIndex:index];
         }
     }
 }
