@@ -3,7 +3,11 @@
 #include "output_device/gryphn_output_device.h"
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
-#include "commands/command_buffer/vulkan_command_buffer.h"
+
+VkDeviceSize min(VkDeviceSize a, VkDeviceSize b) {
+    if (a >= b) return a;
+    return b;
+}
 
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
     VkBufferUsageFlags usageFlags = 0;
@@ -58,28 +62,17 @@ gnReturnCode VkCreateBuffer(
     return GN_SUCCESS;
 }
 
-void VkCopyBuffer(VkBuffer source, VkBuffer destination, size_t size, VkCommandPool pool, VkDevice device, VkQueue queue) {
-    VkCommandBuffer transferBuffer = VkBeginTransferOperation(device, pool);
-    VkBufferCopy copyRegion = {
-      .size = size
-    };
-    vkCmdCopyBuffer(transferBuffer, source, destination, 1, &copyRegion);
-    VkEndTransferOperation(transferBuffer, pool, queue, device);
+void VkCopyBuffer(gnDevice device, VkBuffer source, VkBuffer destination, VkBufferCopy copy) {
+    VkCommandBuffer transferBuffer = gnBeginVulkanTransferOperation(device);
+    vkCmdCopyBuffer(transferBuffer, source, destination, 1, &copy);
+    gnEndVulkanTransferOperation(device, transferBuffer);
 }
 
 gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));
     VkBufferUsageFlags usage = vkGryphnBufferType(info.type);
-    buffer->buffer->useStagingBuffer = gnFalse;
+    buffer->buffer->useStagingBuffer = (info.usage == GN_STATIC_DRAW);
     if (info.usage == GN_STATIC_DRAW) {
-        buffer->buffer->useStagingBuffer = gnTrue;
-        VkCreateBuffer(
-            &buffer->buffer->stagingBuffer,
-            info.size, device,
-            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-            VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-        );
-
         return VkCreateBuffer(
             &buffer->buffer->buffer,
             info.size, device,
@@ -99,32 +92,31 @@ gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gn
 
     return GN_SUCCESS;
 }
-void bufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
-    void* bufferData;
-    if (buffer->buffer->useStagingBuffer) {
-        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory, 0, dataSize, 0, &bufferData);
-        memcpy(bufferData, data, dataSize);
-        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory);
-        VkCopyBuffer(
-            buffer->buffer->stagingBuffer.buffer, buffer->buffer->buffer.buffer, dataSize,
-            buffer->device->outputDevice->transferCommandPool, buffer->device->outputDevice->device,
-            buffer->device->outputDevice->transferQueue);
-    } else {
-        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, dataSize, 0, &bufferData);
-        memcpy(bufferData, data, dataSize);
-        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory);
-    }
+void bufferData(gnBufferHandle buffer, VkDeviceSize dataSize, void* data) {
+    vulkanBufferSubData(buffer, 0, dataSize, data);
 }
 void vulkanBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, void* data) {
     void* bufferData;
+
     if (buffer->buffer->useStagingBuffer) {
-        vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory, 0, dataSize, 0, &bufferData);
-        memcpy(bufferData + offset, data, dataSize);
-        vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->stagingBuffer.memory);
-        VkCopyBuffer(
-            buffer->buffer->stagingBuffer.buffer, buffer->buffer->buffer.buffer, dataSize,
-            buffer->device->outputDevice->transferCommandPool, buffer->device->outputDevice->device,
-            buffer->device->outputDevice->transferQueue);
+        VkGryphnBuffer* stagingBuffer = &buffer->device->outputDevice->stagingBuffer;
+        VkDeviceSize sizeLeft = dataSize;
+        int copies = 0;
+        while (sizeLeft > 0) {
+            VkDeviceSize chunkSize = (buffer->device->outputDevice->stagingBufferSize < sizeLeft) ? buffer->device->outputDevice->stagingBufferSize : sizeLeft;
+            vkMapMemory(buffer->device->outputDevice->device, stagingBuffer->memory, 0, dataSize, 0, &bufferData);
+            memcpy(bufferData, data + (dataSize - sizeLeft), chunkSize);
+            vkUnmapMemory(buffer->device->outputDevice->device, stagingBuffer->memory);
+
+            VkBufferCopy copyRegion = {
+                .srcOffset = 0,
+                .dstOffset = offset + (dataSize - sizeLeft),
+                .size = chunkSize
+            };
+            VkCopyBuffer(buffer->device, stagingBuffer->buffer, buffer->buffer->buffer.buffer, copyRegion);
+            sizeLeft -= chunkSize;
+            copies++;
+        }
     } else {
         vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, dataSize, 0, &bufferData);
         memcpy(bufferData + offset, data, dataSize);
@@ -143,7 +135,7 @@ void gnDestroyVulkanBuffer(VkGryphnBuffer* buffer, VkDevice device) {
 }
 
 void destroyBuffer(gnBufferHandle buffer) {
-    if (buffer->buffer->useStagingBuffer == gnTrue) gnDestroyVulkanBuffer(&buffer->buffer->stagingBuffer, buffer->device->outputDevice->device);
+    // if (buffer->buffer->useStagingBuffer == gnTrue) gnDestroyVulkanBuffer(&buffer->buffer->stagingBuffer, buffer->device->outputDevice->device);
     gnDestroyVulkanBuffer(&buffer->buffer->buffer, buffer->device->outputDevice->device);
     free(buffer->buffer);
 }

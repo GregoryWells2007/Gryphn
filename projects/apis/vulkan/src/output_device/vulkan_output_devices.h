@@ -12,6 +12,7 @@ typedef struct gnPlatformOutputDevice_t {
     VkCommandPool transferCommandPool;
 
     VkGryphnBuffer stagingBuffer;
+    VkDeviceSize stagingBufferSize;
 
     gnBool enabledOversizedDescriptorPools;
 } gnPlatformOutputDevice;

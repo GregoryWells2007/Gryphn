@@ -11,9 +11,6 @@ void gnDestroyVulkanBuffer(VkGryphnBuffer* buffer, VkDevice device);
 
 struct gnPlatformBuffer_t {
     VkGryphnBuffer buffer;
-
-    // for if static draw
-    VkGryphnBuffer stagingBuffer;
     gnBool useStagingBuffer;
 };
 
@@ -21,6 +18,7 @@ gnReturnCode VkCreateBuffer(
     VkGryphnBuffer* buffer, size_t size, gnDevice device,
     VkMemoryPropertyFlags flags, VkBufferUsageFlags usage
 );
+void gnDestroyVulkanBuffer(VkGryphnBuffer* buffer, VkDevice device);
 uint32_t VkMemoryIndex(VkPhysicalDevice device, uint32_t memoryType, VkMemoryPropertyFlags flags, gnBool* foundMemory);
 
 gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info);

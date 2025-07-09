@@ -85,7 +85,15 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
     free(queueCreateInfos);
     free(queueFamilies);
 
-    return GN_SUCCESS;
+    // create the massive staging buffer
+    outputDevice->outputDevice->stagingBufferSize = 128 * 1024 * 1024;
+    gnReturnCode code = VkCreateBuffer(
+        &outputDevice->outputDevice->stagingBuffer,
+        outputDevice->outputDevice->stagingBufferSize, outputDevice,
+        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+        VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+    );
+    return code; // lowkey is a hack
 }
 
 void waitForDevice(const gnOutputDeviceHandle device) {
@@ -93,6 +101,7 @@ void waitForDevice(const gnOutputDeviceHandle device) {
 }
 
 void destroyOutputDevice(gnOutputDeviceHandle device) {
+    gnDestroyVulkanBuffer(&device->outputDevice->stagingBuffer, device->outputDevice->device);
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);
     vkDestroyDevice(device->outputDevice->device, NULL);
     free(device->outputDevice);
