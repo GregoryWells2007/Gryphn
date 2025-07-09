@@ -23,7 +23,7 @@ typedef struct gnPhysicalDeviceProperties {
 } gnPhysicalDeviceProperties;
 
 typedef struct gnPhysicalDeviceFeatures {
-    gnMultisampleCountFlags avaliableSamples;
+    gnMultisampleCountFlags maxColorSamples, maxDepthSamples;
     uint32_t maxMemoryAllocations;
     uint32_t maxPushConstantSize;
 } gnPhysicalDeviceFeatures;

@@ -101,10 +101,9 @@ void vulkanBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, 
     if (buffer->buffer->useStagingBuffer) {
         VkGryphnBuffer* stagingBuffer = &buffer->device->outputDevice->stagingBuffer;
         VkDeviceSize sizeLeft = dataSize;
-        int copies = 0;
         while (sizeLeft > 0) {
             VkDeviceSize chunkSize = (buffer->device->outputDevice->stagingBufferSize < sizeLeft) ? buffer->device->outputDevice->stagingBufferSize : sizeLeft;
-            vkMapMemory(buffer->device->outputDevice->device, stagingBuffer->memory, 0, dataSize, 0, &bufferData);
+            vkMapMemory(buffer->device->outputDevice->device, stagingBuffer->memory, 0, chunkSize, 0, &bufferData);
             memcpy(bufferData, data + (dataSize - sizeLeft), chunkSize);
             vkUnmapMemory(buffer->device->outputDevice->device, stagingBuffer->memory);
 
@@ -115,7 +114,6 @@ void vulkanBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, 
             };
             VkCopyBuffer(buffer->device, stagingBuffer->buffer, buffer->buffer->buffer.buffer, copyRegion);
             sizeLeft -= chunkSize;
-            copies++;
         }
     } else {
         vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, dataSize, 0, &bufferData);

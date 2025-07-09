@@ -5,13 +5,13 @@
 
 gnMultisampleCountFlags vkSampleCountToGryphn(VkSampleCountFlags counts) {
     gnMultisampleCountFlags sampleCount = 0;
-    if (counts & VK_SAMPLE_COUNT_64_BIT) { sampleCount |= GN_SAMPLE_BIT_64; }
-    if (counts & VK_SAMPLE_COUNT_32_BIT) { sampleCount |= GN_SAMPLE_BIT_32; }
-    if (counts & VK_SAMPLE_COUNT_16_BIT) { sampleCount |= GN_SAMPLE_BIT_16; }
-    if (counts & VK_SAMPLE_COUNT_8_BIT) { sampleCount |= GN_SAMPLE_BIT_8; }
-    if (counts & VK_SAMPLE_COUNT_4_BIT) { sampleCount |= GN_SAMPLE_BIT_4; }
-    if (counts & VK_SAMPLE_COUNT_2_BIT) { sampleCount |= GN_SAMPLE_BIT_2; }
-    if (counts & VK_SAMPLE_COUNT_1_BIT) { sampleCount |= GN_SAMPLE_BIT_1; }
+    if ((counts & VK_SAMPLE_COUNT_64_BIT) == VK_SAMPLE_COUNT_64_BIT) { sampleCount |= GN_SAMPLE_BIT_64; }
+    if ((counts & VK_SAMPLE_COUNT_32_BIT) == VK_SAMPLE_COUNT_32_BIT) { sampleCount |= GN_SAMPLE_BIT_32; }
+    if ((counts & VK_SAMPLE_COUNT_16_BIT) == VK_SAMPLE_COUNT_16_BIT) { sampleCount |= GN_SAMPLE_BIT_16; }
+    if ((counts & VK_SAMPLE_COUNT_8_BIT) == VK_SAMPLE_COUNT_8_BIT) { sampleCount |= GN_SAMPLE_BIT_8; }
+    if ((counts & VK_SAMPLE_COUNT_4_BIT) == VK_SAMPLE_COUNT_4_BIT) { sampleCount |= GN_SAMPLE_BIT_4; }
+    if ((counts & VK_SAMPLE_COUNT_2_BIT) == VK_SAMPLE_COUNT_2_BIT) { sampleCount |= GN_SAMPLE_BIT_2; }
+    if ((counts & VK_SAMPLE_COUNT_1_BIT) == VK_SAMPLE_COUNT_1_BIT) { sampleCount |= GN_SAMPLE_BIT_1; }
     return sampleCount;
 }
 
@@ -74,9 +74,8 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
 
         VkPhysicalDeviceProperties physicalDeviceProperties;
         vkGetPhysicalDeviceProperties(physicalDevices[i], &physicalDeviceProperties);
-        VkSampleCountFlags counts = physicalDeviceProperties.limits.framebufferColorSampleCounts & physicalDeviceProperties.limits.framebufferDepthSampleCounts;
-
-        outputDevices[i].features.avaliableSamples = vkSampleCountToGryphn(counts);
+        outputDevices[i].features.maxColorSamples = vkSampleCountToGryphn(physicalDeviceProperties.limits.framebufferColorSampleCounts);
+        outputDevices[i].features.maxDepthSamples = vkSampleCountToGryphn(physicalDeviceProperties.limits.framebufferDepthSampleCounts);
         outputDevices[i].features.maxMemoryAllocations = physicalDeviceProperties.limits.maxMemoryAllocationCount;
         outputDevices[i].features.maxPushConstantSize = physicalDeviceProperties.limits.maxPushConstantsSize;
     }
