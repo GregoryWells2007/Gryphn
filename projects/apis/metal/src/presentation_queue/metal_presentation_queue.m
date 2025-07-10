@@ -48,11 +48,18 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     return GN_SUCCESS;
 }
 
-gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
+gnReturnCode getMetalPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
     while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
     *imageIndex = presentationQueue->presentationQueue->avaliableTextures.data[0];
     uint32_tArrayListPopHead(&presentationQueue->presentationQueue->avaliableTextures);
     semaphore->semaphore->eventTriggered = gnTrue;
+    return GN_SUCCESS;
+}
+
+gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex) {
+    while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
+    *imageIndex = presentationQueue->presentationQueue->avaliableTextures.data[0];
+    uint32_tArrayListPopHead(&presentationQueue->presentationQueue->avaliableTextures);
     return GN_SUCCESS;
 }
 

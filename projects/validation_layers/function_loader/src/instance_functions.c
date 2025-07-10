@@ -28,7 +28,7 @@ void checkDestroyOutputDevice(gnOutputDeviceHandle device) {
 
 #ifdef GN_PLATFORM_MACOS
 gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
-    CHECK_FUNCTION_WITH_RETURN_CODE(instance, _gnCreateMacOSWindowSurface, instanceFunctions, surface, instance, info);
+    CHECK_FUNCTION_WITH_RETURN_CODE(instance, _gnCreateMacOSWindowSurface, instanceFunctions, windowSurface, instance, createInfo);
 }
 #endif
 #ifdef GN_PLATFORM_LINUX

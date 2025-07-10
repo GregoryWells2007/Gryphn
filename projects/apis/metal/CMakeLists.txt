@@ -11,7 +11,9 @@ file(GLOB_RECURSE LOADER_FILES CONFIGURE_DEPENDS
 add_library(GryphnMetalImpl STATIC ${SOURCE_FILES} ${LOADER_FILES})
 target_include_directories(GryphnMetalImpl PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../core/src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../utils/
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../extensions/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../platform/

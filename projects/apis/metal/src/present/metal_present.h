@@ -8,4 +8,5 @@
 #include "texture/metal_texture.h"
 #import <QuartzCore/CAMetalLayer.h>
 
+gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo info);
 gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info);

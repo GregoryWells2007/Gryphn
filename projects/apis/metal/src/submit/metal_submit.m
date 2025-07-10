@@ -1,6 +1,7 @@
 #include "metal_submit.h"
+#include "synchronization/fence/gryphn_fence.h"
 
-gnReturnCode metalSubmit(gnOutputDevice device, gnSubmitInfo info) {
+gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
     for (int i = 0; i < info.waitCount; i++) {
         while (!info.waitSemaphores[i]->semaphore->eventTriggered) {}
     }
@@ -21,5 +22,15 @@ gnReturnCode metalSubmit(gnOutputDevice device, gnSubmitInfo info) {
         [commandBuffer commit];
     }
 
+    return GN_SUCCESS;
+}
+
+gnReturnCode metalSubmit(gnOutputDevice device, gnSubmitInfo info) {
+    for (int i = 0; i < info.commandBufferCount; i++) {
+        id<MTLCommandBuffer> commandBuffer = info.commandBuffers[i]->commandBuffer->commandBuffer;
+        [commandBuffer commit];
+    }
+
+    [info.commandBuffers[info.commandBufferCount - 1]->commandBuffer->commandBuffer waitUntilCompleted];
     return GN_SUCCESS;
 }

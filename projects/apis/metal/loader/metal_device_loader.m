@@ -35,9 +35,6 @@ gnDeviceFunctions loadMetalDeviceFunctions() {
         ._gnCreateCommandPool = createMetalCommandPool,
         ._gnDestroyCommandPool = destroyMetalCommandPool,
 
-        ._gnCreateSemaphore = createMetalSemaphore,
-        ._gnDestroySemaphore = destroyMetalSemaphore,
-
         ._gnCreateBuffer = createMetalBuffer,
         ._gnBufferData = metalBufferData,
         ._gnMapBuffer = mapMetalBuffer,
@@ -54,11 +51,6 @@ gnDeviceFunctions loadMetalDeviceFunctions() {
         ._gnCreateTexture = createMetalTexture,
         ._gnTextureData = metalTextureData,
         ._gnDestroyTexture = metalDestroyTexture,
-
-        ._gnCreateFence = createMetalFence,
-        ._gnWaitForFence = waitForMetalFence,
-        ._gnResetFence = resetMetalFence,
-        ._gnDestroyFence = destroyMetalFence,
 
         ._gnSubmit = metalSubmit,
         ._gnPresent = metalPresent,

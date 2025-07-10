@@ -1,5 +1,5 @@
 #pragma once
-#include "sync/semaphore/gryphn_semaphore.h"
+#include "synchronization/semaphore/gryphn_semaphore.h"
 #import <Metal/MTLEvent.h>
 
 typedef struct gnPlatformSemaphore_t {

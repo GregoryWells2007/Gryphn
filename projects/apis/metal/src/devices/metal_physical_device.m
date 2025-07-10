@@ -30,12 +30,13 @@ gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCou
             .queueType = GN_QUEUE_GRAPHICS | GN_QUEUE_COMPUTE | GN_QUEUE_TRANSFER
         };
 
-        if ([device supportsTextureSampleCount:1]) { devicesList[i].features.avaliableSamples |= GN_SAMPLE_BIT_1; }
-        if ([device supportsTextureSampleCount:2]) { devicesList[i].features.avaliableSamples |= GN_SAMPLE_BIT_2; }
-        if ([device supportsTextureSampleCount:4]) { devicesList[i].features.avaliableSamples |= GN_SAMPLE_BIT_4; }
-        if ([device supportsTextureSampleCount:8]) { devicesList[i].features.avaliableSamples |= GN_SAMPLE_BIT_8; }
-        if ([device supportsTextureSampleCount:16]) { devicesList[i].features.avaliableSamples |= GN_SAMPLE_BIT_16; }
-        if ([device supportsTextureSampleCount:32]) { devicesList[i].features.avaliableSamples |= GN_SAMPLE_BIT_32; }
+        if ([device supportsTextureSampleCount:1]) { devicesList[i].features.maxColorSamples |= GN_SAMPLE_BIT_1; }
+        if ([device supportsTextureSampleCount:2]) { devicesList[i].features.maxColorSamples |= GN_SAMPLE_BIT_2; }
+        if ([device supportsTextureSampleCount:4]) { devicesList[i].features.maxColorSamples |= GN_SAMPLE_BIT_4; }
+        if ([device supportsTextureSampleCount:8]) { devicesList[i].features.maxColorSamples |= GN_SAMPLE_BIT_8; }
+        if ([device supportsTextureSampleCount:16]) { devicesList[i].features.maxColorSamples |= GN_SAMPLE_BIT_16; }
+        if ([device supportsTextureSampleCount:32]) { devicesList[i].features.maxColorSamples |= GN_SAMPLE_BIT_32; }
+        devicesList[i].features.maxDepthSamples = devicesList[i].features.maxColorSamples;
 
         devicesList[i].features.maxMemoryAllocations = 0x40000000;
         devicesList[i].features.maxPushConstantSize = 4096;
