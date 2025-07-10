@@ -16,8 +16,7 @@ gnInstanceFunctions loadOpenGLInstanceFunctions() {
         ._gnCreateX11WindowSurface = createGLXContext,
         #endif
         #endif
-        // ._gnCreateMacOSWindowSurface = createMetalSurface,
         // ._gnDestroyWindowSurface = destroyMetalWindowSurface,
-        // ._gnGetSurfaceDetails = getMetalSurfaceDetails
+        ._gnGetSurfaceDetails = genOpenGLSurfaceDetails
     };
 }

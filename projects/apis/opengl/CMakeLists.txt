@@ -20,4 +20,4 @@ target_include_directories(GryphnOpenGLImpl PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../include/
 )
 add_compile_definitions(GN_REVEAL_IMPL)
-target_link_libraries(GryphnOpenGLImpl GL)
+target_link_libraries(GryphnOpenGLImpl GL "X11")

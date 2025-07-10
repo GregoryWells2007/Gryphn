@@ -16,8 +16,17 @@ gnReturnCode createGLXContext(gnWindowSurfaceHandle windowSurface, gnInstanceHan
     windowSurface->windowSurface->context = glXCreateContext(createInfo.display, vi, NULL, GL_TRUE);
     if (glXMakeCurrent(createInfo.display, createInfo.window, windowSurface->windowSurface->context) == GL_FALSE)
         return GN_FAILED_TO_ATTACH_WINDOW;
+    windowSurface->windowSurface->window = createInfo.window;
+    windowSurface->windowSurface->display = createInfo.display;
     return GN_SUCCESS;
 }
+
+gnUInt2 getWindowSize(gnPlatformWindowSurface* surface) {
+    XWindowAttributes attr;
+    XGetWindowAttributes(surface->display, surface->window, &attr);
+    return (gnUInt2){ attr.width, attr.height };
+}
+
 #endif
 
 #ifdef GN_WINFDOW_WAYLAND
@@ -26,3 +35,26 @@ gnReturnCode gnCreateWaylandWindowSurface(gnWindowSurfaceHandle windowSurface, g
 }
 #endif
 #endif
+
+gnSurfaceDetails genOpenGLSurfaceDetails(
+    gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device
+) {
+    gnSurfaceDetails surfaceDetails;
+    surfaceDetails.formatCount = 1;
+    surfaceDetails.formats = (gnSurfaceFormat[]){
+        (gnSurfaceFormat){
+            .format = GN_FORMAT_RGBA8_SRGB,
+            .colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR
+        }
+    };
+
+    surfaceDetails.minImageCount = 2;
+    surfaceDetails.maxImageCount = 3;
+
+    gnUInt2 windowSize = getWindowSize(windowSurface->windowSurface);
+    surfaceDetails.minImageSize = windowSize;
+    surfaceDetails.maxImageSize = windowSize;
+    surfaceDetails.currentSize = windowSize;
+
+    return surfaceDetails;
+}
