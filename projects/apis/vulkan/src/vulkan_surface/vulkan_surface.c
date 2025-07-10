@@ -2,7 +2,6 @@
 #include <instance/vulkan_instance.h>
 #include "vulkan_surface.h"
 #include <output_device/vulkan_physical_device.h>
-#include <stdio.h>
 
 
 #ifdef GN_PLATFORM_LINUX
