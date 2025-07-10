@@ -6,6 +6,9 @@
 #ifdef GN_API_METAL
 #include <apis/metal/loader/metal_loader.h>
 #endif
+#ifdef GN_API_OPENGL
+#include <apis/opengl/loader/opengl_loader.h>
+#endif
 
 #include "stdio.h"
 #include "core/src/instance/gryphn_instance.h"
@@ -21,7 +24,9 @@ gnInstanceFunctions loadAPIInstanceFunctions(gnRenderingAPI api) {
     case GN_RENDERINGAPI_SOFTWARE: return (gnInstanceFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX11: return (gnInstanceFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX12: return (gnInstanceFunctions){ NULL };
-    case GN_RENDERINGAPI_OPENGL: return (gnInstanceFunctions){ NULL };
+#ifdef GN_API_OPENGL
+    case GN_RENDERINGAPI_OPENGL: return loadOpenGLInstanceFunctions();
+#endif
 #ifdef GN_API_METAL
     case GN_RENDERINGAPI_METAL: return loadMetalInstanceFunctions();
 #endif
