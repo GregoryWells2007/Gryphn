@@ -9,10 +9,12 @@ if (UNIX AND NOT APPLE)
         GN_PLATFORM_LINUX
         GN_WINDOW_X11
 
-        GN_API_VULKAN
+        GN_API_VULKAN GN_API_OPENGL
     )
-    set(VULKAN_BUILT ON)
     add_subdirectory(projects/apis/vulkan/)
+    add_subdirectory(projects/apis/opengl/)
+    set(VULKAN_BUILT ON)
+    set(OPENGL_BUILT ON)
 endif()
 if (APPLE)
     add_compile_definitions(
@@ -38,4 +40,7 @@ if (VULKAN_BUILT)
 endif()
 if (METAL_BUILT)
     target_link_libraries(Gryphn INTERFACE GryphnMetalImpl)
+endif()
+if (OPENGL_BUILT)
+    target_link_libraries(Gryphn INTERFACE GryphnOpenGLImpl)
 endif()
