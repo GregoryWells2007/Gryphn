@@ -52,7 +52,7 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
         ._gnTextureData = textureData,
         ._gnDestroyTexture = destroyTexture,
 
-        ._gnSubmit = submit,
+        ._gnSubmit = vulkanSubmit,
         ._gnPresent = present,
 
         ._gnWaitForDevice = waitForDevice

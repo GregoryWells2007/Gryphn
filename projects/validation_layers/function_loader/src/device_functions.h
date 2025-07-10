@@ -1,7 +1,6 @@
 #include "loader/src/gryphn_device_functions.h"
 
 gnReturnCode checkCreatePresentationQueue(gnPresentationQueueHandle presentationQueue, const gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);
-gnReturnCode checkPresentationQueueGetImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
 gnReturnCode checkPresentationQueueGetImage(gnPresentationQueueHandle presentationQueue, uint32_t *imageIndex);
 void checkDestroyPresentationQueue(gnPresentationQueueHandle presentationQueue);
 
@@ -20,9 +19,6 @@ void checkDestroyFramebuffer(gnFramebuffer framebuffer);
 gnReturnCode checkCreateCommandPool(gnCommandPoolHandle commandPool, gnOutputDeviceHandle device, gnCommandPoolInfo info);
 void checkDestroyCommandPool(gnCommandPoolHandle commandPool);
 
-gnReturnCode checkCreateSemaphore(gnSemaphoreHandle semaphore, gnOutputDeviceHandle device);
-void checkDestroySemaphore(gnSemaphoreHandle semaphore);
-
 gnReturnCode checkCreateBuffer(gnBufferHandle buffer, gnDeviceHandle device, gnBufferInfo info);
 void checkBufferData(gnBufferHandle buffer, size_t size, void* data);
 void checkBufferSubData(gnBufferHandle buffer, size_t offset, size_t size, void* data);
@@ -40,11 +36,6 @@ void checkUpdateImageUniform(gnUniform uniform, gnImageUniformInfo* imageInfo);
 gnReturnCode checkCreateTexture(gnTexture texture, gnDevice device, const gnTextureInfo info);
 void checkTextureData(gnTextureHandle texture, void* pixelData);
 void checkDestroyTexture(gnTexture texture);
-
-gnReturnCode checkCreateFence(gnFenceHandle fence, gnOutputDeviceHandle device);
-void checkWaitForFence(gnFenceHandle fence, uint64_t timeout);
-void checkResetFence(gnFenceHandle fence);
-void checkDestroyFence(gnFenceHandle fence);
 
 gnReturnCode checkSubmit(gnOutputDeviceHandle device, gnSubmitInfo submit);
 gnReturnCode checkPresent(gnOutputDeviceHandle device, gnPresentInfo info);

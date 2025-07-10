@@ -28,3 +28,4 @@
 #include <extensions/synchronization/fence/gryphn_fence.h>
 #include <extensions/synchronization/semaphore/gryphn_semaphore.h>
 #include <extensions/synchronization/gryphn_synced_presentation_queue.h>
+#include <extensions/synchronization/commands/gryphn_sync_submit.h>

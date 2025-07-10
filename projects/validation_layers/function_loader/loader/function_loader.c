@@ -2,6 +2,7 @@
 #include "src/instance_functions.h"
 #include "src/device_functions.h"
 #include "src/command_functions.h"
+#include "extensions/sync_functions.h"
 
 gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
     return (gnInstanceFunctions){
@@ -115,5 +116,7 @@ gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions() {
         ._gnWaitForFence = checkWaitForFence,
         ._gnResetFence = checkResetFence,
         ._gnDestroyFence = checkDestroyFence,
+
+        ._gnSubmitSync = checkSubmitSync
     };
 }
