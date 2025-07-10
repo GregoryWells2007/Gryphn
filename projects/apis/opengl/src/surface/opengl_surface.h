@@ -17,3 +17,6 @@ gnReturnCode createGLXContext(gnWindowSurfaceHandle windowSurface, gnInstanceHan
 gnUInt2 getWindowSize(gnPlatformWindowSurface* surface);
 gnSurfaceDetails genOpenGLSurfaceDetails(gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device);
 void destroyOpenGLSurface(gnWindowSurface surface);
+
+GLint glGryphnFormatToOpenGLFormat(gnImageFormat format);
+GLint glGryphnFormatToOpenGLInternalFormat(gnImageFormat format);

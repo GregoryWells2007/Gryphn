@@ -44,7 +44,9 @@ gnDeviceFunctions loadAPIDeviceFunctions(gnRenderingAPI api) {
     case GN_RENDERINGAPI_SOFTWARE: return (gnDeviceFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX11: return (gnDeviceFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX12: return (gnDeviceFunctions){ NULL };
-    case GN_RENDERINGAPI_OPENGL: return (gnDeviceFunctions){ NULL };
+#ifdef GN_API_OPENGL
+    case GN_RENDERINGAPI_OPENGL: return loadOpenGLDeviceFunctions();
+#endif
 #ifdef GN_API_METAL
     case GN_RENDERINGAPI_METAL: return loadMetalDeviceFunctions();
 #endif
