@@ -1,13 +1,14 @@
 #include "opengl_loader.h"
 #include "instance/opengl_instance.h"
 #include "surface/opengl_surface.h"
+#include "device/opengl_physical_device.h"
 
 gnInstanceFunctions loadOpenGLInstanceFunctions() {
     return (gnInstanceFunctions){
         ._gnCreateInstance = createOpenGLInstance,
         ._gnDestroyInstance = destroyOpenGLInstance,
-        // ._gnGetPhysicalDevices = getMetalDevices,
-        // ._gnQueueCanPresentToSurface = metalCanQueuePresentToSurface,
+        ._gnGetPhysicalDevices = getOpenGLDevice,
+        ._gnQueueCanPresentToSurface = openGLQueueCanPresent,
         // ._gnCreateOutputDevice = createMetalOutputDevice,
         // ._gnDestroyOutputDevice = destroyMetalOutputDevice,
         #ifdef GN_PLATFORM_LINUX

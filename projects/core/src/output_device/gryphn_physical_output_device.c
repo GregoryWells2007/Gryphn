@@ -23,7 +23,7 @@ gnBool gnQueueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueI
 
 gnBool gnHasGraphicsQueue(const gnPhysicalDevice device) {
     for (int i = 0; i < device.queueProperties.queueCount; i++) {
-        if (device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) {
+        if ((device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) == GN_QUEUE_GRAPHICS) {
             return gnTrue;
         }
     }
@@ -40,7 +40,7 @@ gnBool gnHasPresentQueue(const gnPhysicalDevice device, gnWindowSurfaceHandle wi
 
 int gnGetGraphicsQueueIndex(const gnPhysicalDevice device) {
     for (int i = 0; i < device.queueProperties.queueCount; i++) {
-        if (device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) {
+        if ((device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) == GN_QUEUE_GRAPHICS) {
             return i;
             break;
         }

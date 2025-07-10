@@ -29,10 +29,10 @@ typedef struct gnPhysicalDeviceFeatures {
 } gnPhysicalDeviceFeatures;
 
 typedef enum gnQueueTypeFlags {
-    GN_QUEUE_GRAPHICS = 1,
-    GN_QUEUE_COMPUTE = 2,
-    GN_QUEUE_TRANSFER = 4,
-    GN_QUEUE_SPARSE_BINDING = 8
+    GN_QUEUE_GRAPHICS       = 1 << 0,
+    GN_QUEUE_COMPUTE        = 1 << 1,
+    GN_QUEUE_TRANSFER       = 1 << 2,
+    GN_QUEUE_SPARSE_BINDING = 1 << 3
 } gnQueueTypeFlags;
 
 typedef struct gnQueueProperties {
