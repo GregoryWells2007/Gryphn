@@ -85,6 +85,9 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
     free(queueCreateInfos);
     free(queueFamilies);
 
+    VkFenceCreateInfo fenceInfo = { .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO };
+    if (vkCreateFence(outputDevice->outputDevice->device, &fenceInfo, NULL, &outputDevice->outputDevice->barrierFence) != VK_SUCCESS) return GN_FAILED_TO_CREATE_FENCE;
+
     // create the massive staging buffer
     outputDevice->outputDevice->stagingBufferSize = 128 * 1024 * 1024;
     gnReturnCode code = VkCreateBuffer(
@@ -101,6 +104,7 @@ void waitForDevice(const gnOutputDeviceHandle device) {
 }
 
 void destroyOutputDevice(gnOutputDeviceHandle device) {
+    vkDestroyFence(device->outputDevice->device, device->outputDevice->barrierFence, NULL);
     gnDestroyVulkanBuffer(&device->outputDevice->stagingBuffer, device->outputDevice->device);
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);
     vkDestroyDevice(device->outputDevice->device, NULL);

@@ -14,6 +14,8 @@ typedef struct gnPlatformOutputDevice_t {
     VkGryphnBuffer stagingBuffer;
     VkDeviceSize stagingBufferSize;
 
+    VkFence barrierFence;
+
     gnBool enabledOversizedDescriptorPools;
 } gnPlatformOutputDevice;
 
