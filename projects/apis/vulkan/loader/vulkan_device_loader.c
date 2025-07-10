@@ -35,7 +35,7 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
         ._gnDestroyCommandPool = destroyCommandPool,
 
         ._gnCreateBuffer = createBuffer,
-        ._gnBufferData = bufferData,
+        ._gnBufferData = vulkanBufferData,
         ._gnBufferSubData = vulkanBufferSubData,
         ._gnMapBuffer = mapBuffer,
         ._gnDestroyBuffer = destroyBuffer,

@@ -92,7 +92,7 @@ gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gn
 
     return GN_SUCCESS;
 }
-void bufferData(gnBufferHandle buffer, VkDeviceSize dataSize, void* data) {
+void vulkanBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
     vulkanBufferSubData(buffer, 0, dataSize, data);
 }
 void vulkanBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, void* data) {
