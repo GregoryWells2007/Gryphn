@@ -4,6 +4,7 @@
 #include "core/src/gryphn_handles.h"
 
 typedef struct gnSubmitSyncInfo gnSubmitSyncInfo;
+typedef struct gnPresentSyncInfo gnPresentSyncInfo;
 
 typedef struct gnSyncExtFunctions {
     gnReturnCode (*_gnPresentationQueueGetImageAsync)(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
@@ -17,4 +18,5 @@ typedef struct gnSyncExtFunctions {
     void (*_gnDestroyFence)(gnFenceHandle fence);
 
     gnReturnCode (*_gnSubmitSync)(gnOutputDevice device, gnSubmitSyncInfo info);
+    gnReturnCode (*_gnPresentSync)(gnOutputDeviceHandle device, gnPresentSyncInfo info);
 } gnSyncExtFunctions;

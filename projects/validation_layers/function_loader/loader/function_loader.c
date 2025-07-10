@@ -117,6 +117,7 @@ gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions() {
         ._gnResetFence = checkResetFence,
         ._gnDestroyFence = checkDestroyFence,
 
-        ._gnSubmitSync = checkSubmitSync
+        ._gnSubmitSync = checkSubmitSync,
+        ._gnPresentSync = checkPresentSync
     };
 }

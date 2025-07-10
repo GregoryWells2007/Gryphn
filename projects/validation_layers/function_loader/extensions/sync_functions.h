@@ -10,3 +10,4 @@ void checkDestroyFence(gnFenceHandle fence);
 // gnReturnCode fdsfsdf(gnOutputDevice device, gnSubmitSyncInfo info);
 
 gnReturnCode checkSubmitSync(gnOutputDevice device, gnSubmitSyncInfo info);
+gnReturnCode checkPresentSync(gnOutputDevice device, gnPresentSyncInfo info);

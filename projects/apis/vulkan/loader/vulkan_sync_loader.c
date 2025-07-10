@@ -3,6 +3,7 @@
 #include <sync/fence/vulkan_fence.h>
 #include "presentation_queue/vulkan_presentation_queue.h"
 #include "submit/vulkan_submit.h"
+#include "present/vulkan_present.h"
 
 gnSyncExtFunctions loadVulkanSyncFunctions() {
     return (gnSyncExtFunctions){
@@ -16,6 +17,7 @@ gnSyncExtFunctions loadVulkanSyncFunctions() {
         ._gnResetFence = resetFence,
         ._gnDestroyFence = destroyFence,
 
-        ._gnSubmitSync = vulkanSubmitSync
+        ._gnSubmitSync = vulkanSubmitSync,
+        ._gnPresentSync = vulkanPresentSync
     };
 }

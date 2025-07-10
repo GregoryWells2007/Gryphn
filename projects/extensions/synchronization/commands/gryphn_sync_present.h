@@ -3,11 +3,13 @@
 #include "utils/gryphn_error_code.h"
 #include "gryphn_handles.h"
 
-typedef struct gnPresentInfo {
+typedef struct gnPresentSyncInfo {
+    uint32_t waitCount;
+    gnSemaphoreHandle* waitSemaphores;
     uint32_t presentationQueueCount;
     gnPresentationQueueHandle* presentationQueues;
     uint32_t* imageIndices;
     uint32_t queueIndex;
-} gnPresentInfo;
+} gnPresentSyncInfo;
 
-gnReturnCode gnPresent(gnOutputDeviceHandle device, gnPresentInfo info);
+gnReturnCode gnPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo info);
