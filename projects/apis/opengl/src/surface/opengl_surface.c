@@ -1,3 +1,4 @@
+#include <glad/glad.h>
 #include "opengl_surface.h"
 
 #ifdef GN_PLATFORM_LINUX
@@ -18,6 +19,8 @@ gnReturnCode createGLXContext(gnWindowSurfaceHandle windowSurface, gnInstanceHan
         return GN_FAILED_TO_ATTACH_WINDOW;
     windowSurface->windowSurface->window = createInfo.window;
     windowSurface->windowSurface->display = createInfo.display;
+    if (!gladLoadGLLoader((GLADloadproc)glXGetProcAddress))
+        return GN_FAILED_TO_INIT_OPENGL;
     return GN_SUCCESS;
 }
 
@@ -57,4 +60,8 @@ gnSurfaceDetails genOpenGLSurfaceDetails(
     surfaceDetails.currentSize = windowSize;
 
     return surfaceDetails;
+}
+
+void destroyOpenGLSurface(gnWindowSurface surface) {
+    free(surface->windowSurface);
 }

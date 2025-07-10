@@ -2,6 +2,7 @@
 #include "instance/opengl_instance.h"
 #include "surface/opengl_surface.h"
 #include "device/opengl_physical_device.h"
+#include "device/opengl_output_device.h"
 
 gnInstanceFunctions loadOpenGLInstanceFunctions() {
     return (gnInstanceFunctions){
@@ -9,14 +10,14 @@ gnInstanceFunctions loadOpenGLInstanceFunctions() {
         ._gnDestroyInstance = destroyOpenGLInstance,
         ._gnGetPhysicalDevices = getOpenGLDevice,
         ._gnQueueCanPresentToSurface = openGLQueueCanPresent,
-        // ._gnCreateOutputDevice = createMetalOutputDevice,
-        // ._gnDestroyOutputDevice = destroyMetalOutputDevice,
+        ._gnCreateOutputDevice = createOpenGLOutputDevice,
+        ._gnDestroyOutputDevice = destroyOpenGLOutputDevice,
         #ifdef GN_PLATFORM_LINUX
         #ifdef GN_WINDOW_X11
         ._gnCreateX11WindowSurface = createGLXContext,
         #endif
         #endif
-        // ._gnDestroyWindowSurface = destroyMetalWindowSurface,
+        ._gnDestroyWindowSurface = destroyOpenGLSurface,
         ._gnGetSurfaceDetails = genOpenGLSurfaceDetails
     };
 }
