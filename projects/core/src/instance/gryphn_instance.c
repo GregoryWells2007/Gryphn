@@ -15,6 +15,11 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
         .layerToLoad = api_layer
     }));
 
+    // TODO: still needs to check to see if the extension is supported
+    for (int i = 0; i < info.extensionCount; i++) {
+        if (info.extensions[i] == GN_EXT_SYNCHRONIZATION) (*instance)->layers.data[0].syncFunctions = loadAPISyncFunctions(info.renderingAPI);
+    }
+
     gnBool loaderFunctionChecker = gnFalse;
     for (int i = 0; i < info.debugger->info.layerCount; i++) {
         if (info.debugger->info.layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) loaderFunctionChecker = gnTrue;

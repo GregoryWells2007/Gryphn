@@ -99,8 +99,6 @@ loaderLayer api_loaded_layer(gnRenderingAPI api) {
         .instanceFunctions = loadAPIInstanceFunctions(api),
         .deviceFunctions = loadAPIDeviceFunctions(api),
         .commandFunctions = loadAPICommandFunctions(api),
-
-        .syncFunctions = loadAPISyncFunctions(api)
     };
 }
 

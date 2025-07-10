@@ -26,3 +26,6 @@ GN_ARRAY_LIST(loaderLayer);
 
 loaderLayer* loaderGetNextLayer(gnInstance instance);
 void resetLayer(gnInstance instance);
+
+
+gnSyncExtFunctions loadAPISyncFunctions(gnRenderingAPI api);
