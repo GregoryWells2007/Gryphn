@@ -10,5 +10,6 @@ typedef struct gnPlatformPresentationQueue_t {
 } gnPlatformPresentationQueue;
 
 gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo);
+gnReturnCode getVulkanPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex);
 gnReturnCode getPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex);
 void destroyPresentationQueue(gnPresentationQueueHandle queue);

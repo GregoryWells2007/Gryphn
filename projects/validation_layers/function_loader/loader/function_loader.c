@@ -40,7 +40,6 @@ gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
 gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = checkCreatePresentationQueue,
-        // ._gnPresentationQueueGetImageAsync = checkPresentationQueueGetImageAsync,
         ._gnPresentationQueueGetImage = checkPresentationQueueGetImage,
         ._gnDestroyPresentationQueue = checkDestroyPresentationQueue,
 
@@ -59,9 +58,6 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
         ._gnCreateCommandPool = checkCreateCommandPool,
         ._gnDestroyCommandPool = checkDestroyCommandPool,
 
-        // ._gnCreateSemaphore = checkCreateSemaphore,
-        // ._gnDestroySemaphore = checkDestroySemaphore,
-
         ._gnCreateBuffer = checkCreateBuffer,
         ._gnBufferData = checkBufferData,
         ._gnBufferSubData = checkBufferSubData,
@@ -79,11 +75,6 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
         ._gnCreateTexture = checkCreateTexture,
         ._gnTextureData = checkTextureData,
         ._gnDestroyTexture = checkDestroyTexture,
-
-        // ._gnCreateFence = checkCreateFence,
-        // ._gnWaitForFence = checkWaitForFence,
-        // ._gnResetFence = checkResetFence,
-        // ._gnDestroyFence = checkDestroyFence,
 
         ._gnSubmit = checkSubmit,
         ._gnPresent = checkPresent,
@@ -110,5 +101,19 @@ gnCommandFunctions loadFunctionLoaderCommandFunctions() {
         ._gnCommandBindBuffer = checkCommandBindBuffer,
         ._gnCommandDraw = checkCommandDraw,
         ._gnCommandDrawIndexed = checkCommandDrawIndexed,
+    };
+}
+
+gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions() {
+    return (gnSyncExtFunctions) {
+        ._gnPresentationQueueGetImageAsync = checkPresentationQueueGetImageAsync,
+
+        ._gnCreateSemaphore = checkCreateSemaphore,
+        ._gnDestroySemaphore = checkDestroySemaphore,
+
+        ._gnCreateFence = checkCreateFence,
+        ._gnWaitForFence = checkWaitForFence,
+        ._gnResetFence = checkResetFence,
+        ._gnDestroyFence = checkDestroyFence,
     };
 }

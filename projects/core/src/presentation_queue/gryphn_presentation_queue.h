@@ -28,7 +28,6 @@ struct gnPresentationQueue_t {
 #endif
 
 gnReturnCode gnCreatePresentationQueue(gnPresentationQueueHandle* presentationQueue, gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);
-// gnReturnCode gnPresentationQueueGetImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphoreHandle semaphore, uint32_t* imageIndex);
 gnReturnCode gnPresentationQueueGetImage(gnPresentationQueue presentationQueue, uint32_t* imageIndex);
 uint32_t gnGetPresentationQueueImageCount(gnPresentationQueueHandle presentationQueue);
 gnTextureHandle gnGetPresentationQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t index);

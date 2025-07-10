@@ -81,6 +81,18 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
     return GN_SUCCESS;
 }
 
+gnReturnCode getVulkanPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex) {
+    VkResult result = vkAcquireNextImageKHR(
+        presentationQueue->outputDevice->outputDevice->device,
+        presentationQueue->presentationQueue->swapChain,
+        UINT64_MAX, VK_NULL_HANDLE, VK_NULL_HANDLE, imageIndex);
+
+    if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
+    if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
+
+    return GN_SUCCESS;
+}
+
 gnReturnCode getPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
     VkResult result = vkAcquireNextImageKHR(
         presentationQueue->outputDevice->outputDevice->device,

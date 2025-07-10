@@ -67,6 +67,25 @@ gnCommandFunctions loadAPICommandFunctions(gnRenderingAPI api) {
     }
 }
 
+gnSyncExtFunctions loadAPISyncFunctions(gnRenderingAPI api) {
+    switch (api) {
+    case GN_RENDERINGAPI_NONE: return (gnSyncExtFunctions){ NULL };
+#ifdef GN_API_VULKAN
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanSyncFunctions();
+#endif
+
+    case GN_RENDERINGAPI_SOFTWARE: return (gnSyncExtFunctions){ NULL };
+    case GN_RENDERINGAPI_DIRECTX11: return (gnSyncExtFunctions){ NULL };
+    case GN_RENDERINGAPI_DIRECTX12: return (gnSyncExtFunctions){ NULL };
+    case GN_RENDERINGAPI_OPENGL: return (gnSyncExtFunctions){ NULL };
+#ifdef GN_API_METAL
+    case GN_RENDERINGAPI_METAL: return loadMetalSyncFunctions();
+#endif
+
+    default: return (gnSyncExtFunctions){NULL};
+    }
+}
+
 loaderLayer null_layer() {
     return (loaderLayer){
         .instanceFunctions = (gnInstanceFunctions){ NULL },
@@ -79,7 +98,9 @@ loaderLayer api_loaded_layer(gnRenderingAPI api) {
     return (loaderLayer){
         .instanceFunctions = loadAPIInstanceFunctions(api),
         .deviceFunctions = loadAPIDeviceFunctions(api),
-        .commandFunctions = loadAPICommandFunctions(api)
+        .commandFunctions = loadAPICommandFunctions(api),
+
+        .syncFunctions = loadAPISyncFunctions(api)
     };
 }
 
@@ -87,7 +108,9 @@ loaderLayer function_check_layer() {
     return (loaderLayer){
         .instanceFunctions = loadFunctionLoaderInstanceFunctions(),
         .deviceFunctions = loadFunctionLoaderDeviceFunctions(),
-        .commandFunctions = loadFunctionLoaderCommandFunctions()
+        .commandFunctions = loadFunctionLoaderCommandFunctions(),
+
+        .syncFunctions = loadFunctionLoaderSyncExtFunctions()
     };
 }
 

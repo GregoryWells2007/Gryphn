@@ -9,8 +9,6 @@
 #include <uniforms/vulkan_uniform.h>
 #include <commands/command_pool/vulkan_command_pool.h>
 #include <buffers/vulkan_buffer.h>
-#include <sync/semaphore/vulkan_semaphore.h>
-#include <sync/fence/vulkan_fence.h>
 #include <present/vulkan_present.h>
 #include <submit/vulkan_submit.h>
 #include <output_device/vulkan_output_devices.h>
@@ -18,7 +16,7 @@
 gnDeviceFunctions loadVulkanDeviceFunctions() {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = createPresentationQueue,
-        // ._gnPresentationQueueGetImageAsync = getPresentQueueImageAsync,
+        ._gnPresentationQueueGetImage = getVulkanPresentQueueImage,
         ._gnDestroyPresentationQueue = destroyPresentationQueue,
 
         ._gnCreateShaderModule = createShaderModule,
@@ -35,9 +33,6 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
 
         ._gnCreateCommandPool = createCommandPool,
         ._gnDestroyCommandPool = destroyCommandPool,
-
-        // ._gnCreateSemaphore = createSemaphore,
-        // ._gnDestroySemaphore = destroySemaphore,
 
         ._gnCreateBuffer = createBuffer,
         ._gnBufferData = bufferData,
@@ -56,11 +51,6 @@ gnDeviceFunctions loadVulkanDeviceFunctions() {
         ._gnCreateTexture = createTexture,
         ._gnTextureData = textureData,
         ._gnDestroyTexture = destroyTexture,
-
-        // ._gnCreateFence = createFence,
-        // ._gnWaitForFence = waitForFence,
-        // ._gnResetFence = resetFence,
-        // ._gnDestroyFence = destroyFence,
 
         ._gnSubmit = submit,
         ._gnPresent = present,
