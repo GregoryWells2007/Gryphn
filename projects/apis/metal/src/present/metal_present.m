@@ -1,8 +1,10 @@
 #include "metal_present.h"
 #include <synchronization/commands/gryphn_sync_present.h>
 
-gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
+#include "stdio.h"
+#include "time.h"
 
+gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
     for (int i =0 ; i < info.presentationQueueCount; i++) {
     info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
     id<CAMetalDrawable> drawable = [info.presentationQueues[i]->info.surface->windowSurface->layer nextDrawable];
@@ -34,7 +36,7 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
         device->outputDevice->executingCommandBuffer = commandBuffer;
     }
 
-    [device->outputDevice->executingCommandBuffer waitUntilScheduled];
+    [device->outputDevice->executingCommandBuffer waitUntilCompleted];
 
     for (int  i = 0; i < info.presentationQueueCount; i++) {
         if (info.presentationQueues[i]->info.imageSize.x != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.width ||
@@ -46,11 +48,14 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
     return GN_SUCCESS;
 }
 
-
 gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo info) {
+    clock_t begin = clock();
     for (int i = 0; i < info.waitCount; i++) {
         while (!info.waitSemaphores[i]->semaphore->eventTriggered) {}
     }
+    clock_t end = clock();
+    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
+    printf("time spent waiting to present: %lf\n", time_spent);
 
     for (int i =0 ; i < info.presentationQueueCount; i++) {
     info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
@@ -62,7 +67,7 @@ gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo inf
 
     id<MTLCommandBuffer> commandBuffer = [device->outputDevice->transferQueue commandBuffer];
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
-        uint32_tArrayListAdd(&presentationQueue->presentationQueue->avaliableTextures, imageIndex);
+        mtlAddImageBackToQueue(presentationQueue, imageIndex);
     }];
 
         id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
@@ -83,7 +88,7 @@ gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo inf
         device->outputDevice->executingCommandBuffer = commandBuffer;
     }
 
-    [device->outputDevice->executingCommandBuffer waitUntilScheduled];
+    // [device->outputDevice->executingCommandBuffer waitUntilScheduled];
 
     for (int  i = 0; i < info.presentationQueueCount; i++) {
         if (info.presentationQueues[i]->info.imageSize.x != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.width ||

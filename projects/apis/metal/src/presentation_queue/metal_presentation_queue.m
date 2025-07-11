@@ -48,18 +48,35 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     return GN_SUCCESS;
 }
 
+void mtlTakeImageFromQueue(uint32_t* whereToPut, gnPresentationQueue queue, gnSemaphore semaphore) {
+    *whereToPut = queue->presentationQueue->avaliableTextures.data[0];
+    uint32_tArrayListPopHead(&queue->presentationQueue->avaliableTextures);
+    if (semaphore) semaphore->semaphore->eventTriggered = gnTrue;
+}
+
+void mtlAddImageBackToQueue(gnPresentationQueue queue, uint32_t index) {
+    if (queue->presentationQueue->neededImages.count > 0)
+        mtlTakeImageFromQueue(queue->presentationQueue->neededImages.data[queue->presentationQueue->neededImages.count - 1].whereToPut, queue, queue->presentationQueue->neededImages.data[queue->presentationQueue->neededImages.count - 1].semaphoreToSignal);
+    else
+        uint32_tArrayListAdd(&queue->presentationQueue->avaliableTextures, index);
+}
+
 gnReturnCode getMetalPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
-    while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
-    *imageIndex = presentationQueue->presentationQueue->avaliableTextures.data[0];
-    uint32_tArrayListPopHead(&presentationQueue->presentationQueue->avaliableTextures);
-    semaphore->semaphore->eventTriggered = gnTrue;
+    if (presentationQueue->presentationQueue->avaliableTextures.count == 0) {
+        mtlImageNeeded image = {
+          .semaphoreToSignal = semaphore,
+          .whereToPut = imageIndex
+        };
+        mtlImageNeededArrayListAdd(&presentationQueue->presentationQueue->neededImages, image);
+    } else {
+        mtlTakeImageFromQueue(imageIndex, presentationQueue, semaphore);
+    }
     return GN_SUCCESS;
 }
 
 gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex) {
     while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
-    *imageIndex = presentationQueue->presentationQueue->avaliableTextures.data[0];
-    uint32_tArrayListPopHead(&presentationQueue->presentationQueue->avaliableTextures);
+    mtlTakeImageFromQueue(imageIndex, presentationQueue, NULL);
     return GN_SUCCESS;
 }
 
