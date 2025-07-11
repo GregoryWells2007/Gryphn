@@ -2,29 +2,27 @@
 #include "synchronization/fence/gryphn_fence.h"
 
 #include "stdio.h"
-#include "time.h"
-
 
 gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
-    clock_t begin = clock();
-    for (int i = 0; i < info.waitCount; i++) {
-        while (!info.waitSemaphores[i]->semaphore->eventTriggered) {}
-    }
-    clock_t end = clock();
-    double time_spent = (double)(end - begin) / CLOCKS_PER_SEC;
-    printf("time spent waiting for image in submit: %lf\n", time_spent);
-
-    __block gnSemaphore* semsToSignal = info.signalSemaphores;
-    __block int semsToSignalCount = info.signalCount;
     __block gnFence fenceToSignal = info.fence;
+    __block atomic_int buffersLeft;
+    atomic_init(&buffersLeft, info.commandBufferCount);
 
     for (int i = 0; i < info.commandBufferCount; i++) {
+        id <MTLCommandBuffer> buffer = [info.commandBuffers[i]->commandPool->commandPool->commandQueue commandBuffer];
+        for (int c = 0; c < info.waitCount; c++)
+            mtlWaitSemaphore(info.waitSemaphores[c], buffer);
+        [buffer commit];
+
         id<MTLCommandBuffer> commandBuffer = info.commandBuffers[i]->commandBuffer->commandBuffer;
+
+        for (int c = 0; c < info.signalCount; c++)
+            mtlSignalSemaphore(info.signalSemaphores[c], commandBuffer);
+
         [info.commandBuffers[i]->commandBuffer->commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
-            for (int c = 0; c < semsToSignalCount; c++) {
-                semsToSignal[c]->semaphore->eventTriggered = gnTrue;
+            if (atomic_fetch_sub_explicit(&buffersLeft, 1, memory_order_acq_rel) == 1) {
+                fenceToSignal->signaled = gnTrue;
             }
-            fenceToSignal->signaled = gnTrue;
         }];
 
         [commandBuffer commit];

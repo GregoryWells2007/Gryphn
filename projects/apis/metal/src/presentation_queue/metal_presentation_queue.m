@@ -51,12 +51,19 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
 void mtlTakeImageFromQueue(uint32_t* whereToPut, gnPresentationQueue queue, gnSemaphore semaphore) {
     *whereToPut = queue->presentationQueue->avaliableTextures.data[0];
     uint32_tArrayListPopHead(&queue->presentationQueue->avaliableTextures);
-    if (semaphore) semaphore->semaphore->eventTriggered = gnTrue;
+
+    if (!semaphore) return;
+
+    id<MTLCommandBuffer> buffer = [queue->outputDevice->outputDevice->transferQueue commandBuffer];
+    mtlSignalSemaphore(semaphore, buffer);
+    [buffer commit];
 }
 
 void mtlAddImageBackToQueue(gnPresentationQueue queue, uint32_t index) {
-    if (queue->presentationQueue->neededImages.count > 0)
+    if (queue->presentationQueue->neededImages.count > 0) {
         mtlTakeImageFromQueue(queue->presentationQueue->neededImages.data[queue->presentationQueue->neededImages.count - 1].whereToPut, queue, queue->presentationQueue->neededImages.data[queue->presentationQueue->neededImages.count - 1].semaphoreToSignal);
+        mtlImageNeededArrayListRemove(&queue->presentationQueue->neededImages);
+    }
     else
         uint32_tArrayListAdd(&queue->presentationQueue->avaliableTextures, index);
 }
