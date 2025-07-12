@@ -1,8 +1,6 @@
 #include "metal_submit.h"
 #include "synchronization/fence/gryphn_fence.h"
 
-#include "stdio.h"
-
 gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
     __block gnFence fenceToSignal = info.fence;
     __block atomic_int buffersLeft;

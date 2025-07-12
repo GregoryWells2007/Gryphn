@@ -4,11 +4,6 @@
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
 
-VkDeviceSize min(VkDeviceSize a, VkDeviceSize b) {
-    if (a >= b) return a;
-    return b;
-}
-
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
     VkBufferUsageFlags usageFlags = 0;
     switch (type) {
