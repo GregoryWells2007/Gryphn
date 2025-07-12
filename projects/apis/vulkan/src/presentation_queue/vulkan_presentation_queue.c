@@ -98,10 +98,8 @@ gnReturnCode getPresentQueueImageAsync(gnPresentationQueueHandle presentationQue
         presentationQueue->outputDevice->outputDevice->device,
         presentationQueue->presentationQueue->swapChain,
         timeout, semaphore->semaphore->semaphore, VK_NULL_HANDLE, imageIndex);
-
     if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
     if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
-
     return GN_SUCCESS;
 }
 
