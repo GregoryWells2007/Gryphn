@@ -6,6 +6,7 @@ gnReturnCode createFence(gnFence fence, gnDevice device) {
     VkFenceCreateInfo fenceInfo = {
         .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO
     };
+
     if (vkCreateFence(device->outputDevice->device, &fenceInfo, NULL, &fence->fence->fence) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_FENCE;
     return GN_SUCCESS;

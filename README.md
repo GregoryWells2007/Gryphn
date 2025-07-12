@@ -41,6 +41,12 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
   - buffers store GPU data so that it can be used in shaders <br />
 - Textures:
   - Store image data so that it can be sampled in shaders <br />
+# Extentions
+- GN_EXT_SYNCHRONIZATION
+  - allows sync primatives (fence, semaphore) and sync functions (gnPresentationQueueGetImageAsync, gnSubmitSync, gnPresentSync)<br />
+  - Supported APIs<br />
+    - Vulkan <br />
+    - Metal* (metal support is buggy, fences are nonatomic so they cannot be used across multible threads) <br />
 
 # Validation
 Gryphn its an interesting API to work with so ive attempted to put together a somewhat comprehensive set of validation tools that will tell you what you (or I) am doing wrong. Gryphn currently has support for 2 validation layers but I plan to support more in the future <br />
@@ -61,7 +67,6 @@ Gryphn validation layers are meant to be more specific so there are certain ones
 - APIs like OpenGL dont support the full capabilities of vulkan so things like synchronization
 I currently am planning to move synchronization primatives to be an extension.
 Planned extensions: <br />
-  - GN_EXT_SYNCHRONIZATION, my only problem with this extension is that I might be able to fake support for things like semaphores in OpenGL, im not 100% sure yet<br />
   - GN_EXT_COMPUTE, while compute pipelines might be a vulkan standard they are not an OpenGL standard so this does need to be an exension <br /><br />
 - I will add more exensions as Gryphn grows in complexity, my current biggest task is going to be moving synchronization primatives over into extension land and not a core part of the Gryphn standard. My biggest problem with exentensions is that I don't want them to be something like, this feature is only supported on Vulkan which I think removes part of the reason for my making this project.
 #### Standardization

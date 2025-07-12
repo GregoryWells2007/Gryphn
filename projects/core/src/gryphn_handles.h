@@ -1,5 +1,7 @@
 #pragma once
 
+#define GN_NULL_HANDLE 0
+
 #define GN_HANDLE(type) \
 typedef struct type##_t* type##Handle; \
 typedef struct type##_t* type

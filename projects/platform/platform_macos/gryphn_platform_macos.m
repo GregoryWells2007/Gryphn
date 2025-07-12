@@ -27,6 +27,7 @@ CAMetalLayer* gnCreateCAMetalLayer(NSWindow* window) {
     [layer setFramebufferOnly:YES];
     [view setLayer:layer];
     [view setWantsLayer:YES];
+    // [layer setDisplaySyncEnabled:NO];
     CGSize viewSize = view.bounds.size;
     CGFloat scale = window.screen.backingScaleFactor;
     layer.pixelFormat = MTLPixelFormatBGRA8Unorm;

@@ -31,14 +31,6 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
 
     spvc_compiler_create_shader_resources(compiler, &resources);
 
-    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_SHADER_RECORD_BUFFER, &list, &count);
-    for (int i = 0; i < count; i++) {
-        uint32_t set = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationDescriptorSet),
-                 binding = spvc_compiler_get_decoration(compiler, list[i].id, SpvDecorationBinding),
-        mslBinding = spvc_compiler_msl_get_automatic_resource_binding(compiler, list[i].id);
-        printf("%s: set %ui, binding %ui, mslBinding %ui\n", list[i].name, set, binding, mslBinding);
-    }
-
     spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_UNIFORM_BUFFER, &list, &count);
     // [[buffer(0)]] is reserved for stage_in, [[buffer(1)]] is reserved for push_constant
     uint32_t currentBufferBinding = 2, currentTextureBinding = 0;

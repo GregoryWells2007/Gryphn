@@ -9,7 +9,6 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
     *instance = malloc(sizeof(struct gnInstance_t));
 
     (*instance)->layers = loaderLayerArrayListCreate();
-
     loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
         .api = info.renderingAPI,
         .layerToLoad = api_layer

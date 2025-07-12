@@ -46,7 +46,7 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
 void metalTextureData(gnTextureHandle texture, void* pixelData) {
     MTLRegion region = {
         { 0, 0, 0 },
-        {texture->info.extent.width, texture->info.extent.width, texture->info.extent.depth}
+        {texture->info.extent.width, texture->info.extent.height, texture->info.extent.depth}
     };
 
     NSUInteger bytesPerRow = 4 * texture->info.extent.width; // TODO: fix this should not be set to 4
@@ -54,7 +54,6 @@ void metalTextureData(gnTextureHandle texture, void* pixelData) {
                 mipmapLevel:0
                   withBytes:pixelData
                 bytesPerRow:bytesPerRow];
-
 }
 
 void metalDestroyTexture(gnTexture texture) {

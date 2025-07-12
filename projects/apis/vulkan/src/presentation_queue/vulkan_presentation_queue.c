@@ -87,12 +87,9 @@ gnReturnCode getVulkanPresentQueueImage(gnPresentationQueueHandle presentationQu
         presentationQueue->outputDevice->outputDevice->device,
         presentationQueue->presentationQueue->swapChain,
         UINT64_MAX, VK_NULL_HANDLE, presentationQueue->outputDevice->outputDevice->barrierFence, imageIndex);
-
     if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
     if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
-
     vkWaitForFences(presentationQueue->outputDevice->outputDevice->device, 1, &presentationQueue->outputDevice->outputDevice->barrierFence, VK_TRUE, UINT64_MAX);
-
     return GN_SUCCESS;
 }
 
