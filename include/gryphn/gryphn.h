@@ -25,6 +25,8 @@
 #include <core/src/uniforms/gryphn_uniform.h>
 
 // extenions
+#include <loader/src/gryphn_extension_loader.h>
+
 #include <extensions/synchronization/fence/gryphn_fence.h>
 #include <extensions/synchronization/semaphore/gryphn_semaphore.h>
 #include <extensions/synchronization/gryphn_synced_presentation_queue.h>

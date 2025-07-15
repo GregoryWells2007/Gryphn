@@ -3,7 +3,6 @@
 #include "core/src/gryphn_handles.h"
 #include "utils/gryphn_version.h"
 #include "utils/gryphn_error_code.h"
-#include <loader/src/gryphn_loader.h>
 #include <gryphn_extensions.h>
 
 typedef struct gnInstanceInfo {
@@ -21,6 +20,7 @@ typedef struct gnInstanceInfo {
 } gnInstanceInfo;
 
 #ifdef GN_REVEAL_IMPL
+#include <loader/src/gryphn_loader.h>
 struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnBool valid;
