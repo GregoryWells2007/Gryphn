@@ -59,8 +59,8 @@ typedef struct gnPhysicalOutputDevice_t {
 gnPhysicalOutputDeviceHandle* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count);
 gnBool gnPhysicalDeviceCanPresentToSurface(gnPhysicalOutputDeviceHandle device, gnWindowSurfaceHandle windowSurface);
 
-// gnPhysicalDeviceProperties gnGetPhysicalDeviceProperties(gnPhysicalOutputDeviceHandle device);
-// gnPhysicalDeviceFeatures gnGetPhysicalDeviceFeatures(gnPhysicalOutputDeviceHandle device);
+gnPhysicalDeviceProperties gnGetPhysicalDeviceProperties(gnPhysicalOutputDeviceHandle device);
+gnPhysicalDeviceFeatures gnGetPhysicalDeviceFeatures(gnPhysicalOutputDeviceHandle device);
 // gnPhysicalDeviceQueueProperties gnGetPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle device);
 
 // gnBool gnHasGraphicsQueue(gnPhysicalOutputDeviceHandle device);

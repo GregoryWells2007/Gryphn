@@ -41,6 +41,7 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
     gnPhysicalDevice* outputDevices = (gnPhysicalDevice*)malloc(sizeof(gnPhysicalDevice) * *deviceCount);
 
     for (int i = 0; i < *deviceCount; i++) {
+        outputDevices[i] = malloc(sizeof(gnPhysicalOutputDevice_t));
         outputDevices[i]->physicalDevice = malloc(sizeof(struct gnPlatformPhysicalDevice_t));
         outputDevices[i]->physicalDevice->device = physicalDevices[i];
 
