@@ -1,5 +1,4 @@
 #include "vulkan_instance.h"
-#include <debugger/vulkan_debugger.h>
 #include <stdio.h>
 
 typedef struct vkUserData {

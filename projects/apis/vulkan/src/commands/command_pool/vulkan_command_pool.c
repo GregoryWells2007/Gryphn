@@ -7,7 +7,7 @@ gnReturnCode createCommandPool(gnCommandPool commandPool, gnDevice device, gnCom
     VkCommandPoolCreateInfo poolInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-        .queueFamilyIndex = info.queueIndex,
+        .queueFamilyIndex = device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queueInfo.queueIndex,
     };
 
     if (vkCreateCommandPool(device->outputDevice->device, &poolInfo, NULL, &commandPool->commandPool->commandPool) != VK_SUCCESS) {

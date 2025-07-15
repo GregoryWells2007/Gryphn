@@ -34,8 +34,8 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
         createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
     else
         createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-    createInfo.queueFamilyIndexCount = presentationInfo.queueFamilyCount;
-    createInfo.pQueueFamilyIndices = presentationInfo.queueFamilies;
+    createInfo.queueFamilyIndexCount = 1;
+    createInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
     createInfo.preTransform = details.capabilities.currentTransform;
     createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     createInfo.presentMode = presentMode;

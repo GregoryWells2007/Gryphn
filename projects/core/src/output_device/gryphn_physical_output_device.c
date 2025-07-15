@@ -59,4 +59,4 @@ int gnGetPresentQueueIndex(gnPhysicalDevice device, gnWindowSurfaceHandle window
 
 gnPhysicalDeviceProperties gnGetPhysicalDeviceProperties(gnPhysicalOutputDeviceHandle device) { return device->properties; }
 gnPhysicalDeviceFeatures gnGetPhysicalDeviceFeatures(gnPhysicalOutputDeviceHandle device) { return device->features; }
-gnPhysicalDeviceQueueProperties gnGetPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle device) { return device->queueProperties; }
+// gnPhysicalDeviceQueueProperties gnGetPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle device) { return device->queueProperties; }

@@ -28,29 +28,29 @@ typedef struct gnPhysicalDeviceFeatures {
     uint32_t maxPushConstantSize;
 } gnPhysicalDeviceFeatures;
 
-typedef enum gnQueueTypeFlags {
-    GN_QUEUE_GRAPHICS       = 1 << 0,
-    GN_QUEUE_COMPUTE        = 1 << 1,
-    GN_QUEUE_TRANSFER       = 1 << 2,
-    GN_QUEUE_SPARSE_BINDING = 1 << 3
-} gnQueueTypeFlags;
+// typedef enum gnQueueTypeFlags {
+//     GN_QUEUE_GRAPHICS       = 1 << 0,
+//     GN_QUEUE_COMPUTE        = 1 << 1,
+//     GN_QUEUE_TRANSFER       = 1 << 2,
+//     GN_QUEUE_SPARSE_BINDING = 1 << 3
+// } gnQueueTypeFlags;
 
-typedef struct gnQueueProperties {
-    uint32_t queueCount;
-    gnQueueTypeFlags queueType;
-} gnQueueProperties;
+// typedef struct gnQueueProperties {
+//     uint32_t queueCount;
+//     gnQueueTypeFlags queueType;
+// } gnQueueProperties;
 
-typedef struct gnPhysicalDeviceQueueProperties {
-    uint32_t queueCount;
-    gnQueueProperties* queueProperties;
-} gnPhysicalDeviceQueueProperties;
+// typedef struct gnPhysicalDeviceQueueProperties {
+//     uint32_t queueCount;
+//     gnQueueProperties* queueProperties;
+// } gnPhysicalDeviceQueueProperties;
 
 #ifdef GN_REVEAL_IMPL
 typedef struct gnPhysicalOutputDevice_t {
     struct gnPlatformPhysicalDevice_t* physicalDevice;
     gnPhysicalDeviceProperties properties;
     gnPhysicalDeviceFeatures features;
-    gnPhysicalDeviceQueueProperties queueProperties;
+    // gnPhysicalDeviceQueueProperties queueProperties;
 
     gnInstanceHandle instance;
 } gnPhysicalOutputDevice_t;
@@ -61,7 +61,7 @@ gnBool gnQueueCanPresentToSurface(gnPhysicalOutputDeviceHandle device, uint32_t 
 
 gnPhysicalDeviceProperties gnGetPhysicalDeviceProperties(gnPhysicalOutputDeviceHandle device);
 gnPhysicalDeviceFeatures gnGetPhysicalDeviceFeatures(gnPhysicalOutputDeviceHandle device);
-gnPhysicalDeviceQueueProperties gnGetPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle device);
+// gnPhysicalDeviceQueueProperties gnGetPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle device);
 
 gnBool gnHasGraphicsQueue(gnPhysicalOutputDeviceHandle device);
 gnBool gnHasPresentQueue(gnPhysicalOutputDeviceHandle device, gnWindowSurfaceHandle windowSurface);

@@ -8,13 +8,13 @@
 gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
 
-    VkDeviceQueueCreateInfo* queueCreateInfos = malloc(sizeof(VkDeviceQueueCreateInfo) * deviceInfo.queueInfoCount);
+    VkDeviceQueueCreateInfo* queueCreateInfos = malloc(sizeof(VkDeviceQueueCreateInfo) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
     float queuePriority = 1.0f;
-    for (int i = 0; i < deviceInfo.queueInfoCount; i++) {
+    for (int i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
         queueCreateInfos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
         queueCreateInfos[i].flags = 0;
-        queueCreateInfos[i].queueFamilyIndex = deviceInfo.queueInfos[i].queueIndex;
-        queueCreateInfos[i].queueCount = deviceInfo.queueInfos[i].queueCount;
+        queueCreateInfos[i].queueFamilyIndex = deviceInfo.physicalDevice->physicalDevice->neededQueues[i].queueIndex;
+        queueCreateInfos[i].queueCount = 1;
         queueCreateInfos[i].pQueuePriorities = &queuePriority;
     }
 
@@ -24,7 +24,7 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
 
     VkDeviceCreateInfo deviceCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
-        .queueCreateInfoCount = deviceInfo.queueInfoCount,
+        .queueCreateInfoCount = deviceInfo.physicalDevice->physicalDevice->neededQueueCount,
         .pQueueCreateInfos = queueCreateInfos,
         .pEnabledFeatures = &deviceFeatures
     };
@@ -45,9 +45,20 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
     if (vkCreateDevice(deviceInfo.physicalDevice->physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_DEVICE;
 
-    outputDevice->outputDevice->queues = malloc(sizeof(VkQueue) * deviceInfo.queueInfoCount);
-    for (int i = 0; i < deviceInfo.queueInfoCount; i++) {
-        vkGetDeviceQueue(outputDevice->outputDevice->device, deviceInfo.queueInfos[i].queueIndex, 0, &outputDevice->outputDevice->queues[i]);
+    outputDevice->outputDevice->queues = malloc(sizeof(VkQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
+    uint32_t transferQueue = 0;
+    for (int i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
+        outputDevice->outputDevice->queues[i].queueInfo = deviceInfo.physicalDevice->physicalDevice->neededQueues[i];
+
+        vkGetDeviceQueue(outputDevice->outputDevice->device, deviceInfo.physicalDevice->physicalDevice->neededQueues[i].queueIndex, 0, &outputDevice->outputDevice->queues[i].queue);
+        if ((outputDevice->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
+            outputDevice->outputDevice->transferQueueIndex = i;
+            transferQueue = outputDevice->outputDevice->queues[i].queueInfo.queueIndex;
+        }
+
+        if ((outputDevice->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
+            outputDevice->outputDevice->graphicsQueueIndex = i;
+        }
     }
 
     uint32_t queueCount = 0;
@@ -64,19 +75,10 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         queueFamilies
     );
 
-    uint32_t transferQueueIndex = 0;
-    for (int i = 0; i < queueCount; i++) {
-        if ((queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
-            transferQueueIndex = i;
-            vkGetDeviceQueue(outputDevice->outputDevice->device, deviceInfo.queueInfos[i].queueIndex, 0, &outputDevice->outputDevice->transferQueue);
-            break;
-        }
-    }
-
     VkCommandPoolCreateInfo poolInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-        .queueFamilyIndex = transferQueueIndex
+        .queueFamilyIndex = transferQueue
     };
 
     if (vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferCommandPool) != VK_SUCCESS)
@@ -116,5 +118,5 @@ VkCommandBuffer gnBeginVulkanTransferOperation(gnDevice device) {
     return VkBeginTransferOperation(device->outputDevice->device, device->outputDevice->transferCommandPool);
 }
 void gnEndVulkanTransferOperation(gnDevice device, VkCommandBuffer buffer) {
-    VkEndTransferOperation(buffer, device->outputDevice->transferCommandPool, device->outputDevice->transferQueue, device->outputDevice->device);
+    VkEndTransferOperation(buffer, device->outputDevice->transferCommandPool, device->outputDevice->queues[device->outputDevice->transferQueueIndex].queue, device->outputDevice->device);
 }

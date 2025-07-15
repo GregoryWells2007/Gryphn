@@ -2,7 +2,6 @@
 #include <gryphn_platform_include.h>
 #include <utils/gryphn_image_format.h>
 #include <instance/gryphn_instance.h>
-#include "output_device/gryphn_physical_output_device.h"
 #include "utils/math/gryphn_vec2.h"
 
 typedef struct gnSurfaceFormat {

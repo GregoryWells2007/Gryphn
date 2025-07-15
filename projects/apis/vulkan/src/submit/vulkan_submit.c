@@ -26,7 +26,7 @@ gnReturnCode vulkanSubmitSync(gnDevice device, gnSubmitSyncInfo info) {
     VkQueue queue;
     vkGetDeviceQueue(device->outputDevice->device, info.queueIndex, 0, &queue);
 
-    if (vkQueueSubmit(queue, 1, &submitInfo, info.fence->fence->fence) != VK_SUCCESS) {
+    if (vkQueueSubmit(device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queue, 1, &submitInfo, info.fence->fence->fence) != VK_SUCCESS) {
         free(waitSemaphores);
         free(waitStages);
         free(commandBuffers);
@@ -55,11 +55,8 @@ gnReturnCode vulkanSubmit(gnDevice device, gnSubmitInfo info) {
         .pSignalSemaphores = NULL
     };
 
-    VkQueue queue;
-    vkGetDeviceQueue(device->outputDevice->device, info.queueIndex, 0, &queue);
-
     vkResetFences(device->outputDevice->device, 1, &device->outputDevice->barrierFence);
-    if (vkQueueSubmit(queue, 1, &submitInfo, device->outputDevice->barrierFence) != VK_SUCCESS)
+    if (vkQueueSubmit(device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queue, 1, &submitInfo, device->outputDevice->barrierFence) != VK_SUCCESS)
         return GN_FAILED_TO_SUBMIT_COMMAND_BUFFER;
     vkWaitForFences(device->outputDevice->device, 1, &device->outputDevice->barrierFence, VK_TRUE, UINT64_MAX);
     return GN_SUCCESS;

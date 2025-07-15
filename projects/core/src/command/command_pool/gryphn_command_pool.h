@@ -1,5 +1,5 @@
 #pragma once
-#include "stdint.h"
+// #include "stdint.h"
 #include <utils/gryphn_error_code.h>
 #include "gryphn_handles.h"
 
@@ -9,7 +9,7 @@ typedef enum gnCommandPoolFlags {
 } gnCommandPoolFlags;
 
 typedef struct gnCommandPoolInfo {
-    uint32_t queueIndex;
+    // uint32_t queueIndex;
     gnCommandPoolFlags flags;
 } gnCommandPoolInfo;
 

@@ -56,20 +56,37 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
         case VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM: outputDevices[i]->properties.deviceType = GN_INTEGRATED_DEVICE;
         }
 
-        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &outputDevices[i]->queueProperties.queueCount, NULL);
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &queueFamilyCount, NULL);
+        VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * queueFamilyCount);
+        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &queueFamilyCount, queueFamilies);
 
-        VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * outputDevices[i]->queueProperties.queueCount);
-        outputDevices[i]->queueProperties.queueProperties = malloc(sizeof(gnQueueProperties) * outputDevices[i]->queueProperties.queueCount);
-        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &outputDevices[i]->queueProperties.queueCount, queueFamilies);
-        for (int c = 0; c < outputDevices[i]->queueProperties.queueCount; c++) {
-            outputDevices[i]->queueProperties.queueProperties[i].queueCount = queueFamilies[i].queueCount;
+        outputDevices[i]->physicalDevice->neededQueues = malloc(sizeof(vulkanNeededQueue) * queueFamilyCount);
+        gnBool foundGraphicsQueueFamily = gnFalse, foundTransferQueueFamily = gnFalse;
+        for (int c = 0; c < queueFamilyCount; c++) {
+            gnBool hasNeededQueue = gnFalse;
 
-            gnQueueTypeFlags finalQueueType = 0;
-            if (queueFamilies[i].queueFlags & VK_QUEUE_GRAPHICS_BIT) finalQueueType |= GN_QUEUE_GRAPHICS;
-            if (queueFamilies[i].queueFlags & VK_QUEUE_COMPUTE_BIT) finalQueueType |= GN_QUEUE_COMPUTE;
-            if (queueFamilies[i].queueFlags & VK_QUEUE_TRANSFER_BIT) finalQueueType |= GN_QUEUE_TRANSFER;
-            if (queueFamilies[i].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT) finalQueueType |= GN_QUEUE_SPARSE_BINDING;
-            outputDevices[i]->queueProperties.queueProperties[i].queueType = finalQueueType;
+            if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
+                foundGraphicsQueueFamily = true;
+                hasNeededQueue = gnTrue;
+            }
+            if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
+                foundTransferQueueFamily = true;
+                hasNeededQueue = gnTrue;
+            }
+
+            if (hasNeededQueue) {
+                vulkanNeededQueue neededQueue = {
+                    .queueIndex = c,
+                    .createFlags = 0,
+                    .usedForPresent = gnFalse
+                };
+                if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT)) neededQueue.createFlags |= VK_QUEUE_GRAPHICS_BIT;
+                if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT)) neededQueue.createFlags |= VK_QUEUE_TRANSFER_BIT;
+
+                outputDevices[i]->physicalDevice->neededQueues[outputDevices[i]->physicalDevice->neededQueueCount] = neededQueue;
+                outputDevices[i]->physicalDevice->neededQueueCount++;
+            }
         }
 
         VkPhysicalDeviceProperties physicalDeviceProperties;
@@ -78,16 +95,55 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
         outputDevices[i]->features.maxDepthSamples = vkSampleCountToGryphn(physicalDeviceProperties.limits.framebufferDepthSampleCounts);
         outputDevices[i]->features.maxMemoryAllocations = physicalDeviceProperties.limits.maxMemoryAllocationCount;
         outputDevices[i]->features.maxPushConstantSize = physicalDeviceProperties.limits.maxPushConstantsSize;
+
+        free(queueFamilies);
     }
     free(physicalDevices);
 
     return outputDevices;
 }
 
-gnBool queueCanPresentToSurface(gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
-    VkBool32 supportsPresent = VK_FALSE;
-    vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, queueIndex, windowSurface->windowSurface->surface, &supportsPresent);
-    if (supportsPresent)
-        return gnTrue;
-    return gnFalse;
+gnBool deviceCanPresentToSurface(gnPhysicalDevice device, gnWindowSurface surface) {
+    gnBool foundQueue = gnFalse;
+    for (int i = 0; i < device->physicalDevice->neededQueueCount; i++) {
+        VkBool32 supportsPresent = VK_FALSE;
+        vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, device->physicalDevice->neededQueues[i].queueIndex, surface->windowSurface->surface, &supportsPresent);
+        if (supportsPresent) {
+            device->physicalDevice->neededQueues[i].usedForPresent = gnTrue;
+            foundQueue = gnTrue;
+            break;
+        }
+        surface->windowSurface->presentQueueIndex = i;
+    }
+
+    if (!foundQueue) {
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, NULL);
+
+        for (int i = 0; i < queueFamilyCount; i++) {
+            VkBool32 supportsPresent = VK_FALSE;
+            vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, i, surface->windowSurface->surface, &supportsPresent);
+            if (supportsPresent) {
+                device->physicalDevice->neededQueues[device->physicalDevice->neededQueueCount] = (vulkanNeededQueue){
+                    .queueIndex = i,
+                    .createFlags = 0,
+                    .usedForPresent = gnTrue
+                };
+                foundQueue = gnTrue;
+                surface->windowSurface->presentQueueIndex = device->physicalDevice->neededQueueCount;
+                device->physicalDevice->neededQueueCount++;
+                break;
+            }
+        }
+    }
+
+    return foundQueue;
 }
+
+// gnBool queueCanPresentToSurface(gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
+//     VkBool32 supportsPresent = VK_FALSE;
+//     vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, queueIndex, windowSurface->windowSurface->surface, &supportsPresent);
+//     if (supportsPresent)
+//         return gnTrue;
+//     return gnFalse;
+// }
