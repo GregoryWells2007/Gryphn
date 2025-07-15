@@ -8,10 +8,14 @@
 //     // float* queuePriority;
 // } gnDeviceQueueInfo;
 
+typedef struct gnOutputDeviceEnabledFeatures {
+
+} gnOutputDeviceEnabledFeatures;
+
 typedef struct gnOutputDeviceInfo {
     // uint32_t queueInfoCount;
     // gnDeviceQueueInfo* queueInfos;
-    gnPhysicalDeviceFeatures enabledFeatures;
+    gnOutputDeviceEnabledFeatures enabledFeatures;
     gnPhysicalDevice physicalDevice;
 } gnOutputDeviceInfo;
 

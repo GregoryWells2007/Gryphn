@@ -45,7 +45,7 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
     if (vkCreateDevice(deviceInfo.physicalDevice->physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_DEVICE;
 
-    outputDevice->outputDevice->queues = malloc(sizeof(VkQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
+    outputDevice->outputDevice->queues = malloc(sizeof(vulkanQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
     uint32_t transferQueue = 0;
     for (int i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
         outputDevice->outputDevice->queues[i].queueInfo = deviceInfo.physicalDevice->physicalDevice->neededQueues[i];
@@ -61,20 +61,6 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         }
     }
 
-    uint32_t queueCount = 0;
-    vkGetPhysicalDeviceQueueFamilyProperties(
-        deviceInfo.physicalDevice->physicalDevice->device,
-        &queueCount,
-        NULL
-    );
-
-    VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * queueCount);
-    vkGetPhysicalDeviceQueueFamilyProperties(
-        deviceInfo.physicalDevice->physicalDevice->device,
-        &queueCount,
-        queueFamilies
-    );
-
     VkCommandPoolCreateInfo poolInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
@@ -83,9 +69,6 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
 
     if (vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferCommandPool) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_COMMAND_POOL;
-
-    free(queueCreateInfos);
-    free(queueFamilies);
 
     VkFenceCreateInfo fenceInfo = { .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO };
     if (vkCreateFence(outputDevice->outputDevice->device, &fenceInfo, NULL, &outputDevice->outputDevice->barrierFence) != VK_SUCCESS) return GN_FAILED_TO_CREATE_FENCE;
