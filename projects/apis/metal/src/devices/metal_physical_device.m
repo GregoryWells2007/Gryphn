@@ -23,12 +23,12 @@ gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCou
             devicesList[i]->properties.deviceType = GN_EXTERNAL_DEVICE;
 
         // below I am going to fake that there is one queue that can support graphics, compute, and transfer queues
-        devicesList[i]->queueProperties.queueCount = 1;
-        devicesList[i]->queueProperties.queueProperties = malloc(sizeof(gnQueueProperties));
-        devicesList[i]->queueProperties.queueProperties[0] = (gnQueueProperties){
-            .queueCount = 1,
-            .queueType = GN_QUEUE_GRAPHICS | GN_QUEUE_COMPUTE | GN_QUEUE_TRANSFER
-        };
+        // devicesList[i]->queueProperties.queueCount = 1;
+        // devicesList[i]->queueProperties.queueProperties = malloc(sizeof(gnQueueProperties));
+        // devicesList[i]->queueProperties.queueProperties[0] = (gnQueueProperties){
+        //     .queueCount = 1,
+        //     .queueType = GN_QUEUE_GRAPHICS | GN_QUEUE_COMPUTE | GN_QUEUE_TRANSFER
+        // };
 
         if ([device supportsTextureSampleCount:1]) { devicesList[i]->features.maxColorSamples |= GN_SAMPLE_BIT_1; }
         if ([device supportsTextureSampleCount:2]) { devicesList[i]->features.maxColorSamples |= GN_SAMPLE_BIT_2; }
