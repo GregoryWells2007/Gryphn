@@ -30,12 +30,18 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    if (presentationInfo.imageSharingMode == GN_SHARING_MODE_EXCLUSIVE)
-        createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-    else
+    if (presentationInfo.surface->windowSurface->presentQueueIndex != device->outputDevice->graphicsQueueIndex) {
         createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-    createInfo.queueFamilyIndexCount = 1;
-    createInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
+        createInfo.queueFamilyIndexCount = 2;
+        createInfo.pQueueFamilyIndices = (uint32_t[]){
+            device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex,
+            device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queueInfo.queueIndex
+        };
+    } else {
+        createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+        createInfo.queueFamilyIndexCount = 1;
+        createInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
+    }
     createInfo.preTransform = details.capabilities.currentTransform;
     createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     createInfo.presentMode = presentMode;
