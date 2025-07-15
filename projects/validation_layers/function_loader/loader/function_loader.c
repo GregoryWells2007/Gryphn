@@ -10,7 +10,7 @@ gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
         ._gnDestroyInstance = checkDestroyInstance,
 
         ._gnGetPhysicalDevices = checkGetPhysicalDevices,
-        ._gnQueueCanPresentToSurface = checkQueueCanPresentToSurface,
+        ._gnPhysicalDeviceCanPresentToSurface = checkCanDevicePresent,
 
         ._gnCreateOutputDevice = checkCreateOutputDevice,
         ._gnDestroyOutputDevice = checkDestroyOutputDevice,

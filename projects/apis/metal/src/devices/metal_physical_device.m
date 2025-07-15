@@ -45,6 +45,6 @@ gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCou
     return devicesList;
 }
 
-gnBool metalCanQueuePresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurface windowSurface) {
+gnBool metalCanDevicePresent(gnPhysicalDevice device, gnWindowSurface windowSurface) {
     return gnTrue; // I belive that a window should always be able to present to a surface in metal
 }

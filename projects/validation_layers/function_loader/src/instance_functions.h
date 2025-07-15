@@ -6,7 +6,7 @@ gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceInfo info)
 void checkDestroyInstance(gnInstance instance);
 
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count);
-gnBool checkQueueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface);
+gnBool checkCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
 
 gnReturnCode checkCreateOutputDevice(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
 void checkDestroyOutputDevice(gnOutputDeviceHandle device);

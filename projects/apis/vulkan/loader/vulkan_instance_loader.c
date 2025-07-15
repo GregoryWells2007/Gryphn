@@ -10,7 +10,7 @@ gnInstanceFunctions loadVulkanInstanceFunctions() {
         ._gnDestroyInstance = destroyInstance,
 
         ._gnGetPhysicalDevices = getPhysicalDevices,
-        ._gnQueueCanPresentToSurface = queueCanPresentToSurface,
+        ._gnPhysicalDeviceCanPresentToSurface = deviceCanPresentToSurface,
 
         ._gnCreateOutputDevice = createOutputDevice,
         ._gnDestroyOutputDevice = destroyOutputDevice,

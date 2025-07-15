@@ -8,7 +8,7 @@ gnInstanceFunctions loadMetalInstanceFunctions() {
         ._gnCreateInstance = createMetalInstance,
         ._gnDestroyInstance = destroyMetalInstance,
         ._gnGetPhysicalDevices = getMetalDevices,
-        ._gnQueueCanPresentToSurface = metalCanQueuePresentToSurface,
+        ._gnPhysicalDeviceCanPresentToSurface = metalCanDevicePresent,
         ._gnCreateOutputDevice = createMetalOutputDevice,
         ._gnDestroyOutputDevice = destroyMetalOutputDevice,
         ._gnCreateMacOSWindowSurface = createMetalSurface,

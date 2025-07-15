@@ -23,7 +23,7 @@ typedef struct gnInstanceFunctions {
     void (*_gnDestroyInstance)(gnInstanceHandle instance);
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
-    gnBool (*_gnQueueCanPresentToSurface)(gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface);
+    gnBool (*_gnPhysicalDeviceCanPresentToSurface)(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
 
     gnReturnCode (*_gnCreateOutputDevice)(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
     void (*_gnDestroyOutputDevice)(gnOutputDeviceHandle device);
