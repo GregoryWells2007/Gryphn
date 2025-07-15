@@ -15,8 +15,8 @@ void checkDestroyInstance(gnInstance instance) {
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count) {
     CHECK_RETURNED_FUNCTION(instance, _gnGetPhysicalDevices, instanceFunctions, NULL, instance, count);
 }
-gnBool checkQueueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface) {
-    CHECK_RETURNED_FUNCTION(device.instance, _gnQueueCanPresentToSurface, instanceFunctions, gnFalse, device, queueIndex, windowSurface);
+gnBool checkQueueCanPresentToSurface(gnPhysicalDevice device, uint32_t queueIndex, const gnWindowSurfaceHandle windowSurface) {
+    CHECK_RETURNED_FUNCTION(device->instance, _gnQueueCanPresentToSurface, instanceFunctions, gnFalse, device, queueIndex, windowSurface);
 }
 
 gnReturnCode checkCreateOutputDevice(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {

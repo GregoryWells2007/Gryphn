@@ -16,6 +16,8 @@ GN_HANDLE(gnWindowSurface);
 GN_HANDLE(gnPresentationQueue);
 GN_HANDLE(gnTexture);
 GN_HANDLE(gnRenderPassDescriptor);
+GN_HANDLE(gnPhysicalOutputDevice);
+GN_HANDLE_ALIAS(gnPhysicalOutputDevice, gnPhysicalDevice);
 GN_HANDLE(gnOutputDevice);
 GN_HANDLE_ALIAS(gnOutputDevice, gnDevice);
 GN_HANDLE(gnShaderModule);

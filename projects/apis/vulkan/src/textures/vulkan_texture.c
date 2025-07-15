@@ -182,7 +182,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
     VkMemoryAllocateInfo allocInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .allocationSize = memRequirements.size,
-        .memoryTypeIndex = VkMemoryIndex(device->physicalDevice.physicalDevice->device, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &foundMemory)
+        .memoryTypeIndex = VkMemoryIndex(device->physicalDevice->physicalDevice->device, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &foundMemory)
     };
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 
@@ -210,7 +210,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         return GN_FAILED_TO_CREATE_IMAGE_VIEW;
 
     VkPhysicalDeviceProperties properties = {};
-    vkGetPhysicalDeviceProperties(device->physicalDevice.physicalDevice->device, &properties);
+    vkGetPhysicalDeviceProperties(device->physicalDevice->physicalDevice->device, &properties);
 
     VkSamplerCreateInfo samplerInfo = {
         .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,

@@ -6,7 +6,7 @@
 
 gnReturnCode createMetalOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
-    outputDevice->outputDevice->device = deviceInfo.physicalDevice.physicalDevice->device.retain;
+    outputDevice->outputDevice->device = deviceInfo.physicalDevice->physicalDevice->device.retain;
     outputDevice->outputDevice->transferQueue = outputDevice->outputDevice->device.newCommandQueue;
     return GN_SUCCESS;
 }

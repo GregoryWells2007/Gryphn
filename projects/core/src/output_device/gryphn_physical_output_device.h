@@ -45,20 +45,22 @@ typedef struct gnPhysicalDeviceQueueProperties {
     gnQueueProperties* queueProperties;
 } gnPhysicalDeviceQueueProperties;
 
-typedef struct gnPhysicalDevice {
+#ifdef GN_REVEAL_IMPL
+typedef struct gnPhysicalOutputDevice_t {
     struct gnPlatformPhysicalDevice_t* physicalDevice;
     gnPhysicalDeviceProperties properties;
     gnPhysicalDeviceFeatures features;
     gnPhysicalDeviceQueueProperties queueProperties;
 
     gnInstanceHandle instance;
-} gnPhysicalDevice;
+} gnPhysicalOutputDevice_t;
+#endif
 
-gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count);
-gnBool gnQueueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface);
+gnPhysicalOutputDeviceHandle* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count);
+gnBool gnQueueCanPresentToSurface(gnPhysicalOutputDeviceHandle device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface);
 
-gnBool gnHasGraphicsQueue(const gnPhysicalDevice device);
-gnBool gnHasPresentQueue(const gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
+gnBool gnHasGraphicsQueue(gnPhysicalOutputDeviceHandle device);
+gnBool gnHasPresentQueue(gnPhysicalOutputDeviceHandle device, gnWindowSurfaceHandle windowSurface);
 
-int gnGetGraphicsQueueIndex(const gnPhysicalDevice device);
-int gnGetPresentQueueIndex(const gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
+int gnGetGraphicsQueueIndex(gnPhysicalOutputDeviceHandle device);
+int gnGetPresentQueueIndex(gnPhysicalOutputDeviceHandle device, gnWindowSurfaceHandle windowSurface);

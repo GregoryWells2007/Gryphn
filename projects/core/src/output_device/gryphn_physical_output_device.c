@@ -1,11 +1,10 @@
 #include "gryphn_physical_output_device.h"
 #include "instance/gryphn_instance.h"
 
-gnPhysicalDevice* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {
-    gnPhysicalDevice* devices = instance->callingLayer->instanceFunctions._gnGetPhysicalDevices(instance, count);
-    for (int i = 0; i < *count; i++) {
-        devices[i].instance = instance;
-    }
+gnPhysicalOutputDeviceHandle* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {
+    gnPhysicalOutputDeviceHandle* devices = instance->callingLayer->instanceFunctions._gnGetPhysicalDevices(instance, count);
+    for (int i = 0; i < *count; i++)
+        devices[i]->instance = instance;
     return devices;
 }
 
@@ -18,19 +17,19 @@ gnBool gnQueueCanPresentToSurface(const gnPhysicalDevice device, uint32_t queueI
     //     );
     //     return gnFalse;
     // }
-    return device.instance->callingLayer->instanceFunctions._gnQueueCanPresentToSurface(device, queueIndex, windowSurface);
+    return device->instance->callingLayer->instanceFunctions._gnQueueCanPresentToSurface(device, queueIndex, windowSurface);
 }
 
-gnBool gnHasGraphicsQueue(const gnPhysicalDevice device) {
-    for (int i = 0; i < device.queueProperties.queueCount; i++) {
-        if ((device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) == GN_QUEUE_GRAPHICS) {
+gnBool gnHasGraphicsQueue(gnPhysicalDevice device) {
+    for (int i = 0; i < device->queueProperties.queueCount; i++) {
+        if ((device->queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) == GN_QUEUE_GRAPHICS) {
             return gnTrue;
         }
     }
     return gnFalse;
 }
-gnBool gnHasPresentQueue(const gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface) {
-    for (int i = 0; i < device.queueProperties.queueCount; i++) {
+gnBool gnHasPresentQueue(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface) {
+    for (int i = 0; i < device->queueProperties.queueCount; i++) {
         if (gnQueueCanPresentToSurface(device, i, windowSurface)) {
             return gnTrue;
         }
@@ -38,17 +37,17 @@ gnBool gnHasPresentQueue(const gnPhysicalDevice device, gnWindowSurfaceHandle wi
     return gnFalse;
 }
 
-int gnGetGraphicsQueueIndex(const gnPhysicalDevice device) {
-    for (int i = 0; i < device.queueProperties.queueCount; i++) {
-        if ((device.queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) == GN_QUEUE_GRAPHICS) {
+int gnGetGraphicsQueueIndex(gnPhysicalDevice device) {
+    for (int i = 0; i < device->queueProperties.queueCount; i++) {
+        if ((device->queueProperties.queueProperties[i].queueType & GN_QUEUE_GRAPHICS) == GN_QUEUE_GRAPHICS) {
             return i;
             break;
         }
     }
     return -1;
 }
-int gnGetPresentQueueIndex(const gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface) {
-    for (int i = 0; i < device.queueProperties.queueCount; i++) {
+int gnGetPresentQueueIndex(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface) {
+    for (int i = 0; i < device->queueProperties.queueCount; i++) {
         if (gnQueueCanPresentToSurface(device, i, windowSurface)) {
             return i;
             break;

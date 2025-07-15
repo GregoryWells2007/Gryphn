@@ -47,7 +47,7 @@ gnReturnCode VkCreateBuffer(
     VkMemoryAllocateInfo memoryAllocateInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .allocationSize = bufferRequirements.size,
-        .memoryTypeIndex = VkMemoryIndex(device->physicalDevice.physicalDevice->device, bufferRequirements.memoryTypeBits, flags, &foundMemory)
+        .memoryTypeIndex = VkMemoryIndex(device->physicalDevice->physicalDevice->device, bufferRequirements.memoryTypeBits, flags, &foundMemory)
     };
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 

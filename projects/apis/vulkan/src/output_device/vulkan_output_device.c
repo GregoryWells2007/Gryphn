@@ -28,7 +28,7 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         .pQueueCreateInfos = queueCreateInfos,
         .pEnabledFeatures = &deviceFeatures
     };
-    deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount, deviceInfo.physicalDevice.physicalDevice->device);
+    deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount, deviceInfo.physicalDevice->physicalDevice->device);
 
     outputDevice->outputDevice->enabledOversizedDescriptorPools = gnFalse;
     for (int i = 0; i < deviceCreateInfo.enabledExtensionCount; i++)
@@ -42,7 +42,7 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         deviceCreateInfo.ppEnabledLayerNames = validation_layers;
     }
 
-    if (vkCreateDevice(deviceInfo.physicalDevice.physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device) != VK_SUCCESS)
+    if (vkCreateDevice(deviceInfo.physicalDevice->physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device) != VK_SUCCESS)
         return GN_FAILED_TO_CREATE_DEVICE;
 
     outputDevice->outputDevice->queues = malloc(sizeof(VkQueue) * deviceInfo.queueInfoCount);
@@ -52,14 +52,14 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
 
     uint32_t queueCount = 0;
     vkGetPhysicalDeviceQueueFamilyProperties(
-        deviceInfo.physicalDevice.physicalDevice->device,
+        deviceInfo.physicalDevice->physicalDevice->device,
         &queueCount,
         NULL
     );
 
     VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * queueCount);
     vkGetPhysicalDeviceQueueFamilyProperties(
-        deviceInfo.physicalDevice.physicalDevice->device,
+        deviceInfo.physicalDevice->physicalDevice->device,
         &queueCount,
         queueFamilies
     );

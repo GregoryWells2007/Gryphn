@@ -65,12 +65,12 @@ gnSurfaceFormat* vkGetSurfaceFormats(
 ) {
     gnSurfaceFormat* formats = NULL;
 
-    vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice->device, windowSurface->windowSurface->surface, formatCount, NULL);
+    vkGetPhysicalDeviceSurfaceFormatsKHR(device->physicalDevice->device, windowSurface->windowSurface->surface, formatCount, NULL);
     formats = malloc(sizeof(gnSurfaceFormat) * *formatCount);
     VkSurfaceFormatKHR* vkFormats = malloc(sizeof(VkSurfaceFormatKHR) * *formatCount);;
 
     if (*formatCount > 0) {
-        vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice->device, windowSurface->windowSurface->surface, formatCount, vkFormats);
+        vkGetPhysicalDeviceSurfaceFormatsKHR(device->physicalDevice->device, windowSurface->windowSurface->surface, formatCount, vkFormats);
         for (int i = 0; i < *formatCount; i++) {
             switch (vkFormats[i].format) {
             case VK_FORMAT_B8G8R8A8_SRGB: { formats[i].format = GN_FORMAT_BGRA8_SRGB; break; }
@@ -95,7 +95,7 @@ gnSurfaceDetails getSurfaceDetails(
     surfaceDetails.formats = vkGetSurfaceFormats(windowSurface, device, &surfaceDetails.formatCount);
 
     VkSurfaceCapabilitiesKHR details;
-    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device.physicalDevice->device, windowSurface->windowSurface->surface, &details);
+    vkGetPhysicalDeviceSurfaceCapabilitiesKHR(device->physicalDevice->device, windowSurface->windowSurface->surface, &details);
 
     surfaceDetails.minImageCount = details.minImageCount;
     surfaceDetails.maxImageCount = details.maxImageCount;
