@@ -1,7 +1,7 @@
 #include "sync_functions.h"
 #include "loader_utils.h"
 #include "core/src/presentation_queue/gryphn_presentation_queue.h"
-#include <core/src/debugger/gryphn_debugger.h>
+#include <core/src/instance/gryphn_debugger.h>
 #include "synchronization/semaphore/gryphn_semaphore.h"
 #include "synchronization/fence/gryphn_fence.h"
 #include "synchronization/commands/gryphn_sync_submit.h"

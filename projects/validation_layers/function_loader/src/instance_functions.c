@@ -1,6 +1,6 @@
 #include "instance_functions.h"
 #include "../loader_utils.h"
-#include <core/src/debugger/gryphn_debugger.h>
+#include <core/src/instance/gryphn_debugger.h>
 #include "core/src/output_device/gryphn_output_device.h"
 #include "core/src/window_surface/gryphn_surface.h"
 

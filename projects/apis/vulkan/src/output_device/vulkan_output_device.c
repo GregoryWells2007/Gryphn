@@ -34,7 +34,7 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
     for (int i = 0; i < deviceCreateInfo.enabledExtensionCount; i++)
         if (strcmp(deviceCreateInfo.ppEnabledExtensionNames[i], VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME) == 0) outputDevice->outputDevice->enabledOversizedDescriptorPools = gnTrue;
 
-    if (instance->debugger == NULL)
+    if (instance->hasDebugger)
         deviceCreateInfo.enabledLayerCount = 0;
     else {
         const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };

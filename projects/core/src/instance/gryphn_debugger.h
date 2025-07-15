@@ -1,8 +1,6 @@
 #pragma once
 #include "stdint.h"
 #include "utils/gryphn_string.h"
-#include "utils/gryphn_error_code.h"
-#include "gryphn_handles.h"
 
 struct gnPlatformDebugger_t;
 
@@ -43,24 +41,14 @@ typedef struct gnDebuggerInfo {
 } gnDebuggerInfo;
 
 #ifdef GN_REVEAL_IMPL
-
-struct gnDebugger_t {
-    gnDebuggerInfo info;
-};
-#endif
-
-gnReturnCode gnCreateDebugger(gnDebuggerHandle* debugger, const gnDebuggerInfo info);
-void gnDestroyDebugger(gnDebuggerHandle debugger);
-
-#ifdef GN_REVEAL_IMPL
-static void gnDebuggerSetErrorMessage(gnDebuggerHandle debugger, gnMessageData data) {
-    if (debugger == NULL) return;
-
-    debugger->info.callback(
+// struct gnDebugger_t { gnDebuggerInfo info; };
+static void gnDebuggerSetErrorMessage(gnDebuggerInfo debugger, gnMessageData data) {
+    // if (debugger == NULL) return;
+    debugger.callback(
         GN_MESSAGE_ERROR,
         GN_DEBUG_MESSAGE_VALIDATION,
         data,
-        debugger->info.userData
+        debugger.userData
     );
 }
 #endif

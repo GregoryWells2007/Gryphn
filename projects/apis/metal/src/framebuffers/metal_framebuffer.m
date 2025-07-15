@@ -1,5 +1,4 @@
 #include "metal_framebuffer.h"
-#include "debugger/gryphn_debugger.h"
 #include "texture/metal_texture.h"
 #include "renderpass/gryphn_render_pass_descriptor.h"
 #include "instance/gryphn_instance.h"

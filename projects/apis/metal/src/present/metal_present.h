@@ -4,7 +4,6 @@
 #include "devices/metal_output_devices.h"
 #include "sync/semaphore/metal_semaphore.h"
 #include "presentation_queue/metal_presentation_queue.h"
-#include "debugger/gryphn_debugger.h"
 #include "texture/metal_texture.h"
 #import <QuartzCore/CAMetalLayer.h>
 

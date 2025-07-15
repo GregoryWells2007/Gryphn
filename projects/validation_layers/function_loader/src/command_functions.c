@@ -2,7 +2,7 @@
 #include "core/src/command/command_pool/gryphn_command_pool.h"
 #include "core/src/command/command_buffer/gryphn_command_buffer.h"
 #include "core/src/output_device/gryphn_output_device.h"
-#include <core/src/debugger/gryphn_debugger.h>
+#include <core/src/instance/gryphn_debugger.h>
 #include <core/src/instance/gryphn_instance.h>
 #include "core/src/renderpass/gryphn_render_pass.h"
 #include "core/src/pipelines/graphics_pipeline/gryphn_graphics_pipeline.h"

@@ -2,11 +2,11 @@
 #include "instance/gryphn_instance.h"
 #include <loader/src/gryphn_instance_functions.h>
 #include "loader/src/gryphn_loader.h"
-#include "debugger/gryphn_debugger.h"
 #include "loader/src/gryphn_loader.h"
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
     *instance = malloc(sizeof(struct gnInstance_t));
+    (*instance)->hasDebugger = gnFalse;
 
     (*instance)->layers = loaderLayerArrayListCreate();
     loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
@@ -20,8 +20,12 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
     }
 
     gnBool loaderFunctionChecker = gnFalse;
-    for (int i = 0; i < info.debugger->info.layerCount; i++) {
-        if (info.debugger->info.layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) loaderFunctionChecker = gnTrue;
+    if (info.debugger != NULL) {
+        for (int i = 0; i < info.debugger->layerCount; i++) {
+            if (info.debugger->layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) loaderFunctionChecker = gnTrue;
+        }
+        (*instance)->debugger = *info.debugger;
+        (*instance)->hasDebugger = gnTrue;
     }
 
     if (loaderFunctionChecker) {
@@ -36,7 +40,6 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
 
     // i hate this line of code but im not fixing it
     (*instance)->callingLayer = &(*instance)->layers.data[(*instance)->layers.count - 1];
-    (*instance)->debugger = info.debugger;
     return (*instance)->callingLayer->instanceFunctions._gnCreateInstance((*instance), info);
 }
 

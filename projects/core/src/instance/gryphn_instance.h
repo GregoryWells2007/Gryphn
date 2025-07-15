@@ -3,6 +3,7 @@
 #include "core/src/gryphn_handles.h"
 #include "utils/gryphn_version.h"
 #include "utils/gryphn_error_code.h"
+#include "core/src/instance/gryphn_debugger.h"
 #include <gryphn_extensions.h>
 
 typedef struct gnInstanceInfo {
@@ -13,7 +14,7 @@ typedef struct gnInstanceInfo {
     gnVersion engineVersion;
 
     gnRenderingAPI renderingAPI;
-    gnDebuggerHandle debugger;
+    gnDebuggerInfo* debugger;
 
     uint32_t extensionCount;
     gnExtension* extensions;
@@ -29,7 +30,8 @@ struct gnInstance_t {
     loaderLayer* callingLayer;
     uint32_t currentLayer;
 
-    gnDebuggerHandle debugger;
+    gnBool hasDebugger;
+    gnDebuggerInfo debugger;
 };
 #endif
 

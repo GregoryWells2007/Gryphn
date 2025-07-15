@@ -1,6 +1,6 @@
 #include "device_functions.h"
 #include "loader_utils.h"
-#include <core/src/debugger/gryphn_debugger.h>
+#include <core/src/instance/gryphn_debugger.h>
 #include "core/src/presentation_queue/gryphn_presentation_queue.h"
 #include "core/src/shader_module/gryphn_shader_module.h"
 #include "core/src/renderpass/gryphn_render_pass_descriptor.h"

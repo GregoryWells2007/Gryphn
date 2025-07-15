@@ -1,6 +1,5 @@
 #include "metal_command_buffer.h"
 #include "commands/command_pool/metal_command_pool.h"
-#include "debugger/gryphn_debugger.h"
 #include "instance/gryphn_instance.h"
 #import <Metal/Metal.h>
 

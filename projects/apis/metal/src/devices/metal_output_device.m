@@ -3,7 +3,6 @@
 #include "metal_output_devices.h"
 #include "instance/metal_instance.h"
 #include "instance/gryphn_instance.h"
-#include <debugger/gryphn_debugger.h>
 
 gnReturnCode createMetalOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));

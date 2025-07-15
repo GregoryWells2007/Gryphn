@@ -1,6 +1,5 @@
 #include "metal_graphics_pipeline.h"
 #include "devices/metal_output_devices.h"
-#include "debugger/gryphn_debugger.h"
 #include "shader_module/metal_shader_module.h"
 #include "surface/metal_surface.h"
 #include "texture/metal_texture.h"

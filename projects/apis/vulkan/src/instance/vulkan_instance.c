@@ -80,8 +80,8 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
     #endif
 
     if (instanceInfo.debugger != NULL) {
-        for (int i = 0; i < instanceInfo.debugger->info.layerCount; i++) {
-            if (instanceInfo.debugger->info.layers[i] == GN_DEBUGGER_LAYER_PLATFORM) {
+        for (int i = 0; i < instanceInfo.debugger->layerCount; i++) {
+            if (instanceInfo.debugger->layers[i] == GN_DEBUGGER_LAYER_PLATFORM) {
                 vkStringArrayListAdd(&extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
                 const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
@@ -89,8 +89,8 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
                 createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
 
                 vkUserData* userData = malloc(sizeof(vkUserData));
-                userData->debuggerCallback = instanceInfo.debugger->info.callback;
-                userData->userData = instanceInfo.debugger->info.userData;
+                userData->debuggerCallback = instanceInfo.debugger->callback;
+                userData->userData = instanceInfo.debugger->userData;
 
                 VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {
                     .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,

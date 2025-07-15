@@ -3,7 +3,6 @@
 
 // core functionality
 #include <core/src/instance/gryphn_instance.h>
-#include <core/src/debugger/gryphn_debugger.h>
 #include <core/src/output_device/gryphn_physical_output_device.h>
 #include <core/src/window_surface/gryphn_surface.h>
 #include <core/src/window_surface/gryphn_surface_create_functions.h>

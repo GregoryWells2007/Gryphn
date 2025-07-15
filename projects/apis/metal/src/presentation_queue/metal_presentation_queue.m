@@ -1,7 +1,6 @@
 #include "metal_presentation_queue.h"
 #include "surface/metal_surface.h"
 #include "devices/metal_output_devices.h"
-#include "debugger/gryphn_debugger.h"
 #include "texture/metal_texture.h"
 #include "sync/semaphore/metal_semaphore.h"
 

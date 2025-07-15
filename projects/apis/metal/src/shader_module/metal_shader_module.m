@@ -1,12 +1,12 @@
 #include "metal_shader_module.h"
 #include "spirv_cross_c.h"
-#include "debugger/gryphn_debugger.h"
+#include "instance/gryphn_debugger.h"
 #include "devices/metal_output_devices.h"
 #import <Foundation/Foundation.h>
 #import <Metal/Metal.h>
 
 void mtlSpirVErrorCallback(void *userdata, const char *error) {
-    gnDebugger debugger = (gnDebugger)userdata;
+    gnDebuggerInfo debugger = *((gnDebuggerInfo*)userdata);
     gnDebuggerSetErrorMessage(debugger, (gnMessageData){
         .message = gnCombineStrings(gnCreateString("shader compilation error MSL "), gnCreateString(error))
     });
@@ -25,7 +25,7 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     size_t count;
 
     spvc_context_create(&context);
-    spvc_context_set_error_callback(context, mtlSpirVErrorCallback, module->device->instance->debugger);
+    spvc_context_set_error_callback(context, mtlSpirVErrorCallback, &module->device->instance->debugger);
     spvc_context_parse_spirv(context, shaderModuleInfo.code, shaderModuleInfo.size / 4, &ir);
     spvc_context_create_compiler(context, SPVC_BACKEND_MSL, ir, SPVC_CAPTURE_MODE_COPY, &compiler);
 
