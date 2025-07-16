@@ -31,6 +31,43 @@ VkSampleCountFlags gnSampleCountToVulkan(gnMultisampleCountFlags counts) {
     return sampleCount;
 }
 
+void vulkanLoadNeededQueues(VkPhysicalDevice vulkanDevice, gnPhysicalDevice gryphnDevice) {
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(vulkanDevice, &queueFamilyCount, NULL);
+    VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * queueFamilyCount);
+    vkGetPhysicalDeviceQueueFamilyProperties(vulkanDevice, &queueFamilyCount, queueFamilies);
+
+    gryphnDevice->physicalDevice->neededQueues = malloc(sizeof(vulkanNeededQueue) * queueFamilyCount);
+    gnBool foundGraphicsQueueFamily = gnFalse, foundTransferQueueFamily = gnFalse;
+    for (int c = 0; c < queueFamilyCount; c++) {
+        gnBool hasNeededQueue = gnFalse;
+
+        if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
+            foundGraphicsQueueFamily = true;
+            hasNeededQueue = gnTrue;
+        }
+        if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
+            foundTransferQueueFamily = true;
+            hasNeededQueue = gnTrue;
+        }
+
+        if (hasNeededQueue) {
+            vulkanNeededQueue neededQueue = {
+                .queueIndex = c,
+                .createFlags = 0,
+                .usedForPresent = gnFalse
+            };
+            if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT)) neededQueue.createFlags |= VK_QUEUE_GRAPHICS_BIT;
+            if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT)) neededQueue.createFlags |= VK_QUEUE_TRANSFER_BIT;
+
+            gryphnDevice->physicalDevice->neededQueues[gryphnDevice->physicalDevice->neededQueueCount] = neededQueue;
+            gryphnDevice->physicalDevice->neededQueueCount++;
+        }
+    }
+
+    free(queueFamilies);
+}
+
 gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* deviceCount) {
     vkEnumeratePhysicalDevices(instance->instance->vk_instance, deviceCount, NULL);
     if (deviceCount == 0)
@@ -57,38 +94,9 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
         case VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM: outputDevices[i]->properties.deviceType = GN_INTEGRATED_DEVICE;
         }
 
-        uint32_t queueFamilyCount = 0;
-        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &queueFamilyCount, NULL);
-        VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * queueFamilyCount);
-        vkGetPhysicalDeviceQueueFamilyProperties(physicalDevices[i], &queueFamilyCount, queueFamilies);
+        if (instance->enabledExtensions[GN_EXT_QUEUES] == gnFalse)
+            vulkanLoadNeededQueues(physicalDevices[i], outputDevices[i]);
 
-        outputDevices[i]->physicalDevice->neededQueues = malloc(sizeof(vulkanNeededQueue) * queueFamilyCount);
-        gnBool foundGraphicsQueueFamily = gnFalse, foundTransferQueueFamily = gnFalse;
-        for (int c = 0; c < queueFamilyCount; c++) {
-            gnBool hasNeededQueue = gnFalse;
-
-            if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
-                foundGraphicsQueueFamily = true;
-                hasNeededQueue = gnTrue;
-            }
-            if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
-                foundTransferQueueFamily = true;
-                hasNeededQueue = gnTrue;
-            }
-
-            if (hasNeededQueue) {
-                vulkanNeededQueue neededQueue = {
-                    .queueIndex = c,
-                    .createFlags = 0,
-                    .usedForPresent = gnFalse
-                };
-                if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT)) neededQueue.createFlags |= VK_QUEUE_GRAPHICS_BIT;
-                if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT)) neededQueue.createFlags |= VK_QUEUE_TRANSFER_BIT;
-
-                outputDevices[i]->physicalDevice->neededQueues[outputDevices[i]->physicalDevice->neededQueueCount] = neededQueue;
-                outputDevices[i]->physicalDevice->neededQueueCount++;
-            }
-        }
 
         VkPhysicalDeviceProperties physicalDeviceProperties;
         vkGetPhysicalDeviceProperties(physicalDevices[i], &physicalDeviceProperties);
@@ -96,8 +104,6 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
         outputDevices[i]->features.maxDepthSamples = vkSampleCountToGryphn(physicalDeviceProperties.limits.framebufferDepthSampleCounts);
         outputDevices[i]->features.maxMemoryAllocations = physicalDeviceProperties.limits.maxMemoryAllocationCount;
         outputDevices[i]->features.maxPushConstantSize = physicalDeviceProperties.limits.maxPushConstantsSize;
-
-        free(queueFamilies);
     }
     free(physicalDevices);
 

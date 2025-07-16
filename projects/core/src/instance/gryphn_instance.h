@@ -30,6 +30,8 @@ struct gnInstance_t {
     loaderLayer* callingLayer;
     uint32_t currentLayer;
 
+    gnBool enabledExtensions[GN_EXT_MAX];
+
     gnBool hasDebugger;
     gnDebuggerInfo debugger;
 };

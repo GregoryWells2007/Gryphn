@@ -1,6 +1,7 @@
 #pragma once
-#include "stdint.h"
 
-typedef uint32_t gnExtension;
-#define GN_EXT_SYNCHRONIZATION 0
-#define GN_EXT_QUEUES 1
+typedef enum gnExtension {
+    GN_EXT_SYNCHRONIZATION = 0,
+    GN_EXT_QUEUES = 1,
+    GN_EXT_MAX
+} gnExtension;

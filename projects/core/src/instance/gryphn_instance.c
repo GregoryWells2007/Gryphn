@@ -14,10 +14,10 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
         .layerToLoad = api_layer
     }));
 
-    // TODO: still needs to check to see if the extension is supported
-    for (int i = 0; i < info.extensionCount; i++) {
-        if (info.extensions[i] == GN_EXT_SYNCHRONIZATION) (*instance)->layers.data[0].syncFunctions = loadAPISyncFunctions(info.renderingAPI);
-    }
+    for (int c = 0; c < GN_EXT_MAX; c++) (*instance)->enabledExtensions[c] = gnFalse;
+    for (int i = 0; i < info.extensionCount; i++) (*instance)->enabledExtensions[info.extensions[i]] = gnTrue;
+
+    if ((*instance)->enabledExtensions[GN_EXT_SYNCHRONIZATION]) (*instance)->layers.data[0].syncFunctions = loadAPISyncFunctions(info.renderingAPI);
 
     gnBool loaderFunctionChecker = gnFalse;
     if (info.debugger != NULL) {

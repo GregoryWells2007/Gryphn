@@ -1,6 +1,8 @@
 #pragma once
+#include <stdint.h>
 
 #define GN_NULL_HANDLE 0
+typedef uint32_t gnFlags;
 
 #define GN_HANDLE(type) \
 typedef struct type##_t* type##Handle; \
