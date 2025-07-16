@@ -2,6 +2,7 @@
 #include "stdint.h"
 #include "utils/gryphn_error_code.h"
 #include "gryphn_handles.h"
+#include "extensions/synchronization/semaphore/gryphn_semaphore.h"
 
 typedef struct gnPresentSyncInfo {
     uint32_t waitCount;

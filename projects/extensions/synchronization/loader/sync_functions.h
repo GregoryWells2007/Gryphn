@@ -1,6 +1,8 @@
 #pragma once
 #include "stdint.h"
 #include "utils/gryphn_error_code.h"
+#include <extensions/synchronization/fence/gryphn_fence.h>
+#include <extensions/synchronization/semaphore/gryphn_semaphore.h>
 #include "core/src/gryphn_handles.h"
 
 typedef struct gnSubmitSyncInfo gnSubmitSyncInfo;

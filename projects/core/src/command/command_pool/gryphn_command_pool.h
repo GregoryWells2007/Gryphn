@@ -3,13 +3,13 @@
 #include <utils/gryphn_error_code.h>
 #include "gryphn_handles.h"
 
-typedef enum gnCommandPoolFlags {
-    GN_NO_FLAGS = 0,
-    GN_REUSE_COMMAND_BUFFERS = 1
-} gnCommandPoolFlags;
+typedef enum gnCommandPoolFlagBits {
+    GN_NO_FLAGS              = 0,
+    GN_REUSE_COMMAND_BUFFERS = 1 << 0
+} gnCommandPoolFlagBits;
+typedef gnFlags gnCommandPoolFlags;
 
 typedef struct gnCommandPoolInfo {
-    // uint32_t queueIndex;
     gnCommandPoolFlags flags;
 } gnCommandPoolInfo;
 

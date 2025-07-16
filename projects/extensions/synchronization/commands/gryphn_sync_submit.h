@@ -2,6 +2,8 @@
 #include "stdint.h"
 #include "core/src/renderpass/gryphn_render_pass_descriptor.h"
 #include "core/src/gryphn_handles.h"
+#include "extensions/synchronization/semaphore/gryphn_semaphore.h"
+#include "extensions/synchronization/fence/gryphn_fence.h"
 
 typedef struct gnSubmitSyncInfo {
     uint32_t waitCount;
