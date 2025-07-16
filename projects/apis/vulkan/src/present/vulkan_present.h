@@ -4,4 +4,6 @@
 #include <output_device/vulkan_output_devices.h>
 
 gnReturnCode vulkanPresentSync(gnDevice device, gnPresentSyncInfo info);
+gnReturnCode vulkanQueuePresentSync(gnDevice device, gnQueue queue, gnPresentSyncInfo info);
 gnReturnCode vulkanPresent(gnDevice device, gnPresentInfo info);
+gnReturnCode vulkanQueuePresent(gnOutputDevice device, gnQueue queue, gnPresentInfo info);

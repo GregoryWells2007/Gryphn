@@ -6,6 +6,8 @@
 typedef struct gnQueueFamilyProperties gnQueueFamilyProperties;
 typedef struct gnSubmitInfo gnSubmitInfo;
 typedef struct gnSubmitSyncInfo gnSubmitSyncInfo;
+typedef struct gnPresentInfo gnPresentInfo;
+typedef struct gnPresentSyncInfo gnPresentSyncInfo;
 
 typedef struct gnQueueExtFunctions {
     gnReturnCode (*_gnGetPhysicalDeviceQueueProperties)(gnPhysicalOutputDeviceHandle device, uint32_t queueCount, gnQueueFamilyProperties* queues);
@@ -13,4 +15,7 @@ typedef struct gnQueueExtFunctions {
 
     gnReturnCode (*_gnQueueSubmit)(gnOutputDevice device, gnQueue queue, gnSubmitInfo info);
     gnReturnCode (*_gnQueueSubmitSync)(gnOutputDevice device, gnQueue queue, gnSubmitSyncInfo info);
+
+    gnReturnCode (*_gnQueuePresent)(gnDevice device, gnQueue queue, gnPresentInfo info);
+    gnReturnCode (*_gnQueuePresentSync)(gnDevice device, gnQueue queue, gnPresentSyncInfo info);
 } gnQueueExtFunctions;

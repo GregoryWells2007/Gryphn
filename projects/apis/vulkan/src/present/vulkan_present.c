@@ -2,7 +2,7 @@
 #include "extensions/synchronization/commands/gryphn_sync_present.h"
 #include "vulkan_surface/vulkan_surface.h"
 
-gnReturnCode vulkanPresentSync(gnDevice device, gnPresentSyncInfo info) {
+gnReturnCode vulkanQueuePresentSync(gnDevice device, gnQueue queue, gnPresentSyncInfo info) {
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
     for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;
 
@@ -18,14 +18,17 @@ gnReturnCode vulkanPresentSync(gnDevice device, gnPresentSyncInfo info) {
         .pImageIndices = info.imageIndices
     };
 
-    VkResult result = vkQueuePresentKHR(device->outputDevice->queues[info.presentationQueues[0]->info.surface->windowSurface->presentQueueIndex].queue, &presentInfo);
+    VkResult result = vkQueuePresentKHR((VkQueue)queue, &presentInfo);
     if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
     if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
     return GN_SUCCESS;
 }
 
+gnReturnCode vulkanPresentSync(gnDevice device, gnPresentSyncInfo info) {
+    return vulkanQueuePresentSync(device, (gnQueue)device->outputDevice->queues[info.presentationQueues[0]->info.surface->windowSurface->presentQueueIndex].queue, info);
+}
 
-gnReturnCode vulkanPresent(gnDevice device, gnPresentInfo info) {
+gnReturnCode vulkanQueuePresent(gnDevice device, gnQueue queue, gnPresentInfo info) {
     VkSwapchainKHR* swapchains = malloc(sizeof(VkSwapchainKHR) * info.presentationQueueCount);
     for (int i = 0; i < info.presentationQueueCount; i++) swapchains[i] = info.presentationQueues[i]->presentationQueue->swapChain;
 
@@ -38,8 +41,12 @@ gnReturnCode vulkanPresent(gnDevice device, gnPresentInfo info) {
         .pImageIndices = info.imageIndices
     };
 
-    VkResult result = vkQueuePresentKHR(device->outputDevice->queues[info.presentationQueues[0]->info.surface->windowSurface->presentQueueIndex].queue, &presentInfo);
+    VkResult result = vkQueuePresentKHR((VkQueue)queue, &presentInfo);
     if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
     if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
     return GN_SUCCESS;
+}
+
+gnReturnCode vulkanPresent(gnDevice device, gnPresentInfo info) {
+    return vulkanQueuePresent(device, (gnQueue)device->outputDevice->queues[info.presentationQueues[0]->info.surface->windowSurface->presentQueueIndex].queue, info);
 }
