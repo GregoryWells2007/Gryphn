@@ -1,4 +1,5 @@
 #include "vulkan_device_queues.h"
+#include "output_device/vulkan_output_devices.h"
 
 gnReturnCode vulkanPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle device, uint32_t queueFamilyCount, gnQueueFamilyProperties* queues) {
     vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, NULL);
@@ -19,4 +20,10 @@ gnReturnCode vulkanPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle de
     }
 
     return GN_SUCCESS;
+}
+
+void gnGetDeviceQueue(gnOutputDevice device, uint32_t queueFamily, uint32_t queueIndex, gnQueue* queue) {
+    VkQueue vulkanQueue;
+    vkGetDeviceQueue(device->outputDevice->device, queueFamily, queueIndex, &vulkanQueue);
+    *queue = (uint64_t)vulkanQueue;
 }

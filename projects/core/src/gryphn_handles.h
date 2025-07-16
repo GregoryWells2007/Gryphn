@@ -8,6 +8,10 @@ typedef uint32_t gnFlags;
 typedef struct type##_t* type##Handle; \
 typedef struct type##_t* type
 
+#define GN_IMPLEMENTATION_HANDLE(type) \
+typedef uint64_t type##Handle; \
+typedef uint64_t type
+
 #define GN_HANDLE_ALIAS(handle, alias) \
 typedef struct handle##_t* alias##Handle; \
 typedef struct handle##_t* alias
@@ -36,4 +40,4 @@ GN_HANDLE(gnUniform);
 GN_HANDLE(gnSemaphore);
 GN_HANDLE(gnFence);
 // GN_EXT_QUEUES
-GN_HANDLE(gnQueue); // NOTE: this is an implementaion specific object
+GN_IMPLEMENTATION_HANDLE(gnQueue); // NOTE: this is an implementaion specific object
