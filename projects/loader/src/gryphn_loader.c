@@ -93,6 +93,25 @@ gnSyncExtFunctions loadAPISyncFunctions(gnRenderingAPI api) {
     }
 }
 
+gnQueueExtFunctions loadAPIQueueFunctions(gnRenderingAPI api) {
+    switch (api) {
+    case GN_RENDERINGAPI_NONE: return (gnQueueExtFunctions){ NULL };
+#ifdef GN_API_VULKAN
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanQueueFunctions();
+#endif
+
+    case GN_RENDERINGAPI_SOFTWARE: return (gnQueueExtFunctions){ NULL };
+    case GN_RENDERINGAPI_DIRECTX11: return (gnQueueExtFunctions){ NULL };
+    case GN_RENDERINGAPI_DIRECTX12: return (gnQueueExtFunctions){ NULL };
+    case GN_RENDERINGAPI_OPENGL: return (gnQueueExtFunctions){ NULL };
+#ifdef GN_API_METAL
+    case GN_RENDERINGAPI_METAL: return (gnQueueExtFunctions){ NULL };
+#endif
+
+    default: return (gnQueueExtFunctions){NULL};
+    }
+}
+
 loaderLayer null_layer() {
     return (loaderLayer){
         .instanceFunctions = (gnInstanceFunctions){ NULL },

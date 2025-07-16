@@ -6,6 +6,7 @@
 #include "utils/lists/gryphn_array_list.h"
 
 #include "extensions/synchronization/loader/sync_functions.h"
+#include "extensions/queues/queues_functions.h"
 
 typedef struct loaderLayer {
     // idk why I sperate these info different classes, I should really shove them in one bit class
@@ -16,6 +17,7 @@ typedef struct loaderLayer {
     gnCommandFunctions commandFunctions;
 
     gnSyncExtFunctions syncFunctions;
+    gnQueueExtFunctions queueFunctions;
 
     // this index is not set by loadLayer, set by gnCreateInstance, also not used for now
     uint32_t layerIndex;

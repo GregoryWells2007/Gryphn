@@ -1,5 +1,4 @@
-#include <output_device/vulkan_physical_device.h>
-#include "extensions/queues/gryphn_physcial_device_queue.h"
+#include "vulkan_device_queues.h"
 
 gnReturnCode vulkanPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle device, uint32_t queueFamilyCount, gnQueueFamilyProperties* queues) {
     vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, NULL);
