@@ -2,19 +2,20 @@
 #include <output_device/gryphn_physical_output_device.h>
 #include <utils/gryphn_error_code.h>
 
-// typedef struct gnDeviceQueueInfo {
-//     int queueIndex;
-//     int queueCount;
-//     // float* queuePriority;
-// } gnDeviceQueueInfo;
-
 typedef struct gnOutputDeviceEnabledFeatures {
 
 } gnOutputDeviceEnabledFeatures;
 
+typedef struct gnDeviceQueueInfo {
+    int queueFamilyIndex;
+    int queueCount;
+    float* queuePrioritys;
+} gnDeviceQueueInfo;
+
 typedef struct gnOutputDeviceInfo {
-    // uint32_t queueInfoCount;
-    // gnDeviceQueueInfo* queueInfos;
+    uint32_t queueInfoCount;
+    gnDeviceQueueInfo* queueInfos; // only used if GN_EXT_QUEUES is enabled
+
     gnOutputDeviceEnabledFeatures enabledFeatures;
     gnPhysicalDevice physicalDevice;
 } gnOutputDeviceInfo;
