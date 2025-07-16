@@ -12,6 +12,10 @@ gnReturnCode gnCommandPoolAllocateCommandBuffersFromPointer(gnCommandBufferHandl
 }
 
 gnReturnCode gnCommandPoolAllocateCommandBuffersFromList(gnCommandBufferArrayList buffers, uint32_t count, gnCommandPoolHandle commandPool) {
+    if (buffers.count < count) {
+        gnCommandBufferArrayListExpand(&buffers, buffers.count - count);
+    }
+
     for (int i = 0; i < count; i++) {
         buffers.data[i] = malloc(sizeof(struct gnCommandBuffer_t));
         buffers.data[i]->commandPool = commandPool;
