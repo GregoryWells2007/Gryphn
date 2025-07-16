@@ -7,5 +7,7 @@
 #include <renderpass/vulkan_render_pass_descriptor.h>
 #include "extensions/synchronization/commands/gryphn_sync_submit.h"
 
+gnReturnCode vulkanSubmitSyncQueue(gnOutputDevice device, gnQueue queue, gnSubmitSyncInfo info);
 gnReturnCode vulkanSubmitSync(gnDevice device, gnSubmitSyncInfo info);
+gnReturnCode vulkanSubmitQueue(gnOutputDevice device, gnQueue queue, gnSubmitInfo info);
 gnReturnCode vulkanSubmit(gnDevice device, gnSubmitInfo info);
