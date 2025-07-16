@@ -30,17 +30,23 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
     createInfo.imageArrayLayers = 1;
     createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 
-    if (presentationInfo.surface->windowSurface->presentQueueIndex != device->outputDevice->graphicsQueueIndex) {
-        createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-        createInfo.queueFamilyIndexCount = 2;
-        createInfo.pQueueFamilyIndices = (uint32_t[]){
-            device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex,
-            device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queueInfo.queueIndex
-        };
+    if (device->instance->enabledExtensions[GN_EXT_QUEUES]) {
+        createInfo.imageSharingMode = (presentationInfo.imageSharingMode == GN_SHARING_MODE_CONCURRENT) ? VK_SHARING_MODE_CONCURRENT : VK_SHARING_MODE_EXCLUSIVE;
+        createInfo.queueFamilyIndexCount = presentationInfo.queueFamilyCount;
+        createInfo.pQueueFamilyIndices = presentationInfo.queueFamilies;
     } else {
-        createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-        createInfo.queueFamilyIndexCount = 1;
-        createInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
+        if (presentationInfo.surface->windowSurface->presentQueueIndex != device->outputDevice->graphicsQueueIndex) {
+            createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+            createInfo.queueFamilyIndexCount = 2;
+            createInfo.pQueueFamilyIndices = (uint32_t[]){
+                device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex,
+                device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queueInfo.queueIndex
+            };
+        } else {
+            createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            createInfo.queueFamilyIndexCount = 1;
+            createInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
+        }
     }
     createInfo.preTransform = details.capabilities.currentTransform;
     createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;

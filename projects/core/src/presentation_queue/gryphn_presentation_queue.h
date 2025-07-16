@@ -9,9 +9,11 @@ typedef struct gnPresentationQueueInfo {
     gnUInt2 imageSize;
     gnWindowSurfaceHandle surface;
     gnSurfaceFormat format;
-    // gnImageSharingMode imageSharingMode;
-    // uint32_t queueFamilyCount;
-    // uint32_t* queueFamilies;
+
+    // ignored unless GN_EXT_QUEUES is enabled
+    gnImageSharingMode imageSharingMode;
+    uint32_t queueFamilyCount;
+    uint32_t* queueFamilies;
 } gnPresentationQueueInfo;
 
 struct gnPlatformPresentationQueue_t;

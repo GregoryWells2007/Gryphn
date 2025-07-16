@@ -11,6 +11,7 @@ typedef gnFlags gnCommandPoolFlags;
 
 typedef struct gnCommandPoolInfo {
     gnCommandPoolFlags flags;
+    uint32_t queueFamilyIndex; // ignored unless GN_EXT_QUEUES is enabled
 } gnCommandPoolInfo;
 
 #ifdef GN_REVEAL_IMPL
