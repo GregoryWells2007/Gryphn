@@ -4,8 +4,6 @@
 #include "utils/lists/gryphn_array_list.h"
 #include "gryphn_handles.h"
 
-GN_HANDLE(gnFence);
-
 #ifdef GN_REVEAL_IMPL
 struct gnFence_t {
     struct gnPlatformFence_t* fence;

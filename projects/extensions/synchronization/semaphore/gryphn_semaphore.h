@@ -3,8 +3,6 @@
 #include "utils/lists/gryphn_array_list.h"
 #include "gryphn_handles.h"
 
-GN_HANDLE(gnSemaphore);
-
 #ifdef GN_REVEAL_IMPL
 struct gnSemaphore_t {
     struct gnPlatformSemaphore_t* semaphore;

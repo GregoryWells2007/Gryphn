@@ -30,3 +30,10 @@ GN_HANDLE(gnFramebuffer);
 GN_HANDLE(gnBuffer);
 GN_HANDLE(gnUniformPool);
 GN_HANDLE(gnUniform);
+
+// extension objects
+// GN_EXT_SYNCHRONIZATION
+GN_HANDLE(gnSemaphore);
+GN_HANDLE(gnFence);
+// GN_EXT_QUEUES
+GN_HANDLE(gnQueue); // NOTE: this is an implementaion specific object

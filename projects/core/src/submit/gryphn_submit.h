@@ -6,6 +6,5 @@
 typedef struct gnSubmitInfo {
     uint32_t commandBufferCount;
     gnCommandBufferHandle* commandBuffers;
-    // uint32_t queueIndex;
 } gnSubmitInfo;
 gnReturnCode gnSubmit(gnOutputDevice device, gnSubmitInfo info);
