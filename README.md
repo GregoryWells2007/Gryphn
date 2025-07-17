@@ -77,7 +77,7 @@ Gryphn validation layers are meant to be more specific so there are certain ones
 I currently am planning to move synchronization primatives to be an extension.
 Planned extensions: <br />
   - GN_EXT_COMPUTE, while compute pipelines might be a vulkan standard they are not an OpenGL standard so this does need to be an exension <br /><br />
-- I will add more exensions as Gryphn grows in complexity, my current biggest task is going to be moving synchronization primatives over into extension land and not a core part of the Gryphn standard. My biggest problem with exentensions is that I don't want them to be something like, this feature is only supported on Vulkan which I think removes part of the reason for my making this project.
+- I will add more exensions as Gryphn grows in complexity, im currently attempting to simplify the API to make it more simmilar to OpenGL but then with extensions it can be made more like Vulkan
 #### Standardization
 I currently don't write out a gryphn standard for myself but I am planning on creating that before I attempt to implement new features. This is something I should have done from the start.
 # Utils library
