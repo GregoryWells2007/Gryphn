@@ -11,6 +11,7 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
 - [ ] Direct 3D 12
 - [ ] OpenGL
 - [ ] Software
+* Currently working on the OpenGL backend
 
 # Features
 #### Application objects
@@ -47,6 +48,14 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
   - Supported APIs<br />
     - Vulkan <br />
     - Metal* (metal support is buggy, fences are nonatomic so they cannot be used across multible threads) <br />
+- GN_EXT_QUEUES
+  - tells vulkan when used as a backend API to stop handling queue managment and instead hand control over to the programmer
+  - Supported APIs <br />
+    - Vulkan <br />
+  - New Objects
+    - gnQueueHandle <br />
+    - gnQueueTypeBits+gnQueueTypeFlags <br />
+    - gnQueueFamilyProperties <br />
 
 # Validation
 Gryphn its an interesting API to work with so ive attempted to put together a somewhat comprehensive set of validation tools that will tell you what you (or I) am doing wrong. Gryphn currently has support for 2 validation layers but I plan to support more in the future <br />
