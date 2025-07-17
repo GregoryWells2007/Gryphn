@@ -134,7 +134,8 @@ loaderLayer function_check_layer() {
         .deviceFunctions = loadFunctionLoaderDeviceFunctions(),
         .commandFunctions = loadFunctionLoaderCommandFunctions(),
 
-        .syncFunctions = loadFunctionLoaderSyncExtFunctions()
+        .syncFunctions = loadFunctionLoaderSyncExtFunctions(),
+        .queueFunctions = loadFunctionLoaderQueueExtFunctions(),
     };
 }
 

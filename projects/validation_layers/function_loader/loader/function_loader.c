@@ -3,6 +3,7 @@
 #include "src/device_functions.h"
 #include "src/command_functions.h"
 #include "extensions/sync_functions.h"
+#include "extensions/queue_functions.h"
 
 gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
     return (gnInstanceFunctions){
@@ -119,5 +120,16 @@ gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions() {
 
         ._gnSubmitSync = checkSubmitSync,
         ._gnPresentSync = checkPresentSync
+    };
+}
+
+gnQueueExtFunctions loadFunctionLoaderQueueExtFunctions() {
+    return (gnQueueExtFunctions){
+        ._gnGetPhysicalDeviceQueueProperties = checkGetPhysicalDeviceQueueProperties,
+        ._gnGetDeviceQueue = checkGetDeviceQueue,
+        ._gnQueueSubmit = checkQueueSubmit,
+        ._gnQueueSubmitSync = checkQueueSubmitSync,
+        ._gnQueuePresent = checkQueuePresent,
+        ._gnQueuePresentSync = checkQueuePresentSync
     };
 }

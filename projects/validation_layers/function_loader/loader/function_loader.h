@@ -8,4 +8,6 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions();
 gnCommandFunctions loadFunctionLoaderCommandFunctions();
 
 #include "extensions/synchronization/loader/sync_functions.h"
+#include "extensions/queues/queues_functions.h"
 gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions();
+gnQueueExtFunctions loadFunctionLoaderQueueExtFunctions();
