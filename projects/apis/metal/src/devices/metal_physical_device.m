@@ -8,6 +8,7 @@ gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCou
     *deviceCount = [devices count];
     gnPhysicalDevice* devicesList = (gnPhysicalDevice*)malloc(sizeof(gnPhysicalDevice) * *deviceCount);
     for (int i = 0; i < *deviceCount; i++) {
+        devicesList[i] = malloc(sizeof(gnPhysicalOutputDevice_t));
         devicesList[i]->physicalDevice = malloc(sizeof(gnPlatformPhysicalDevice));
         devicesList[i]->physicalDevice->device = [devices objectAtIndex:0];
 
