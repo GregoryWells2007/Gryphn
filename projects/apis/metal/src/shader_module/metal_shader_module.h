@@ -18,7 +18,14 @@ typedef struct metalShaderMap {
 typedef struct gnPlatformShaderModule_t {
     id<MTLFunction> function;
     metalShaderMap map;
+    gnBool useShaderMap;
 } gnPlatformShaderModule;
 
-gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
-void destroyMetalShaderModule(gnShaderModule module);
+#ifdef __cplusplus
+extern "C" {
+#endif
+    gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
+    void destroyMetalShaderModule(gnShaderModule module);
+#ifdef __cplusplus
+}
+#endif

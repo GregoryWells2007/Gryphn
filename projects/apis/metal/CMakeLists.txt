@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 17)
 project(GryphnMetalImpl)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS
-    "src/*.c" "src/*.h" "src/*.m"
+    "src/*.c" "src/*.h" "src/*.m" "src/*.mm"
 )
 file(GLOB_RECURSE LOADER_FILES CONFIGURE_DEPENDS
     "loader/*.m"

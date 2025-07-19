@@ -11,7 +11,6 @@ typedef struct gnSubmitSyncInfo {
     gnSemaphoreHandle* signalSemaphores;
     uint32_t commandBufferCount;
     gnCommandBufferHandle* commandBuffers;
-    uint32_t queueIndex;
     gnFenceHandle fence;
 } gnSubmitSyncInfo;
 
