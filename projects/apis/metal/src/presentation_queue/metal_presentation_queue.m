@@ -68,15 +68,8 @@ void mtlAddImageBackToQueue(gnPresentationQueue queue, uint32_t index) {
 }
 
 gnReturnCode getMetalPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
-    if (presentationQueue->presentationQueue->avaliableTextures.count == 0) {
-        mtlImageNeeded image = {
-          .semaphoreToSignal = semaphore,
-          .whereToPut = imageIndex
-        };
-        mtlImageNeededArrayListAdd(&presentationQueue->presentationQueue->neededImages, image);
-    } else {
-        mtlTakeImageFromQueue(imageIndex, presentationQueue, semaphore);
-    }
+    while(presentationQueue->presentationQueue->avaliableTextures.count == 0);
+    mtlTakeImageFromQueue(imageIndex, presentationQueue, semaphore);
     return GN_SUCCESS;
 }
 
