@@ -16,7 +16,8 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     };
     if (shaderModuleInfo.stage == GN_FRAGMENT_SHADER_MODULE) options.stage = fragment;
 
-    const char* res = mtlCompileShader(shaderModuleInfo.code, shaderModuleInfo.size / 4, &options);
+    mtlShader shader = mtlCompileShader(shaderModuleInfo.code, shaderModuleInfo.size / 4, &options);
+    const char* res = shader.code;
     if (res == NULL) return GN_FAILED_TO_CONVERT_SHADER_CODE;
 
     NSError* error = nil;
@@ -45,10 +46,10 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
 
     NSString* functionName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
     module->shaderModule->function = [shaderLib newFunctionWithName:functionName];
-    // printf("res %s\n", res);
 
     [shaderLib release];
     free((void*)res);
+    module->shaderModule->shaderMap = shader.map;
     return GN_SUCCESS;
 }
 
