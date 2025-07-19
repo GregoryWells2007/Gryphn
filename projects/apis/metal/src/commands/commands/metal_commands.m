@@ -114,26 +114,26 @@ void metalDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexC
 
 void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
-    for (int i = 0; i < uniform->uniform->bindingCount; i++) {
-        if (uniform->uniform->bindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
-            gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->bindings[i].data;
-            [encoder setVertexBuffer:info.buffer->buffer->buffer
-                offset:info.offset
-                atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.sets[set].bindings[info.binding]
-            ];
-        } else if (uniform->uniform->bindings[i].type == GN_SHADER_STORE_BUFFER_DESCRIPTOR) {
-            gnStorageUniformInfo info = *(gnStorageUniformInfo*)uniform->uniform->bindings[i].data;
-            [encoder setVertexBuffer:info.buffer->buffer->buffer
-                offset:info.offset
-                atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.sets[set].bindings[info.binding]
-            ];
-        } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
-            gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
-            uint32_t index = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.sets[set].bindings[info.binding];
-            [encoder setFragmentTexture:info.texture->texture->texture atIndex:index];
-            [encoder setFragmentSamplerState:info.texture->texture->sampler atIndex:index];
-        }
-    }
+    // for (int i = 0; i < uniform->uniform->bindingCount; i++) {
+    //     if (uniform->uniform->bindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
+    //         gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->bindings[i].data;
+    //         [encoder setVertexBuffer:info.buffer->buffer->buffer
+    //             offset:info.offset
+    //             atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.sets[set].bindings[info.binding]
+    //         ];
+    //     } else if (uniform->uniform->bindings[i].type == GN_SHADER_STORE_BUFFER_DESCRIPTOR) {
+    //         gnStorageUniformInfo info = *(gnStorageUniformInfo*)uniform->uniform->bindings[i].data;
+    //         [encoder setVertexBuffer:info.buffer->buffer->buffer
+    //             offset:info.offset
+    //             atIndex:buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->vertexShaderMaps.sets[set].bindings[info.binding]
+    //         ];
+    //     } else if (uniform->uniform->bindings[i].type == GN_IMAGE_DESCRIPTOR) {
+    //         gnImageUniformInfo info = *(gnImageUniformInfo*)uniform->uniform->bindings[i].data;
+    //         uint32_t index = buffer->commandBuffer->boundGraphcisPipeline->graphicsPipeline->fragmentShaderMaps.sets[set].bindings[info.binding];
+    //         [encoder setFragmentTexture:info.texture->texture->texture atIndex:index];
+    //         [encoder setFragmentSamplerState:info.texture->texture->sampler atIndex:index];
+    //     }
+    // }
 }
 
 void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {

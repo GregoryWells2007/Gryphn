@@ -45,6 +45,7 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
 
     NSString* functionName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
     module->shaderModule->function = [shaderLib newFunctionWithName:functionName];
+    // printf("res %s\n", res);
 
     [shaderLib release];
     free((void*)res);
