@@ -23,7 +23,7 @@ target_include_directories(GryphnMetalImpl PUBLIC
 add_compile_definitions(GN_REVEAL_IMPL)
 add_subdirectory(depends/SPIRV-Cross)
 
-target_link_libraries(GryphnMetalImpl spirv-cross-core spirv-cross-msl spirv-cross-c)
+target_link_libraries(GryphnMetalImpl spirv-cross-core spirv-cross-msl spirv-cross-cpp)
 
 target_link_libraries(GryphnMetalImpl
     "-framework IOKit"
