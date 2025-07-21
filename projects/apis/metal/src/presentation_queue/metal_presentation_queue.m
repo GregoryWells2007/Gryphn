@@ -22,7 +22,6 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
     MTLPixelFormat convertedFormat = mtlGryphnFormatToMetalFormat(presentationInfo.format.format);
-    CGColorSpaceRef convertedColorSpace = mtlGryphnColorSpaceToMetalColorSpace(presentationInfo.format.colorSpace);
 
     MTLTextureDescriptor* textureDescriptor = [[MTLTextureDescriptor alloc] init];
     textureDescriptor.pixelFormat = convertedFormat;
