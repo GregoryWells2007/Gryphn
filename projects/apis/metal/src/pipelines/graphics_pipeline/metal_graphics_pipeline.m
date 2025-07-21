@@ -72,7 +72,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
 
     for (int i = 0; i < info.shaderModuleCount; i++) {
         const char* shaderCode = mtlCompilerShader(info.shaderModules[i]->shaderModule->compiler, &info.uniformLayout);
-        printf("shader code: %s\n", shaderCode);
+        // printf("shader code: %s\n", shaderCode);
 
         NSError* error = nil;
         MTLCompileOptions* mtloptions = nil;
