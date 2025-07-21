@@ -18,7 +18,7 @@ gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationIn
 
 
         for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
-            if (allocInfo.sets[i].uniformBindings[c].type == GN_IMAGE_DESCRIPTOR) {
+            if (allocInfo.sets[i].uniformBindings[c].type == GN_COMBINED_IMAGE_SAMPLER_DESCRIPTOR) {
                 MTLArgumentDescriptor* textureDescriptor = [[MTLArgumentDescriptor alloc] init];
                 textureDescriptor.dataType = MTLDataTypeTexture;
                 textureDescriptor.index = 0;
