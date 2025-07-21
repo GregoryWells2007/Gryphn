@@ -45,14 +45,6 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
     descriptor.rasterSampleCount = mtlSampleCount(info.multisample.samples);
-
-    if (info.subpassIndex >= info.renderPassDescriptor->info.subpassCount) {
-        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-            .message = gnCreateString("Subpass index is larger then the subpass count in render pass descriptor")
-        });
-        return GN_UNKNOWN_SUBPASS;
-    }
-
     struct gnSubpassInfo_t subpass = info.renderPassDescriptor->info.subpassInfos[info.subpassIndex];
 
     for (uint32_t i = 0; i < subpass.colorAttachmentCount; i++) {
@@ -70,6 +62,11 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
             [descriptor.colorAttachments objectAtIndexedSubscript:i].destinationAlphaBlendFactor = mtlGryphnBlendFactor(info.colorBlending.destinationAlphaBlendFactor);
         } else {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = FALSE;
+        }
+
+        if (subpass.depthAttachment != NULL) {
+            descriptor.depthAttachmentPixelFormat = mtlGryphnFormatToMetalFormat(info.renderPassDescriptor->info.attachmentInfos[subpass.depthAttachment->index].format);
+            // descriptor.stencilAttachmentPixelFormat = mtlGryphnFormatToMetalFormat(info.renderPassDescriptor->info.attachmentInfos[subpass.depthAttachment->index].format);
         }
     }
 
@@ -108,15 +105,10 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     [descriptor setVertexDescriptor:vertexDescriptor];
     NSError* error = nil;
     graphicsPipeline->graphicsPipeline->graphicsPipeline = [device->outputDevice->device newRenderPipelineStateWithDescriptor:descriptor error:&error];
-    if (graphicsPipeline->graphicsPipeline->graphicsPipeline == nil) {
-        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-            .message = gnCombineStrings(gnCreateString("Failed to create metal render pipeline descriptor "), error.localizedDescription.UTF8String)
-        });
-        return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
-    }
     [descriptor release];
     [vertexDescriptor release];
     [error release];
+    if (graphicsPipeline->graphicsPipeline->graphicsPipeline == nil) return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
     return GN_SUCCESS;
 }
 
