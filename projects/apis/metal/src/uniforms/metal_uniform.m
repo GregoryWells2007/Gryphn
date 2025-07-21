@@ -20,13 +20,24 @@ void updateMetalStorageUniform(gnUniform uniform, gnStorageUniformInfo* info) {
 }
 
 void updateMetalImageUniform(gnUniform uniform, gnImageUniformInfo* info) {
-    printf("%p\n", info->texture->texture->texture);
+    // mtlResource usedResources[MAX_METAL_BINDINGS];
+    // uint32_t indexMap[MAX_METAL_BINDINGS];
+    // uint32_t usedResourceCount;
+
+    if (uniform->uniform->indexMap[info->binding] == -1) {
+        uniform->uniform->indexMap[info->binding] = uniform->uniform->usedResourceCount;
+        uniform->uniform->usedResourceCount++;
+    }
+
+    uniform->uniform->usedResources[uniform->uniform->indexMap[info->binding]] = info->texture->texture->texture;
+
     [uniform->uniform->encoder setTexture:info->texture->texture->texture atIndex:uniform->uniform->index[info->binding]];
     [uniform->uniform->encoder setSamplerState:info->texture->texture->sampler atIndex:uniform->uniform->index[info->binding] + 1];
 
-    uniform->uniform->resources = mtlResourceArrayListCreate();
-    mtlResourceArrayListAdd(&uniform->uniform->resources, info->texture->texture->texture);
+    // uniform->uniform->resources = mtlResourceArrayListCreate();
+    // mtlResourceArrayListAdd(&uniform->uniform->resources, info->texture->texture->texture);
     // mtlResourceArrayListAdd(&uniform->uniform->resources, info->texture->texture->sampler);
+
 
     // printf("updating metal image uniform %i\n", uniform->uniform->index[info->binding]);
 

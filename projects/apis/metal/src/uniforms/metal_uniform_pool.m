@@ -60,6 +60,8 @@ gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationIn
         }
 
         for (int k = 0; k < arguments.count; k++) [[arguments objectAtIndex:k] release];
+
+        for (int g = 0; g < MAX_METAL_BINDINGS; g++) uniforms[i]->uniform->indexMap[g] = -1;
     }
     return uniforms;
 }

@@ -11,14 +11,15 @@ typedef struct metalUniformBinding {
 } metalUniformBinding;
 
 typedef id<MTLResource> mtlResource;
-GN_ARRAY_LIST(mtlResource);
 
 typedef struct gnPlatformUniform_t {
     uint32_t index[MAX_METAL_BINDINGS];
     id<MTLArgumentEncoder> encoder;
     id<MTLBuffer> argumentBuffer;
 
-    mtlResourceArrayList resources;
+    mtlResource usedResources[MAX_METAL_BINDINGS];
+    int indexMap[MAX_METAL_BINDINGS];
+    uint32_t usedResourceCount;
 } gnPlatformUniform;
 
 void updateMetalBufferUniform(gnUniform uniform, gnBufferUniformInfo* info);
