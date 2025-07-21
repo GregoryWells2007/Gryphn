@@ -64,6 +64,8 @@ Gryphn validation layers are meant to be more specific so there are certain ones
 - GN_DEBUGGER_LAYER_PLATFORM, this only does anything on vulkan for the time being, metal currently doesnt allow you to disable its validation but that API has a lot more problems when working with it so im fine with that for the time being, it will do things like enable vulkan validation layers or it will also allow the APIs to load there specific validation layers
 - GN_DEBUGGER_LAYER_FUNCTIONS, this is more for my own sake but when I am writing new backends or layers I may tend to forget to implement a specific function so this layer will just check to make sure that every function is loaded properly.
 # Plans
+#### 1.0 Spec <br />
+Gryphn is getting to the point where I can't keep developing it in the same way I have in the past where I just implement functions and features based on when I need them so slowly over the coming weeks I want to have a true spec written down for every function, that its expected results are, what its functionality does, and just go back and look at every line of code. The spec is going to be based on what I have right now with a few modifacations and also I would like to add more features.
 #### Improved Validation <br />
 - More/Improved validation layers
   - GN_DEBUGGER_LAYER_HANDLES, will check to make sure that handles are valid and you dont do something like attempt to pass something like a gnBuffer handle into a gnDevice handle
