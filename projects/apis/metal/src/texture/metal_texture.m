@@ -16,13 +16,16 @@ NSUInteger mtlSampleCount(gnMultisampleCountFlags flags) {
 gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
     MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
+    textureDescriptor.sampleCount = mtlSampleCount(info.samples);
+    textureDescriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
+    textureDescriptor.storageMode = MTLStorageModeShared;             // Most efficient for GPU-only textures
+    textureDescriptor.depth = info.extent.depth;
     textureDescriptor.width = info.extent.width;
     textureDescriptor.height = info.extent.height;
-    textureDescriptor.depth = info.extent.depth;
-    textureDescriptor.sampleCount = mtlSampleCount(info.samples);
     textureDescriptor.pixelFormat = mtlGryphnFormatToMetalFormat(info.format);
-    textureDescriptor.usage = MTLTextureUsageRenderTarget;
+
     if (textureDescriptor.sampleCount >= 2) {
+        textureDescriptor.storageMode = MTLStorageModeShared;
         textureDescriptor.textureType = MTLTextureType2DMultisample;
     }
     else {
@@ -30,14 +33,15 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
     }
 
     MTLSamplerDescriptor *samplerDesc = [[MTLSamplerDescriptor alloc] init];
-    samplerDesc.minFilter = MTLSamplerMinMagFilterLinear;
-    samplerDesc.magFilter = MTLSamplerMinMagFilterLinear;
+    samplerDesc.minFilter = (info.minFilter == GN_FILTER_NEAREST) ? MTLSamplerMinMagFilterNearest : MTLSamplerMinMagFilterLinear;
+    samplerDesc.magFilter = (info.magFilter == GN_FILTER_NEAREST) ? MTLSamplerMinMagFilterNearest : MTLSamplerMinMagFilterLinear;;
     samplerDesc.mipFilter = MTLSamplerMipFilterNotMipmapped;
     samplerDesc.sAddressMode = MTLSamplerAddressModeClampToEdge;
     samplerDesc.tAddressMode = MTLSamplerAddressModeClampToEdge;
-    samplerDesc.normalizedCoordinates = YES;
+    samplerDesc.supportArgumentBuffers = true;
     texture->texture->sampler = [device->outputDevice->device newSamplerStateWithDescriptor:samplerDesc];
     texture->texture->texture = [device->outputDevice->device newTextureWithDescriptor:textureDescriptor];
+
     [textureDescriptor release];
     [samplerDesc release];
     return GN_SUCCESS;
