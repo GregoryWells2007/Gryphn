@@ -12,7 +12,7 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     mtlCompilerInfo info = {
         .code = shaderModuleInfo.code,
         .wordCount = shaderModuleInfo.size / 4,
-        .entryPoint = shaderModuleInfo.entryPoint.value,
+        .entryPoint = gnToCString(shaderModuleInfo.entryPoint),
         .stage = (shaderModuleInfo.stage == GN_FRAGMENT_SHADER_MODULE) ? mtlFragment : mtlVertex
     };
     if ((device->outputDevice->device.argumentBuffersSupport == MTLArgumentBuffersTier2)) {

@@ -18,6 +18,8 @@ void handle_resources(spirv_cross::CompilerMSL& compiler, spirv_cross::SmallVect
 
 GN_CPP_FUNCTION mtlCompiler mtlCreateCompiler(mtlCompilerInfo* info) {
     mtlInternalCompiler* compiler = (mtlInternalCompiler*)malloc(sizeof(mtlInternalCompiler));
+    // if(info->stage == mtlVertex) compiler->mslCompiler->set_entry_point(info->entryPoint, spv::ExecutionModelVertex);
+    // if(info->stage == mtlFragment) compiler->mslCompiler->set_entry_point(info->entryPoint, spv::ExecutionModelFragment);
     compiler->mslCompiler = new spirv_cross::CompilerMSL(info->code, info->wordCount);
 
     spirv_cross::CompilerMSL::Options options = compiler->mslCompiler->get_msl_options();

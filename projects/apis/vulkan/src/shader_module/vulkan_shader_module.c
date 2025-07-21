@@ -28,7 +28,7 @@ gnReturnCode createShaderModule(gnShaderModule module, gnDevice device, gnShader
         .sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO,
         .stage = vkGryphnShaderModuleStage(shaderModuleInfo.stage),
         .module = module->shaderModule->shaderModule,
-        .pName = shaderModuleInfo.entryPoint.value
+        .pName = gnToCString(shaderModuleInfo.entryPoint)
     };
 
     return GN_SUCCESS;

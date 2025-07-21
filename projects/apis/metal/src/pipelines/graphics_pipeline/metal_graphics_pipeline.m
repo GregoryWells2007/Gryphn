@@ -89,7 +89,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
         }
 
 
-        const char* name = info.shaderModules[i]->info.entryPoint.value;
+        const char* name = gnToCString(info.shaderModules[i]->info.entryPoint);
         if (strcmp(name, "main") == 0)  name = "main0";
 
         gnBool foundFunction = false;
