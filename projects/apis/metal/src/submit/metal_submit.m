@@ -18,6 +18,9 @@ gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
             mtlSignalSemaphore(info.signalSemaphores[c], commandBuffer);
 
         [info.commandBuffers[i]->commandBuffer->commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+            if (buffer.error) {
+                NSLog(@"Command buffer error: %s", buffer.error.localizedDescription.UTF8String);
+            }
             if (atomic_fetch_sub_explicit(&buffersLeft, 1, memory_order_acq_rel) == 1) {
                 fenceToSignal->signaled = gnTrue;
             }
