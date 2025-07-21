@@ -71,15 +71,40 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     }
 
     for (int i = 0; i < info.shaderModuleCount; i++) {
-        if (info.shaderModules[i]->info.stage == GN_VERTEX_SHADER_MODULE) {
-            [descriptor setVertexFunction:info.shaderModules[i]->shaderModule->function];
-            graphicsPipeline->graphicsPipeline->vertexShaderMaps = info.shaderModules[i]->shaderModule->shaderMap;
-        } else if (info.shaderModules[i]->info.stage == GN_FRAGMENT_SHADER_MODULE) {
-            [descriptor setFragmentFunction:info.shaderModules[i]->shaderModule->function];
-            graphicsPipeline->graphicsPipeline->fragmentShaderMaps = info.shaderModules[i]->shaderModule->shaderMap;
-        } else {
-            return GN_UNSUPPORTED_SHADER_MODULE;
+        const char* shaderCode = mtlCompilerShader(info.shaderModules[i]->shaderModule->compiler, &info.uniformLayout);
+        printf("shader code: %s\n", shaderCode);
+
+        NSError* error = nil;
+        MTLCompileOptions* mtloptions = nil;
+        NSString* sourceCode = [NSString stringWithCString:shaderCode encoding:NSUTF8StringEncoding];
+        id<MTLLibrary> shaderLib = [device->outputDevice->device    newLibraryWithSource:sourceCode options:mtloptions error:&error];
+        if (!shaderLib) {
+            const char* errorString = error.localizedDescription.UTF8String;
+            gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
+                .message = gnCombineStrings(gnCreateString("Failed to compile metal library "), errorString)
+            });
+            [shaderLib release];
+            free((void*)shaderCode);
+            return GN_FAILED_TO_CREATE_SHADER_MODULE;
         }
+
+
+        const char* name = info.shaderModules[i]->info.entryPoint.value;
+        if (strcmp(name, "main") == 0)  name = "main0";
+
+        gnBool foundFunction = false;
+        for (int i = 0; i < shaderLib.functionNames.count; i++) {
+            if (strcmp([shaderLib.functionNames objectAtIndex:0].UTF8String, name) == 0) {
+                foundFunction = true;
+                break;
+            }
+        }
+        if (!foundFunction) return GN_FAILED_TO_FIND_ENTRY_POINT;
+
+        NSString* functionName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
+        id<MTLFunction> function = [shaderLib newFunctionWithName:functionName];
+        if (info.shaderModules[i]->info.stage == GN_VERTEX_SHADER_MODULE) [descriptor setVertexFunction:function];
+        if (info.shaderModules[i]->info.stage == GN_FRAGMENT_SHADER_MODULE) [descriptor setFragmentFunction:function];
     }
 
     MTLVertexDescriptor* vertexDescriptor = [[MTLVertexDescriptor alloc] init];

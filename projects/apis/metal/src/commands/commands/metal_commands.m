@@ -117,8 +117,8 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
 
     [encoder useResources:uniform->uniform->usedResources count:uniform->uniform->usedResourceCount usage:MTLResourceUsageRead stages:MTLRenderStageVertex | MTLRenderStageFragment];
 
-    [encoder setVertexBuffer:uniform->uniform->argumentBuffer offset:0 atIndex:(set + 1)];
-    [encoder setFragmentBuffer:uniform->uniform->argumentBuffer offset:0 atIndex:(set + 1)];
+    [encoder setVertexBuffer:uniform->uniform->argumentBuffers[mtlVertex] offset:0 atIndex:(set + 1)];
+    [encoder setFragmentBuffer:uniform->uniform->argumentBuffers[mtlFragment] offset:0 atIndex:(set + 1)];
 }
 
 void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {

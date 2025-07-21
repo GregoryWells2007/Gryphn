@@ -9,50 +9,22 @@
 gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo) {
     module->shaderModule = malloc(sizeof(gnPlatformShaderModule));
 
-    mtlShaderOptions options = {
-        .useArgumentBuffers = (device->outputDevice->device.argumentBuffersSupport == MTLArgumentBuffersTier2),
-        .stage = vertex,
-        .entryPoint = shaderModuleInfo.entryPoint.value
+    mtlCompilerInfo info = {
+        .code = shaderModuleInfo.code,
+        .wordCount = shaderModuleInfo.size / 4,
+        .entryPoint = shaderModuleInfo.entryPoint.value,
+        .stage = (shaderModuleInfo.stage == GN_FRAGMENT_SHADER_MODULE) ? mtlFragment : mtlVertex
     };
-    if (shaderModuleInfo.stage == GN_FRAGMENT_SHADER_MODULE) options.stage = fragment;
-
-    mtlShader shader = mtlCompileShader(shaderModuleInfo.code, shaderModuleInfo.size / 4, &options);
-    const char* res = shader.code;
-    if (res == NULL) return GN_FAILED_TO_CONVERT_SHADER_CODE;
-    printf("res: %s\n", res);
-
-    NSError* error = nil;
-    MTLCompileOptions* mtloptions = nil;
-    NSString* sourceCode = [NSString stringWithCString:res encoding:NSUTF8StringEncoding];
-    id<MTLLibrary> shaderLib = [device->outputDevice->device    newLibraryWithSource:sourceCode options:mtloptions error:&error];
-    if (!shaderLib) {
-        const char* errorString = error.localizedDescription.UTF8String;
-        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-            .message = gnCombineStrings(gnCreateString("Failed to compile metal library "), errorString)
-        });
-        [shaderLib release];
-        free((void*)res);
-        return GN_FAILED_TO_CREATE_SHADER_MODULE;
+    if ((device->outputDevice->device.argumentBuffersSupport == MTLArgumentBuffersTier2)) {
+        info.mslMajorVersion = 3;
+        info.minorVersion = 0;
+        info.useArgumentBuffers = true;
+    } else {
+        info.mslMajorVersion = 1;
+        info.minorVersion = 0;
+        info.useArgumentBuffers = false;
     }
-
-    const char* name = shaderModuleInfo.entryPoint.value;
-    if (strcmp(name, "main") == 0)  name = "main0";
-
-    gnBool foundFunction = false;
-    for (int i = 0; i < shaderLib.functionNames.count; i++) {
-        if (strcmp([shaderLib.functionNames objectAtIndex:0].UTF8String, name) == 0) {
-            foundFunction = true;
-            break;
-        }
-    }
-    if (!foundFunction) return GN_FAILED_TO_FIND_ENTRY_POINT;
-
-    NSString* functionName = [NSString stringWithCString:name encoding:NSUTF8StringEncoding];
-    module->shaderModule->function = [shaderLib newFunctionWithName:functionName];
-
-    [shaderLib release];
-    if (options.stage == vertex) free((void*)res);
-    module->shaderModule->shaderMap = shader.map;
+    module->shaderModule->compiler = mtlCreateCompiler(&info);
     return GN_SUCCESS;
 }
 

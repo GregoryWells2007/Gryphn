@@ -14,8 +14,10 @@ typedef id<MTLResource> mtlResource;
 
 typedef struct gnPlatformUniform_t {
     uint32_t index[MAX_METAL_BINDINGS];
-    id<MTLArgumentEncoder> encoder;
-    id<MTLBuffer> argumentBuffer;
+    gnShaderModuleStage stageUsed[MAX_METAL_BINDINGS];
+    id<MTLArgumentEncoder> encoders[mtlMaxStage];
+    id<MTLBuffer> argumentBuffers[mtlMaxStage];
+
 
     mtlResource usedResources[MAX_METAL_BINDINGS];
     int indexMap[MAX_METAL_BINDINGS];

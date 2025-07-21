@@ -5,15 +5,8 @@
 #import <Metal/Metal.h>
 
 typedef struct gnPlatformShaderModule_t {
-    id<MTLFunction> function;
-    mtlShaderMap shaderMap;
+    mtlCompiler compiler;
 } gnPlatformShaderModule;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-    gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
-    void destroyMetalShaderModule(gnShaderModule module);
-#ifdef __cplusplus
-}
-#endif
+gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
+void destroyMetalShaderModule(gnShaderModule module);

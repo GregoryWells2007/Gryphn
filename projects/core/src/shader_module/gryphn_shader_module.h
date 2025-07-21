@@ -5,9 +5,9 @@
 #include "gryphn_handles.h"
 
 typedef enum gnShaderModuleStage {
-    GN_VERTEX_SHADER_MODULE   = 0x00000001,
-    GN_FRAGMENT_SHADER_MODULE = 0x00000002,
-    GN_ALL_SHADER_MODULE      = 0xffffffff
+    GN_VERTEX_SHADER_MODULE   = 1 << 0,
+    GN_FRAGMENT_SHADER_MODULE = 1 << 1,
+    GN_ALL_SHADER_MODULE = GN_VERTEX_SHADER_MODULE | GN_FRAGMENT_SHADER_MODULE
 } gnShaderModuleStage;
 
 typedef struct gnShaderModuleInfo {
