@@ -114,6 +114,9 @@ void metalDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexC
 
 void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
+    [encoder useResources:uniform->uniform->resources.data count:uniform->uniform->resources.count usage:MTLResourceUsageRead stages:MTLRenderStageFragment];
+    [encoder setFragmentBuffer:uniform->uniform->argumentBuffer offset:0 atIndex:2];
+
     // for (int i = 0; i < uniform->uniform->bindingCount; i++) {
     //     if (uniform->uniform->bindings[i].type == GN_UNIFORM_BUFFER_DESCRIPTOR) {
     //         gnBufferUniformInfo info = *(gnBufferUniformInfo*)uniform->uniform->bindings[i].data;

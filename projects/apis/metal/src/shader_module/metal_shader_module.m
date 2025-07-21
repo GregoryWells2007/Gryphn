@@ -19,6 +19,7 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     mtlShader shader = mtlCompileShader(shaderModuleInfo.code, shaderModuleInfo.size / 4, &options);
     const char* res = shader.code;
     if (res == NULL) return GN_FAILED_TO_CONVERT_SHADER_CODE;
+    printf("res: %s\n", res);
 
     NSError* error = nil;
     MTLCompileOptions* mtloptions = nil;
@@ -29,6 +30,8 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
         gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
             .message = gnCombineStrings(gnCreateString("Failed to compile metal library "), errorString)
         });
+        [shaderLib release];
+        free((void*)res);
         return GN_FAILED_TO_CREATE_SHADER_MODULE;
     }
 
@@ -48,7 +51,7 @@ gnReturnCode createMetalShaderModule(gnShaderModule module, gnDevice device, gnS
     module->shaderModule->function = [shaderLib newFunctionWithName:functionName];
 
     [shaderLib release];
-    free((void*)res);
+    if (options.stage == vertex) free((void*)res);
     module->shaderModule->shaderMap = shader.map;
     return GN_SUCCESS;
 }
