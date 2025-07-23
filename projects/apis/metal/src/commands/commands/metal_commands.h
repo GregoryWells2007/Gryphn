@@ -15,5 +15,5 @@ void setMetalScissor(gnCommandBuffer buffer, gnScissor scissor);
 void bindMetalBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type);
 void metalDraw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
 void metalDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance);
-void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set);
+void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets);
 void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);

@@ -112,7 +112,7 @@ void metalDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexC
     ];
 }
 
-void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
+void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
     id<MTLRenderCommandEncoder> encoder = (id<MTLRenderCommandEncoder>)buffer->commandBuffer->encoder;
 
     [encoder useResources:uniform->uniform->usedResources count:uniform->uniform->usedResourceCount usage:MTLResourceUsageRead stages:MTLRenderStageVertex | MTLRenderStageFragment];
