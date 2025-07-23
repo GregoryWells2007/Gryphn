@@ -3,6 +3,7 @@
 #include "shader_module/metal_shader_module.h"
 #include "surface/metal_surface.h"
 #include "texture/metal_texture.h"
+#include "renderpass/metal_render_pass.h"
 
 #include "utils/math/gryphn_vec3.h"
 
@@ -65,8 +66,9 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
         }
 
         if (subpass.depthAttachment != NULL) {
-            descriptor.depthAttachmentPixelFormat = mtlGryphnFormatToMetalFormat(info.renderPassDescriptor->info.attachmentInfos[subpass.depthAttachment->index].format);
-            // descriptor.stencilAttachmentPixelFormat = mtlGryphnFormatToMetalFormat(info.renderPassDescriptor->info.attachmentInfos[subpass.depthAttachment->index].format);
+            descriptor.depthAttachmentPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+            descriptor.depthAttachmentPixelFormat = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex].depthAttachment.texture.pixelFormat;
+            descriptor.stencilAttachmentPixelFormat = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex].stencilAttachment.texture.pixelFormat;
         }
     }
 

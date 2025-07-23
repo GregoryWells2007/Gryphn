@@ -3,10 +3,9 @@
 #include "utils/gryphn_bool.h"
 #include "utils/gryphn_image_format.h"
 #include "utils/lists/gryphn_array_list.h"
+#include "renderpass/metal_render_pass.h"
 #import <Metal/Metal.h>
 #import <Metal/MTLRenderPass.h>
-
-typedef MTLRenderPassDescriptor* mtlSubpass;
 
 typedef struct gnPlatformFramebuffer_t {
     uint32_t subpassCount;
