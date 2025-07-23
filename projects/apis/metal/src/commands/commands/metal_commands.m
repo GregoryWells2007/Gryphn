@@ -117,8 +117,31 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
 
     [encoder useResources:uniform->uniform->usedResources count:uniform->uniform->usedResourceCount usage:MTLResourceUsageRead stages:MTLRenderStageVertex | MTLRenderStageFragment];
 
-    [encoder setVertexBuffer:uniform->uniform->argumentBuffers[mtlVertex] offset:0 atIndex:(set + 1)];
-    [encoder setFragmentBuffer:uniform->uniform->argumentBuffers[mtlFragment] offset:0 atIndex:(set + 1)];
+    int startIndex = 0;
+    for (int i = 0; i < dynamicOffsetCount; i++) {
+        int c = startIndex;
+        for (; c < MAX_METAL_BINDINGS; c++) {
+            if (uniform->uniform->isDynamic[c]) {
+                gnBufferUniformInfo updateInfo = {
+                    .binding = c,
+                    .dynamic = gnTrue,
+                    .offset = dynamicOffsets[i],
+                    .size = 0
+                };
+                mtlBufferUniformInfo info = {
+                    .baseInfo = &updateInfo,
+                    .buffer = (id<MTLBuffer>)uniform->uniform->usedResources[uniform->uniform->indexMap[c]]
+                };
+                mtlUpdateMetalBufferUniform(uniform, &info);
+
+                break;
+            }
+        }
+        startIndex = c + 1;
+    }
+
+    [encoder setVertexBytes:uniform->uniform->argumentBuffers[mtlVertex].contents length:uniform->uniform->encoders[mtlVertex].encodedLength atIndex:(set + 1)];
+    [encoder setFragmentBytes:uniform->uniform->argumentBuffers[mtlFragment].contents length:uniform->uniform->encoders[mtlFragment].encodedLength atIndex:(set + 1)];
 }
 
 void metalBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
