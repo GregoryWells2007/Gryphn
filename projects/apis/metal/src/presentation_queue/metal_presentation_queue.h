@@ -16,6 +16,9 @@ typedef struct gnPlatformPresentationQueue_t {
     uint32_tArrayList avaliableTextures;
 
     mtlImageNeededArrayList neededImages;
+
+    gnVec2 createdSize;
+    // gnVec2 createdWindowSize;
 } gnPlatformPresentationQueue;
 
 gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo);

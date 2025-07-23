@@ -20,6 +20,8 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     }
 
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
+    presentationQueue->presentationQueue->createdSize.x = presentationInfo.surface->windowSurface->layer.visibleRect.size.width;
+    presentationQueue->presentationQueue->createdSize.y = presentationInfo.surface->windowSurface->layer.visibleRect.size.height;
 
     MTLPixelFormat convertedFormat = mtlGryphnFormatToMetalFormat(presentationInfo.format.format);
 
@@ -69,12 +71,22 @@ void mtlAddImageBackToQueue(gnPresentationQueue queue, uint32_t index) {
 gnReturnCode getMetalPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
     while(presentationQueue->presentationQueue->avaliableTextures.count == 0);
     mtlTakeImageFromQueue(imageIndex, presentationQueue, semaphore);
+
+    CGSize currentSize = presentationQueue->info.surface->windowSurface->layer.visibleRect.size;
+    if (currentSize.width  != presentationQueue->presentationQueue->createdSize.x ||
+        currentSize.height != presentationQueue->presentationQueue->createdSize.y) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
+
     return GN_SUCCESS;
 }
 
 gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex) {
     while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
     mtlTakeImageFromQueue(imageIndex, presentationQueue, NULL);
+
+    CGSize currentSize = presentationQueue->info.surface->windowSurface->layer.visibleRect.size;
+    if (currentSize.width  != presentationQueue->presentationQueue->createdSize.x ||
+        currentSize.height != presentationQueue->presentationQueue->createdSize.y) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
+
     return GN_SUCCESS;
 }
 
