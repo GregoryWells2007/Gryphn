@@ -19,40 +19,47 @@ gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationIn
 
         for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
             gnUniformBinding binding = allocInfo.sets[i].uniformBindings[c];
-            if (binding.type == GN_UNIFORM_BUFFER_DESCRIPTOR ||
-                binding.type == GN_SHADER_STORE_BUFFER_DESCRIPTOR) {
-                    MTLArgumentDescriptor* descriptor = [[MTLArgumentDescriptor alloc] init];
-                    descriptor.dataType = MTLDataTypePointer;
-                    descriptor.index = 0;
-                    descriptor.arrayLength = 1;
-                    descriptor.access = MTLBindingAccessReadOnly;
+            switch (binding.type) {
+            case GN_UNIFORM_BUFFER_DESCRIPTOR:
+            case GN_DYNAMIC_UNIFORM_BUFFER_DESCRIPTOR:
+            case GN_SHADER_STORE_BUFFER_DESCRIPTOR: {
+                MTLArgumentDescriptor* descriptor = [[MTLArgumentDescriptor alloc] init];
+                descriptor.dataType = MTLDataTypePointer;
+                descriptor.index = 0;
+                descriptor.arrayLength = 1;
+                descriptor.access = MTLBindingAccessReadOnly;
 
-                    if ((binding.stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE) [vertexArguments addObject:descriptor];
-                    if ((binding.stage & GN_FRAGMENT_SHADER_MODULE) == GN_FRAGMENT_SHADER_MODULE) [fragmentArguments addObject:descriptor];
-                    [totalArguments addObject:descriptor];
+                if ((binding.stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE) [vertexArguments addObject:descriptor];
+                if ((binding.stage & GN_FRAGMENT_SHADER_MODULE) == GN_FRAGMENT_SHADER_MODULE) [fragmentArguments addObject:descriptor];
+                [totalArguments addObject:descriptor];
 
-                    uniforms[i]->uniform->index[allocInfo.sets[i].uniformBindings[c].binding] = currentIndex;
-                    currentIndex++;
-            } else if (allocInfo.sets[i].uniformBindings[c].type == GN_COMBINED_IMAGE_SAMPLER_DESCRIPTOR) {
-                    MTLArgumentDescriptor* textureDescriptor = [[MTLArgumentDescriptor alloc] init];
-                    textureDescriptor.dataType = MTLDataTypeTexture;
-                    textureDescriptor.index = 1;
-                    textureDescriptor.arrayLength = 1;
-                    textureDescriptor.access = MTLBindingAccessReadOnly;
-                    if ((binding.stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE) [vertexArguments addObject:textureDescriptor];
-                    if ((binding.stage & GN_FRAGMENT_SHADER_MODULE) == GN_FRAGMENT_SHADER_MODULE) [fragmentArguments addObject:textureDescriptor];
-                    [totalArguments addObject:textureDescriptor];
+                uniforms[i]->uniform->index[allocInfo.sets[i].uniformBindings[c].binding] = currentIndex;
+                currentIndex++;
+                break;
+            }
+            case GN_COMBINED_IMAGE_SAMPLER_DESCRIPTOR: {
+                MTLArgumentDescriptor* textureDescriptor = [[MTLArgumentDescriptor alloc] init];
+                textureDescriptor.dataType = MTLDataTypeTexture;
+                textureDescriptor.index = 1;
+                textureDescriptor.arrayLength = 1;
+                textureDescriptor.access = MTLBindingAccessReadOnly;
+                if ((binding.stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE) [vertexArguments addObject:textureDescriptor];
+                if ((binding.stage & GN_FRAGMENT_SHADER_MODULE) == GN_FRAGMENT_SHADER_MODULE) [fragmentArguments addObject:textureDescriptor];
+                [totalArguments addObject:textureDescriptor];
 
-                    MTLArgumentDescriptor* samplerDescriptor = [[MTLArgumentDescriptor alloc] init];
-                    samplerDescriptor.dataType = MTLDataTypeSampler;
-                    samplerDescriptor.index = 2;
-                    samplerDescriptor.arrayLength = 1;
-                    samplerDescriptor.access = MTLBindingAccessReadOnly;
-                    if ((binding.stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE) [vertexArguments addObject:samplerDescriptor];
-                    if ((binding.stage & GN_FRAGMENT_SHADER_MODULE) == GN_FRAGMENT_SHADER_MODULE) [fragmentArguments addObject:samplerDescriptor];
-                    [totalArguments addObject:samplerDescriptor];
-                    uniforms[i]->uniform->index[binding.binding] = currentIndex;
-                    currentIndex += 2;
+                MTLArgumentDescriptor* samplerDescriptor = [[MTLArgumentDescriptor alloc] init];
+                samplerDescriptor.dataType = MTLDataTypeSampler;
+                samplerDescriptor.index = 2;
+                samplerDescriptor.arrayLength = 1;
+                samplerDescriptor.access = MTLBindingAccessReadOnly;
+                if ((binding.stage & GN_VERTEX_SHADER_MODULE) == GN_VERTEX_SHADER_MODULE) [vertexArguments addObject:samplerDescriptor];
+                if ((binding.stage & GN_FRAGMENT_SHADER_MODULE) == GN_FRAGMENT_SHADER_MODULE) [fragmentArguments addObject:samplerDescriptor];
+                [totalArguments addObject:samplerDescriptor];
+                uniforms[i]->uniform->index[binding.binding] = currentIndex;
+                currentIndex += 2;
+                break;
+            }
+            case GN_UNIFORM_TYPE_MAX: break;
             }
             uniforms[i]->uniform->stageUsed[binding.binding] = binding.stage;
         }
