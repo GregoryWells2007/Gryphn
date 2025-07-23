@@ -69,12 +69,12 @@ void drawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount,
     buffer->commandBuffer->changedBuffer = gnFalse;
 }
 
-void bindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
+void bindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
     vkCmdBindDescriptorSets(
         buffer->commandBuffer->buffer,
         VK_PIPELINE_BIND_POINT_GRAPHICS,
         buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->pipelineLayout, set, 1,
-        &uniform->uniform->set, 0, NULL
+        &uniform->uniform->set, dynamicOffsetCount, dynamicOffsets
     );
 }
 

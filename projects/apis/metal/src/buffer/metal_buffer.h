@@ -11,5 +11,6 @@ struct gnPlatformBuffer_t {
 
 gnReturnCode createMetalBuffer(gnBufferHandle buffer, gnDevice device, gnBufferInfo info);
 void metalBufferData(gnBufferHandle buffer, size_t dataSize, void* data);
+void metalBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, gnBufferMemory data);
 void* mapMetalBuffer(gnBufferHandle buffer);
 void destroyMetalBuffer(gnBufferHandle buffer);

@@ -14,9 +14,12 @@ gnReturnCode createMetalBuffer(gnBufferHandle buffer, gnDevice device, gnBufferI
     return GN_SUCCESS;
 }
 void metalBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
+    metalBufferSubData(buffer, 0, dataSize, data);
+}
+void metalBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, gnBufferMemory data) {
     void* bufferData;
     if (buffer->buffer->useStagingBuffer) {
-        memcpy(buffer->buffer->stagingBuffer.contents, data, dataSize);
+        memcpy(buffer->buffer->stagingBuffer.contents + offset, data, dataSize);
         id<MTLCommandBuffer> commandBuffer = [buffer->device->outputDevice->transferQueue commandBuffer];
         id<MTLBlitCommandEncoder> encoder = [commandBuffer blitCommandEncoder];
         [encoder copyFromBuffer:buffer->buffer->stagingBuffer sourceOffset:0 toBuffer:buffer->buffer->buffer destinationOffset:0 size:dataSize];
@@ -24,7 +27,7 @@ void metalBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
         [commandBuffer commit];
         [commandBuffer waitUntilCompleted];
     } else
-        memcpy(buffer->buffer->buffer.contents, data, dataSize);
+        memcpy(buffer->buffer->buffer.contents + offset, data, dataSize);
 }
 void* mapMetalBuffer(gnBufferHandle buffer) {
     return buffer->buffer->buffer.contents;

@@ -19,8 +19,8 @@ void gnCommandSetViewport(gnCommandBufferHandle buffer, gnViewport viewport) {
 void gnCommandSetScissor(gnCommandBufferHandle buffer, gnScissor scissor) {
     buffer->commandPool->instance->callingLayer->commandFunctions._gnCommandSetScissor(buffer, scissor);
 }
-void gnCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
-    buffer->commandPool->instance->callingLayer->commandFunctions._gnCommandBindUniform(buffer, uniform, set);
+void gnCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
+    buffer->commandPool->instance->callingLayer->commandFunctions._gnCommandBindUniform(buffer, uniform, set, dynamicOffsetCount, dynamicOffsets);
 }
 void gnCommandBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
     buffer->commandPool->instance->callingLayer->commandFunctions._gnCommandBindBuffer(buffer, bufferToBind, type);

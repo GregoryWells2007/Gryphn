@@ -2,6 +2,7 @@
 #include "stdint.h"
 #include "stdlib.h"
 #include "utils/lists/gryphn_array_list.h"
+#include "utils/gryphn_bool.h"
 #include "gryphn_handles.h"
 
 typedef struct gnBufferUniformInfo {
@@ -9,6 +10,7 @@ typedef struct gnBufferUniformInfo {
     gnBuffer buffer;
     size_t offset;
     size_t size;
+    gnBool dynamic;
 } gnBufferUniformInfo;
 
 typedef struct gnStorageUniformInfo {

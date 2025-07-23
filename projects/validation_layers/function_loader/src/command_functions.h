@@ -12,7 +12,7 @@ void checkCommandEndRenderPass(gnCommandBufferHandle buffer);
 void checkCommandBindGraphicsPipeline(gnCommandBufferHandle buffer, gnGraphicsPipelineHandle graphicsPipeline);
 void checkCommandSetViewport(gnCommandBufferHandle buffer, gnViewport viewport);
 void checkCommandSetScissor(gnCommandBufferHandle buffer, gnScissor scissor);
-void checkCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set);
+void checkCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets);
 void checkCommandPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);
 
 void checkCommandBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type);

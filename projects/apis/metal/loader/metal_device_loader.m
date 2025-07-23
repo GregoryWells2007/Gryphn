@@ -37,6 +37,7 @@ gnDeviceFunctions loadMetalDeviceFunctions() {
 
         ._gnCreateBuffer = createMetalBuffer,
         ._gnBufferData = metalBufferData,
+        ._gnBufferSubData = metalBufferSubData,
         ._gnMapBuffer = mapMetalBuffer,
         ._gnDestroyBuffer = destroyMetalBuffer,
 

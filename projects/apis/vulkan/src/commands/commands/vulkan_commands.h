@@ -17,5 +17,5 @@ void setScissor(gnCommandBuffer buffer, gnScissor scissor);
 void bindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type);
 void draw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
 void drawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance);
-void bindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set);
+void bindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets);
 void pushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);

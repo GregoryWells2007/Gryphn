@@ -41,8 +41,8 @@ void checkCommandSetViewport(gnCommandBufferHandle buffer, gnViewport viewport) 
 void checkCommandSetScissor(gnCommandBufferHandle buffer, gnScissor scissor) {
     CHECK_VOID_FUNCTION(buffer->instance, _gnCommandSetScissor, commandFunctions, buffer, scissor);
 }
-void checkCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set) {
-    CHECK_VOID_FUNCTION(buffer->instance, _gnCommandBindUniform, commandFunctions, buffer, uniform, set);
+void checkCommandBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
+    CHECK_VOID_FUNCTION(buffer->instance, _gnCommandBindUniform, commandFunctions, buffer, uniform, set, dynamicOffsetCount, dynamicOffsets);
 }
 void checkCommandPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
     CHECK_VOID_FUNCTION(buffer->instance, _gnCommandPushConstant, commandFunctions, buffer, layout, data);
