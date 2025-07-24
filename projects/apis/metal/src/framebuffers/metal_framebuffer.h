@@ -7,9 +7,18 @@
 #import <Metal/Metal.h>
 #import <Metal/MTLRenderPass.h>
 
+typedef struct mtlClearCopy {
+    gnBool clear;
+    MTLRenderPassColorAttachmentDescriptor* descriptor;
+} mtlClearCopy;
+
 typedef struct gnPlatformFramebuffer_t {
     uint32_t subpassCount;
     mtlSubpass* subpasses;
+    uint32_t* depthAttachmentIndicies;
+
+    uint32_t clearCopyCount;
+    mtlClearCopy* clearCopies;
 } gnPlatformFramebuffer;
 
 gnBool isDepthFormat(gnImageFormat format);

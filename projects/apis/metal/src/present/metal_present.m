@@ -31,6 +31,8 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
 
         [blit endEncoding];
 
+        [drawable texture];
+
         [commandBuffer presentDrawable:drawable];
         [commandBuffer commit];
         device->outputDevice->executingCommandBuffer = commandBuffer;

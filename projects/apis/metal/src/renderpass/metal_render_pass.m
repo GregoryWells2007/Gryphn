@@ -45,28 +45,32 @@ gnReturnCode createMetalRenderPass(gnRenderPassDescriptor renderPass, gnDevice d
             uint32_t attachmentIndex = info.subpassInfos[i].colorAttachments[c].index;
             int resolveAttachmentIndex = -1;
 
+            renderPass->renderPassDescriptor->subpasses[i].colorAttachments[c] = [[MTLRenderPassColorAttachmentDescriptor alloc] init];
             MTLRenderPassColorAttachmentDescriptor* color = renderPass->renderPassDescriptor->subpasses[i].colorAttachments[c];
             if (resolve) {
                 resolveAttachmentIndex = info.subpassInfos[i].resolveAttachments[c].index;
                 color.storeAction = mtlGryphnStoreOperationResolve(info.attachmentInfos[attachmentIndex].storeOperation);
-            } else {
+            } else
                 color.storeAction = mtlGryphnStoreOperation(info.attachmentInfos[attachmentIndex].storeOperation);
-            }
             color.loadAction  = mtlGryphnLoadOperation(info.attachmentInfos[attachmentIndex].loadOperation);
+            color.storeAction = MTLStoreActionStoreAndMultisampleResolve;
 
             if (color.loadAction == MTLLoadActionClear)
                 color.clearColor = MTLClearColorMake(0.0, 0.0, 0.0, 1.0);
 
-            renderPass->renderPassDescriptor->copyInfos[i].colorAttachments[i].attachmentIndex = attachmentIndex;
-            renderPass->renderPassDescriptor->copyInfos[i].colorAttachments[i].resolveAttachmentIndex = resolveAttachmentIndex;
+            renderPass->renderPassDescriptor->copyInfos[i].colorAttachments[c].format = MTLPixelFormatBGRA8Unorm_sRGB;
+            renderPass->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex = attachmentIndex;
+            renderPass->renderPassDescriptor->copyInfos[i].colorAttachments[c].resolveAttachmentIndex = resolveAttachmentIndex;
         }
 
+        renderPass->renderPassDescriptor->copyInfos[i].depthAttachmentIndex = -1;
         if (info.subpassInfos[i].depthAttachment != NULL) {
             MTLRenderPassDepthAttachmentDescriptor* depthAttachment = renderPass->renderPassDescriptor->subpasses[i].depthAttachment;
             uint32_t attachmentIndex = info.subpassInfos[i].depthAttachment->index;
             depthAttachment.loadAction  = mtlGryphnLoadOperation(info.attachmentInfos[attachmentIndex].loadOperation);
             depthAttachment.storeAction = mtlGryphnStoreOperation(info.attachmentInfos[attachmentIndex].storeOperation);
             depthAttachment.clearDepth = 1.0f;
+            renderPass->renderPassDescriptor->copyInfos[i].depthAttachmentIndex = attachmentIndex;
         }
     }
     return GN_SUCCESS;

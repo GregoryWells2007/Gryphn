@@ -6,22 +6,15 @@
 void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
     int currentColorAttachment = 0;
     for (int i = 0; i < passInfo.clearValueCount; i++) {
-        gnBool wasDepthStencil = gnFalse;
-        if (isDepthFormat(passInfo.renderPassDescriptor->info.attachmentInfos[i].format)) {
-            wasDepthStencil = gnTrue;
-        }
-        if (isStencilFormat(passInfo.renderPassDescriptor->info.attachmentInfos[i].format)) {
-            wasDepthStencil = gnTrue;
-        }
-
-        if(!wasDepthStencil) {
-            MTLRenderPassColorAttachmentDescriptor* color = passInfo.framebuffer->framebuffer->subpasses[i].colorAttachments[i];
+        if (passInfo.framebuffer->framebuffer->clearCopies[i].clear) {
+            MTLRenderPassColorAttachmentDescriptor* color = passInfo.framebuffer->framebuffer->clearCopies[i].descriptor;
             color.clearColor = MTLClearColorMake(
-                passInfo.clearValues[i].red,
-                passInfo.clearValues[i].green,
-                passInfo.clearValues[i].blue,
-                passInfo.clearValues[i].alpha
+                passInfo.clearValues[i].r,
+                passInfo.clearValues[i].g,
+                passInfo.clearValues[i].b,
+                passInfo.clearValues[i].a
             );
+            currentColorAttachment++;
         }
     }
     buffer->commandBuffer->encoder = [buffer->commandBuffer->commandBuffer renderCommandEncoderWithDescriptor:passInfo.framebuffer->framebuffer->subpasses[0]];

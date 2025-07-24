@@ -45,14 +45,15 @@ MTLCompareFunction mtlGrypnCompareOperation(gnCompareOperation operation) {
 gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
-    descriptor.rasterSampleCount = mtlSampleCount(info.multisample.samples);
-    struct gnSubpassInfo_t subpass = info.renderPassDescriptor->info.subpassInfos[info.subpassIndex];
+    // descriptor.rasterSampleCount = mtlSampleCount(info.multisample.samples);
+    descriptor.rasterSampleCount = 1;
+    descriptor.rasterizationEnabled = YES;
+    mtlSubpass subpass = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex];
+    mtlSubpassCopyInfo copyInfo = info.renderPassDescriptor->renderPassDescriptor->copyInfos[info.subpassIndex];
+    for (uint32_t i = 0; i < copyInfo.colorAttachmentCount; i++) {
+        MTLRenderPassColorAttachmentDescriptor* colorPass = subpass.colorAttachments[i];
 
-    for (uint32_t i = 0; i < subpass.colorAttachmentCount; i++) {
-        gnSubpassAttachmentInfo subpassAtt = subpass.colorAttachments[i];
-
-        gnRenderPassAttachmentInfo attInfo = info.renderPassDescriptor->info.attachmentInfos[subpassAtt.index];
-        descriptor.colorAttachments[i].pixelFormat = mtlGryphnFormatToMetalFormat(attInfo.format);
+        descriptor.colorAttachments[i].pixelFormat = copyInfo.colorAttachments[i].format;
         if (info.colorBlending.enable == gnTrue) {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = YES;
             [descriptor.colorAttachments objectAtIndexedSubscript:i].rgbBlendOperation = mtlGryphnBlendOperation(info.colorBlending.colorBlendOperation);

@@ -30,6 +30,7 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     textureDescriptor.width = presentationInfo.imageSize.x;
     textureDescriptor.height = presentationInfo.imageSize.y;
     textureDescriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
+    textureDescriptor.sampleCount = 1;
     textureDescriptor.textureType  = MTLTextureType2D;
 
     presentationQueue->imageCount = presentationInfo.minImageCount;

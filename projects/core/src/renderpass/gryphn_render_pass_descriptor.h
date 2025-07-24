@@ -76,7 +76,6 @@ typedef struct gnRenderPassDescriptorInfo {
 #ifdef GN_REVEAL_IMPL
 struct gnRenderPassDescriptor_t {
     struct gnPlatformRenderPassDescriptor_t* renderPassDescriptor;
-    gnRenderPassDescriptorInfo info;
     gnDeviceHandle device;
 };
 #endif

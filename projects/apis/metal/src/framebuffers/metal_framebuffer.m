@@ -7,10 +7,15 @@
 gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice device, gnFramebufferInfo info) {
     framebuffer->framebuffer = malloc(sizeof(struct gnPlatformFramebuffer_t));
 
+    framebuffer->framebuffer->clearCopyCount = info.attachmentCount;
+    framebuffer->framebuffer->clearCopies = malloc(sizeof(mtlClearCopy) * info.attachmentCount);
+    for (int i = 0; i < info.attachmentCount; i++) {
+        framebuffer->framebuffer->clearCopies[i].clear = gnFalse;
+    }
+
     framebuffer->framebuffer->subpassCount = info.renderPassDescriptor->renderPassDescriptor->subpassCount;
     framebuffer->framebuffer->subpasses = malloc(sizeof(mtlSubpass) * framebuffer->framebuffer->subpassCount);
-
-
+    framebuffer->framebuffer->depthAttachmentIndicies = malloc(sizeof(uint32_t) * framebuffer->framebuffer->subpassCount);
     for (int i = 0; i < framebuffer->framebuffer->subpassCount; i++) {
         framebuffer->framebuffer->subpasses[i] = [info.renderPassDescriptor->renderPassDescriptor->subpasses[i] copy];
         MTLRenderPassDescriptor* pass = framebuffer->framebuffer->subpasses[i];
@@ -22,15 +27,20 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
             colorPass.texture = info.attachments[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex]->texture->texture;
             if (info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].resolveAttachmentIndex >= 0)
                 colorPass.resolveTexture = info.attachments[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].resolveAttachmentIndex]->texture->texture;
+            framebuffer->framebuffer->clearCopies[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex].clear = gnTrue;
+            framebuffer->framebuffer->clearCopies[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex].descriptor = colorPass;
         }
 
-
-        if (info.attachments[i]->info.format == GN_FORMAT_D24S8_UINT || info.attachments[i]->info.format == GN_FORMAT_D32S8_UINT) {
+        if (info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].depthAttachmentIndex >= 0) {
             MTLRenderPassDepthAttachmentDescriptor* depthAttachment = framebuffer->framebuffer->subpasses[i].depthAttachment;
-            depthAttachment.texture = info.attachments[i]->texture->texture;
-            MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = framebuffer->framebuffer->subpasses[i].stencilAttachment;
-            stencilAttachment.texture = info.attachments[i]->texture->texture;
+            depthAttachment.texture = info.attachments[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].depthAttachmentIndex]->texture->texture;
         }
+
+        // if (info.attachments[i]->info.format == GN_FORMAT_D24S8_UINT || info.attachments[i]->info.format == GN_FORMAT_D32S8_UINT) {
+        //     framebuffer->framebuffer->depthAttachmentIndicies[i] = i;
+        //     MTLRenderPassStencilAttachmentDescriptor* stencilAttachment = framebuffer->framebuffer->subpasses[i].stencilAttachment;
+        //     stencilAttachment.texture = info.attachments[i]->texture->texture;
+        // }
     }
 
     return GN_SUCCESS;

@@ -24,13 +24,10 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
     textureDescriptor.height = info.extent.height;
     textureDescriptor.pixelFormat = mtlGryphnFormatToMetalFormat(info.format);
 
-    if (textureDescriptor.sampleCount >= 2) {
-        textureDescriptor.storageMode = MTLStorageModeShared;
+    if (textureDescriptor.sampleCount >= 2)
         textureDescriptor.textureType = MTLTextureType2DMultisample;
-    }
-    else {
+    else
         textureDescriptor.textureType = MTLTextureType2D;
-    }
 
     MTLSamplerDescriptor *samplerDesc = [[MTLSamplerDescriptor alloc] init];
     samplerDesc.minFilter = (info.minFilter == GN_FILTER_NEAREST) ? MTLSamplerMinMagFilterNearest : MTLSamplerMinMagFilterLinear;
