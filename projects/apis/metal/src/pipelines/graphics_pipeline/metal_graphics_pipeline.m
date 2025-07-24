@@ -45,8 +45,7 @@ MTLCompareFunction mtlGrypnCompareOperation(gnCompareOperation operation) {
 gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(struct gnPlatformGraphicsPipeline_t));
     MTLRenderPipelineDescriptor* descriptor = [[MTLRenderPipelineDescriptor alloc] init];
-    // descriptor.rasterSampleCount = mtlSampleCount(info.multisample.samples);
-    descriptor.rasterSampleCount = 1;
+    descriptor.rasterSampleCount = mtlSampleCount(info.multisample.samples);
     descriptor.rasterizationEnabled = YES;
     mtlSubpass subpass = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex];
     mtlSubpassCopyInfo copyInfo = info.renderPassDescriptor->renderPassDescriptor->copyInfos[info.subpassIndex];

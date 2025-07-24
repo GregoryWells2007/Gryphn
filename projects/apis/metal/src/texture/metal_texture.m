@@ -10,7 +10,7 @@ NSUInteger mtlSampleCount(gnMultisampleCountFlags flags) {
     if ((flags & GN_SAMPLE_BIT_4) == GN_SAMPLE_BIT_4) { return 4; }
     if ((flags & GN_SAMPLE_BIT_2) == GN_SAMPLE_BIT_2) { return 2; }
     if ((flags & GN_SAMPLE_BIT_1) == GN_SAMPLE_BIT_1) { return 1; }
-    return 0;
+    return 1;
 }
 
 gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
@@ -24,7 +24,7 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
     textureDescriptor.height = info.extent.height;
     textureDescriptor.pixelFormat = mtlGryphnFormatToMetalFormat(info.format);
 
-    if (textureDescriptor.sampleCount >= 2)
+    if (textureDescriptor.sampleCount > 1)
         textureDescriptor.textureType = MTLTextureType2DMultisample;
     else
         textureDescriptor.textureType = MTLTextureType2D;
