@@ -91,11 +91,11 @@ VkStencilOp vkGryphnStencilOperation(gnStencilOperation operation) {
 
 gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(gnPlatformGraphicsPipeline));
-    for (int i = 0; i < GN_DYNAMIC_STATE_MAX; i++) graphicsPipeline->graphicsPipeline->isDynamic[i] = gnFalse;
+    for (int i = 0; i < GN_DYNAMIC_STATE_MAX; i++) graphicsPipeline->graphicsPipeline->isDynamic[i] = GN_FALSE;
 
     graphicsPipeline->graphicsPipeline->dynamicStates = malloc(sizeof(VkDynamicState) * info.dynamicState.dynamicStateCount);
     for (int i = 0; i < info.dynamicState.dynamicStateCount; i++) {
-        graphicsPipeline->graphicsPipeline->isDynamic[info.dynamicState.dynamicStates[i]] = gnTrue;
+        graphicsPipeline->graphicsPipeline->isDynamic[info.dynamicState.dynamicStates[i]] = GN_TRUE;
         graphicsPipeline->graphicsPipeline->dynamicStates[i] = vkGryphnDynamicStateToVulkanDynamicState(info.dynamicState.dynamicStates[i]);
     }
 
@@ -184,7 +184,7 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
 
     graphicsPipeline->graphicsPipeline->colorBlendAttachment = (VkPipelineColorBlendAttachmentState){
         .colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT,
-        .blendEnable = ( info.colorBlending.enable == gnTrue ) ? VK_TRUE : VK_FALSE,
+        .blendEnable = ( info.colorBlending.enable == GN_TRUE ) ? VK_TRUE : VK_FALSE,
         .srcColorBlendFactor = vkGryphnBlendFactor(info.colorBlending.sourceColorBlendFactor),
         .dstColorBlendFactor = vkGryphnBlendFactor(info.colorBlending.destinationColorBlendFactor),
         .colorBlendOp = vkGryphnBlendOperation(info.colorBlending.colorBlendOperation),

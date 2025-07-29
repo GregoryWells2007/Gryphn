@@ -6,7 +6,7 @@
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
     *instance = malloc(sizeof(struct gnInstance_t));
-    (*instance)->hasDebugger = gnFalse;
+    (*instance)->hasDebugger = GN_FALSE;
 
     (*instance)->layers = loaderLayerArrayListCreate();
     loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
@@ -14,18 +14,18 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceInfo info) {
         .layerToLoad = api_layer
     }));
 
-    for (int c = 0; c < GN_EXT_MAX; c++) (*instance)->enabledExtensions[c] = gnFalse;
-    for (int i = 0; i < info.extensionCount; i++) (*instance)->enabledExtensions[info.extensions[i]] = gnTrue;
+    for (int c = 0; c < GN_EXT_MAX; c++) (*instance)->enabledExtensions[c] = GN_FALSE;
+    for (int i = 0; i < info.extensionCount; i++) (*instance)->enabledExtensions[info.extensions[i]] = GN_TRUE;
 
     if ((*instance)->enabledExtensions[GN_EXT_SYNCHRONIZATION]) (*instance)->layers.data[0].syncFunctions = loadAPISyncFunctions(info.renderingAPI);
 
-    gnBool loaderFunctionChecker = gnFalse;
+    gnBool loaderFunctionChecker = GN_FALSE;
     if (info.debugger != NULL) {
         for (int i = 0; i < info.debugger->layerCount; i++) {
-            if (info.debugger->layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) loaderFunctionChecker = gnTrue;
+            if (info.debugger->layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) loaderFunctionChecker = GN_TRUE;
         }
         (*instance)->debugger = *info.debugger;
-        (*instance)->hasDebugger = gnTrue;
+        (*instance)->hasDebugger = GN_TRUE;
     }
 
     if (loaderFunctionChecker) {

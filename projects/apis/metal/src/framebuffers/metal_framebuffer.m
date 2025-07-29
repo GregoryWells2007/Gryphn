@@ -10,7 +10,7 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
     framebuffer->framebuffer->clearCopyCount = info.attachmentCount;
     framebuffer->framebuffer->clearCopies = malloc(sizeof(mtlClearCopy) * info.attachmentCount);
     for (int i = 0; i < info.attachmentCount; i++) {
-        framebuffer->framebuffer->clearCopies[i].clear = gnFalse;
+        framebuffer->framebuffer->clearCopies[i].clear = GN_FALSE;
     }
 
     framebuffer->framebuffer->subpassCount = info.renderPassDescriptor->renderPassDescriptor->subpassCount;
@@ -27,7 +27,7 @@ gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice de
             colorPass.texture = info.attachments[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex]->texture->texture;
             if (info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].resolveAttachmentIndex >= 0)
                 colorPass.resolveTexture = info.attachments[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].resolveAttachmentIndex]->texture->texture;
-            framebuffer->framebuffer->clearCopies[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex].clear = gnTrue;
+            framebuffer->framebuffer->clearCopies[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex].clear = GN_TRUE;
             framebuffer->framebuffer->clearCopies[info.renderPassDescriptor->renderPassDescriptor->copyInfos[i].colorAttachments[c].attachmentIndex].descriptor = colorPass;
         }
 

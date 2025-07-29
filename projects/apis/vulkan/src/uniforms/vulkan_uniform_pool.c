@@ -12,7 +12,7 @@ gnReturnCode createUniformPool(gnUniformPool pool, gnDeviceHandle device) {
     pool->uniformPool = malloc(sizeof(struct gnPlatformUniformPool_t));
     pool->uniformPool->pools = VkGryphnUniformPoolArrayListCreate();
 
-    if (device->outputDevice->enabledOversizedDescriptorPools == gnTrue) {
+    if (device->outputDevice->enabledOversizedDescriptorPools == GN_TRUE) {
         {
             VkGryphnUniformPool firstPool = {
                 .pool = VK_NULL_HANDLE,

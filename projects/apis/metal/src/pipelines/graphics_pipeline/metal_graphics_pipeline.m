@@ -53,7 +53,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
         MTLRenderPassColorAttachmentDescriptor* colorPass = subpass.colorAttachments[i];
 
         descriptor.colorAttachments[i].pixelFormat = copyInfo.colorAttachments[i].format;
-        if (info.colorBlending.enable == gnTrue) {
+        if (info.colorBlending.enable == GN_TRUE) {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = YES;
             [descriptor.colorAttachments objectAtIndexedSubscript:i].rgbBlendOperation = mtlGryphnBlendOperation(info.colorBlending.colorBlendOperation);
             [descriptor.colorAttachments objectAtIndexedSubscript:i].alphaBlendOperation = mtlGryphnBlendOperation(info.colorBlending.alphaBlendOperation);

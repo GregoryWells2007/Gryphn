@@ -12,7 +12,7 @@
 
 gnBool gnIsExtensionSuppoted(gnRenderingAPI api, gnExtension extension) {
     switch (api) {
-    case GN_RENDERINGAPI_NONE: return gnFalse;
+    case GN_RENDERINGAPI_NONE: return GN_FALSE;
 #ifdef GN_API_VULKAN
     case GN_RENDERINGAPI_VULKAN: return vulkanIsExtensionSupported(extension);
 #endif
@@ -31,6 +31,6 @@ gnBool gnIsExtensionSuppoted(gnRenderingAPI api, gnExtension extension) {
 #ifdef GN_API_METAL
     case GN_RENDERINGAPI_METAL: return metalIsExtensionSupported(extension);
 #endif
-    default: return gnFalse;
+    default: return GN_FALSE;
     }
 }

@@ -36,7 +36,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     vkUserData* userData = (vkUserData*)pUserData;
     gnDebuggerCallback callback = userData->debuggerCallback;
     gnBool result = callback(severity, type, data, userData->userData);
-    if (result == gnFalse) return VK_FALSE;
+    if (result == GN_FALSE) return VK_FALSE;
     return VK_TRUE;
 }
 
@@ -110,12 +110,12 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
     VkResult result = vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance);
     if (result != VK_SUCCESS)
         return GN_FAILED_CREATE_INSTANCE;
-    instance->valid = gnTrue;
+    instance->valid = GN_TRUE;
 
     return GN_SUCCESS;
 }
 
 void destroyInstance(gnInstanceHandle instance) {
-    instance->valid = gnFalse;
+    instance->valid = GN_FALSE;
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

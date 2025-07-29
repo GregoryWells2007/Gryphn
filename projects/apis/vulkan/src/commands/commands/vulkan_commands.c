@@ -56,7 +56,7 @@ void bindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBuf
     if (type == GN_VERTEX_BUFFER)
         vkCmdBindVertexBuffers(buffer->commandBuffer->buffer, 0, 1, &bufferToBind->buffer->buffer.buffer, offsets);
     else if (type == GN_INDEX_BUFFER) {
-        buffer->commandBuffer->changedBuffer = gnTrue;
+        buffer->commandBuffer->changedBuffer = GN_TRUE;
         buffer->commandBuffer->boundIndexBuffer = bufferToBind;
     }
 }
@@ -66,7 +66,7 @@ void draw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instance
 void drawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance)  {
     if (buffer->commandBuffer->changedBuffer) vkCmdBindIndexBuffer(buffer->commandBuffer->buffer, buffer->commandBuffer->boundIndexBuffer->buffer->buffer.buffer, 0, (type == GN_UINT32) ? VK_INDEX_TYPE_UINT32 : VK_INDEX_TYPE_UINT16);
     vkCmdDrawIndexed(buffer->commandBuffer->buffer, indexCount, instanceCount, firstIndex, vertexOffset, firstInstance);
-    buffer->commandBuffer->changedBuffer = gnFalse;
+    buffer->commandBuffer->changedBuffer = GN_FALSE;
 }
 
 void bindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {

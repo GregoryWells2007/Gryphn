@@ -16,8 +16,8 @@ gnRenderingAPI* gnGetSupportedRenderingAPIs(int* count) {
 }
 
 gnBool gnSupportsRenderingAPI(gnRenderingAPI api) {
-    for (int i = 0; i < 3; i++) if (api == renderingAPIs[i]) return gnTrue;
-    return gnFalse;
+    for (int i = 0; i < 3; i++) if (api == renderingAPIs[i]) return GN_TRUE;
+    return GN_FALSE;
 }
 
 CAMetalLayer* gnCreateCAMetalLayer(NSWindow* window) {

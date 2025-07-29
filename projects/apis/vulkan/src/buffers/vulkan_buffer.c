@@ -20,7 +20,7 @@ uint32_t VkMemoryIndex(VkPhysicalDevice device, uint32_t memoryType, VkMemoryPro
     vkGetPhysicalDeviceMemoryProperties(device, &memoryProperties);
     for (uint32_t i = 0; i < memoryProperties.memoryTypeCount; i++) {
         if ((memoryType & (1 << i)) && (memoryProperties.memoryTypes[i].propertyFlags & flags) == flags) {
-            *foundMemory = gnTrue;
+            *foundMemory = GN_TRUE;
             return i;
         }
     } // this whole thing was adapted from vulkan-tutorial.com
@@ -43,7 +43,7 @@ gnReturnCode VkCreateBuffer(
     VkMemoryRequirements bufferRequirements;
     vkGetBufferMemoryRequirements(device->outputDevice->device, buffer->buffer, &bufferRequirements);
 
-    gnBool foundMemory = gnFalse;
+    gnBool foundMemory = GN_FALSE;
     VkMemoryAllocateInfo memoryAllocateInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .allocationSize = bufferRequirements.size,

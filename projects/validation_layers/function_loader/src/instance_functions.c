@@ -16,7 +16,7 @@ gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* c
     CHECK_RETURNED_FUNCTION(instance, _gnGetPhysicalDevices, instanceFunctions, NULL, instance, count);
 }
 gnBool checkCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface) {
-    CHECK_RETURNED_FUNCTION(device->instance, _gnPhysicalDeviceCanPresentToSurface, instanceFunctions, gnFalse, device, windowSurface);
+    CHECK_RETURNED_FUNCTION(device->instance, _gnPhysicalDeviceCanPresentToSurface, instanceFunctions, GN_FALSE, device, windowSurface);
 }
 
 gnReturnCode checkCreateOutputDevice(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {

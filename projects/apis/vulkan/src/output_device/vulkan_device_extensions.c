@@ -20,10 +20,10 @@ const char* *vkGetGryphnDeviceExtensions(uint32_t* outCount, VkPhysicalDevice de
     VkExtensionProperties* vkExtensions = malloc(sizeof(VkExtensionProperties) * extensionCount);
     vkEnumerateDeviceExtensionProperties(device, NULL, &extensionCount, vkExtensions);
 
-    gnBool supportsDescriptorPoolOverallocation = gnFalse;
+    gnBool supportsDescriptorPoolOverallocation = GN_FALSE;
     for (uint32_t i = 0; i < extensionCount; i++) {
         if (strcmp(VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME, vkExtensions[i].extensionName) == 0) {
-            supportsDescriptorPoolOverallocation = gnTrue;
+            supportsDescriptorPoolOverallocation = GN_TRUE;
             break;
         }
     }

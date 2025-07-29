@@ -7,18 +7,18 @@
 gnReturnCode gnCreateFence(gnFenceHandle* fence, gnDevice device) {
     *fence = malloc(sizeof(struct gnFence_t));
     (*fence)->device = device;
-    (*fence)->signaled = gnFalse;
+    (*fence)->signaled = GN_FALSE;
     return device->instance->callingLayer->syncFunctions._gnCreateFence(*fence, device);
 }
 void gnSignalFence(gnFenceHandle fence) {
-    fence->signaled = gnTrue;
+    fence->signaled = GN_TRUE;
 }
 void gnWaitForFence(gnFenceHandle fence, uint64_t timeout) {
-    if (fence->signaled == gnTrue) return;
+    if (fence->signaled == GN_TRUE) return;
     fence->device->instance->callingLayer->syncFunctions._gnWaitForFence(fence, timeout);
 }
 void gnResetFence(gnFenceHandle fence) {
-    fence->signaled = gnFalse;
+    fence->signaled = GN_FALSE;
     fence->device->instance->callingLayer->syncFunctions._gnResetFence(fence);
 }
 void gnDestroyFence(gnFenceHandle fence) {

@@ -23,10 +23,10 @@ gnBool gnIsSurfaceFormatSupported(
     gnSurfaceFormat* formats = gnGetSupportedSurfaceFormats(windowSurface, device, &formatCount);
     for (int i = 0; i < formatCount; i++) {
         if (formats[i].format == format.format && formats[i].colorSpace == format.colorSpace) {
-            return gnTrue;
+            return GN_TRUE;
         }
     }
-    return gnFalse;
+    return GN_FALSE;
 }
 
 gnSurfaceFormat gnGetPreferredSurfaceFormat(

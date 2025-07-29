@@ -178,7 +178,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(device->outputDevice->device, texture->texture->image.image, &memRequirements);
 
-    gnBool foundMemory = gnFalse;
+    gnBool foundMemory = GN_FALSE;
     VkMemoryAllocateInfo allocInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .allocationSize = memRequirements.size,
@@ -191,7 +191,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
 
     vkBindImageMemory(device->outputDevice->device, texture->texture->image.image, texture->texture->image.memory, 0);
 
-    texture->texture->beenWrittenToo = gnFalse;
+    texture->texture->beenWrittenToo = GN_FALSE;
 
     VkImageViewCreateInfo viewInfo = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
@@ -255,7 +255,7 @@ void textureData(gnTextureHandle texture, void* pixelData) {
     VkCopyBufferToImage(texture->texture->buffer, texture->texture->image, texture->info.extent, texture->device);
     VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
-    texture->texture->beenWrittenToo = gnTrue;
+    texture->texture->beenWrittenToo = GN_TRUE;
 }
 
 void gnDestroyVulkanImage(VkGryphnImage* image, VkDevice device) {

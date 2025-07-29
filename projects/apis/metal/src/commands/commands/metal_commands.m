@@ -117,7 +117,7 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
             if (uniform->uniform->isDynamic[c]) {
                 gnBufferUniformInfo updateInfo = {
                     .binding = c,
-                    .dynamic = gnTrue,
+                    .dynamic = GN_TRUE,
                     .offset = dynamicOffsets[i],
                     .size = 0
                 };

@@ -10,7 +10,7 @@ gnReturnCode allocateMetalCommandBuffers(gnCommandBufferHandle* commandBuffers, 
 
         // write a command log at some point
         if ((pool->info.flags & GN_REUSE_COMMAND_BUFFERS) == GN_REUSE_COMMAND_BUFFERS)
-            commandBuffers[i]->commandBuffer->isIndirectCommandBuffer = gnTrue;
+            commandBuffers[i]->commandBuffer->isIndirectCommandBuffer = GN_TRUE;
     }
 
     return GN_SUCCESS;

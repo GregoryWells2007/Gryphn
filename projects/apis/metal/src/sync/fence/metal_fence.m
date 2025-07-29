@@ -15,7 +15,7 @@ void singalMetalFence(gnFence fence) {
 }
 void waitForMetalFence(gnFence fence, uint64_t timeout) {
     // dispatch_semaphore_wait(fence->fence->semaphore, timeout);
-    while (fence->signaled == gnFalse) {}
+    while (fence->signaled == GN_FALSE) {}
 }
 void resetMetalFence(gnFence fence) {
     // dispatch_semaphore_signal(fence->fence->semaphore);

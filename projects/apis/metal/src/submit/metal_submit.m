@@ -22,7 +22,7 @@ gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
                 NSLog(@"Command buffer error: %s", buffer.error.localizedDescription.UTF8String);
             }
             if (atomic_fetch_sub_explicit(&buffersLeft, 1, memory_order_acq_rel) == 1) {
-                fenceToSignal->signaled = gnTrue;
+                fenceToSignal->signaled = GN_TRUE;
             }
         }];
 

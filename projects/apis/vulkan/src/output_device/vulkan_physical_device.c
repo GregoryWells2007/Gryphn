@@ -38,24 +38,24 @@ void vulkanLoadNeededQueues(VkPhysicalDevice vulkanDevice, gnPhysicalDevice gryp
     vkGetPhysicalDeviceQueueFamilyProperties(vulkanDevice, &queueFamilyCount, queueFamilies);
 
     gryphnDevice->physicalDevice->neededQueues = malloc(sizeof(vulkanNeededQueue) * queueFamilyCount);
-    gnBool foundGraphicsQueueFamily = gnFalse, foundTransferQueueFamily = gnFalse;
+    gnBool foundGraphicsQueueFamily = GN_FALSE, foundTransferQueueFamily = GN_FALSE;
     for (int c = 0; c < queueFamilyCount; c++) {
-        gnBool hasNeededQueue = gnFalse;
+        gnBool hasNeededQueue = GN_FALSE;
 
         if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
-            foundGraphicsQueueFamily = true;
-            hasNeededQueue = gnTrue;
+            foundGraphicsQueueFamily = GN_TRUE;
+            hasNeededQueue = GN_TRUE;
         }
         if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
-            foundTransferQueueFamily = true;
-            hasNeededQueue = gnTrue;
+            foundTransferQueueFamily = GN_TRUE;
+            hasNeededQueue = GN_TRUE;
         }
 
         if (hasNeededQueue) {
             vulkanNeededQueue neededQueue = {
                 .queueIndex = c,
                 .createFlags = 0,
-                .usedForPresent = gnFalse
+                .usedForPresent = GN_FALSE
             };
             if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT)) neededQueue.createFlags |= VK_QUEUE_GRAPHICS_BIT;
             if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT)) neededQueue.createFlags |= VK_QUEUE_TRANSFER_BIT;
@@ -94,7 +94,7 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
         case VK_PHYSICAL_DEVICE_TYPE_MAX_ENUM: outputDevices[i]->properties.deviceType = GN_INTEGRATED_DEVICE;
         }
 
-        if (instance->enabledExtensions[GN_EXT_QUEUES] == gnFalse)
+        if (instance->enabledExtensions[GN_EXT_QUEUES] == GN_FALSE)
             vulkanLoadNeededQueues(physicalDevices[i], outputDevices[i]);
 
 
@@ -111,13 +111,13 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
 }
 
 gnBool deviceCanPresentToSurface(gnPhysicalDevice device, gnWindowSurface surface) {
-    gnBool foundQueue = gnFalse;
+    gnBool foundQueue = GN_FALSE;
     for (int i = 0; i < device->physicalDevice->neededQueueCount; i++) {
         VkBool32 supportsPresent = VK_FALSE;
         vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, device->physicalDevice->neededQueues[i].queueIndex, surface->windowSurface->surface, &supportsPresent);
         if (supportsPresent) {
-            device->physicalDevice->neededQueues[i].usedForPresent = gnTrue;
-            foundQueue = gnTrue;
+            device->physicalDevice->neededQueues[i].usedForPresent = GN_TRUE;
+            foundQueue = GN_TRUE;
             break;
         }
         surface->windowSurface->presentQueueIndex = i;
@@ -134,9 +134,9 @@ gnBool deviceCanPresentToSurface(gnPhysicalDevice device, gnWindowSurface surfac
                 device->physicalDevice->neededQueues[device->physicalDevice->neededQueueCount] = (vulkanNeededQueue){
                     .queueIndex = i,
                     .createFlags = 0,
-                    .usedForPresent = gnTrue
+                    .usedForPresent = GN_TRUE
                 };
-                foundQueue = gnTrue;
+                foundQueue = GN_TRUE;
                 surface->windowSurface->presentQueueIndex = device->physicalDevice->neededQueueCount;
                 device->physicalDevice->neededQueueCount++;
                 break;
@@ -146,11 +146,3 @@ gnBool deviceCanPresentToSurface(gnPhysicalDevice device, gnWindowSurface surfac
 
     return foundQueue;
 }
-
-// gnBool queueCanPresentToSurface(gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
-//     VkBool32 supportsPresent = VK_FALSE;
-//     vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, queueIndex, windowSurface->windowSurface->surface, &supportsPresent);
-//     if (supportsPresent)
-//         return gnTrue;
-//     return gnFalse;
-// }
