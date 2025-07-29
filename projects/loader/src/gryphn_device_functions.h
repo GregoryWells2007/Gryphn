@@ -1,7 +1,7 @@
 #pragma once
 #include "stdint.h"
 #include "stdlib.h"
-#include "core/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include "gryphn_handles.h"
 
 typedef struct gnPresentationQueueInfo gnPresentationQueueInfo;

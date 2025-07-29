@@ -1,6 +1,6 @@
 #pragma once
 #include "stdint.h"
-#include "core/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include <extensions/synchronization/fence/gryphn_fence.h>
 #include <extensions/synchronization/semaphore/gryphn_semaphore.h>
 #include "core/src/gryphn_handles.h"

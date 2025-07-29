@@ -1,6 +1,6 @@
 #pragma once
 #include "stdint.h"
-#include "core/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include "core/src/gryphn_handles.h"
 
 typedef struct gnQueueFamilyProperties gnQueueFamilyProperties;
