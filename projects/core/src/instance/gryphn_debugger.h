@@ -32,17 +32,16 @@ typedef enum gnDebuggerLayer {
     GN_DEBUGGER_LAYER_FUNCTIONS // enable the checks on every function
 } gnDebuggerLayer;
 
-typedef struct gnDebuggerInfo {
-    gnDebuggerCallback callback; // instance callback cannot be null
-    void* userData;
-
+typedef struct gnDebuggerCreateInfo {
+    gnDebuggerCallback callback;
     uint32_t layerCount;
     gnDebuggerLayer* layers;
-} gnDebuggerInfo;
+    void* userData;
+} gnDebuggerCreateInfo;
 
 #ifdef GN_REVEAL_IMPL
 // struct gnDebugger_t { gnDebuggerInfo info; };
-static void gnDebuggerSetErrorMessage(gnDebuggerInfo debugger, gnMessageData data) {
+static void gnDebuggerSetErrorMessage(gnDebuggerCreateInfo debugger, gnMessageData data) {
     // if (debugger == NULL) return;
     debugger.callback(
         GN_MESSAGE_ERROR,
