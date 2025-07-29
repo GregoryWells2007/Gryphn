@@ -1,6 +1,6 @@
 #pragma once
 #include <output_device/gryphn_physical_output_device.h>
-#include <utils/gryphn_error_code.h>
+#include <core/gryphn_error_code.h>
 
 typedef struct gnOutputDeviceEnabledFeatures {
 

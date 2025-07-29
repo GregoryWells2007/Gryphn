@@ -99,7 +99,6 @@ gnQueueExtFunctions loadAPIQueueFunctions(gnRenderingAPI api) {
 #ifdef GN_API_VULKAN
     case GN_RENDERINGAPI_VULKAN: return loadVulkanQueueFunctions();
 #endif
-
     case GN_RENDERINGAPI_SOFTWARE: return (gnQueueExtFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX11: return (gnQueueExtFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX12: return (gnQueueExtFunctions){ NULL };
