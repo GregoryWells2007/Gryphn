@@ -1,6 +1,7 @@
 #include "vulkan_command_pool.h"
 #include "output_device/vulkan_output_devices.h"
 #include "instance/gryphn_instance.h"
+#include "vulkan_result_converter.h"
 
 gnReturnCode createCommandPool(gnCommandPool commandPool, gnDevice device, gnCommandPoolInfo info) {
     commandPool->commandPool = malloc(sizeof(gnPlatformCommandPool));
@@ -11,11 +12,7 @@ gnReturnCode createCommandPool(gnCommandPool commandPool, gnDevice device, gnCom
         .queueFamilyIndex = info.queueFamilyIndex,
     };
     if (!device->instance->enabledExtensions[GN_EXT_QUEUES]) poolInfo.queueFamilyIndex = device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queueInfo.queueIndex;
-
-    if (vkCreateCommandPool(device->outputDevice->device, &poolInfo, NULL, &commandPool->commandPool->commandPool) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_COMMAND_POOL;
-
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkCreateCommandPool(device->outputDevice->device, &poolInfo, NULL, &commandPool->commandPool->commandPool));
 }
 
 void destroyCommandPool(gnCommandPool commandPool) {

@@ -13,15 +13,14 @@ gnReturnCode allocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint3
 
     VkCommandBuffer* buffers = malloc(sizeof(VkCommandBuffer) * count);
 
-    if (vkAllocateCommandBuffers(pool->device->outputDevice->device, &allocInfo, buffers) != VK_SUCCESS)
-        return GN_FAILED_TO_ALLOCATE_OBJECT;
+    VkResult allocationResult = vkAllocateCommandBuffers(pool->device->outputDevice->device, &allocInfo, buffers);
+    if (allocationResult == VK_SUCCESS)
+        for (int i = 0; i < count; i++) {
+            commandBuffers[i]->commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
+            commandBuffers[i]->commandBuffer->buffer = buffers[i];
+        }
 
-    for (int i = 0; i < count; i++) {
-        commandBuffers[i]->commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
-        commandBuffers[i]->commandBuffer->buffer = buffers[i];
-    }
-
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(allocationResult);
 }
 
 void resetCommandBuffer(gnCommandBufferHandle commandBuffer) {

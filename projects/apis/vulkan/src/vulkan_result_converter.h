@@ -2,7 +2,7 @@
 #include <core/gryphn_return_code.h>
 #include <vulkan/vulkan.h>
 
-gnReturnCode VkResultToGnReturnCode(VkResult result) {
+static inline gnReturnCode VkResultToGnReturnCode(VkResult result) {
     switch (result) {
         case VK_SUCCESS: return GN_SUCCESS;
         // case VK_NOT_READY: return ;
