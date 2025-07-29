@@ -4,7 +4,7 @@
 #include "core/src/output_device/gryphn_output_device.h"
 #include "core/src/window_surface/gryphn_surface.h"
 
-gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceInfo info) {
+gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info) {
     CHECK_FUNCTION_WITH_RETURN_CODE(instance, _gnCreateInstance, instanceFunctions, instance, info);
 }
 

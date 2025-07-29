@@ -2,7 +2,7 @@
 #include "core/src/instance/gryphn_instance.h"
 #include <core/src/window_surface/gryphn_surface_create_functions.h>
 
-gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceInfo info);
+gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info);
 void checkDestroyInstance(gnInstance instance);
 
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count);
