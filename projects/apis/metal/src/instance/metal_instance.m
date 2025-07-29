@@ -1,7 +1,7 @@
 #include "metal_instance.h"
 
 // metal instances are kinda useless
-gnReturnCode createMetalInstance(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
+gnReturnCode createMetalInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo) {
     if (instance->instance == NULL) instance->instance = malloc(sizeof(gnPlatformInstance));
     return GN_SUCCESS;
 }

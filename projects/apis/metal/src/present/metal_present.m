@@ -8,7 +8,7 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
     for (int i =0 ; i < info.presentationQueueCount; i++) {
     info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
     id<CAMetalDrawable> drawable = [info.presentationQueues[i]->info.surface->windowSurface->layer nextDrawable];
-    if (drawable == nil) return GN_FAILED_TO_CREATE_FRAMEBUFFER;
+    if (drawable == nil) return GN_UNKNOWN_ERROR;
 
     __block gnPresentationQueue presentationQueue = info.presentationQueues[i];
     __block uint32_t imageIndex = info.imageIndices[i];
@@ -54,7 +54,7 @@ gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo inf
     for (int i =0 ; i < info.presentationQueueCount; i++) {
         if (info.presentationQueues[i]->info.surface->windowSurface->layer.device == nil) info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
         id<CAMetalDrawable> drawable = [info.presentationQueues[i]->info.surface->windowSurface->layer nextDrawable];
-        if (drawable == nil) return GN_FAILED_TO_CREATE_FRAMEBUFFER;
+        if (drawable == nil) return GN_UNKNOWN_ERROR;
 
         __block gnPresentationQueue presentationQueue = info.presentationQueues[i];
         __block uint32_t imageIndex = info.imageIndices[i];

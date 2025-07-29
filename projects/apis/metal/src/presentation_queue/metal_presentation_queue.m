@@ -5,20 +5,6 @@
 #include "sync/semaphore/metal_semaphore.h"
 
 gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
-    if (presentationInfo.minImageCount > 3) {
-        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-            .message = gnCreateString("On Metal you cannot have more than 3 images in a presentation queue")
-        });
-        return GN_UNSUPPORTED_IMAGE_COUNT;
-    }
-
-    if (presentationInfo.minImageCount < 2) {
-        gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
-            .message = gnCreateString("On Metal you cannot have less than 2 images in a presentation queue")
-        });
-        return GN_UNSUPPORTED_IMAGE_COUNT;
-    }
-
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
     presentationQueue->presentationQueue->createdSize.x = presentationInfo.surface->windowSurface->layer.visibleRect.size.width;
     presentationQueue->presentationQueue->createdSize.y = presentationInfo.surface->windowSurface->layer.visibleRect.size.height;

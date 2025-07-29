@@ -87,7 +87,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
             });
             [shaderLib release];
             free((void*)shaderCode);
-            return GN_FAILED_TO_CREATE_SHADER_MODULE;
+            return GN_FAILED_CREATE_OBJECT;
         }
 
 
@@ -135,7 +135,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     [descriptor release];
     [vertexDescriptor release];
     [error release];
-    if (graphicsPipeline->graphicsPipeline->graphicsPipeline == nil) return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
+    if (graphicsPipeline->graphicsPipeline->graphicsPipeline == nil) return GN_FAILED_CREATE_OBJECT;
     return GN_SUCCESS;
 }
 
