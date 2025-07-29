@@ -20,10 +20,7 @@ gnReturnCode createFramebuffer(gnFramebuffer framebuffer, gnDevice device, gnFra
         .layers = 1
     };
 
-    if (vkCreateFramebuffer(device->outputDevice->device, &framebufferInfo, NULL, &framebuffer->framebuffer->framebuffer) != VK_SUCCESS) {
-        return GN_FAILED_TO_CREATE_FRAMEBUFFER;
-    }
-
+    VkResult res = vkCreateFramebuffer(device->outputDevice->device, &framebufferInfo, NULL, &framebuffer->framebuffer->framebuffer);
     free(attachments);
     return GN_SUCCESS;
 }

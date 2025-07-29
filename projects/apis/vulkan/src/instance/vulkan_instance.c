@@ -1,10 +1,5 @@
 #include "vulkan_instance.h"
-#include <stdio.h>
-
-typedef struct vkUserData {
-    gnDebuggerCallback debuggerCallback;
-    void* userData;
-} vkUserData;
+#include "vulkan_result_converter.h"
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -40,7 +35,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_TRUE;
 }
 
-gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
+gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
     vkStringArrayList extensions = vkStringArrayListCreate();
@@ -61,10 +56,10 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
 
     VkApplicationInfo appInfo = {
         .sType = VK_STRUCTURE_TYPE_APPLICATION_INFO,
-        .pApplicationName = gnToCString(instanceInfo.applicationName),
-        .applicationVersion = instanceInfo.applicationVersion,
-        .pEngineName = gnToCString(instanceInfo.engineName),
-        .engineVersion = instanceInfo.engineVersion,
+        .pApplicationName = gnToCString(instanceInfo->applicationInfo.applicationName),
+        .applicationVersion = instanceInfo->applicationInfo.applicationVersion,
+        .pEngineName = gnToCString(instanceInfo->applicationInfo.engineName),
+        .engineVersion = instanceInfo->applicationInfo.engineVersion,
         .apiVersion = VK_API_VERSION_1_3,
     };
 
@@ -78,44 +73,34 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceInfo instanceIn
     createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
     #endif
 
-    if (instanceInfo.debugger != NULL) {
-        for (int i = 0; i < instanceInfo.debugger->layerCount; i++) {
-            if (instanceInfo.debugger->layers[i] == GN_DEBUGGER_LAYER_PLATFORM) {
-                vkStringArrayListAdd(&extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    for (int i = 0; i < instanceInfo->debuggerInfo.layerCount; i++) {
+        if (instanceInfo->debuggerInfo.layers[i] == GN_DEBUGGER_LAYER_PLATFORM) {
+            vkStringArrayListAdd(&extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
-                const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
-                createInfo.enabledLayerCount = 1;
-                createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
+            const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
+            createInfo.enabledLayerCount = 1;
+            createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
 
-                vkUserData* userData = malloc(sizeof(vkUserData));
-                userData->debuggerCallback = instanceInfo.debugger->callback;
-                userData->userData = instanceInfo.debugger->userData;
+            instance->instance->userData.debuggerCallback = instanceInfo->debuggerInfo.callback;
+            instance->instance->userData.userData = instanceInfo->debuggerInfo.userData;
 
-                VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {
-                    .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-                    .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-                    .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-                };
-                debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
-                debugCreateInfo.pUserData = userData;
-                createInfo.pNext = &debugCreateInfo;
-            }
+            VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {
+                .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+                .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+                .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+            };
+            debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
+            debugCreateInfo.pUserData = &instance->instance->userData;
+            createInfo.pNext = &debugCreateInfo;
         }
-
     }
+
 
     createInfo.enabledExtensionCount = extensions.count;
     createInfo.ppEnabledExtensionNames = extensions.data;
-
-    VkResult result = vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance);
-    if (result != VK_SUCCESS)
-        return GN_FAILED_CREATE_INSTANCE;
-    instance->valid = GN_TRUE;
-
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance));
 }
 
 void destroyInstance(gnInstanceHandle instance) {
-    instance->valid = GN_FALSE;
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

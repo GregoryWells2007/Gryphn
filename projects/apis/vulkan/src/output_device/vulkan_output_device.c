@@ -4,6 +4,7 @@
 #include "vulkan_device_extensions.h"
 #include "instance/gryphn_instance.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"
+#include "vulkan_result_converter.h"
 
 gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
@@ -58,8 +59,9 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         deviceCreateInfo.ppEnabledLayerNames = validation_layers;
     }
 
-    if (vkCreateDevice(deviceInfo.physicalDevice->physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_DEVICE;
+    VkResult result = vkCreateDevice(deviceInfo.physicalDevice->physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device);
+    if (result != VK_SUCCESS)
+        return VkResultToGnReturnCode(result);
 
     outputDevice->outputDevice->queues = malloc(sizeof(vulkanQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
     uint32_t transferQueue = 0;
@@ -83,11 +85,13 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         .queueFamilyIndex = transferQueue
     };
 
-    if (vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferCommandPool) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_COMMAND_POOL;
+    VkResult command_pool_result = vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferCommandPool);
+    if (command_pool_result != VK_SUCCESS)
+        return VkResultToGnReturnCode(command_pool_result);
 
     VkFenceCreateInfo fenceInfo = { .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO };
-    if (vkCreateFence(outputDevice->outputDevice->device, &fenceInfo, NULL, &outputDevice->outputDevice->barrierFence) != VK_SUCCESS) return GN_FAILED_TO_CREATE_FENCE;
+    VkResult fence_result = vkCreateFence(outputDevice->outputDevice->device, &fenceInfo, NULL, &outputDevice->outputDevice->barrierFence);
+    if (fence_result != VK_SUCCESS) VkResultToGnReturnCode(fence_result);
 
     // create the massive staging buffer
     outputDevice->outputDevice->stagingBufferSize = 128 * 1024 * 1024;

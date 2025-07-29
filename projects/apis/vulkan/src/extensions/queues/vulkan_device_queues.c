@@ -18,7 +18,6 @@ gnReturnCode vulkanPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle de
         if ((queueFamilies[i].queueFlags & VK_QUEUE_SPARSE_BINDING_BIT) == VK_QUEUE_SPARSE_BINDING_BIT) queues[i].queueTypeFlags |= GN_QUEUE_SPARSE_BINDING_BIT;
         if ((queueFamilies[i].queueFlags & VK_QUEUE_PROTECTED_BIT) == VK_QUEUE_PROTECTED_BIT)           queues[i].queueTypeFlags |= GN_QUEUE_PROTECTED_BIT;
     }
-
     return GN_SUCCESS;
 }
 
