@@ -1,6 +1,6 @@
 #pragma once
 #include "utils/math/gryphn_vec2.h"
-#include "utils/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include "gryphn_handles.h"
 
 typedef struct gnFramebufferInfo {

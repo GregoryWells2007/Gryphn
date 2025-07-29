@@ -1,7 +1,7 @@
 #pragma once
 #include <gryphn_platform_include.h>
 #include <gryphn_handles.h>
-#include <utils/gryphn_error_code.h>
+#include <core/gryphn_return_code.h>
 
 #ifdef GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11

@@ -2,7 +2,7 @@
 #include "core/src/gryphn_rendering_api.h"
 #include "core/src/gryphn_handles.h"
 #include "utils/gryphn_version.h"
-#include "core/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include "core/src/instance/gryphn_debugger.h"
 #include <gryphn_extensions.h>
 

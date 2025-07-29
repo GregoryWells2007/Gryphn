@@ -1,7 +1,7 @@
 #pragma once
 #include "stdint.h"
 #include "utils/gryphn_image_format.h"
-#include "utils/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include "core/src/output_device/gryphn_physical_output_device.h"
 #include "gryphn_handles.h"
 

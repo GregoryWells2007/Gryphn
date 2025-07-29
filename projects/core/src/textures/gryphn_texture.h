@@ -1,6 +1,6 @@
 #pragma once
 #include "utils/gryphn_image_format.h"
-#include "utils/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include "utils/math/gryphn_vec3.h"
 #include "core/src/output_device/gryphn_physical_output_device.h"
 #include <gryphn_handles.h>

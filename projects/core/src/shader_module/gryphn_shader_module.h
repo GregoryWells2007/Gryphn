@@ -1,7 +1,7 @@
 #pragma once
 #include "stdint.h"
 #include "utils/gryphn_string.h"
-#include "utils/gryphn_error_code.h"
+#include "core/gryphn_return_code.h"
 #include "gryphn_handles.h"
 
 typedef enum gnShaderModuleStage {
