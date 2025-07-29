@@ -1,10 +1,21 @@
 #pragma once
 
 typedef enum gnReturnCode {
+
     GN_SUCCESS = 0,
+
+    // non spec return codes
+    GN_FAILED_CREATE_OBJECT, GN_FAILED_TO_ALLOCATE_OBJECT,
+    GN_FAILED_TO_ALLOCATE_MEMORY, GN_OUT_OUT_HOST_MEMEORY,
+    GN_OUT_OUT_DEVICE_MEMORY,
+
+
     GN_UNLOADED_EXTENSION = -1,
     GN_UNLOADED_LAYER = -2,
-    GN_UNSUPPORTED_API = -3
+    GN_UNSUPPORTED_API = -3,
+    GN_UNKNOWN_ERROR = -4
+
+
 
     // GN_SUCCESS,
     // GN_UNKNOWN_RENDERINGAPI,

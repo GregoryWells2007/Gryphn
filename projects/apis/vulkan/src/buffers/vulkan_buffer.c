@@ -3,6 +3,7 @@
 #include "output_device/gryphn_output_device.h"
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
+#include <vulkan_result_converter.h>
 
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
     VkBufferUsageFlags usageFlags = 0;
@@ -37,8 +38,9 @@ gnReturnCode VkCreateBuffer(
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE
     };
 
-    if (vkCreateBuffer(device->outputDevice->device, &bufferInfo, NULL, &buffer->buffer) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_BUFFER;
+    VkResult created_buffer = vkCreateBuffer(device->outputDevice->device, &bufferInfo, NULL, &buffer->buffer);
+    if (created_buffer != VK_SUCCESS)
+        return VkResultToGnReturnCode(created_buffer);
 
     VkMemoryRequirements bufferRequirements;
     vkGetBufferMemoryRequirements(device->outputDevice->device, buffer->buffer, &bufferRequirements);
@@ -51,10 +53,9 @@ gnReturnCode VkCreateBuffer(
     };
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 
-    if (vkAllocateMemory(device->outputDevice->device, &memoryAllocateInfo, NULL, &buffer->memory) != VK_SUCCESS)
-        return GN_FAILED_TO_ALLOCATE_MEMORY;
-    vkBindBufferMemory(device->outputDevice->device, buffer->buffer, buffer->memory, 0);
-    return GN_SUCCESS;
+    VkResult memoryFound = vkAllocateMemory(device->outputDevice->device, &memoryAllocateInfo, NULL, &buffer->memory);
+    if (memoryFound == VK_SUCCESS) vkBindBufferMemory(device->outputDevice->device, buffer->buffer, buffer->memory, 0);
+    return VkResultToGnReturnCode(memoryFound);
 }
 
 void VkCopyBuffer(gnDevice device, VkBuffer source, VkBuffer destination, VkBufferCopy copy) {
@@ -82,8 +83,6 @@ gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gn
             vkGryphnBufferType(info.type)
         );
     }
-
-
 
     return GN_SUCCESS;
 }

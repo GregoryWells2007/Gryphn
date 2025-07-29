@@ -1,6 +1,7 @@
 #include "vulkan_command_buffer.h"
 #include "commands/command_pool/vulkan_command_pool.h"
 #include "output_device/vulkan_output_devices.h"
+#include <vulkan_result_converter.h>
 
 gnReturnCode allocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPool pool) {
     VkCommandBufferAllocateInfo allocInfo = {
@@ -13,7 +14,7 @@ gnReturnCode allocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint3
     VkCommandBuffer* buffers = malloc(sizeof(VkCommandBuffer) * count);
 
     if (vkAllocateCommandBuffers(pool->device->outputDevice->device, &allocInfo, buffers) != VK_SUCCESS)
-        return GN_FAILED_TO_ALLOCATE_COMMAND_BUFFERS;
+        return GN_FAILED_TO_ALLOCATE_OBJECT;
 
     for (int i = 0; i < count; i++) {
         commandBuffers[i]->commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
@@ -37,16 +38,11 @@ gnReturnCode beginCommandBuffer(gnCommandBufferHandle commandBuffer) {
     if ((commandBuffer->commandPool->info.flags & GN_REUSE_COMMAND_BUFFERS) != GN_REUSE_COMMAND_BUFFERS)
         beginInfo.flags |= VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
 
-    if (vkBeginCommandBuffer(commandBuffer->commandBuffer->buffer, &beginInfo) != VK_SUCCESS) {
-        return GN_FAILED_TO_BEGIN_RECORDING;
-    }
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkBeginCommandBuffer(commandBuffer->commandBuffer->buffer, &beginInfo));
 }
 
 gnReturnCode endCommandBuffer(gnCommandBufferHandle commandBuffer) {
-    if (vkEndCommandBuffer(commandBuffer->commandBuffer->buffer) != VK_SUCCESS)
-        return GN_FAIELD_TO_END_RECORDING;
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkEndCommandBuffer(commandBuffer->commandBuffer->buffer));
 }
 
 
