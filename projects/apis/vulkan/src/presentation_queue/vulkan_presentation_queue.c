@@ -4,7 +4,7 @@
 #include "vulkan_surface/vulkan_surface.h"
 #include "textures/vulkan_texture.h"
 #include "sync/semaphore/vulkan_semaphore.h"
-#include "stdio.h"
+#include <vulkan_result_converter.h>
 
 gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
@@ -55,9 +55,7 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
     createInfo.oldSwapchain = VK_NULL_HANDLE;
 
     VkResult result = vkCreateSwapchainKHR(device->outputDevice->device, &createInfo, NULL, &presentationQueue->presentationQueue->swapChain);
-    if (result == VK_ERROR_NATIVE_WINDOW_IN_USE_KHR) return GN_WINDOW_IN_USE;
-    if (result != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_PRESENTATION_QUEUE;
+    if (result != VK_SUCCESS) return VkResultToGnReturnCode(result);
 
     vkGetSwapchainImagesKHR(device->outputDevice->device, presentationQueue->presentationQueue->swapChain, &presentationQueue->imageCount, NULL);
     presentationQueue->presentationQueue->swapChainImages = malloc(sizeof(VkImage) * presentationQueue->imageCount);
@@ -83,14 +81,15 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
         presentationQueue->images[i] = malloc(sizeof(struct gnTexture_t));
         presentationQueue->images[i]->texture = malloc(sizeof(gnPlatformTexture));
         imageViewCreateInfo.image = presentationQueue->presentationQueue->swapChainImages[i];
-        if (vkCreateImageView(device->outputDevice->device, &imageViewCreateInfo, NULL, &presentationQueue->presentationQueue->swapChainImageViews[i]) != VK_SUCCESS)
-            return GN_FAILED_TO_CREATE_IMAGE_VIEW;
+        VkResult creatingImageViewResult = vkCreateImageView(device->outputDevice->device, &imageViewCreateInfo, NULL, &presentationQueue->presentationQueue->swapChainImageViews[i]);
+        if (creatingImageViewResult != VK_SUCCESS)
+            return VkResultToGnReturnCode(creatingImageViewResult);
 
         presentationQueue->images[i]->texture->image.image = presentationQueue->presentationQueue->swapChainImages[i];
         presentationQueue->images[i]->texture->image.imageView = presentationQueue->presentationQueue->swapChainImageViews[i];
     }
 
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(result);
 }
 
 gnReturnCode getVulkanPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex) {

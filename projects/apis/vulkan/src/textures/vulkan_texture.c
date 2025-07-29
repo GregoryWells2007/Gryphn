@@ -2,6 +2,7 @@
 #include "vulkan_texture.h"
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
+#include <vulkan_result_converter.h>
 
 VkImageType vkGryphnTextureType(gnTextureType type) {
     switch(type) {
@@ -150,7 +151,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         &texture->texture->buffer, imageSize, device,
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_TRANSFER_SRC_BIT
     );
-    if (staginBufferCreateCode != GN_SUCCESS) return GN_FAILED_TO_CREATE_BUFFER;
+    if (staginBufferCreateCode != GN_SUCCESS) return staginBufferCreateCode;
     texture->texture->size = imageSize;
 
     VkImageCreateInfo imageInfo = {
@@ -172,8 +173,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
     };
 
     VkResult res = vkCreateImage(device->outputDevice->device, &imageInfo, NULL, &texture->texture->image.image);
-    if (res == VK_ERROR_FORMAT_NOT_SUPPORTED) return GN_UNSUPPORTED_IMAGE_FORMAT;
-    else if (res != VK_SUCCESS) return GN_FAILED_TO_CREATE_IMAGE;
+    if (res != VK_SUCCESS) return VkResultToGnReturnCode(res);
 
     VkMemoryRequirements memRequirements;
     vkGetImageMemoryRequirements(device->outputDevice->device, texture->texture->image.image, &memRequirements);
@@ -186,9 +186,8 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
     };
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 
-    if (vkAllocateMemory(device->outputDevice->device, &allocInfo, NULL, &texture->texture->image.memory) != VK_SUCCESS)
-        return GN_FAILED_TO_ALLOCATE_MEMORY;
-
+    VkResult allocationRes = vkAllocateMemory(device->outputDevice->device, &allocInfo, NULL, &texture->texture->image.memory);
+    if (allocationRes != VK_SUCCESS) return VkResultToGnReturnCode(allocationRes);
     vkBindImageMemory(device->outputDevice->device, texture->texture->image.image, texture->texture->image.memory, 0);
 
     texture->texture->beenWrittenToo = GN_FALSE;
@@ -206,8 +205,8 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         .subresourceRange.layerCount = 1,
     };
 
-    if (vkCreateImageView(device->outputDevice->device, &viewInfo, NULL, &texture->texture->image.imageView) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_IMAGE_VIEW;
+    VkResult image_view = vkCreateImageView(device->outputDevice->device, &viewInfo, NULL, &texture->texture->image.imageView);
+    if (image_view != VK_SUCCESS) return VkResultToGnReturnCode(image_view);
 
     VkPhysicalDeviceProperties properties = {};
     vkGetPhysicalDeviceProperties(device->physicalDevice->physicalDevice->device, &properties);
@@ -235,13 +234,10 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         .maxLod = 0.0f,
     };
 
-    if (vkCreateSampler(device->outputDevice->device, &samplerInfo, NULL, &texture->texture->sampler) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_SAMPLER;
-
     if (vkGryphnIsDepthStencil(info.format))
         VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL);
 
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkCreateSampler(device->outputDevice->device, &samplerInfo, NULL, &texture->texture->sampler));
 }
 
 void textureData(gnTextureHandle texture, void* pixelData) {

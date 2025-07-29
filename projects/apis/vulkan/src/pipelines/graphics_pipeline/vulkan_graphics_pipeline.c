@@ -4,7 +4,7 @@
 #include "shader_module/vulkan_shader_module.h"
 #include "renderpass/vulkan_render_pass_descriptor.h"
 #include "uniforms/vulkan_uniform_layout.h"
-
+#include "vulkan_result_converter.h"
 
 VkDynamicState vkGryphnDynamicStateToVulkanDynamicState(gnDynamicState state) {
     switch (state) {
@@ -257,8 +257,9 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
         pipelineLayoutInfo.pPushConstantRanges = graphicsPipeline->graphicsPipeline->ranges
     };
 
-    if (vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_UNIFORM_LAYOUT;
+    VkResult pipelineCode = vkCreatePipelineLayout(device->outputDevice->device, &pipelineLayoutInfo, NULL, &graphicsPipeline->graphicsPipeline->pipelineLayout);
+    if (pipelineCode!= VK_SUCCESS)
+        return VkResultToGnReturnCode(pipelineCode);
 
     graphicsPipeline->graphicsPipeline->modules = malloc(sizeof(VkPipelineShaderStageCreateInfo) * info.shaderModuleCount);
     for (int i = 0; i < info.shaderModuleCount; i++) {
@@ -284,10 +285,7 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
         .basePipelineIndex = -1,
     };
 
-    if (vkCreateGraphicsPipelines(device->outputDevice->device, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &graphicsPipeline->graphicsPipeline->graphicsPipeline) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_GRAPHICS_PIPELINE;
-
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkCreateGraphicsPipelines(device->outputDevice->device, VK_NULL_HANDLE, 1, &pipelineInfo, NULL, &graphicsPipeline->graphicsPipeline->graphicsPipeline));
 }
 
 void destroyGraphicsPipeline(gnGraphicsPipeline graphicsPipeline) {
@@ -298,7 +296,6 @@ void destroyGraphicsPipeline(gnGraphicsPipeline graphicsPipeline) {
     for (int i = 0; i < graphicsPipeline->graphicsPipeline->setCount; i++)
         vkDestroyDescriptorSetLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->sets[i], NULL);
     free(graphicsPipeline->graphicsPipeline->modules);
-
     vkDestroyPipeline(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->graphicsPipeline, NULL);
     vkDestroyPipelineLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->pipelineLayout, NULL);
     free(graphicsPipeline->graphicsPipeline);

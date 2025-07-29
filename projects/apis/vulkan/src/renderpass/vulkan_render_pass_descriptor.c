@@ -2,7 +2,7 @@
 #include "vulkan_surface/vulkan_surface.h"
 #include "output_device/vulkan_output_devices.h"
 #include <output_device/vulkan_physical_device.h>
-#include "stdio.h"
+#include <vulkan_result_converter.h>
 
 VkAttachmentLoadOp vkGryphnLoadOperation(gnLoadOperation loadOperation) {
     switch(loadOperation) {
@@ -130,18 +130,11 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
         .dependencyCount = info.dependencyCount,
         .pDependencies = renderPass->renderPassDescriptor->dependencies,
     };
-
-    if (vkCreateRenderPass(device->outputDevice->device, &renderPassInfo, NULL, &renderPass->renderPassDescriptor->renderPass) != VK_SUCCESS)
-        return GN_FAILED_TO_CREATE_RENDER_PASS;
-
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkCreateRenderPass(device->outputDevice->device, &renderPassInfo, NULL, &renderPass->renderPassDescriptor->renderPass));
 }
-
 
 void destroyRenderPass(gnRenderPassDescriptor renderPass) {
     vkDestroyRenderPass(renderPass->device->outputDevice->device, renderPass->renderPassDescriptor->renderPass, NULL);
-
-
     free(renderPass->renderPassDescriptor->attachments);
     free(renderPass->renderPassDescriptor->subpasses);
     free(renderPass->renderPassDescriptor->dependencies);

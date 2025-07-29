@@ -1,6 +1,7 @@
 #include "vulkan_present.h"
 #include "extensions/synchronization/commands/gryphn_sync_present.h"
 #include "vulkan_surface/vulkan_surface.h"
+#include "vulkan_result_converter.h"
 
 gnReturnCode vulkanQueuePresentSync(gnDevice device, gnQueue queue, gnPresentSyncInfo info) {
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
@@ -18,10 +19,7 @@ gnReturnCode vulkanQueuePresentSync(gnDevice device, gnQueue queue, gnPresentSyn
         .pImageIndices = info.imageIndices
     };
 
-    VkResult result = vkQueuePresentKHR((VkQueue)queue, &presentInfo);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
-    if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkQueuePresentKHR((VkQueue)queue, &presentInfo));
 }
 
 gnReturnCode vulkanPresentSync(gnDevice device, gnPresentSyncInfo info) {
@@ -41,10 +39,7 @@ gnReturnCode vulkanQueuePresent(gnDevice device, gnQueue queue, gnPresentInfo in
         .pImageIndices = info.imageIndices
     };
 
-    VkResult result = vkQueuePresentKHR((VkQueue)queue, &presentInfo);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
-    if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkQueuePresentKHR((VkQueue)queue, &presentInfo));
 }
 
 gnReturnCode vulkanPresent(gnDevice device, gnPresentInfo info) {

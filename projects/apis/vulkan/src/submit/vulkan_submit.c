@@ -1,4 +1,5 @@
 #include "vulkan_submit.h"
+#include "vulkan_result_converter.h"
 
 gnReturnCode vulkanSubmitSyncQueue(gnOutputDevice device, gnQueue queue, gnSubmitSyncInfo info) {
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
@@ -23,18 +24,7 @@ gnReturnCode vulkanSubmitSyncQueue(gnOutputDevice device, gnQueue queue, gnSubmi
         .pSignalSemaphores = signalSemaphores
     };
 
-    if (vkQueueSubmit((VkQueue)queue, 1, &submitInfo, info.fence->fence->fence) != VK_SUCCESS) {
-        free(waitSemaphores);
-        free(waitStages);
-        free(commandBuffers);
-        free(signalSemaphores);
-        return GN_FAILED_TO_SUBMIT_COMMAND_BUFFER;
-    }
-    free(waitSemaphores);
-    free(waitStages);
-    free(commandBuffers);
-    free(signalSemaphores);
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkQueueSubmit((VkQueue)queue, 1, &submitInfo, info.fence->fence->fence));
 }
 
 gnReturnCode vulkanSubmitSync(gnDevice device, gnSubmitSyncInfo info) {
@@ -57,10 +47,11 @@ gnReturnCode vulkanSubmitQueue(gnOutputDevice device, gnQueue queue, gnSubmitInf
     };
 
     vkResetFences(device->outputDevice->device, 1, &device->outputDevice->barrierFence);
-    if (vkQueueSubmit((VkQueue)queue, 1, &submitInfo, device->outputDevice->barrierFence) != VK_SUCCESS)
-        return GN_FAILED_TO_SUBMIT_COMMAND_BUFFER;
+    VkResult res = vkQueueSubmit((VkQueue)queue, 1, &submitInfo, device->outputDevice->barrierFence);
+    if (res != VK_SUCCESS)
+        return VkResultToGnReturnCode(res);
     vkWaitForFences(device->outputDevice->device, 1, &device->outputDevice->barrierFence, VK_TRUE, UINT64_MAX);
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(res);
 }
 
 gnReturnCode vulkanSubmit(gnDevice device, gnSubmitInfo info) {

@@ -8,7 +8,7 @@
 #import <QuartzCore/CAMetalLayer.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Metal/Metal.h>
-
+#include "vulkan_result_converter.h"
 
 #include "vulkan/vulkan_metal.h"
 gnReturnCode createMacOSWindowSurface(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
@@ -18,10 +18,6 @@ gnReturnCode createMacOSWindowSurface(gnWindowSurfaceHandle windowSurface, gnIns
     surfaceCreateInfo.pNext = NULL;
     surfaceCreateInfo.flags = 0;
     surfaceCreateInfo.pLayer = createInfo.layer;
-
-    VkResult result = vkCreateMetalSurfaceEXT(instance->instance->vk_instance, &surfaceCreateInfo, NULL, &windowSurface->windowSurface->surface);
-    if (result != VK_SUCCESS)
-        return GN_FAILED_TO_ATTACH_WINDOW;
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkCreateMetalSurfaceEXT(instance->instance->vk_instance, &surfaceCreateInfo, NULL, &windowSurface->windowSurface->surface));
 }
 #endif
