@@ -1,6 +1,6 @@
 #pragma once
 #include <utils/gryphn_bool.h>
-#include "utils/gryphn_error_code.h"
+#include "core/gryphn_error_code.h"
 #include "utils/lists/gryphn_array_list.h"
 #include "gryphn_handles.h"
 
