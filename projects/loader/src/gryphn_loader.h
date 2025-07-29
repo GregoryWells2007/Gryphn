@@ -31,3 +31,4 @@ void resetLayer(gnInstance instance);
 
 
 gnSyncExtFunctions loadAPISyncFunctions(gnRenderingAPI api);
+gnQueueExtFunctions loadAPIQueueFunctions(gnRenderingAPI api);

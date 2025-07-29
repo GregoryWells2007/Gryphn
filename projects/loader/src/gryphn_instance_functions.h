@@ -1,10 +1,10 @@
 #pragma once
 #include "stdint.h"
-#include "utils/gryphn_error_code.h"
+#include "core/gryphn_error_code.h"
 #include "utils/gryphn_bool.h"
 #include "gryphn_handles.h"
 
-typedef struct gnInstanceInfo gnInstanceInfo;
+typedef struct gnInstanceCreateInfo gnInstanceCreateInfo;
 typedef struct gnSurfaceDetails gnSurfaceDetails;
 typedef struct gnOutputDeviceInfo gnOutputDeviceInfo;
 
@@ -19,7 +19,7 @@ typedef struct gnOutputDeviceInfo gnOutputDeviceInfo;
 #endif
 
 typedef struct gnInstanceFunctions {
-    gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceInfo info);
+    gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceCreateInfo* info);
     void (*_gnDestroyInstance)(gnInstanceHandle instance);
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
