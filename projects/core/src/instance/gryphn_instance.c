@@ -10,6 +10,11 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     *instance = malloc(sizeof(struct gnInstance_t));
     (*instance)->hasDebugger = GN_FALSE;
     (*instance)->layers = loaderLayerArrayListCreate();
+    dispatcher_init(&(*instance)->dispatch);
+    dispatcher_set_function_array_size(&(*instance)->dispatch, sizeof(gnInstanceFunctions));
+
+    dispatcher_create_layer(&(*instance)->dispatch, loadAPIInstanceFunctions, &info->coreAPI);
+
     loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
         .api = info->coreAPI,
         .layerToLoad = api_layer
@@ -41,11 +46,17 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     (*instance)->currentLayer = ((*instance)->layers.count - 1);
     for (int i = 0; i < (*instance)->layers.count; i++) (*instance)->layers.data[i].layerIndex = i;
     (*instance)->callingLayer = &(*instance)->layers.data[(*instance)->layers.count - 1];
-    gnReturnCode core_code = (*instance)->callingLayer->instanceFunctions._gnCreateInstance((*instance), info);
+
+    gnInstanceFunctions* instance_funcs = (gnInstanceFunctions*)((*instance)->dispatch.first_layer->function_array);
+    gnReturnCode core_code = instance_funcs->_gnCreateInstance((*instance), info);
     if (unsupportedExtension) return GN_UNLOADED_EXTENSION;
     return core_code;
 }
 
-void gnDestroyInstance(gnInstanceHandle instance) {
-    instance->callingLayer->instanceFunctions._gnDestroyInstance(instance);
+void gnDestroyInstance(gnInstanceHandle* instance) {
+    if (instance == GN_NULL_HANDLE) return;
+
+    gnInstanceFunctions* instance_funcs = (gnInstanceFunctions*)((*instance)->dispatch.first_layer->function_array);
+    instance_funcs->_gnDestroyInstance((*instance));
+    *instance = GN_NULL_HANDLE;
 }

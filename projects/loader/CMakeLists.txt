@@ -7,3 +7,4 @@ target_include_directories(GryphnLoader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../ut
 target_include_directories(GryphnLoader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../)
 target_include_directories(GryphnLoader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../core/src/)
 target_include_directories(GryphnLoader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../core/)
+target_include_directories(GryphnLoader PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/../../depends/)

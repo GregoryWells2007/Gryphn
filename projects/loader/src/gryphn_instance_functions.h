@@ -25,7 +25,7 @@ typedef struct gnInstanceFunctions {
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
     gnBool (*_gnPhysicalDeviceCanPresentToSurface)(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
 
-    gnReturnCode (*_gnCreateOutputDevice)(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
+    gnReturnCode (*_gnCreateOutputDevice)(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
     void (*_gnDestroyOutputDevice)(gnOutputDeviceHandle device);
 
 
