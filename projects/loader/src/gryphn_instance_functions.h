@@ -29,7 +29,6 @@ typedef struct gnInstanceFunctions {
     gnReturnCode (*_gnCreateOutputDevice)(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
     void (*_gnDestroyOutputDevice)(gnInstanceHandle handle, gnOutputDeviceHandle device);
 
-
     #ifdef GN_PLATFORM_LINUX
         #ifdef GN_WINDOW_X11
             gnReturnCode (*_gnCreateX11WindowSurface)(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnX11WindowSurfaceInfo createInfo);
