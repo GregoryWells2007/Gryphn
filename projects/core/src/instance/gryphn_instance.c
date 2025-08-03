@@ -4,6 +4,9 @@
 #include "loader/src/gryphn_extension_loader.h"
 #include "loader/src/gryphn_loader.h"
 #include "loader/src/gryphn_loader.h"
+#include "stdio.h"
+
+#include "apis/vulkan/loader/vulkan_loader.h"
 
 // this implementation of gnCreateInstance cannot return GN_UNLOADED_LAYER
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* info) {
@@ -11,7 +14,7 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     (*instance)->hasDebugger = GN_FALSE;
     (*instance)->layers = loaderLayerArrayListCreate();
 
-    // (*instance)->functions =
+    (*instance)->functions = gryphnLoadAPILayer(info->coreAPI);
 
     loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
         .api = info->coreAPI,
@@ -45,11 +48,11 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     for (int i = 0; i < (*instance)->layers.count; i++) (*instance)->layers.data[i].layerIndex = i;
     (*instance)->callingLayer = &(*instance)->layers.data[(*instance)->layers.count - 1];
     if (unsupportedExtension) return GN_UNLOADED_EXTENSION;
-    return (*(PFN_gnCreateInstance*)(*instance)->functions.createInstance.function)(*instance, info, (*instance)->functions.createInstance.next);
+    return (*instance)->functions.createInstance.func(*instance, info, NULL);
 }
 
 void gnDestroyInstance(gnInstanceHandle* instance) {
     if (instance == GN_NULL_HANDLE) return;
-    (*(PFN_gnDestroyInstance*)(*instance)->functions.destroyInstance.function)(*instance, (*instance)->functions.destroyInstance.next);
+    (*instance)->functions.destroyInstance.func(*instance, NULL);
     *instance = GN_NULL_HANDLE;
 }

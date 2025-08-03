@@ -1,6 +1,8 @@
 #include "vulkan_instance.h"
 #include "vulkan_result_converter.h"
 
+#include "stdio.h"
+
 static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -35,7 +37,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_TRUE;
 }
 
-gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnFunctionLayer* next) {
+gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, PFN_gnCreateInstance_layer* next) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
     vkStringArrayList extensions = vkStringArrayListCreate();
@@ -101,6 +103,6 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
     return VkResultToGnReturnCode(vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance));
 }
 
-void vulkanDestroyInstance(gnInstanceHandle instance, gryphnFunctionLayer* next) {
+void vulkanDestroyInstance(gnInstanceHandle instance, PFN_gnDestroyInstance_layer* next) {
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

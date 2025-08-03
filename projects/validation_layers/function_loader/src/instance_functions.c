@@ -4,23 +4,23 @@
 #include "core/src/output_device/gryphn_output_device.h"
 #include "core/src/window_surface/gryphn_surface.h"
 
-gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info, gryphnFunctionLayer* next) {
-    if (next->function == NULL) {
+gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info, PFN_gnCreateInstance_layer* next) {
+    if (next->func == NULL) {
         gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
             .message = gnCreateString("Failed to load gnCreateInstance this indicates a bug within gryphn")
         });
         return GN_FAILED_TO_LOAD_FUNCTION;
     }
-    return (*(PFN_gnCreateInstance*)next->function)(instance, info, next->next);
+    return (*(PFN_gnCreateInstance*)next->func)(instance, info, next->next);
 }
 
-void checkDestroyInstance(gnInstanceHandle instance, gryphnFunctionLayer* next) {
-    if (next->function == NULL) {
+void checkDestroyInstance(gnInstanceHandle instance, PFN_gnDestroyInstance_layer* next) {
+    if (next->func == NULL) {
         gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
             .message = gnCreateString("Failed to load gnDestroyInstance this indicates a bug within gryphn")
         });
     }
-    (*(PFN_gnDestroyInstance*)next->function)(instance, next->next);
+    (*(PFN_gnDestroyInstance*)next->func)(instance, next->next);
 }
 
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count) {
