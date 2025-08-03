@@ -22,7 +22,7 @@ gnBool gnIsSurfaceFormatSupported(
 ) {
     uint32_t formatCount = 0;
     gnSurfaceFormat* formats = gnGetSupportedSurfaceFormats(windowSurface, device, &formatCount);
-    for (int i = 0; i < formatCount; i++) {
+    for (uint32_t i = 0; i < formatCount; i++) {
         if (formats[i].format == format.format && formats[i].colorSpace == format.colorSpace) {
             return GN_TRUE;
         }
@@ -37,14 +37,14 @@ gnSurfaceFormat gnGetPreferredSurfaceFormat(
 ) {
     uint32_t formatCount = 0;
     gnSurfaceFormat* formats = gnGetSupportedSurfaceFormats(windowSurface, device, &formatCount);
-    for (int i = 0; i < formatCount; i++) {
+    for (uint32_t i = 0; i < formatCount; i++) {
         if (formats[i].format == format.format && formats[i].colorSpace == format.colorSpace) {
             return formats[i];
         }
     }
 
     // will attempt to give you a simmilar format that either matches the Image format and the Color space
-    for (int i = 0; i < formatCount; i++) {
+    for (uint32_t i = 0; i < formatCount; i++) {
         if (formats[i].format == format.format || formats[i].colorSpace == format.colorSpace) {
             return formats[i];
         }
