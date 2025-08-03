@@ -15,7 +15,7 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     (*instance)->hasDebugger = GN_FALSE;
     (*instance)->layers = loaderLayerArrayListCreate();
 
-    loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
+    loaderLayerArrayListAdd((*instance)->layers, loadLayer((loaderInfo){
         .api = info->coreAPI,
         .layerToLoad = api_layer
     }));
@@ -23,20 +23,20 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     gnBool unsupportedExtension = GN_FALSE;
     for (int c = 0; c < GN_EXT_MAX; c++) (*instance)->enabledExtensions[c] = GN_FALSE;
     for (int c = 0; c < GN_LAYER_MAX; c++) (*instance)->enabledLayerCounts[c] = 0;
-    for (int i = 0; i < info->extensionCount; i++) {
+    for (uint32_t i = 0; i < info->extensionCount; i++) {
         (*instance)->enabledExtensions[info->extensions[i]] = GN_TRUE;
         if (!gnIsExtensionSuppoted(info->coreAPI, info->extensions[i])) unsupportedExtension = GN_TRUE;
     }
 
-    if ((*instance)->enabledExtensions[GN_EXT_SYNCHRONIZATION]) (*instance)->layers.data[0].syncFunctions = loadAPISyncFunctions(info->coreAPI);
-    if ((*instance)->enabledExtensions[GN_EXT_QUEUES]) (*instance)->layers.data[0].queueFunctions = loadAPIQueueFunctions(info->coreAPI);
+    // if ((*instance)->enabledExtensions[GN_EXT_SYNCHRONIZATION]) (*instance)->layers.data[0].syncFunctions = loadAPISyncFunctions(info->coreAPI);
+    // if ((*instance)->enabledExtensions[GN_EXT_QUEUES]) (*instance)->layers.data[0].queueFunctions = loadAPIQueueFunctions(info->coreAPI);
 
     if (info->debuggerInfo.layerCount > 0) {
-        for (int i = 0; i < info->debuggerInfo.layerCount; i++) {
+        for (uint32_t i = 0; i < info->debuggerInfo.layerCount; i++) {
             (*instance)->enabledLayerCounts[info->debuggerInfo.layers[i]]++;
 
             if (info->debuggerInfo.layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) {
-                loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
+                loaderLayerArrayListAdd((*instance)->layers, loadLayer((loaderInfo){
                     .api = info->coreAPI,
                     .layerToLoad = function_checker_layer
                 }));
@@ -52,15 +52,16 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     ));
 
     int layerIDX = 0;
-    for (int i = 0; i < info->debuggerInfo.layerCount; i++) {
+    for (uint32_t i = 0; i < info->debuggerInfo.layerCount; i++) {
         if (info->debuggerInfo.layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) (*instance)->allLayers[layerIDX++] = checkerLoadInstanceFunctions();
         (*instance)->allLayers[layerIDX - 1].next = &(*instance)->allLayers[layerIDX];
     }
     (*instance)->allLayers[layerIDX] = gryphnLoadAPILayer(info->coreAPI);
     (*instance)->functions = &(*instance)->allLayers[0];
-    (*instance)->currentLayer = ((*instance)->layers.count - 1);
-    for (int i = 0; i < (*instance)->layers.count; i++) (*instance)->layers.data[i].layerIndex = i;
-    (*instance)->callingLayer = &(*instance)->layers.data[(*instance)->layers.count - 1];
+
+    resetLayer(*instance);
+    for (uint32_t i = 0; i < loaderLayerArrayListCount((*instance)->layers); i++) loaderLayerArrayListRefAt((*instance)->layers, i)->layerIndex = i;
+    (*instance)->callingLayer = loaderLayerArrayListRefAt((*instance)->layers, (*instance)->currentLayer);
     if (unsupportedExtension) return GN_UNLOADED_EXTENSION;
     return (*instance)->functions->createInstance(*instance, info, (*instance)->functions->next);
 }

@@ -169,11 +169,11 @@ loaderLayer* loaderGetNextLayer(gnInstance instance) {
         nextLayer = 0;
         resetLayer(instance);
     }
-    return &instance->layers.data[nextLayer];
+    return loaderLayerArrayListRefAt(instance->layers, nextLayer);
 }
 
 void resetLayer(gnInstance instance) {
-    instance->currentLayer = (instance->layers.count - 1);
+    instance->currentLayer = loaderLayerArrayListCount(instance->layers) - 1;
 }
 
 

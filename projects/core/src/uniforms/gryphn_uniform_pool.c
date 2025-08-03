@@ -13,12 +13,12 @@ gnReturnCode gnCreateUniformPool(gnUniformPool* pool, gnDeviceHandle device) {
 // you own this memory now
 gnUniformArrayList gnUniformPoolAllocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInfo) {
     gnUniform* uniforms = pool->device->instance->callingLayer->deviceFunctions._gnUniformPoolAllocateUniforms(pool, allocInfo);
-    for (int i = 0; i < allocInfo.setCount; i++)
+    for (uint32_t i = 0; i < allocInfo.setCount; i++)
         uniforms[i]->pool = pool;
 
     gnUniformArrayList list = gnUniformArrayListCreate();
-    gnUniformArrayListResize(&list, allocInfo.setCount);
-    for (int i = 0; i < allocInfo.setCount; i++) list.data[i] = uniforms[i];
+    gnUniformArrayListResize(list, allocInfo.setCount);
+    for (uint32_t i = 0; i < allocInfo.setCount; i++) *gnUniformArrayListRefAt(list, i) = uniforms[i];
     return list;
 }
 
