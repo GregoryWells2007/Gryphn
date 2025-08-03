@@ -1,8 +1,6 @@
 #include "vulkan_instance.h"
 #include "vulkan_result_converter.h"
 
-#include "stdio.h"
-
 static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
     VkDebugUtilsMessageTypeFlagsEXT messageType,
@@ -102,6 +100,5 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
 }
 
 void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next) {
-    printf("destroying layer\n");
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }
