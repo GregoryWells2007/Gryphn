@@ -31,17 +31,19 @@ MTLStoreAction mtlGryphnStoreOperationResolve(gnStoreOperation storeOperation) {
 }
 
 gnReturnCode createMetalRenderPass(gnRenderPassDescriptor renderPass, gnDevice device, gnRenderPassDescriptorInfo info) {
+    if (device == GN_NULL_HANDLE) return GN_INVALID_HANDLE;
+
     renderPass->renderPassDescriptor = malloc(sizeof(gnPlatformRenderPassDescriptor));
     renderPass->renderPassDescriptor->subpassCount = info.subpassCount;
     renderPass->renderPassDescriptor->subpasses = malloc(sizeof(mtlSubpass) * info.subpassCount);
     renderPass->renderPassDescriptor->copyInfos = malloc(sizeof(mtlSubpassCopyInfo) * info.subpassCount);
 
-    for (int i = 0; i < info.subpassCount; i++) {
+    for (uint32_t i = 0; i < info.subpassCount; i++) {
         renderPass->renderPassDescriptor->subpasses[i] = [[MTLRenderPassDescriptor alloc] init];
         gnBool resolve = !(info.subpassInfos[i].resolveAttachments == NULL);
         renderPass->renderPassDescriptor->copyInfos[i].colorAttachmentCount = info.subpassInfos[i].colorAttachmentCount;
         renderPass->renderPassDescriptor->copyInfos[i].colorAttachments = malloc(sizeof(mtlColorAttachmentCopyInfo) * info.subpassInfos[i].colorAttachmentCount);
-        for (int c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
+        for (uint32_t c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
             uint32_t attachmentIndex = info.subpassInfos[i].colorAttachments[c].index;
             int resolveAttachmentIndex = -1;
 
@@ -77,9 +79,9 @@ gnReturnCode createMetalRenderPass(gnRenderPassDescriptor renderPass, gnDevice d
 }
 
 void destroyMetalRenderPass(gnRenderPassDescriptor renderPass) {
-    for (int i = 0; i < renderPass->renderPassDescriptor->subpassCount; i++) {
+    for (uint32_t i = 0; i < renderPass->renderPassDescriptor->subpassCount; i++) {
         [renderPass->renderPassDescriptor->subpasses[i] release];
-        for (int c = 0; c < renderPass->renderPassDescriptor->copyInfos[i].colorAttachmentCount; c++)
+        for (uint32_t c = 0; c < renderPass->renderPassDescriptor->copyInfos[i].colorAttachmentCount; c++)
             free(renderPass->renderPassDescriptor->copyInfos[i].colorAttachments);
     }
     free(renderPass->renderPassDescriptor->copyInfos);

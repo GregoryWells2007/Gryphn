@@ -9,6 +9,7 @@
 #import <CoreGraphics/CoreGraphics.h>
 
 gnReturnCode createMetalSurface(gnWindowSurface windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
+    if (instance == GN_NULL_HANDLE) return GN_INVALID_HANDLE;
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
     windowSurface->windowSurface->layer = createInfo.layer;
     return GN_SUCCESS;
@@ -26,13 +27,14 @@ gnImageFormat mtlMetalFormatToGryphn(MTLPixelFormat format) {
 gnSurfaceDetails getMetalSurfaceDetails(
     gnWindowSurface windowSurface, gnPhysicalDevice device
 ) {
+    if (device == GN_NULL_HANDLE) return (gnSurfaceDetails){ .formatCount = 0 };
     gnSurfaceDetails surfaceDetails;
     surfaceDetails.formatCount = 1;
     surfaceDetails.formats = (gnSurfaceFormat[]){ { GN_FORMAT_BGRA8_SRGB, GN_COLOR_SPACE_SRGB_NONLINEAR } };
     surfaceDetails.minImageCount = 2;
     surfaceDetails.maxImageCount = 3;
     CGSize size = windowSurface->windowSurface->layer.drawableSize;
-    surfaceDetails.minImageSize = surfaceDetails.maxImageSize = surfaceDetails.currentSize = (gnUInt2){size.width, size.height};
+    surfaceDetails.minImageSize = surfaceDetails.maxImageSize = surfaceDetails.currentSize = (gnUInt2){.x = size.width, .y = size.height};
     return surfaceDetails;
 }
 
