@@ -6,15 +6,14 @@
 #include "loader/src/gryphn_loader.h"
 #include "stdio.h"
 
-#include "apis/vulkan/loader/vulkan_loader.h"
+#include "validation_layers/function_loader/loader/function_loader.h"
+
 
 // this implementation of gnCreateInstance cannot return GN_UNLOADED_LAYER
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* info) {
     *instance = malloc(sizeof(struct gnInstance_t));
     (*instance)->hasDebugger = GN_FALSE;
     (*instance)->layers = loaderLayerArrayListCreate();
-
-    (*instance)->functions = gryphnLoadAPILayer(info->coreAPI);
 
     loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
         .api = info->coreAPI,
@@ -23,6 +22,7 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
 
     gnBool unsupportedExtension = GN_FALSE;
     for (int c = 0; c < GN_EXT_MAX; c++) (*instance)->enabledExtensions[c] = GN_FALSE;
+    for (int c = 0; c < GN_LAYER_MAX; c++) (*instance)->enabledLayerCounts[c] = 0;
     for (int i = 0; i < info->extensionCount; i++) {
         (*instance)->enabledExtensions[info->extensions[i]] = GN_TRUE;
         if (!gnIsExtensionSuppoted(info->coreAPI, info->extensions[i])) unsupportedExtension = GN_TRUE;
@@ -33,6 +33,8 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
 
     if (info->debuggerInfo.layerCount > 0) {
         for (int i = 0; i < info->debuggerInfo.layerCount; i++) {
+            (*instance)->enabledLayerCounts[info->debuggerInfo.layers[i]]++;
+
             if (info->debuggerInfo.layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) {
                 loaderLayerArrayListAdd(&(*instance)->layers, loadLayer((loaderInfo){
                     .api = info->coreAPI,
@@ -44,15 +46,27 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
         (*instance)->hasDebugger = GN_TRUE;
     }
 
+    (*instance)->allLayers = malloc(sizeof(gryphnInstanceFunctionLayers) * (
+        (*instance)->enabledLayerCounts[GN_DEBUGGER_LAYER_FUNCTIONS] +
+        1 // for the core layer
+    ));
+
+    int layerIDX = 0;
+    for (int i = 0; i < info->debuggerInfo.layerCount; i++) {
+        if (info->debuggerInfo.layers[i] == GN_DEBUGGER_LAYER_FUNCTIONS) (*instance)->allLayers[layerIDX++] = checkerLoadInstanceFunctions();
+        (*instance)->allLayers[layerIDX - 1].next = &(*instance)->allLayers[layerIDX];
+    }
+    (*instance)->allLayers[layerIDX] = gryphnLoadAPILayer(info->coreAPI);
+    (*instance)->functions = &(*instance)->allLayers[0];
     (*instance)->currentLayer = ((*instance)->layers.count - 1);
     for (int i = 0; i < (*instance)->layers.count; i++) (*instance)->layers.data[i].layerIndex = i;
     (*instance)->callingLayer = &(*instance)->layers.data[(*instance)->layers.count - 1];
     if (unsupportedExtension) return GN_UNLOADED_EXTENSION;
-    return (*instance)->functions.createInstance.func(*instance, info, NULL);
+    return (*instance)->functions->createInstance(*instance, info, (*instance)->functions->next);
 }
 
 void gnDestroyInstance(gnInstanceHandle* instance) {
     if (instance == GN_NULL_HANDLE) return;
-    (*instance)->functions.destroyInstance.func(*instance, NULL);
+    (*instance)->functions->destroyInstance(*instance, (*instance)->functions->next);
     *instance = GN_NULL_HANDLE;
 }

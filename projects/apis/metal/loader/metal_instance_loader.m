@@ -5,8 +5,9 @@
 
 gryphnInstanceFunctionLayers metalLoadAPILayer() {
     return (gryphnInstanceFunctionLayers) {
-        .createInstance = { metalCreateInstance, NULL },
-        .destroyInstance = { metalDestroyInstance, NULL }
+        .createInstance = metalCreateInstance,
+        .destroyInstance = metalDestroyInstance,
+        .next = NULL
     };
 }
 

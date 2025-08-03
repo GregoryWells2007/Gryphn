@@ -28,8 +28,10 @@ typedef gnBool (*gnDebuggerCallback)(
     void*             userData);
 
 typedef enum gnDebuggerLayer {
-    GN_DEBUGGER_LAYER_PLATFORM, // enable platform (vulkan validation) layers
-    GN_DEBUGGER_LAYER_FUNCTIONS // enable the checks on every function
+    GN_DEBUGGER_LAYER_PLATFORM,  // enable platform (vulkan validation) layers
+    GN_DEBUGGER_LAYER_FUNCTIONS, // enable the checks on every function
+
+    GN_LAYER_MAX
 } gnDebuggerLayer;
 
 typedef struct gnDebuggerCreateInfo {

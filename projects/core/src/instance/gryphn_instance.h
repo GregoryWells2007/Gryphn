@@ -29,8 +29,9 @@ struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnDebuggerCreateInfo debugger;
     gnBool enabledExtensions[GN_EXT_MAX];
-
-    gryphnInstanceFunctionLayers functions;
+    int enabledLayerCounts[GN_LAYER_MAX];
+    gryphnInstanceFunctionLayers* allLayers;
+    gryphnInstanceFunctionLayers* functions;
 
     loaderLayerArrayList layers;
     loaderLayer* callingLayer;

@@ -2,8 +2,8 @@
 #include "core/src/instance/gryphn_instance.h"
 #include <core/src/window_surface/gryphn_surface_create_functions.h>
 
-gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info, PFN_gnCreateInstance_layer* next);
-void checkDestroyInstance(gnInstanceHandle instance, PFN_gnDestroyInstance_layer* next);
+gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info, gryphnInstanceFunctionLayers* next);
+void checkDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next);
 
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count);
 gnBool checkCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);

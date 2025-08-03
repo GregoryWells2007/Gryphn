@@ -3,7 +3,6 @@
 #include "core/gryphn_return_code.h"
 #include "utils/gryphn_bool.h"
 #include "gryphn_handles.h"
-#include "gryphn_loader_helpers.h"
 
 typedef struct gnInstanceCreateInfo gnInstanceCreateInfo;
 typedef struct gnSurfaceDetails gnSurfaceDetails;
@@ -19,13 +18,9 @@ typedef struct gnOutputDeviceInfo gnOutputDeviceInfo;
     typedef struct gnMacOSWindowSurfaceInfo gnMacOSWindowSurfaceInfo;
 #endif
 
-typedef struct PFN_gnCreateInstance_layer PFN_gnCreateInstance_layer;
-typedef gnReturnCode (*PFN_gnCreateInstance)(gnInstanceHandle instance, gnInstanceCreateInfo* info, PFN_gnCreateInstance_layer* next);
-gryphnFunctionLayer(PFN_gnCreateInstance);
-
-typedef struct PFN_gnDestroyInstance_layer PFN_gnDestroyInstance_layer;
-typedef void (*PFN_gnDestroyInstance)(gnInstanceHandle instance, PFN_gnDestroyInstance_layer* next);
-gryphnFunctionLayer(PFN_gnDestroyInstance);
+typedef struct gryphnInstanceFunctionLayers gryphnInstanceFunctionLayers;
+typedef gnReturnCode (*PFN_gnCreateInstance)(gnInstanceHandle instance, gnInstanceCreateInfo* info, gryphnInstanceFunctionLayers* next);
+typedef void (*PFN_gnDestroyInstance)(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next);
 
 typedef struct gnInstanceFunctions {
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);

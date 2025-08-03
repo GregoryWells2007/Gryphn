@@ -6,8 +6,9 @@
 
 gryphnInstanceFunctionLayers loadVulkanAPILayer() {
     return (gryphnInstanceFunctionLayers) {
-        .createInstance = { vulkanCreateInstance, NULL },
-        .destroyInstance = { vulkanDestroyInstance, NULL }
+        .createInstance = vulkanCreateInstance,
+        .destroyInstance = vulkanDestroyInstance,
+        .next = NULL
     };
 }
 

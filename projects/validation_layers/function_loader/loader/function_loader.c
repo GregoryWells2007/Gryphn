@@ -7,8 +7,8 @@
 
 gryphnInstanceFunctionLayers checkerLoadInstanceFunctions() {
     return (gryphnInstanceFunctionLayers) {
-        .createInstance = { checkCreateInstance, NULL },
-        .destroyInstance = { checkDestroyInstance, NULL }
+        .createInstance = checkCreateInstance,
+        .destroyInstance = checkDestroyInstance
     };
 }
 

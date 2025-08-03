@@ -37,7 +37,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_TRUE;
 }
 
-gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, PFN_gnCreateInstance_layer* next) {
+gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
     vkStringArrayList extensions = vkStringArrayListCreate();
@@ -75,26 +75,24 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
     createInfo.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
     #endif
 
-    for (int i = 0; i < instanceInfo->debuggerInfo.layerCount; i++) {
-        if (instanceInfo->debuggerInfo.layers[i] == GN_DEBUGGER_LAYER_PLATFORM) {
-            vkStringArrayListAdd(&extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+    if (instance->enabledLayerCounts[GN_DEBUGGER_LAYER_PLATFORM] > 0) {
+        vkStringArrayListAdd(&extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
 
-            const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
-            createInfo.enabledLayerCount = 1;
-            createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
+        const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
+        createInfo.enabledLayerCount = 1;
+        createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
 
-            instance->instance->userData.debuggerCallback = instanceInfo->debuggerInfo.callback;
-            instance->instance->userData.userData = instanceInfo->debuggerInfo.userData;
+        instance->instance->userData.debuggerCallback = instanceInfo->debuggerInfo.callback;
+        instance->instance->userData.userData = instanceInfo->debuggerInfo.userData;
 
-            VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {
-                .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
-                .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
-                .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
-            };
-            debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
-            debugCreateInfo.pUserData = &instance->instance->userData;
-            createInfo.pNext = &debugCreateInfo;
-        }
+        VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo = {
+            .sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT,
+            .messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT,
+            .messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT
+        };
+        debugCreateInfo.pfnUserCallback = vk_debuggerDebugCallback;
+        debugCreateInfo.pUserData = &instance->instance->userData;
+        createInfo.pNext = &debugCreateInfo;
     }
 
 
@@ -103,6 +101,7 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
     return VkResultToGnReturnCode(vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance));
 }
 
-void vulkanDestroyInstance(gnInstanceHandle instance, PFN_gnDestroyInstance_layer* next) {
+void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next) {
+    printf("destroying layer\n");
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

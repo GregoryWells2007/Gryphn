@@ -14,9 +14,11 @@ typedef struct gryphnFunctionLayer {
 } gryphnFunctionLayer;
 
 typedef struct gryphnInstanceFunctionLayers {
-    PFN_gnCreateInstance_layer createInstance;
-    PFN_gnDestroyInstance_layer destroyInstance;
+    PFN_gnCreateInstance createInstance;
+    PFN_gnDestroyInstance destroyInstance;
+    struct gryphnInstanceFunctionLayers* next;
 } gryphnInstanceFunctionLayers;
+
 gryphnInstanceFunctionLayers gryphnLoadAPILayer(gnRenderingAPI api);
 
 typedef struct loaderLayer {

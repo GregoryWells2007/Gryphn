@@ -3,6 +3,9 @@
 #include "loader/src/gryphn_device_functions.h"
 #include "loader/src/gryphn_command_functions.h"
 
+typedef struct gryphnInstanceFunctionLayers gryphnInstanceFunctionLayers;
+gryphnInstanceFunctionLayers checkerLoadInstanceFunctions();
+
 gnInstanceFunctions loadFunctionLoaderInstanceFunctions();
 gnDeviceFunctions loadFunctionLoaderDeviceFunctions();
 gnCommandFunctions loadFunctionLoaderCommandFunctions();
