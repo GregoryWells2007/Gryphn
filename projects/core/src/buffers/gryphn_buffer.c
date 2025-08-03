@@ -2,6 +2,9 @@
 #include "output_device/gryphn_output_device.h"
 #include "instance/gryphn_instance.h"
 
+GN_ARRAY_LIST_DEFINITION(gnBuffer)
+GN_ARRAY_LIST_DEFINITION(gnBufferMemory)
+
 gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     *buffer = malloc(sizeof(struct gnBuffer_t));
     (*buffer)->device = device;

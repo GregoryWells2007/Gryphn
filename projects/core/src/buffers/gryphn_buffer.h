@@ -37,8 +37,8 @@ struct gnBuffer_t {
 };
 #endif
 typedef void* gnBufferMemory;
-GN_ARRAY_LIST(gnBuffer);
-GN_ARRAY_LIST(gnBufferMemory);
+GN_ARRAY_LIST_HEADER(gnBuffer);
+GN_ARRAY_LIST_HEADER(gnBufferMemory);
 
 gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device, gnBufferInfo info);
 void gnBufferData(gnBufferHandle buffer, size_t dataSize, gnBufferMemory data);

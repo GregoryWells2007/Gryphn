@@ -42,8 +42,7 @@ typedef struct gnDebuggerCreateInfo {
 } gnDebuggerCreateInfo;
 
 #ifdef GN_REVEAL_IMPL
-// struct gnDebugger_t { gnDebuggerInfo info; };
-static void gnDebuggerSetErrorMessage(gnDebuggerCreateInfo debugger, gnMessageData data) {
+static inline void gnDebuggerSetErrorMessage(gnDebuggerCreateInfo debugger, gnMessageData data) {
     // if (debugger == NULL) return;
     debugger.callback(
         GN_MESSAGE_ERROR,

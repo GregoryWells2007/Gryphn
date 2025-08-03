@@ -1,5 +1,7 @@
 #include "vulkan_instance.h"
 #include "vulkan_result_converter.h"
+GN_ARRAY_LIST_DEFINITION(vkString)
+
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     VkDebugUtilsMessageSeverityFlagBitsEXT messageSeverity,
@@ -14,18 +16,24 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     };
 
     switch (messageSeverity) {
-    default: break;
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT: severity = GN_MESSAGE_VERBOSE; break;
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT: severity = GN_MESSAGE_INFO; break;
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT: severity = GN_MESSAGE_WARNING; break;
     case VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT: severity = GN_MESSAGE_ERROR; break;
+    case VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT: {
+        VkDebugUtilsMessengerCallbackDataEXT callbackData = {
+            .pMessage = "Error triggered with VK_DEBUG_UTILS_MESSAGE_SEVERITY_FLAG_BITS_MAX_ENUM_EXT, this indicates a big within vulkan"
+        };
+        vk_debuggerDebugCallback(VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT, VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT, &callbackData, pUserData);
+        severity = GN_MESSAGE_ERROR;
+    }
     }
 
     switch (messageType) {
-    default: break;
     case VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT: type = GN_DEBUG_MESSAGE_GENERAL; break;
     case VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT: type = GN_DEBUG_MESSAGE_VALIDATION; break;
     case VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT: type = GN_DEBUG_MESSAGE_PERFORMANCE; break;
+    case VK_DEBUG_UTILS_MESSAGE_TYPE_DEVICE_ADDRESS_BINDING_BIT_EXT: type = GN_DEBUG_MESSAGE_PERFORMANCE; break;
     }
 
     vkUserData* userData = (vkUserData*)pUserData;
@@ -36,20 +44,21 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
 }
 
 gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next) {
+    if (next != NULL) { return GN_SUCCESS; }
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
     vkStringArrayList extensions = vkStringArrayListCreate();
-    vkStringArrayListAdd(&extensions, "VK_KHR_surface");
-    vkStringArrayListReserve(&extensions, 5);
+    vkStringArrayListAdd(extensions, "VK_KHR_surface");
+    vkStringArrayListReserve(extensions, 5);
 
     #ifdef GN_PLATFORM_MACOS
-    vkStringArrayListAdd(&extensions, "VK_EXT_metal_surface");
-    vkStringArrayListAdd(&extensions, "VK_KHR_portability_enumeration");
+    vkStringArrayListAdd(extensions, "VK_EXT_metal_surface");
+    vkStringArrayListAdd(extensions, "VK_KHR_portability_enumeration");
     #elif GN_PLATFORM_WINDOWS
-    vkStringArrayListAdd(&extensions, "VK_KHR_win32_surface");
+    vkStringArrayListAdd(extensions, "VK_KHR_win32_surface");
     #elif GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11
-    vkStringArrayListAdd(&extensions, "VK_KHR_xlib_surface");
+    vkStringArrayListAdd(extensions, "VK_KHR_xlib_surface");
     #endif
     #endif
 
@@ -74,9 +83,7 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
     #endif
 
     if (instance->enabledLayerCounts[GN_DEBUGGER_LAYER_PLATFORM] > 0) {
-        vkStringArrayListAdd(&extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-
-        const char* validation_layers[1] = { "VK_LAYER_KHRONOS_validation" };
+        vkStringArrayListAdd(extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         createInfo.enabledLayerCount = 1;
         createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
 
@@ -94,11 +101,12 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
     }
 
 
-    createInfo.enabledExtensionCount = extensions.count;
-    createInfo.ppEnabledExtensionNames = extensions.data;
+    createInfo.enabledExtensionCount = vkStringArrayListCount(extensions);
+    createInfo.ppEnabledExtensionNames = vkStringArrayListData(extensions);
     return VkResultToGnReturnCode(vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance));
 }
 
 void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next) {
+    if (next != NULL) { return; }
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

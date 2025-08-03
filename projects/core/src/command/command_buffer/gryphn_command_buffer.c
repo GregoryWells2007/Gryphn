@@ -3,7 +3,7 @@
 #include "instance/gryphn_instance.h"
 
 gnReturnCode gnCommandPoolAllocateCommandBuffersFromPointer(gnCommandBufferHandle* buffers, uint32_t count, gnCommandPoolHandle commandPool) {
-    for (int i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         buffers[i] = malloc(sizeof(struct gnCommandBuffer_t));
         buffers[i]->commandPool = commandPool;
         buffers[i]->instance = commandPool->instance;
@@ -12,15 +12,11 @@ gnReturnCode gnCommandPoolAllocateCommandBuffersFromPointer(gnCommandBufferHandl
 }
 
 gnReturnCode gnCommandPoolAllocateCommandBuffersFromList(gnCommandBufferArrayList buffers, uint32_t count, gnCommandPoolHandle commandPool) {
-    // if (buffers.count < count) {
-    //     gnCommandBufferArrayListExpand(&buffers, buffers.count - count);
-    // }
-
-    for (int i = 0; i < count; i++) {
-        buffers.data[i] = malloc(sizeof(struct gnCommandBuffer_t));
-        buffers.data[i]->commandPool = commandPool;
+    for (uint32_t i = 0; i < count; i++) {
+        gnCommandBufferArrayListAt(buffers, i)->commandBuffer = malloc(sizeof(struct gnCommandBuffer_t));
+        gnCommandBufferArrayListAt(buffers, i)->commandPool = commandPool;
     }
-    return gnCommandPoolAllocateCommandBuffersFromPointer(buffers.data, count, commandPool);
+    return gnCommandPoolAllocateCommandBuffersFromPointer(gnCommandBufferArrayListData(buffers), count, commandPool);
 }
 
 void gnResetCommandBuffer(gnCommandBufferHandle commandBuffer) {
@@ -38,3 +34,6 @@ gnReturnCode gnEndCommandBuffer(gnCommandBufferHandle commandBuffer) {
 void gnDestroyCommandBuffer(gnCommandBufferHandle commandBuffer) {
     commandBuffer->commandPool->instance->callingLayer->commandFunctions._gnDestroyCommandBuffer(commandBuffer);
 }
+
+
+GN_ARRAY_LIST_DEFINITION(gnCommandBuffer)

@@ -3,7 +3,7 @@
 #include <core/gryphn_return_code.h>
 
 typedef struct gnOutputDeviceEnabledFeatures {
-
+    gnBool warningAvioder; // this is here just to stop this from producing a warning
 } gnOutputDeviceEnabledFeatures;
 
 typedef struct gnDeviceQueueInfo {

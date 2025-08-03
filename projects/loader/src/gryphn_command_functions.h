@@ -3,12 +3,12 @@
 #include "core/gryphn_return_code.h"
 #include "gryphn_handles.h"
 
+#include <core/src/buffers/gryphn_buffer.h>
+
 typedef struct gnRenderPassInfo gnRenderPassInfo;
 typedef struct gnViewport gnViewport;
 typedef struct gnScissor gnScissor;
 typedef struct gnPushConstantLayout gnPushConstantLayout;
-typedef enum gnBufferType gnBufferType;
-typedef enum gnIndexType gnIndexType;
 
 typedef struct gnCommandFunctions_t {
     gnReturnCode (*_gnCommandPoolAllocateCommandBuffers)(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPoolHandle pool);

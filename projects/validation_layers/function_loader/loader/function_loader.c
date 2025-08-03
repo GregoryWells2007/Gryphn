@@ -5,14 +5,14 @@
 #include "extensions/sync_functions.h"
 #include "extensions/queue_functions.h"
 
-gryphnInstanceFunctionLayers checkerLoadInstanceFunctions() {
+gryphnInstanceFunctionLayers checkerLoadInstanceFunctions(void) {
     return (gryphnInstanceFunctionLayers) {
         .createInstance = checkCreateInstance,
         .destroyInstance = checkDestroyInstance
     };
 }
 
-gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
+gnInstanceFunctions loadFunctionLoaderInstanceFunctions(void) {
     return (gnInstanceFunctions){
         ._gnGetPhysicalDevices = checkGetPhysicalDevices,
         ._gnPhysicalDeviceCanPresentToSurface = checkCanDevicePresent,
@@ -43,7 +43,7 @@ gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
         ._gnGetSurfaceDetails = checkGetSurfaceDetails
     };
 }
-gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
+gnDeviceFunctions loadFunctionLoaderDeviceFunctions(void) {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = checkCreatePresentationQueue,
         ._gnPresentationQueueGetImage = checkPresentationQueueGetImage,
@@ -88,7 +88,7 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions() {
         ._gnWaitForDevice = checkWaitForDevice
     };
 }
-gnCommandFunctions loadFunctionLoaderCommandFunctions() {
+gnCommandFunctions loadFunctionLoaderCommandFunctions(void) {
     return (gnCommandFunctions){
         ._gnCommandPoolAllocateCommandBuffers = checkCommandPoolAllocateCommandBuffers,
         ._gnBeginCommandBuffer = checkBeginCommandBuffer,
@@ -110,7 +110,7 @@ gnCommandFunctions loadFunctionLoaderCommandFunctions() {
     };
 }
 
-gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions() {
+gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions(void) {
     return (gnSyncExtFunctions) {
         ._gnPresentationQueueGetImageAsync = checkPresentationQueueGetImageAsync,
 
@@ -127,7 +127,7 @@ gnSyncExtFunctions loadFunctionLoaderSyncExtFunctions() {
     };
 }
 
-gnQueueExtFunctions loadFunctionLoaderQueueExtFunctions() {
+gnQueueExtFunctions loadFunctionLoaderQueueExtFunctions(void) {
     return (gnQueueExtFunctions){
         ._gnGetPhysicalDeviceQueueProperties = checkGetPhysicalDeviceQueueProperties,
         ._gnGetDeviceQueue = checkGetDeviceQueue,

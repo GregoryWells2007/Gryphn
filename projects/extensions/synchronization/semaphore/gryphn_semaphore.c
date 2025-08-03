@@ -12,5 +12,4 @@ gnReturnCode gnCreateSemaphore(gnSemaphore* semaphore, struct gnOutputDevice_t* 
 void gnDestroySemaphore(struct gnSemaphore_t* semaphore) {
     semaphore->device->instance->callingLayer->syncFunctions._gnDestroySemaphore(semaphore);
 }
-
-// #endif
+GN_ARRAY_LIST_DEFINITION(gnSemaphore)

@@ -18,4 +18,4 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
 void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next);
 
 typedef const char* vkString;
-GN_ARRAY_LIST(vkString);
+GN_ARRAY_LIST_HEADER(vkString);

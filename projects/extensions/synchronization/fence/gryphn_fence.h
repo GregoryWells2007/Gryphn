@@ -11,10 +11,12 @@ struct gnFence_t {
     gnBool signaled;
 };
 #endif
-GN_ARRAY_LIST(gnFence);
 
 gnReturnCode gnCreateFence(gnFenceHandle* fence, gnOutputDeviceHandle device);
 void gnSignalFence(gnFenceHandle fence);
 void gnWaitForFence(gnFenceHandle fence, uint64_t timeout);
 void gnResetFence(gnFenceHandle fence);
 void gnDestroyFence(gnFenceHandle fence);
+
+
+GN_ARRAY_LIST_HEADER(gnFence);

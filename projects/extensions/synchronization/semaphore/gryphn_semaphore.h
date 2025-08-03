@@ -9,7 +9,7 @@ struct gnSemaphore_t {
     gnOutputDeviceHandle device;
 };
 #endif
-GN_ARRAY_LIST(gnSemaphore);
 
 gnReturnCode gnCreateSemaphore(gnSemaphore* semaphore, struct gnOutputDevice_t* device);
 void gnDestroySemaphore(gnSemaphore semaphore);
+GN_ARRAY_LIST_HEADER(gnSemaphore);

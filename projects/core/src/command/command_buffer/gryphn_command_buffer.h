@@ -12,10 +12,9 @@ struct gnCommandBuffer_t {
 };
 #endif
 
-GN_ARRAY_LIST(gnCommandBuffer);
+GN_ARRAY_LIST_HEADER(gnCommandBuffer);
 
 gnReturnCode gnCommandPoolAllocateCommandBuffersFromPointer(gnCommandBufferHandle* buffers, uint32_t count, gnCommandPoolHandle commandPool);
-// will reserve the space for ${count} number of elements
 gnReturnCode gnCommandPoolAllocateCommandBuffersFromList(gnCommandBufferArrayList buffers, uint32_t count, gnCommandPoolHandle commandPool);
 
 #define gnCommandPoolAllocateCommandBuffers(buffers, count, commandPool)       \

@@ -38,7 +38,7 @@ typedef struct loaderLayer {
 } loaderLayer;
 
 loaderLayer loadLayer(loaderInfo info);
-GN_ARRAY_LIST(loaderLayer);
+GN_ARRAY_LIST_HEADER(loaderLayer);
 
 loaderLayer* loaderGetNextLayer(gnInstance instance);
 void resetLayer(gnInstance instance);

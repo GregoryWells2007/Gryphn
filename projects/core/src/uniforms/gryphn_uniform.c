@@ -14,3 +14,6 @@ void gnUpdateStorageUniform(gnUniform uniform, gnStorageUniformInfo storageInfo)
 void gnUpdateImageUniform(gnUniform uniform, gnImageUniformInfo imageInfo) {
     uniform->pool->device->instance->callingLayer->deviceFunctions._gnUpdateImageUniform(uniform, &imageInfo);
 }
+
+
+GN_ARRAY_LIST_DEFINITION(gnUniform)

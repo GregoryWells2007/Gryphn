@@ -1,5 +1,3 @@
-// #ifdef GN_EXT_GN_EXT_SYNCHRONIZATION
-
 #include "gryphn_fence.h"
 #include "output_device/gryphn_output_device.h"
 #include "instance/gryphn_instance.h"
@@ -25,4 +23,4 @@ void gnDestroyFence(gnFenceHandle fence) {
     fence->device->instance->callingLayer->syncFunctions._gnDestroyFence(fence);
 }
 
-// #endif
+GN_ARRAY_LIST_DEFINITION(gnFence)

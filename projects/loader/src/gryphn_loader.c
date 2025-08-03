@@ -175,3 +175,6 @@ loaderLayer* loaderGetNextLayer(gnInstance instance) {
 void resetLayer(gnInstance instance) {
     instance->currentLayer = (instance->layers.count - 1);
 }
+
+
+GN_ARRAY_LIST_DEFINITION(loaderLayer)

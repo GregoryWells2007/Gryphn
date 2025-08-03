@@ -30,7 +30,7 @@ struct gnUniform_t {
     gnUniformPool pool;
 };
 #endif
-GN_ARRAY_LIST(gnUniform);
+GN_ARRAY_LIST_HEADER(gnUniform);
 
 void gnUpdateBufferUniform(gnUniform uniform, gnBufferUniformInfo bufferInfo);
 void gnUpdateStorageUniform(gnUniform uniform, gnStorageUniformInfo storageInfo);
