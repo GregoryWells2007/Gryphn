@@ -35,7 +35,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_TRUE;
 }
 
-gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo) {
+gnReturnCode createVulkanInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, PFN_gnCreateInstance* next) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
     vkStringArrayList extensions = vkStringArrayListCreate();
@@ -101,6 +101,6 @@ gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceCreateInfo* ins
     return VkResultToGnReturnCode(vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance));
 }
 
-void destroyInstance(gnInstanceHandle instance) {
+void destroyVulkanInstance(gnInstanceHandle instance, PFN_gnDestroyInstance* next) {
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }

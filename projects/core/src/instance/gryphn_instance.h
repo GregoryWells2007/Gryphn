@@ -29,7 +29,6 @@ struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnDebuggerCreateInfo debugger;
     gnBool enabledExtensions[GN_EXT_MAX];
-    dispatcher dispatch;
 
     loaderLayerArrayList layers;
     loaderLayer* callingLayer;

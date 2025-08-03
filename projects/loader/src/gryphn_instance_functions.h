@@ -18,15 +18,18 @@ typedef struct gnOutputDeviceInfo gnOutputDeviceInfo;
     typedef struct gnMacOSWindowSurfaceInfo gnMacOSWindowSurfaceInfo;
 #endif
 
+typedef gnReturnCode (*PFN_gnCreateInstance)(gnInstanceHandle instance, gnInstanceCreateInfo* info, void* next);
+typedef gnReturnCode (*PFN_gnDestroyInstance)(gnInstanceHandle instance, void* next);
+
 typedef struct gnInstanceFunctions {
-    gnReturnCode (*_gnCreateInstance)(gnInstanceHandle instance, gnInstanceCreateInfo* info);
-    void (*_gnDestroyInstance)(gnInstanceHandle instance);
+    PFN_gnCreateInstance createInstance;
+    PFN_gnDestroyInstance destroyInstance;
 
     gnPhysicalDevice* (*_gnGetPhysicalDevices)(gnInstanceHandle instance, uint32_t* count);
     gnBool (*_gnPhysicalDeviceCanPresentToSurface)(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
 
     gnReturnCode (*_gnCreateOutputDevice)(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
-    void (*_gnDestroyOutputDevice)(gnOutputDeviceHandle device);
+    void (*_gnDestroyOutputDevice)(gnInstanceHandle handle, gnOutputDeviceHandle device);
 
 
     #ifdef GN_PLATFORM_LINUX

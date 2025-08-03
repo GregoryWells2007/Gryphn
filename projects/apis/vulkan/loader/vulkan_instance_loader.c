@@ -6,14 +6,14 @@
 
 gnInstanceFunctions loadVulkanInstanceFunctions() {
     return (gnInstanceFunctions){
-        ._gnCreateInstance = createInstance,
-        ._gnDestroyInstance = destroyInstance,
+        .createInstance = (PFN_gnCreateInstance)createVulkanInstance,
+        .destroyInstance = (PFN_gnDestroyInstance)destroyVulkanInstance,
 
         ._gnGetPhysicalDevices = getPhysicalDevices,
         ._gnPhysicalDeviceCanPresentToSurface = deviceCanPresentToSurface,
 
-        ._gnCreateOutputDevice = createOutputDevice,
-        ._gnDestroyOutputDevice = destroyOutputDevice,
+        ._gnCreateOutputDevice = createVulkanOutputDevice,
+        ._gnDestroyOutputDevice = destroyVulkanOutputDevice,
 
 
         #ifdef GN_PLATFORM_LINUX

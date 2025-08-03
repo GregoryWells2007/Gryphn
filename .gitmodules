@@ -4,6 +4,3 @@
 [submodule "projects/apis/metal/depends/SPIRV-Cross"]
 	path = projects/apis/metal/depends/SPIRV-Cross
 	url = https://github.com/KhronosGroup/SPIRV-Cross.git
-[submodule "depends/Dispatcher"]
-	path = depends/Dispatcher
-	url = https://github.com/GregoryWells2007/Dispatcher.git

@@ -2,6 +2,7 @@
 #include <vulkan/vulkan.h>
 #include "instance/gryphn_instance.h"
 #include "utils/lists/gryphn_array_list.h"
+#include "loader/src/gryphn_instance_functions.h"
 
 typedef struct vkUserData {
     gnDebuggerCallback debuggerCallback;
@@ -13,9 +14,8 @@ typedef struct gnPlatformInstance_t {
     vkUserData userData;
 } gnPlatformInstance;
 
-gnReturnCode createInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo);
-void destroyInstance(gnInstanceHandle instance);
+gnReturnCode createVulkanInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, PFN_gnCreateInstance* next);
+void destroyVulkanInstance(gnInstanceHandle instance, PFN_gnDestroyInstance* next);
 
 typedef const char* vkString;
-
 GN_ARRAY_LIST(vkString);

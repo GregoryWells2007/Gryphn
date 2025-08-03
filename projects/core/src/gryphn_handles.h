@@ -4,20 +4,24 @@
 #define GN_NULL_HANDLE 0
 typedef uint32_t gnFlags;
 
+// The value of this handle is defined by the gryphn spec
 #define GN_HANDLE(type) \
 typedef struct type##_t* type##Handle; \
 typedef struct type##_t* type
 
+// The value of this handle is defined by the implementation
 #define GN_IMPLEMENTATION_HANDLE(type) \
 typedef uint64_t type##Handle; \
 typedef uint64_t type
 
+// can be used to alias a normal handle or an implementation handle
 #define GN_HANDLE_ALIAS(handle, alias) \
 typedef struct handle##_t* alias##Handle; \
 typedef struct handle##_t* alias
 
 GN_HANDLE(gnInstance);
-GN_HANDLE(gnDebugger);
+
+
 GN_HANDLE(gnWindowSurface);
 GN_HANDLE(gnPresentationQueue);
 GN_HANDLE(gnTexture);
