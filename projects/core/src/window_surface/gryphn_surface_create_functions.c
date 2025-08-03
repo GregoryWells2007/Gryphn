@@ -1,6 +1,7 @@
 #include "gryphn_surface_create_functions.h"
 #include "gryphn_surface.h"
 #include "instance/gryphn_instance.h"
+#include "loader/src/gryphn_instance_functions.h"
 
 #ifdef GN_PLATFORM_LINUX
     #ifdef GN_WINDOW_X11
