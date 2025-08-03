@@ -50,8 +50,6 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     mtlSubpass subpass = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex];
     mtlSubpassCopyInfo copyInfo = info.renderPassDescriptor->renderPassDescriptor->copyInfos[info.subpassIndex];
     for (uint32_t i = 0; i < copyInfo.colorAttachmentCount; i++) {
-        MTLRenderPassColorAttachmentDescriptor* colorPass = subpass.colorAttachments[i];
-
         descriptor.colorAttachments[i].pixelFormat = copyInfo.colorAttachments[i].format;
         if (info.colorBlending.enable == GN_TRUE) {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = YES;
@@ -72,7 +70,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
         }
     }
 
-    for (int i = 0; i < info.shaderModuleCount; i++) {
+    for (uint32_t i = 0; i < info.shaderModuleCount; i++) {
         const char* shaderCode = mtlCompilerShader(info.shaderModules[i]->shaderModule->compiler, &info.uniformLayout);
         // printf("shader code: %s\n", shaderCode);
 
@@ -95,7 +93,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
         if (strcmp(name, "main") == 0)  name = "main0";
 
         gnBool foundFunction = false;
-        for (int i = 0; i < shaderLib.functionNames.count; i++) {
+        for (uint32_t i = 0; i < shaderLib.functionNames.count; i++) {
             if (strcmp([shaderLib.functionNames objectAtIndex:0].UTF8String, name) == 0) {
                 foundFunction = true;
                 break;
@@ -114,9 +112,9 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     MTLVertexBufferLayoutDescriptorArray* buffers = vertexDescriptor.layouts;
 
     int k = 0;
-    for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
+    for (uint32_t i = 0; i < info.shaderInputLayout.bufferCount; i++) {
         [[buffers objectAtIndexedSubscript:info.shaderInputLayout.bufferAttributes[i].binding] setStride:info.shaderInputLayout.bufferAttributes[i].size];
-        for (int j = 0; j < info.shaderInputLayout.bufferAttributes[i].attributeCount; j++) {
+        for (uint32_t j = 0; j < info.shaderInputLayout.bufferAttributes[i].attributeCount; j++) {
             attributes[k].bufferIndex = i;
             attributes[k].offset = info.shaderInputLayout.bufferAttributes[i].attributes[j].offset;
             attributes[k].format = mtlGryphnVertexFormat(info.shaderInputLayout.bufferAttributes[i].attributes[j].format);

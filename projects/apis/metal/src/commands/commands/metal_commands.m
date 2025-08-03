@@ -4,8 +4,7 @@
 #include "utils/math/gryphn_math.h"
 
 void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
-    int currentColorAttachment = 0;
-    for (int i = 0; i < passInfo.clearValueCount; i++) {
+    for (uint32_t i = 0; i < passInfo.clearValueCount; i++) {
         if (passInfo.framebuffer->framebuffer->clearCopies[i].clear) {
             MTLRenderPassColorAttachmentDescriptor* color = passInfo.framebuffer->framebuffer->clearCopies[i].descriptor;
             color.clearColor = MTLClearColorMake(
@@ -14,7 +13,6 @@ void metelBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
                 passInfo.clearValues[i].b,
                 passInfo.clearValues[i].a
             );
-            currentColorAttachment++;
         }
     }
     buffer->commandBuffer->encoder = [buffer->commandBuffer->commandBuffer renderCommandEncoderWithDescriptor:passInfo.framebuffer->framebuffer->subpasses[0]];
@@ -98,7 +96,7 @@ void metalDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexC
         indexCount:indexCount
         indexType:((type == GN_UINT32) ? MTLIndexTypeUInt32 : MTLIndexTypeUInt16)
         indexBuffer:buffer->commandBuffer->indexBuffer->buffer->buffer
-        indexBufferOffset:0
+        indexBufferOffset:firstIndex
         instanceCount:instanceCount
         baseVertex:vertexOffset
         baseInstance:firstInstance
@@ -111,7 +109,7 @@ void metalBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t 
     [encoder useResources:uniform->uniform->usedResources count:uniform->uniform->usedResourceCount usage:MTLResourceUsageRead stages:MTLRenderStageVertex | MTLRenderStageFragment];
 
     int startIndex = 0;
-    for (int i = 0; i < dynamicOffsetCount; i++) {
+    for (uint32_t i = 0; i < dynamicOffsetCount; i++) {
         int c = startIndex;
         for (; c < MAX_METAL_BINDINGS; c++) {
             if (uniform->uniform->isDynamic[c]) {

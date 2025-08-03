@@ -23,12 +23,12 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     presentationQueue->images = malloc(sizeof(gnTexture) * presentationInfo.minImageCount);
     presentationQueue->presentationQueue->textures = metalTextureArrayListCreate();
     presentationQueue->presentationQueue->avaliableTextures = uint32_tArrayListCreate();
-    for (int i = 0; i < presentationInfo.minImageCount; i++) {
+    for (uint32_t i = 0; i < presentationInfo.minImageCount; i++) {
         presentationQueue->images[i] = malloc(sizeof(struct gnTexture_t));
         presentationQueue->images[i]->texture = malloc(sizeof(gnPlatformTexture));
         presentationQueue->images[i]->texture->texture = [device->outputDevice->device newTextureWithDescriptor:textureDescriptor];
-        metalTextureArrayListAdd(&presentationQueue->presentationQueue->textures, presentationQueue->images[i]->texture->texture);
-        uint32_tArrayListAdd(&presentationQueue->presentationQueue->avaliableTextures, i);
+        metalTextureArrayListAdd(presentationQueue->presentationQueue->textures, presentationQueue->images[i]->texture->texture);
+        uint32_tArrayListAdd(presentationQueue->presentationQueue->avaliableTextures, i);
     }
     [textureDescriptor release];
 
@@ -36,27 +36,31 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
 }
 
 void mtlTakeImageFromQueue(uint32_t* whereToPut, gnPresentationQueue queue, gnSemaphore semaphore) {
-    *whereToPut = queue->presentationQueue->avaliableTextures.data[0];
-    uint32_tArrayListPopHead(&queue->presentationQueue->avaliableTextures);
-
+    *whereToPut = uint32_tArrayListAt(queue->presentationQueue->avaliableTextures, 0);
+    uint32_tArrayListPopHead(queue->presentationQueue->avaliableTextures);
     if (!semaphore) return;
-
     id<MTLCommandBuffer> buffer = [queue->outputDevice->outputDevice->transferQueue commandBuffer];
     mtlSignalSemaphore(semaphore, buffer);
     [buffer commit];
 }
 
 void mtlAddImageBackToQueue(gnPresentationQueue queue, uint32_t index) {
-    if (queue->presentationQueue->neededImages.count > 0) {
-        mtlTakeImageFromQueue(queue->presentationQueue->neededImages.data[queue->presentationQueue->neededImages.count - 1].whereToPut, queue, queue->presentationQueue->neededImages.data[queue->presentationQueue->neededImages.count - 1].semaphoreToSignal);
-        mtlImageNeededArrayListRemove(&queue->presentationQueue->neededImages);
+    if (mtlImageNeededArrayListCount(queue->presentationQueue->neededImages) > 0) {
+        mtlImageNeeded* needed = mtlImageNeededArrayListRefAt(queue->presentationQueue->neededImages, mtlImageNeededArrayListCount(queue->presentationQueue->neededImages) - 1);
+        mtlTakeImageFromQueue(needed->whereToPut, queue, needed->semaphoreToSignal);
+        mtlImageNeededArrayListRemove(queue->presentationQueue->neededImages);
     }
     else
-        uint32_tArrayListAdd(&queue->presentationQueue->avaliableTextures, index);
+        uint32_tArrayListAdd(queue->presentationQueue->avaliableTextures, index);
 }
 
 gnReturnCode getMetalPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
-    while(presentationQueue->presentationQueue->avaliableTextures.count == 0);
+    time_t last_time = time(NULL);
+    while(uint32_tArrayListCount(presentationQueue->presentationQueue->avaliableTextures) == 0 || timeout >= 0) {
+        time_t curr_time = time(NULL);
+        timeout -= (curr_time - last_time);
+        last_time = curr_time;
+    }
     mtlTakeImageFromQueue(imageIndex, presentationQueue, semaphore);
 
     CGSize currentSize = presentationQueue->info.surface->windowSurface->layer.visibleRect.size;
@@ -67,7 +71,7 @@ gnReturnCode getMetalPresentQueueImageAsync(gnPresentationQueueHandle presentati
 }
 
 gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQueue, uint32_t* imageIndex) {
-    while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
+    while(uint32_tArrayListCount(presentationQueue->presentationQueue->avaliableTextures) == 0);
     mtlTakeImageFromQueue(imageIndex, presentationQueue, NULL);
 
     CGSize currentSize = presentationQueue->info.surface->windowSurface->layer.visibleRect.size;
@@ -78,12 +82,14 @@ gnReturnCode getMetalPresentQueueImage(gnPresentationQueueHandle presentationQue
 }
 
 void destroyMetalPresentationQueue(gnPresentationQueueHandle presentationQueue) {
-    free(presentationQueue->presentationQueue->avaliableTextures.data);
-    presentationQueue->presentationQueue->avaliableTextures.count = 0;
-    for (int i = 0; i < presentationQueue->imageCount; i++) {
+    for (uint32_t i = 0; i < presentationQueue->imageCount; i++) {
         [presentationQueue->images[i]->texture->texture release];
         free(presentationQueue->images[i]->texture);
         free(presentationQueue->images[i]);
     }
     free(presentationQueue->presentationQueue);
 }
+
+
+GN_ARRAY_LIST_DEFINITION(metalTexture)
+GN_ARRAY_LIST_DEFINITION(mtlImageNeeded)

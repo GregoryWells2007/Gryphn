@@ -4,7 +4,7 @@
 #import <Metal/Metal.h>
 
 gnReturnCode allocateMetalCommandBuffers(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPool pool) {
-    for (int i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         commandBuffers[i]->commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
         commandBuffers[i]->commandBuffer->commandBuffer = [pool->commandPool->commandQueue commandBuffer];
 
@@ -25,7 +25,7 @@ gnReturnCode beginMetalCommandBuffer(gnCommandBuffer commandBuffer) {
     return GN_SUCCESS;
 }
 
-gnReturnCode endMetalCommandBuffer(gnCommandBuffer commandBuffer) { return GN_SUCCESS; }
+gnReturnCode endMetalCommandBuffer(gnCommandBuffer commandBuffer) { if (commandBuffer == GN_NULL_HANDLE) return GN_INVALID_HANDLE;  return GN_SUCCESS; }
 
 void destroyMetalCommandBuffer(gnCommandBuffer commandBuffer) {
     [commandBuffer->commandBuffer->commandBuffer release];

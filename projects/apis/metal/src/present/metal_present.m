@@ -1,11 +1,10 @@
 #include "metal_present.h"
 #include <synchronization/commands/gryphn_sync_present.h>
 
-#include "stdio.h"
 #include "time.h"
 
 gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
-    for (int i =0 ; i < info.presentationQueueCount; i++) {
+    for (uint32_t i =0 ; i < info.presentationQueueCount; i++) {
     info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
     id<CAMetalDrawable> drawable = [info.presentationQueues[i]->info.surface->windowSurface->layer nextDrawable];
     if (drawable == nil) return GN_UNKNOWN_ERROR;
@@ -15,7 +14,8 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
 
     id<MTLCommandBuffer> commandBuffer = [device->outputDevice->transferQueue commandBuffer];
     [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
-        uint32_tArrayListAdd(&presentationQueue->presentationQueue->avaliableTextures, imageIndex);
+        if (buffer == nil) return;
+        uint32_tArrayListAdd(presentationQueue->presentationQueue->avaliableTextures, imageIndex);
     }];
 
         id<MTLBlitCommandEncoder> blit = [commandBuffer blitCommandEncoder];
@@ -40,7 +40,7 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
 
     [device->outputDevice->executingCommandBuffer waitUntilCompleted];
 
-    for (int  i = 0; i < info.presentationQueueCount; i++) {
+    for (uint32_t i = 0; i < info.presentationQueueCount; i++) {
         if (info.presentationQueues[i]->info.imageSize.x != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.width ||
             info.presentationQueues[i]->info.imageSize.y != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.height) {
                 return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
@@ -51,7 +51,7 @@ gnReturnCode metalPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
 }
 
 gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo info) {
-    for (int i =0 ; i < info.presentationQueueCount; i++) {
+    for (uint32_t i = 0; i < info.presentationQueueCount; i++) {
         if (info.presentationQueues[i]->info.surface->windowSurface->layer.device == nil) info.presentationQueues[i]->info.surface->windowSurface->layer.device = device->outputDevice->device;
         id<CAMetalDrawable> drawable = [info.presentationQueues[i]->info.surface->windowSurface->layer nextDrawable];
         if (drawable == nil) return GN_UNKNOWN_ERROR;
@@ -61,9 +61,10 @@ gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo inf
 
         id<MTLCommandBuffer> commandBuffer = [device->outputDevice->transferQueue commandBuffer];
 
-        for (int c = 0; c < info.waitCount; c++) mtlWaitSemaphore(info.waitSemaphores[c], commandBuffer);
+        for (uint32_t c = 0; c < info.waitCount; c++) mtlWaitSemaphore(info.waitSemaphores[c], commandBuffer);
 
         [commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
+            if (buffer == nil) return;
             mtlAddImageBackToQueue(presentationQueue, imageIndex);
         }];
 
@@ -85,7 +86,7 @@ gnReturnCode metalPresentSync(gnOutputDeviceHandle device, gnPresentSyncInfo inf
             device->outputDevice->executingCommandBuffer = commandBuffer;
         }
 
-        for (int  i = 0; i < info.presentationQueueCount; i++) {
+        for (uint32_t  i = 0; i < info.presentationQueueCount; i++) {
             if (info.presentationQueues[i]->info.imageSize.x != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.width ||
                 info.presentationQueues[i]->info.imageSize.y != info.presentationQueues[i]->info.surface->windowSurface->layer.drawableSize.height) {
                     return GN_SUBOPTIMAL_PRESENTATION_QUEUE;

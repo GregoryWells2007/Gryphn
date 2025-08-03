@@ -4,10 +4,12 @@
 #include "window_surface/gryphn_surface.h"
 
 gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCount) {
+    if (instance == GN_NULL_HANDLE) return NULL;
+
     NSArray *devices = MTLCopyAllDevices();
     *deviceCount = (uint32_t)[devices count];
     gnPhysicalDevice* devicesList = (gnPhysicalDevice*)malloc(sizeof(gnPhysicalDevice) * *deviceCount);
-    for (int i = 0; i < *deviceCount; i++) {
+    for (uint32_t i = 0; i < *deviceCount; i++) {
         devicesList[i] = malloc(sizeof(gnPhysicalOutputDevice_t));
         devicesList[i]->physicalDevice = malloc(sizeof(gnPlatformPhysicalDevice));
         devicesList[i]->physicalDevice->device = [devices objectAtIndex:0];
@@ -39,5 +41,7 @@ gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCou
 }
 
 gnBool metalCanDevicePresent(gnPhysicalDevice device, gnWindowSurface windowSurface) {
+    if (device == GN_NULL_HANDLE || windowSurface == GN_NULL_HANDLE) return GN_FALSE;
+
     return GN_TRUE; // I belive that a window should always be able to present to a surface in metal
 }

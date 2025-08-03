@@ -3,18 +3,18 @@
 #include "presentation_queue/gryphn_presentation_queue.h"
 
 typedef id<MTLTexture> metalTexture;
-GN_ARRAY_LIST(metalTexture);
 
 typedef struct mtlImageNeeded {
     gnSemaphore semaphoreToSignal;
     uint32_t* whereToPut;
 } mtlImageNeeded;
-GN_ARRAY_LIST(mtlImageNeeded);
+
+GN_ARRAY_LIST_HEADER(metalTexture);
+GN_ARRAY_LIST_HEADER(mtlImageNeeded);
 
 typedef struct gnPlatformPresentationQueue_t {
     metalTextureArrayList textures;
     uint32_tArrayList avaliableTextures;
-
     mtlImageNeededArrayList neededImages;
 
     gnVec2 createdSize;
