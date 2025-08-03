@@ -3,6 +3,7 @@
 #include "output_device/vulkan_output_devices.h"
 #include "output_device/vulkan_physical_device.h"
 #include <vulkan_result_converter.h>
+#include "string.h"
 
 VkImageType vkGryphnTextureType(gnTextureType type) {
     switch(type) {
@@ -53,8 +54,8 @@ gnBool vkGryphnIsDepthStencil(gnImageFormat format) { return (format == GN_FORMA
 void VkTransitionImageLayout(gnDevice device, VkImage image, gnImageFormat format, VkImageLayout oldLayout, VkImageLayout newLayout) {
     VkCommandBuffer transferBuffer = gnBeginVulkanTransferOperation(device);
 
-    VkPipelineStageFlags sourceStage, destinationStage;
-    VkAccessFlags sourceAccessMask, destinationAccessMask;
+    VkPipelineStageFlags sourceStage = 0, destinationStage = 0;
+    VkAccessFlags sourceAccessMask = 0, destinationAccessMask = 0;
 
     if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL) {
         sourceAccessMask = 0;
@@ -66,8 +67,8 @@ void VkTransitionImageLayout(gnDevice device, VkImage image, gnImageFormat forma
         sourceAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
         sourceStage = VK_PIPELINE_STAGE_TRANSFER_BIT;
 
-        destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
         destinationAccessMask = VK_ACCESS_SHADER_READ_BIT;
+        destinationStage = VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
     } else if (oldLayout == VK_IMAGE_LAYOUT_UNDEFINED && newLayout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
        sourceAccessMask = 0;
        sourceStage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
@@ -208,7 +209,7 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
     VkResult image_view = vkCreateImageView(device->outputDevice->device, &viewInfo, NULL, &texture->texture->image.imageView);
     if (image_view != VK_SUCCESS) return VkResultToGnReturnCode(image_view);
 
-    VkPhysicalDeviceProperties properties = {};
+    VkPhysicalDeviceProperties properties;
     vkGetPhysicalDeviceProperties(device->outputDevice->physicalDevice, &properties);
 
     VkSamplerCreateInfo samplerInfo = {

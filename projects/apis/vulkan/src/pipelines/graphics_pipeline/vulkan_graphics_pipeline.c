@@ -94,7 +94,7 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
     for (int i = 0; i < GN_DYNAMIC_STATE_MAX; i++) graphicsPipeline->graphicsPipeline->isDynamic[i] = GN_FALSE;
 
     graphicsPipeline->graphicsPipeline->dynamicStates = malloc(sizeof(VkDynamicState) * info.dynamicState.dynamicStateCount);
-    for (int i = 0; i < info.dynamicState.dynamicStateCount; i++) {
+    for (uint32_t i = 0; i < info.dynamicState.dynamicStateCount; i++) {
         graphicsPipeline->graphicsPipeline->isDynamic[info.dynamicState.dynamicStates[i]] = GN_TRUE;
         graphicsPipeline->graphicsPipeline->dynamicStates[i] = vkGryphnDynamicStateToVulkanDynamicState(info.dynamicState.dynamicStates[i]);
     }
@@ -107,15 +107,15 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
 
     int vertexAttributeCount = 0;
     graphicsPipeline->graphicsPipeline->bindingDescriptions = malloc(sizeof(VkVertexInputBindingDescription) * info.shaderInputLayout.bufferCount);
-    for (int i = 0; i < info.shaderInputLayout.bufferCount; i++) {
+    for (uint32_t i = 0; i < info.shaderInputLayout.bufferCount; i++) {
         graphicsPipeline->graphicsPipeline->bindingDescriptions[i].binding = info.shaderInputLayout.bufferAttributes[i].binding;
         graphicsPipeline->graphicsPipeline->bindingDescriptions[i].stride = info.shaderInputLayout.bufferAttributes[i].size;
         graphicsPipeline->graphicsPipeline->bindingDescriptions[i].inputRate = VK_VERTEX_INPUT_RATE_VERTEX;
         vertexAttributeCount += info.shaderInputLayout.bufferAttributes[i].attributeCount;
     }
     graphicsPipeline->graphicsPipeline->attributeDescriptions = malloc(sizeof(VkVertexInputAttributeDescription) * vertexAttributeCount);
-    for (int i = 0, j = 0; j < info.shaderInputLayout.bufferCount; j++) {
-        for (int k = 0; k < info.shaderInputLayout.bufferAttributes[j].attributeCount; k++) {
+    for (uint32_t i = 0, j = 0; j < info.shaderInputLayout.bufferCount; j++) {
+        for (uint32_t k = 0; k < info.shaderInputLayout.bufferAttributes[j].attributeCount; k++) {
             graphicsPipeline->graphicsPipeline->attributeDescriptions[i].binding = j;
             graphicsPipeline->graphicsPipeline->attributeDescriptions[i].location = info.shaderInputLayout.bufferAttributes[j].attributes[k].location;
             graphicsPipeline->graphicsPipeline->attributeDescriptions[i].offset = info.shaderInputLayout.bufferAttributes[j].attributes[k].offset;
@@ -238,10 +238,10 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
 
     graphicsPipeline->graphicsPipeline->setCount = info.uniformLayout.setCount;
     graphicsPipeline->graphicsPipeline->sets = malloc(sizeof(VkDescriptorSetLayout) * info.uniformLayout.setCount);
-    for (int i = 0; i < info.uniformLayout.setCount; i++) graphicsPipeline->graphicsPipeline->sets[i] = vkGryphnCreateSetLayouts(&info.uniformLayout.sets[i], device->outputDevice->device);
+    for (uint32_t i = 0; i < info.uniformLayout.setCount; i++) graphicsPipeline->graphicsPipeline->sets[i] = vkGryphnCreateSetLayouts(&info.uniformLayout.sets[i], device->outputDevice->device);
 
     graphicsPipeline->graphicsPipeline->ranges = malloc(sizeof(VkPushConstantRange) * info.uniformLayout.pushConstantCount);
-    for (int i = 0; i < info.uniformLayout.pushConstantCount; i++) {
+    for (uint32_t i = 0; i < info.uniformLayout.pushConstantCount; i++) {
         graphicsPipeline->graphicsPipeline->ranges[i] = (VkPushConstantRange) {
             .offset = info.uniformLayout.pushConstants[i].offset,
             .size = info.uniformLayout.pushConstants[i].size,
@@ -262,7 +262,7 @@ gnReturnCode createGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnDevic
         return VkResultToGnReturnCode(pipelineCode);
 
     graphicsPipeline->graphicsPipeline->modules = malloc(sizeof(VkPipelineShaderStageCreateInfo) * info.shaderModuleCount);
-    for (int i = 0; i < info.shaderModuleCount; i++) {
+    for (uint32_t i = 0; i < info.shaderModuleCount; i++) {
         graphicsPipeline->graphicsPipeline->modules[i] = info.shaderModules[i]->shaderModule->shaderStageInfo;
     }
 
@@ -293,7 +293,7 @@ void destroyGraphicsPipeline(gnGraphicsPipeline graphicsPipeline) {
     free(graphicsPipeline->graphicsPipeline->bindingDescriptions);
     free(graphicsPipeline->graphicsPipeline->attributeDescriptions);
     free(graphicsPipeline->graphicsPipeline->ranges);
-    for (int i = 0; i < graphicsPipeline->graphicsPipeline->setCount; i++)
+    for (uint32_t i = 0; i < graphicsPipeline->graphicsPipeline->setCount; i++)
         vkDestroyDescriptorSetLayout(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->sets[i], NULL);
     free(graphicsPipeline->graphicsPipeline->modules);
     vkDestroyPipeline(graphicsPipeline->device->outputDevice->device, graphicsPipeline->graphicsPipeline->graphicsPipeline, NULL);

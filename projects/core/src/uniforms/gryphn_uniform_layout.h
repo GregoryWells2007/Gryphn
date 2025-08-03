@@ -1,5 +1,6 @@
 #pragma once
 #include "stdint.h"
+#include "stdlib.h"
 #include "shader_module/gryphn_shader_module.h"
 
 typedef enum gnUniformType {
