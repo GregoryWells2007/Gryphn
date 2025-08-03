@@ -11,6 +11,7 @@ typedef struct vulkanQueue {
 
 typedef struct gnPlatformOutputDevice_t {
     VkDevice device;
+    VkPhysicalDevice physicalDevice;
 
     uint32_t transferQueueIndex, graphicsQueueIndex;
     uint32_t queueCount;
@@ -29,6 +30,6 @@ VkCommandBuffer gnBeginVulkanTransferOperation(gnDevice device);
 void gnEndVulkanTransferOperation(gnDevice device, VkCommandBuffer commandBuffer);
 
 
-gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
-void waitForDevice(const gnOutputDeviceHandle device);
-void destroyOutputDevice(gnOutputDeviceHandle device);
+gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
+void waitForDevice(gnOutputDeviceHandle device);
+void destroyVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device);

@@ -5,14 +5,13 @@ gnReturnCode gnCreateOutputDevice(gnOutputDeviceHandle* outputDevice, gnInstance
     *outputDevice = malloc(sizeof(struct gnOutputDevice_t));
 
     (*outputDevice)->instance = instance;
-    (*outputDevice)->physicalDevice = deviceInfo.physicalDevice;
     (*outputDevice)->deviceInfo = deviceInfo;
-    return instance->callingLayer->instanceFunctions._gnCreateOutputDevice(*outputDevice, instance, deviceInfo);
+    return instance->callingLayer->instanceFunctions._gnCreateOutputDevice(instance, *outputDevice, deviceInfo);
 }
 void gnWaitForDevice(gnOutputDeviceHandle device) {
     device->instance->callingLayer->deviceFunctions._gnWaitForDevice(device);
 }
-void gnDestroyOutputDevice(gnOutputDeviceHandle device) {
-    device->instance->callingLayer->instanceFunctions._gnDestroyOutputDevice(device);
+void gnDestroyOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
+    device->instance->callingLayer->instanceFunctions._gnDestroyOutputDevice(instance, device);
     free(device);
 }

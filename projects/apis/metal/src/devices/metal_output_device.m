@@ -4,7 +4,7 @@
 #include "instance/metal_instance.h"
 #include "instance/gryphn_instance.h"
 
-gnReturnCode createMetalOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
+gnReturnCode createMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle outputDevice, gnOutputDeviceInfo deviceInfo) {
     outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
     outputDevice->outputDevice->device = deviceInfo.physicalDevice->physicalDevice->device.retain;
     outputDevice->outputDevice->transferQueue = outputDevice->outputDevice->device.newCommandQueue;
@@ -15,7 +15,7 @@ void waitForMetalDevice(gnOutputDeviceHandle device) {
     [device->outputDevice->executingCommandBuffer waitUntilCompleted];
 }
 
-void destroyMetalOutputDevice(gnOutputDeviceHandle device) {
+void destroyMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
     // for (int i = 0; i < device->outputDevice->queueCount; i++) {
     //     [device->outputDevice->queues[i] release];
     // }

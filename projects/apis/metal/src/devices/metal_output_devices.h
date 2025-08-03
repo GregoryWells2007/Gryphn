@@ -19,6 +19,6 @@ struct gnPlatformOutputDevice_t {
 gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCount);
 gnBool metalCanDevicePresent(gnPhysicalDevice device, gnWindowSurface windowSurface);
 
-gnReturnCode createMetalOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
+gnReturnCode createMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle outputDevice, gnOutputDeviceInfo deviceInfo);
 void waitForMetalDevice(gnOutputDeviceHandle device);
-void destroyMetalOutputDevice(gnOutputDeviceHandle device);
+void destroyMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device);

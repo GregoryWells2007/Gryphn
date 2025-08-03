@@ -6,8 +6,9 @@
 #include "commands/command_buffer/vulkan_command_buffer.h"
 #include "vulkan_result_converter.h"
 
-gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
-    outputDevice->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
+gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo) {
+    device->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
+    device->outputDevice->physicalDevice = deviceInfo.physicalDevice->physicalDevice->device;
 
     int createQueueCount = 0;
     VkDeviceQueueCreateInfo* queueCreateInfos = NULL;
@@ -47,9 +48,9 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
     };
     deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount, deviceInfo.physicalDevice->physicalDevice->device);
 
-    outputDevice->outputDevice->enabledOversizedDescriptorPools = GN_FALSE;
+    device->outputDevice->enabledOversizedDescriptorPools = GN_FALSE;
     for (int i = 0; i < deviceCreateInfo.enabledExtensionCount; i++)
-        if (strcmp(deviceCreateInfo.ppEnabledExtensionNames[i], VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME) == 0) outputDevice->outputDevice->enabledOversizedDescriptorPools = GN_TRUE;
+        if (strcmp(deviceCreateInfo.ppEnabledExtensionNames[i], VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME) == 0) device->outputDevice->enabledOversizedDescriptorPools = GN_TRUE;
 
     if (instance->hasDebugger)
         deviceCreateInfo.enabledLayerCount = 0;
@@ -59,23 +60,23 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         deviceCreateInfo.ppEnabledLayerNames = validation_layers;
     }
 
-    VkResult result = vkCreateDevice(deviceInfo.physicalDevice->physicalDevice->device, &deviceCreateInfo, NULL, &outputDevice->outputDevice->device);
+    VkResult result = vkCreateDevice(deviceInfo.physicalDevice->physicalDevice->device, &deviceCreateInfo, NULL, &device->outputDevice->device);
     if (result != VK_SUCCESS)
         return VkResultToGnReturnCode(result);
 
-    outputDevice->outputDevice->queues = malloc(sizeof(vulkanQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
+    device->outputDevice->queues = malloc(sizeof(vulkanQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
     uint32_t transferQueue = 0;
     for (int i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
-        outputDevice->outputDevice->queues[i].queueInfo = deviceInfo.physicalDevice->physicalDevice->neededQueues[i];
+        device->outputDevice->queues[i].queueInfo = deviceInfo.physicalDevice->physicalDevice->neededQueues[i];
 
-        vkGetDeviceQueue(outputDevice->outputDevice->device, deviceInfo.physicalDevice->physicalDevice->neededQueues[i].queueIndex, 0, &outputDevice->outputDevice->queues[i].queue);
-        if ((outputDevice->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
-            outputDevice->outputDevice->transferQueueIndex = i;
-            transferQueue = outputDevice->outputDevice->queues[i].queueInfo.queueIndex;
+        vkGetDeviceQueue(device->outputDevice->device, deviceInfo.physicalDevice->physicalDevice->neededQueues[i].queueIndex, 0, &device->outputDevice->queues[i].queue);
+        if ((device->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
+            device->outputDevice->transferQueueIndex = i;
+            transferQueue = device->outputDevice->queues[i].queueInfo.queueIndex;
         }
 
-        if ((outputDevice->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
-            outputDevice->outputDevice->graphicsQueueIndex = i;
+        if ((device->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
+            device->outputDevice->graphicsQueueIndex = i;
         }
     }
 
@@ -85,19 +86,19 @@ gnReturnCode createOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHan
         .queueFamilyIndex = transferQueue
     };
 
-    VkResult command_pool_result = vkCreateCommandPool(outputDevice->outputDevice->device, &poolInfo, NULL, &outputDevice->outputDevice->transferCommandPool);
+    VkResult command_pool_result = vkCreateCommandPool(device->outputDevice->device, &poolInfo, NULL, &device->outputDevice->transferCommandPool);
     if (command_pool_result != VK_SUCCESS)
         return VkResultToGnReturnCode(command_pool_result);
 
     VkFenceCreateInfo fenceInfo = { .sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO };
-    VkResult fence_result = vkCreateFence(outputDevice->outputDevice->device, &fenceInfo, NULL, &outputDevice->outputDevice->barrierFence);
+    VkResult fence_result = vkCreateFence(device->outputDevice->device, &fenceInfo, NULL, &device->outputDevice->barrierFence);
     if (fence_result != VK_SUCCESS) VkResultToGnReturnCode(fence_result);
 
     // create the massive staging buffer
-    outputDevice->outputDevice->stagingBufferSize = 128 * 1024 * 1024;
+    device->outputDevice->stagingBufferSize = 128 * 1024 * 1024;
     gnReturnCode code = VkCreateBuffer(
-        &outputDevice->outputDevice->stagingBuffer,
-        outputDevice->outputDevice->stagingBufferSize, outputDevice,
+        &device->outputDevice->stagingBuffer,
+        device->outputDevice->stagingBufferSize, device,
         VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
         VK_BUFFER_USAGE_TRANSFER_SRC_BIT
     );
@@ -108,7 +109,7 @@ void waitForDevice(const gnOutputDeviceHandle device) {
     vkDeviceWaitIdle(device->outputDevice->device);
 }
 
-void destroyOutputDevice(gnOutputDeviceHandle device) {
+void destroyVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
     vkDestroyFence(device->outputDevice->device, device->outputDevice->barrierFence, NULL);
     gnDestroyVulkanBuffer(&device->outputDevice->stagingBuffer, device->outputDevice->device);
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);

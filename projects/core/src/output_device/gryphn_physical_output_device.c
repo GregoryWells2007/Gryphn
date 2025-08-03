@@ -1,7 +1,8 @@
 #include "gryphn_physical_output_device.h"
 #include "instance/gryphn_instance.h"
+#include "loader/src/gryphn_instance_functions.h"
 
-gnPhysicalOutputDeviceHandle* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {
+gnPhysicalOutputDeviceHandle* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {;
     gnPhysicalOutputDeviceHandle* devices = instance->callingLayer->instanceFunctions._gnGetPhysicalDevices(instance, count);
     for (int i = 0; i < *count; i++)
         devices[i]->instance = instance;
