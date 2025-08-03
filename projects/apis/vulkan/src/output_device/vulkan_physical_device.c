@@ -38,18 +38,13 @@ void vulkanLoadNeededQueues(VkPhysicalDevice vulkanDevice, gnPhysicalDevice gryp
     vkGetPhysicalDeviceQueueFamilyProperties(vulkanDevice, &queueFamilyCount, queueFamilies);
 
     gryphnDevice->physicalDevice->neededQueues = malloc(sizeof(vulkanNeededQueue) * queueFamilyCount);
-    gnBool foundGraphicsQueueFamily = GN_FALSE, foundTransferQueueFamily = GN_FALSE;
-    for (int c = 0; c < queueFamilyCount; c++) {
+    for (uint32_t c = 0; c < queueFamilyCount; c++) {
         gnBool hasNeededQueue = GN_FALSE;
 
-        if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
-            foundGraphicsQueueFamily = GN_TRUE;
+        if ((queueFamilies[c].queueFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT)
             hasNeededQueue = GN_TRUE;
-        }
-        if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
-            foundTransferQueueFamily = GN_TRUE;
+        if ((queueFamilies[c].queueFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT)
             hasNeededQueue = GN_TRUE;
-        }
 
         if (hasNeededQueue) {
             vulkanNeededQueue neededQueue = {
@@ -77,7 +72,7 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
     vkEnumeratePhysicalDevices(instance->instance->vk_instance, deviceCount, physicalDevices);
     gnPhysicalDevice* outputDevices = (gnPhysicalDevice*)malloc(sizeof(gnPhysicalDevice) * *deviceCount);
 
-    for (int i = 0; i < *deviceCount; i++) {
+    for (uint32_t i = 0; i < *deviceCount; i++) {
         outputDevices[i] = malloc(sizeof(gnPhysicalOutputDevice_t));
         outputDevices[i]->physicalDevice = malloc(sizeof(struct gnPlatformPhysicalDevice_t));
         outputDevices[i]->physicalDevice->device = physicalDevices[i];
@@ -112,7 +107,7 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
 
 gnBool deviceCanPresentToSurface(gnPhysicalDevice device, gnWindowSurface surface) {
     gnBool foundQueue = GN_FALSE;
-    for (int i = 0; i < device->physicalDevice->neededQueueCount; i++) {
+    for (uint32_t i = 0; i < device->physicalDevice->neededQueueCount; i++) {
         VkBool32 supportsPresent = VK_FALSE;
         vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, device->physicalDevice->neededQueues[i].queueIndex, surface->windowSurface->surface, &supportsPresent);
         if (supportsPresent) {
@@ -127,7 +122,7 @@ gnBool deviceCanPresentToSurface(gnPhysicalDevice device, gnWindowSurface surfac
         uint32_t queueFamilyCount = 0;
         vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, NULL);
 
-        for (int i = 0; i < queueFamilyCount; i++) {
+        for (uint32_t i = 0; i < queueFamilyCount; i++) {
             VkBool32 supportsPresent = VK_FALSE;
             vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, i, surface->windowSurface->surface, &supportsPresent);
             if (supportsPresent) {

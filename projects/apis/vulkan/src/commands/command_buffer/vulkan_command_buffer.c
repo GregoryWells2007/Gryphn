@@ -15,7 +15,7 @@ gnReturnCode allocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint3
 
     VkResult allocationResult = vkAllocateCommandBuffers(pool->device->outputDevice->device, &allocInfo, buffers);
     if (allocationResult == VK_SUCCESS)
-        for (int i = 0; i < count; i++) {
+        for (uint32_t i = 0; i < count; i++) {
             commandBuffers[i]->commandBuffer = malloc(sizeof(gnPlatformCommandBuffer));
             commandBuffers[i]->commandBuffer->buffer = buffers[i];
         }

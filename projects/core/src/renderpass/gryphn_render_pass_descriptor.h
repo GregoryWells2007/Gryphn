@@ -8,7 +8,7 @@
 typedef enum gnRenderPassStage {
     GN_COLOR_ATTACHMENT_OUTPUT = 1,
     GN_EARLY_FRAGMENT_TEST = 2
-} gnRenderPassStage; // I stole these from vulkan to make that conversion easier
+} gnRenderPassStage;
 
 typedef enum gnRenderPassAccess {
     GN_COLOR_ATTACHMENT_WRITE = 1,

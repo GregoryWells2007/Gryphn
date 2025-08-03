@@ -66,7 +66,6 @@ void VkCopyBuffer(gnDevice device, VkBuffer source, VkBuffer destination, VkBuff
 
 gnReturnCode createBuffer(gnBufferHandle buffer, gnOutputDeviceHandle device, gnBufferInfo info) {
     buffer->buffer = malloc(sizeof(struct gnPlatformBuffer_t));
-    VkBufferUsageFlags usage = vkGryphnBufferType(info.type);
     buffer->buffer->useStagingBuffer = (info.usage == GN_STATIC_DRAW);
     if (info.usage == GN_STATIC_DRAW) {
         return VkCreateBuffer(
@@ -91,14 +90,13 @@ void vulkanBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
 }
 void vulkanBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, void* data) {
     void* bufferData;
-
     if (buffer->buffer->useStagingBuffer) {
         VkGryphnBuffer* stagingBuffer = &buffer->device->outputDevice->stagingBuffer;
         VkDeviceSize sizeLeft = dataSize;
         while (sizeLeft > 0) {
             VkDeviceSize chunkSize = (buffer->device->outputDevice->stagingBufferSize < sizeLeft) ? buffer->device->outputDevice->stagingBufferSize : sizeLeft;
             vkMapMemory(buffer->device->outputDevice->device, stagingBuffer->memory, 0, chunkSize, 0, &bufferData);
-            memcpy(bufferData, data + (dataSize - sizeLeft), chunkSize);
+            memcpy(bufferData, (char*)data + (dataSize - sizeLeft), chunkSize);
             vkUnmapMemory(buffer->device->outputDevice->device, stagingBuffer->memory);
 
             VkBufferCopy copyRegion = {
@@ -111,7 +109,7 @@ void vulkanBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, 
         }
     } else {
         vkMapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory, 0, dataSize, 0, &bufferData);
-        memcpy(bufferData + offset, data, dataSize);
+        memcpy((char*)bufferData + offset, data, dataSize);
         vkUnmapMemory(buffer->device->outputDevice->device, buffer->buffer->buffer.memory);
     }
 }

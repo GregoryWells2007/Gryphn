@@ -4,11 +4,13 @@
 #include "vulkan_result_converter.h"
 
 gnReturnCode vulkanQueuePresentSync(gnDevice device, gnQueue queue, gnPresentSyncInfo info) {
+    if (device == GN_NULL_HANDLE) return GN_INVALID_HANDLE;
+
     VkSemaphore* waitSemaphores = malloc(sizeof(VkSemaphore) * info.waitCount);
-    for (int i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;
+    for (uint32_t i = 0; i < info.waitCount; i++) waitSemaphores[i] = info.waitSemaphores[i]->semaphore->semaphore;
 
     VkSwapchainKHR* swapchains = malloc(sizeof(VkSwapchainKHR) * info.presentationQueueCount);
-    for (int i = 0; i < info.presentationQueueCount; i++) swapchains[i] = info.presentationQueues[i]->presentationQueue->swapChain;
+    for (uint32_t i = 0; i < info.presentationQueueCount; i++) swapchains[i] = info.presentationQueues[i]->presentationQueue->swapChain;
 
     VkPresentInfoKHR presentInfo = {
         .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -27,8 +29,10 @@ gnReturnCode vulkanPresentSync(gnDevice device, gnPresentSyncInfo info) {
 }
 
 gnReturnCode vulkanQueuePresent(gnDevice device, gnQueue queue, gnPresentInfo info) {
+    if (device == GN_NULL_HANDLE) return GN_INVALID_HANDLE;
+
     VkSwapchainKHR* swapchains = malloc(sizeof(VkSwapchainKHR) * info.presentationQueueCount);
-    for (int i = 0; i < info.presentationQueueCount; i++) swapchains[i] = info.presentationQueues[i]->presentationQueue->swapChain;
+    for (uint32_t i = 0; i < info.presentationQueueCount; i++) swapchains[i] = info.presentationQueues[i]->presentationQueue->swapChain;
 
     VkPresentInfoKHR presentInfo = {
         .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,

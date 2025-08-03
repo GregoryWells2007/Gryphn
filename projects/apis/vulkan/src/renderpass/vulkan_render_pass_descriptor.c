@@ -38,19 +38,17 @@ VkPipelineStageFlags vkGryphnRenderPassStage(gnRenderPassStage stage) {
 
 VkAccessFlags vkGryphnRenderPassAccess(gnRenderPassAccess access) {
     VkAccessFlags flags = 0;
-    if ((flags & GN_COLOR_ATTACHMENT_WRITE) == GN_COLOR_ATTACHMENT_WRITE) flags |= VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-    if ((flags & GN_DEPTH_STENCIL_WRITE) == GN_DEPTH_STENCIL_WRITE) flags |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+    if ((access & GN_COLOR_ATTACHMENT_WRITE) == GN_COLOR_ATTACHMENT_WRITE) flags |= VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+    if ((access & GN_DEPTH_STENCIL_WRITE) == GN_DEPTH_STENCIL_WRITE) flags |= VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
     return flags;
 }
 
 gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device, gnRenderPassDescriptorInfo info) {
-
-
     renderPass->renderPassDescriptor = malloc(sizeof(gnPlatformRenderPassDescriptor));
 
     renderPass->renderPassDescriptor->attachmentCount = info.attachmentCount;
     renderPass->renderPassDescriptor->attachments = malloc(sizeof(VkAttachmentDescription) * info.attachmentCount);
-    for (int i = 0; i < info.attachmentCount; i++) {
+    for (uint32_t i = 0; i < info.attachmentCount; i++) {
         renderPass->renderPassDescriptor->attachments[i].format = vkGryphnFormatToVulkanFormat(info.attachmentInfos[i].format);
         renderPass->renderPassDescriptor->attachments[i].flags = 0;
         renderPass->renderPassDescriptor->attachments[i].samples = gnSampleCountToVulkan(info.attachmentInfos[i].samples);
@@ -72,11 +70,11 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
     renderPass->renderPassDescriptor->resolveAttachments = malloc(sizeof(VkAttachmentReference*) * info.subpassCount);
 
 
-    for (int i = 0; i < info.subpassCount; i++) {
+    for (uint32_t i = 0; i < info.subpassCount; i++) {
         renderPass->renderPassDescriptor->colorAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
         renderPass->renderPassDescriptor->resolveAttachments[i] = malloc(sizeof(VkAttachmentReference) * info.subpassInfos[i].colorAttachmentCount);
 
-        for (int c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
+        for (uint32_t c = 0; c < info.subpassInfos[i].colorAttachmentCount; c++) {
             renderPass->renderPassDescriptor->colorAttachments[i][c] = (VkAttachmentReference){
                 .attachment = info.subpassInfos[i].colorAttachments[c].index,
                 .layout = vkGryphnImageLayout(info.subpassInfos[i].colorAttachments[c].imageLayout)
@@ -108,7 +106,7 @@ gnReturnCode createRenderPass(gnRenderPassDescriptor renderPass, gnDevice device
     }
 
     renderPass->renderPassDescriptor->dependencies = malloc(sizeof(VkSubpassDependency) * info.dependencyCount);
-    for (int i = 0; i < info.dependencyCount; i++) {
+    for (uint32_t i = 0; i < info.dependencyCount; i++) {
         renderPass->renderPassDescriptor->dependencies[i] = (VkSubpassDependency) {
             .srcSubpass = (info.dependencies[i].source == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].source,
             .dstSubpass = (info.dependencies[i].destination == GN_SUBPASS_EXTERNAL) ? VK_SUBPASS_EXTERNAL : info.dependencies[i].destination,

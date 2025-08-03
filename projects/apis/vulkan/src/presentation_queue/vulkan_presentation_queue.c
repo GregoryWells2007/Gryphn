@@ -19,42 +19,42 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
         .height = presentationInfo.imageSize.y
     };
 
-    VkSwapchainCreateInfoKHR createInfo = {};
-    createInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
-    createInfo.surface = presentationInfo.surface->windowSurface->surface;
-
-    createInfo.minImageCount = presentationInfo.minImageCount;
-    createInfo.imageFormat = convertedFormat;
-    createInfo.imageColorSpace = convertedColorSpace;
-    createInfo.imageExtent = extent;
-    createInfo.imageArrayLayers = 1;
-    createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    VkSwapchainCreateInfoKHR presentQueueCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+        .surface = presentationInfo.surface->windowSurface->surface,
+        .minImageCount = presentationInfo.minImageCount,
+        .imageFormat = convertedFormat,
+        .imageColorSpace = convertedColorSpace,
+        .imageExtent = extent,
+        .imageArrayLayers = 1,
+        .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .preTransform = details.capabilities.currentTransform,
+        .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        .presentMode = presentMode,
+        .clipped = VK_TRUE,
+        .oldSwapchain = VK_NULL_HANDLE
+    };
 
     if (device->instance->enabledExtensions[GN_EXT_QUEUES]) {
-        createInfo.imageSharingMode = (presentationInfo.imageSharingMode == GN_SHARING_MODE_CONCURRENT) ? VK_SHARING_MODE_CONCURRENT : VK_SHARING_MODE_EXCLUSIVE;
-        createInfo.queueFamilyIndexCount = presentationInfo.queueFamilyCount;
-        createInfo.pQueueFamilyIndices = presentationInfo.queueFamilies;
+        presentQueueCreateInfo.imageSharingMode = (presentationInfo.imageSharingMode == GN_SHARING_MODE_CONCURRENT) ? VK_SHARING_MODE_CONCURRENT : VK_SHARING_MODE_EXCLUSIVE;
+        presentQueueCreateInfo.queueFamilyIndexCount = presentationInfo.queueFamilyCount;
+        presentQueueCreateInfo.pQueueFamilyIndices = presentationInfo.queueFamilies;
     } else {
         if (presentationInfo.surface->windowSurface->presentQueueIndex != device->outputDevice->graphicsQueueIndex) {
-            createInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
-            createInfo.queueFamilyIndexCount = 2;
-            createInfo.pQueueFamilyIndices = (uint32_t[]){
+            presentQueueCreateInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
+            presentQueueCreateInfo.queueFamilyIndexCount = 2;
+            presentQueueCreateInfo.pQueueFamilyIndices = (uint32_t[]){
                 device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex,
                 device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queueInfo.queueIndex
             };
         } else {
-            createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
-            createInfo.queueFamilyIndexCount = 1;
-            createInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
+            presentQueueCreateInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
+            presentQueueCreateInfo.queueFamilyIndexCount = 1;
+            presentQueueCreateInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
         }
     }
-    createInfo.preTransform = details.capabilities.currentTransform;
-    createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
-    createInfo.presentMode = presentMode;
-    createInfo.clipped = VK_TRUE;
-    createInfo.oldSwapchain = VK_NULL_HANDLE;
 
-    VkResult result = vkCreateSwapchainKHR(device->outputDevice->device, &createInfo, NULL, &presentationQueue->presentationQueue->swapChain);
+    VkResult result = vkCreateSwapchainKHR(device->outputDevice->device, &presentQueueCreateInfo, NULL, &presentationQueue->presentationQueue->swapChain);
     if (result != VK_SUCCESS) return VkResultToGnReturnCode(result);
 
     vkGetSwapchainImagesKHR(device->outputDevice->device, presentationQueue->presentationQueue->swapChain, &presentationQueue->imageCount, NULL);
@@ -62,22 +62,23 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
     presentationQueue->presentationQueue->swapChainImageViews = malloc(sizeof(VkImageView) * presentationQueue->imageCount);
     vkGetSwapchainImagesKHR(device->outputDevice->device, presentationQueue->presentationQueue->swapChain, &presentationQueue->imageCount, presentationQueue->presentationQueue->swapChainImages);
 
-    VkImageViewCreateInfo imageViewCreateInfo = {};
-    imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    imageViewCreateInfo.format = convertedFormat;
-    imageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
-    imageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
-    imageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
-    imageViewCreateInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
-    imageViewCreateInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    imageViewCreateInfo.subresourceRange.baseMipLevel = 0;
-    imageViewCreateInfo.subresourceRange.levelCount = 1;
-    imageViewCreateInfo.subresourceRange.baseArrayLayer = 0;
-    imageViewCreateInfo.subresourceRange.layerCount = 1;
+    VkImageViewCreateInfo imageViewCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+        .viewType = VK_IMAGE_VIEW_TYPE_2D,
+        .format = convertedFormat,
+        .components.r = VK_COMPONENT_SWIZZLE_IDENTITY,
+        .components.g = VK_COMPONENT_SWIZZLE_IDENTITY,
+        .components.b = VK_COMPONENT_SWIZZLE_IDENTITY,
+        .components.a = VK_COMPONENT_SWIZZLE_IDENTITY,
+        .subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT,
+        .subresourceRange.baseMipLevel = 0,
+        .subresourceRange.levelCount = 1,
+        .subresourceRange.baseArrayLayer = 0,
+        .subresourceRange.layerCount = 1
+    };
 
     presentationQueue->images = malloc(sizeof(gnTextureHandle) * presentationQueue->imageCount);
-    for (int i = 0; i < presentationQueue->imageCount; i++) {
+    for (uint32_t i = 0; i < presentationQueue->imageCount; i++) {
         presentationQueue->images[i] = malloc(sizeof(struct gnTexture_t));
         presentationQueue->images[i]->texture = malloc(sizeof(gnPlatformTexture));
         imageViewCreateInfo.image = presentationQueue->presentationQueue->swapChainImages[i];
@@ -99,23 +100,18 @@ gnReturnCode getVulkanPresentQueueImage(gnPresentationQueueHandle presentationQu
         presentationQueue->presentationQueue->swapChain,
         UINT64_MAX, VK_NULL_HANDLE, presentationQueue->outputDevice->outputDevice->barrierFence, imageIndex);
     vkWaitForFences(presentationQueue->outputDevice->outputDevice->device, 1, &presentationQueue->outputDevice->outputDevice->barrierFence, VK_TRUE, UINT64_MAX);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
-    if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(result);
 }
 
 gnReturnCode getPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
-    VkResult result = vkAcquireNextImageKHR(
+    return VkResultToGnReturnCode(vkAcquireNextImageKHR(
         presentationQueue->outputDevice->outputDevice->device,
         presentationQueue->presentationQueue->swapChain,
-        timeout, semaphore->semaphore->semaphore, VK_NULL_HANDLE, imageIndex);
-    if (result == VK_ERROR_OUT_OF_DATE_KHR) return GN_OUT_OF_DATE_PRESENTATION_QUEUE;
-    if (result == VK_SUBOPTIMAL_KHR) return GN_SUBOPTIMAL_PRESENTATION_QUEUE;
-    return GN_SUCCESS;
+        timeout, semaphore->semaphore->semaphore, VK_NULL_HANDLE, imageIndex));
 }
 
 void destroyPresentationQueue(gnPresentationQueueHandle queue) {
-    for (int i = 0; i < queue->imageCount; i++)
+    for (uint32_t i = 0; i < queue->imageCount; i++)
         vkDestroyImageView(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChainImageViews[i], NULL);
     vkDestroySwapchainKHR(queue->outputDevice->outputDevice->device, queue->presentationQueue->swapChain, NULL);
     free(queue->presentationQueue->swapChainImageViews);

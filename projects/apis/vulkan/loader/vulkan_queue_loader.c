@@ -3,7 +3,7 @@
 #include <submit/vulkan_submit.h>
 #include <present/vulkan_present.h>
 
-gnQueueExtFunctions loadVulkanQueueFunctions() {
+gnQueueExtFunctions loadVulkanQueueFunctions(void) {
     return (gnQueueExtFunctions) {
         ._gnGetPhysicalDeviceQueueProperties = vulkanPhysicalDeviceQueueProperties,
         ._gnQueueSubmit = vulkanSubmitQueue,

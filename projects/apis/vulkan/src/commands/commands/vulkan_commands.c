@@ -4,7 +4,7 @@
 void beginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
 
     VkClearValue* values = malloc(sizeof(VkClearValue) * passInfo.clearValueCount);
-    for (int i = 0; i < passInfo.clearValueCount; i++) {
+    for (uint32_t i = 0; i < passInfo.clearValueCount; i++) {
         values[i] = (VkClearValue){{{
             passInfo.clearValues[i].red,
             passInfo.clearValues[i].green,

@@ -4,7 +4,7 @@
 #include <output_device/vulkan_output_devices.h>
 #include <vulkan_surface/vulkan_surface.h>
 
-gryphnInstanceFunctionLayers loadVulkanAPILayer() {
+gryphnInstanceFunctionLayers loadVulkanAPILayer(void) {
     return (gryphnInstanceFunctionLayers) {
         .createInstance = vulkanCreateInstance,
         .destroyInstance = vulkanDestroyInstance,
@@ -12,7 +12,7 @@ gryphnInstanceFunctionLayers loadVulkanAPILayer() {
     };
 }
 
-gnInstanceFunctions loadVulkanInstanceFunctions() {
+gnInstanceFunctions loadVulkanInstanceFunctions(void) {
     return (gnInstanceFunctions){
 
         ._gnGetPhysicalDevices = getPhysicalDevices,

@@ -2,7 +2,7 @@
 #include <vulkan/vulkan.h>
 #include <output_device/vulkan_output_devices.h>
 
-typedef struct vkSwapchainSupportDetails_t {
+typedef struct vkSwapchainSupportDetails {
     VkSurfaceCapabilitiesKHR capabilities;
     uint32_t formatCount;
     VkSurfaceFormatKHR* formats;
@@ -11,15 +11,11 @@ typedef struct vkSwapchainSupportDetails_t {
     VkPresentModeKHR* presentModes;
 } vkSwapchainSupportDetails;
 
-typedef struct vkSwapchainDetails_t {
+typedef struct vkSwapchainDetails {
     VkSurfaceFormatKHR surfaceFormat;
 } vkSwapchainDetails;
 
-struct vkSwapchainSupportDetails_t vkGetSwapchainSupport(
+struct vkSwapchainSupportDetails vkGetSwapchainSupport(
     const VkPhysicalDevice device,
     const VkSurfaceKHR surface
-);
-
-struct vkSwapchainDetails_t vkGetSwapchainDetails(
-    const struct vkSwapchainSupportDetails_t supportDetails
 );

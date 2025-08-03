@@ -5,7 +5,7 @@
 #include "submit/vulkan_submit.h"
 #include "present/vulkan_present.h"
 
-gnSyncExtFunctions loadVulkanSyncFunctions() {
+gnSyncExtFunctions loadVulkanSyncFunctions(void) {
     return (gnSyncExtFunctions){
         ._gnPresentationQueueGetImageAsync = getPresentQueueImageAsync,
 

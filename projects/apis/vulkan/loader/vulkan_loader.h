@@ -7,12 +7,12 @@
 #include "core/gryphn_extensions.h"
 
 typedef struct gryphnInstanceFunctionLayers gryphnInstanceFunctionLayers;
-gryphnInstanceFunctionLayers loadVulkanAPILayer();
+gryphnInstanceFunctionLayers loadVulkanAPILayer(void);
 
-gnInstanceFunctions loadVulkanInstanceFunctions();
-gnDeviceFunctions loadVulkanDeviceFunctions();
-gnCommandFunctions loadVulkanCommandFunctions();
-gnSyncExtFunctions loadVulkanSyncFunctions();
-gnQueueExtFunctions loadVulkanQueueFunctions();
+gnInstanceFunctions loadVulkanInstanceFunctions(void);
+gnDeviceFunctions loadVulkanDeviceFunctions(void);
+gnCommandFunctions loadVulkanCommandFunctions(void);
+gnSyncExtFunctions loadVulkanSyncFunctions(void);
+gnQueueExtFunctions loadVulkanQueueFunctions(void);
 
 gnBool vulkanIsExtensionSupported(gnExtension extension);

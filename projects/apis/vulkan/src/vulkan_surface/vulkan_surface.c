@@ -71,7 +71,7 @@ gnSurfaceFormat* vkGetSurfaceFormats(
 
     if (*formatCount > 0) {
         vkGetPhysicalDeviceSurfaceFormatsKHR(device->physicalDevice->device, windowSurface->windowSurface->surface, formatCount, vkFormats);
-        for (int i = 0; i < *formatCount; i++) {
+        for (uint32_t i = 0; i < *formatCount; i++) {
             switch (vkFormats[i].format) {
             case VK_FORMAT_B8G8R8A8_SRGB: { formats[i].format = GN_FORMAT_BGRA8_SRGB; break; }
             case VK_FORMAT_B8G8R8A8_UNORM: { formats[i].format = GN_FORMAT_BGRA8; break; }
@@ -100,9 +100,9 @@ gnSurfaceDetails getSurfaceDetails(
     surfaceDetails.minImageCount = details.minImageCount;
     surfaceDetails.maxImageCount = details.maxImageCount;
 
-    surfaceDetails.minImageSize = (gnUInt2){ details.minImageExtent.width, details.minImageExtent.height };
-    surfaceDetails.maxImageSize = (gnUInt2){ details.maxImageExtent.width, details.maxImageExtent.height };
-    surfaceDetails.currentSize = (gnUInt2){ details.currentExtent.width, details.currentExtent.height };
+    surfaceDetails.minImageSize = (gnUInt2){ .x = details.minImageExtent.width, .y = details.minImageExtent.height };
+    surfaceDetails.maxImageSize = (gnUInt2){ .x = details.maxImageExtent.width, .y = details.maxImageExtent.height };
+    surfaceDetails.currentSize = (gnUInt2){ .x = details.currentExtent.width, .y = details.currentExtent.height };
 
     return surfaceDetails;
 }
