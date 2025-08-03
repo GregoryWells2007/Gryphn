@@ -55,5 +55,5 @@ void checkDestroyWindowSurface(gnWindowSurfaceHandle windowSurface) {
     CHECK_VOID_FUNCTION(windowSurface->instance, _gnDestroyWindowSurface, instanceFunctions, windowSurface);
 }
 gnSurfaceDetails checkGetSurfaceDetails(gnWindowSurfaceHandle windowSurface, gnPhysicalDevice device) {
-    CHECK_RETURNED_FUNCTION(windowSurface->instance, _gnGetSurfaceDetails, instanceFunctions, (gnSurfaceDetails){}, windowSurface, device);
+    CHECK_RETURNED_FUNCTION(windowSurface->instance, _gnGetSurfaceDetails, instanceFunctions, (gnSurfaceDetails){ .formatCount = 0 }, windowSurface, device);
 }
