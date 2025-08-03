@@ -8,7 +8,7 @@ gnReturnCode vulkanPhysicalDeviceQueueProperties(gnPhysicalOutputDeviceHandle de
     VkQueueFamilyProperties* queueFamilies = malloc(sizeof(VkQueueFamilyProperties) * queueFamilyCount);
     vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, queueFamilies);
 
-    for (int i = 0; i < queueFamilyCount; i++) {
+    for (uint32_t i = 0; i < queueFamilyCount; i++) {
         queues[i].queueCount = queueFamilies[i].queueCount;
         queues[i].queueTypeFlags = 0;
 

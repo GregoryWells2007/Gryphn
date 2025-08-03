@@ -2,12 +2,13 @@
 #include "textures/vulkan_texture.h"
 #include "renderpass/vulkan_render_pass_descriptor.h"
 #include "output_device/vulkan_output_devices.h"
+#include "vulkan_result_converter.h"
 
 gnReturnCode createFramebuffer(gnFramebuffer framebuffer, gnDevice device, gnFramebufferInfo info) {
     framebuffer->framebuffer = malloc(sizeof(struct gnPlatformFramebuffer_t));
 
     VkImageView* attachments = malloc(sizeof(VkImageView) * info.attachmentCount);
-    for (int i = 0; i < info.attachmentCount; i++)
+    for (uint32_t i = 0; i < info.attachmentCount; i++)
         attachments[i] = info.attachments[i]->texture->image.imageView;
 
     VkFramebufferCreateInfo framebufferInfo = {
@@ -22,7 +23,7 @@ gnReturnCode createFramebuffer(gnFramebuffer framebuffer, gnDevice device, gnFra
 
     VkResult res = vkCreateFramebuffer(device->outputDevice->device, &framebufferInfo, NULL, &framebuffer->framebuffer->framebuffer);
     free(attachments);
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(res);
 }
 
 void destroyFramebuffer(gnFramebuffer framebuffer) {

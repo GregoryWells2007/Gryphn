@@ -13,11 +13,12 @@
 #include "vulkan/vulkan_metal.h"
 gnReturnCode createMacOSWindowSurface(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo) {
     windowSurface->windowSurface = malloc(sizeof(gnPlatformWindowSurface));
-    VkMetalSurfaceCreateInfoEXT surfaceCreateInfo = {};
-    surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT;
-    surfaceCreateInfo.pNext = NULL;
-    surfaceCreateInfo.flags = 0;
-    surfaceCreateInfo.pLayer = createInfo.layer;
+    VkMetalSurfaceCreateInfoEXT surfaceCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_METAL_SURFACE_CREATE_INFO_EXT,
+        .pNext = NULL,
+        .flags = 0,
+        .pLayer = createInfo.layer
+    };
     return VkResultToGnReturnCode(vkCreateMetalSurfaceEXT(instance->instance->vk_instance, &surfaceCreateInfo, NULL, &windowSurface->windowSurface->surface));
 }
 #endif
