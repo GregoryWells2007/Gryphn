@@ -9,7 +9,7 @@ gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* c
 gnBool checkCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
 
 gnReturnCode checkCreateOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
-void checkDestroyOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device);
+void checkDestroyOutputDevice(gnOutputDeviceHandle device);
 
 #ifdef GN_PLATFORM_MACOS
 gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);

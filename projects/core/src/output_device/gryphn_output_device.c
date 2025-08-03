@@ -11,7 +11,7 @@ gnReturnCode gnCreateOutputDevice(gnOutputDeviceHandle* outputDevice, gnInstance
 void gnWaitForDevice(gnOutputDeviceHandle device) {
     device->instance->callingLayer->deviceFunctions._gnWaitForDevice(device);
 }
-void gnDestroyOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
-    device->instance->callingLayer->instanceFunctions._gnDestroyOutputDevice(instance, device);
+void gnDestroyOutputDevice(gnOutputDeviceHandle device) {
+    device->instance->callingLayer->instanceFunctions._gnDestroyOutputDevice(device);
     free(device);
 }

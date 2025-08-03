@@ -21,4 +21,4 @@ gnBool metalCanDevicePresent(gnPhysicalDevice device, gnWindowSurface windowSurf
 
 gnReturnCode createMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle outputDevice, gnOutputDeviceInfo deviceInfo);
 void waitForMetalDevice(gnOutputDeviceHandle device);
-void destroyMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device);
+void destroyMetalOutputDevice(gnOutputDeviceHandle device);

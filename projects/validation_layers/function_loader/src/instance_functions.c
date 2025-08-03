@@ -34,8 +34,8 @@ gnBool checkCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle wind
 gnReturnCode checkCreateOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo) {
     CHECK_FUNCTION_WITH_RETURN_CODE(instance, _gnCreateOutputDevice, instanceFunctions, instance, device, deviceInfo);
 }
-void checkDestroyOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
-    CHECK_VOID_FUNCTION(device->instance, _gnDestroyOutputDevice, instanceFunctions, instance, device);
+void checkDestroyOutputDevice(gnOutputDeviceHandle device) {
+    CHECK_VOID_FUNCTION(device->instance, _gnDestroyOutputDevice, instanceFunctions, device);
 }
 
 #ifdef GN_PLATFORM_MACOS

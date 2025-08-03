@@ -15,10 +15,7 @@ void waitForMetalDevice(gnOutputDeviceHandle device) {
     [device->outputDevice->executingCommandBuffer waitUntilCompleted];
 }
 
-void destroyMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
-    // for (int i = 0; i < device->outputDevice->queueCount; i++) {
-    //     [device->outputDevice->queues[i] release];
-    // }
+void destroyMetalOutputDevice(gnOutputDeviceHandle device) {
     [device->outputDevice->transferQueue release];
     [device->outputDevice->device release];
     free(device->outputDevice);

@@ -5,6 +5,7 @@
 #include "instance/gryphn_instance.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"
 #include "vulkan_result_converter.h"
+#include "string.h"
 
 gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo) {
     device->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
@@ -17,7 +18,7 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
         queueCreateInfos = malloc(sizeof(VkDeviceQueueCreateInfo) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
         createQueueCount = deviceInfo.physicalDevice->physicalDevice->neededQueueCount;
         float queuePriority = 1.0f;
-        for (int i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
+        for (uint32_t i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
             queueCreateInfos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             queueCreateInfos[i].flags = 0;
             queueCreateInfos[i].queueCount = 1;
@@ -27,7 +28,7 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
     } else {
         createQueueCount = deviceInfo.queueInfoCount;
         queueCreateInfos = malloc(sizeof(VkDeviceQueueCreateInfo) * deviceInfo.queueInfoCount);
-        for (int i = 0; i < deviceInfo.queueInfoCount; i++) {
+        for (uint32_t i = 0; i < deviceInfo.queueInfoCount; i++) {
             queueCreateInfos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             queueCreateInfos[i].flags = 0;
             queueCreateInfos[i].queueCount = deviceInfo.queueInfos[i].queueCount;
@@ -49,7 +50,7 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
     deviceCreateInfo.ppEnabledExtensionNames = vkGetGryphnDeviceExtensions(&deviceCreateInfo.enabledExtensionCount, deviceInfo.physicalDevice->physicalDevice->device);
 
     device->outputDevice->enabledOversizedDescriptorPools = GN_FALSE;
-    for (int i = 0; i < deviceCreateInfo.enabledExtensionCount; i++)
+    for (uint32_t i = 0; i < deviceCreateInfo.enabledExtensionCount; i++)
         if (strcmp(deviceCreateInfo.ppEnabledExtensionNames[i], VK_NV_DESCRIPTOR_POOL_OVERALLOCATION_EXTENSION_NAME) == 0) device->outputDevice->enabledOversizedDescriptorPools = GN_TRUE;
 
     if (instance->hasDebugger)
@@ -66,7 +67,7 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
 
     device->outputDevice->queues = malloc(sizeof(vulkanQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
     uint32_t transferQueue = 0;
-    for (int i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
+    for (uint32_t i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
         device->outputDevice->queues[i].queueInfo = deviceInfo.physicalDevice->physicalDevice->neededQueues[i];
 
         vkGetDeviceQueue(device->outputDevice->device, deviceInfo.physicalDevice->physicalDevice->neededQueues[i].queueIndex, 0, &device->outputDevice->queues[i].queue);
@@ -109,7 +110,7 @@ void waitForDevice(const gnOutputDeviceHandle device) {
     vkDeviceWaitIdle(device->outputDevice->device);
 }
 
-void destroyVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
+void destroyVulkanOutputDevice(gnOutputDeviceHandle device) {
     vkDestroyFence(device->outputDevice->device, device->outputDevice->barrierFence, NULL);
     gnDestroyVulkanBuffer(&device->outputDevice->stagingBuffer, device->outputDevice->device);
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);

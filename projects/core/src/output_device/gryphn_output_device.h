@@ -31,4 +31,4 @@ struct gnOutputDevice_t {
 
 gnReturnCode gnCreateOutputDevice(gnOutputDeviceHandle* outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
 void gnWaitForDevice(gnOutputDeviceHandle device);
-void gnDestroyOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device);
+void gnDestroyOutputDevice(gnOutputDeviceHandle device);

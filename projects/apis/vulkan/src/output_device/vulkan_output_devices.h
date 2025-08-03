@@ -32,4 +32,4 @@ void gnEndVulkanTransferOperation(gnDevice device, VkCommandBuffer commandBuffer
 
 gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
 void waitForDevice(gnOutputDeviceHandle device);
-void destroyVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device);
+void destroyVulkanOutputDevice(gnOutputDeviceHandle device);
