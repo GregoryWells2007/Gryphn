@@ -3,6 +3,7 @@
 #include "output_device/gryphn_output_device.h"
 #include "output_device/vulkan_output_devices.h"
 #include <vulkan_result_converter.h>
+#include "string.h"
 
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
     VkBufferUsageFlags usageFlags = 0;
