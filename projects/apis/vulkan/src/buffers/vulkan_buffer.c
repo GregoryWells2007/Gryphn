@@ -2,7 +2,6 @@
 #include "buffers/gryphn_buffer.h"
 #include "output_device/gryphn_output_device.h"
 #include "output_device/vulkan_output_devices.h"
-#include "output_device/vulkan_physical_device.h"
 #include <vulkan_result_converter.h>
 
 VkBufferUsageFlags vkGryphnBufferType(gnBufferType type) {
@@ -49,7 +48,7 @@ gnReturnCode VkCreateBuffer(
     VkMemoryAllocateInfo memoryAllocateInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         .allocationSize = bufferRequirements.size,
-        .memoryTypeIndex = VkMemoryIndex(device->physicalDevice->physicalDevice->device, bufferRequirements.memoryTypeBits, flags, &foundMemory)
+        .memoryTypeIndex = VkMemoryIndex(device->outputDevice->physicalDevice, bufferRequirements.memoryTypeBits, flags, &foundMemory)
     };
     if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
 

@@ -2,14 +2,14 @@
 #include "core/src/instance/gryphn_instance.h"
 #include <core/src/window_surface/gryphn_surface_create_functions.h>
 
-gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info);
-void checkDestroyInstance(gnInstance instance);
+gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info, gryphnFunctionLayer* next);
+void checkDestroyInstance(gnInstanceHandle instance, gryphnFunctionLayer* next);
 
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count);
 gnBool checkCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface);
 
-gnReturnCode checkCreateOutputDevice(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
-void checkDestroyOutputDevice(gnOutputDeviceHandle device);
+gnReturnCode checkCreateOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
+void checkDestroyOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device);
 
 #ifdef GN_PLATFORM_MACOS
 gnReturnCode checkCreateSurfaceMacOS(gnWindowSurfaceHandle windowSurface, gnInstanceHandle instance, gnMacOSWindowSurfaceInfo createInfo);

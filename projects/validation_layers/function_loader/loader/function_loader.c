@@ -5,11 +5,15 @@
 #include "extensions/sync_functions.h"
 #include "extensions/queue_functions.h"
 
+gryphnInstanceFunctionLayers checkerLoadInstanceFunctions() {
+    return (gryphnInstanceFunctionLayers) {
+        .createInstance = { checkCreateInstance, NULL },
+        .destroyInstance = { checkDestroyInstance, NULL }
+    };
+}
+
 gnInstanceFunctions loadFunctionLoaderInstanceFunctions() {
     return (gnInstanceFunctions){
-        ._gnCreateInstance = checkCreateInstance,
-        ._gnDestroyInstance = checkDestroyInstance,
-
         ._gnGetPhysicalDevices = checkGetPhysicalDevices,
         ._gnPhysicalDeviceCanPresentToSurface = checkCanDevicePresent,
 

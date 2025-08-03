@@ -139,6 +139,7 @@ loaderLayer null_layer() {
 
 loaderLayer api_loaded_layer(gnRenderingAPI api) {
     return (loaderLayer){
+        .instanceFunctions = loadAPIInstanceFunctions(api),
         .deviceFunctions = loadAPIDeviceFunctions(api),
         .commandFunctions = loadAPICommandFunctions(api),
     };
@@ -146,6 +147,7 @@ loaderLayer api_loaded_layer(gnRenderingAPI api) {
 
 loaderLayer function_check_layer() {
     return (loaderLayer){
+        .instanceFunctions = loadFunctionLoaderInstanceFunctions(),
         .deviceFunctions = loadFunctionLoaderDeviceFunctions(),
         .commandFunctions = loadFunctionLoaderCommandFunctions(),
 

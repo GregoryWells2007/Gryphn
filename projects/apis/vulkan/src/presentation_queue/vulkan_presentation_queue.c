@@ -9,7 +9,7 @@
 gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
-    vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->physicalDevice->physicalDevice->device, presentationInfo.surface->windowSurface->surface);
+    vkSwapchainSupportDetails details = vkGetSwapchainSupport(device->outputDevice->physicalDevice, presentationInfo.surface->windowSurface->surface);
     VkFormat convertedFormat = vkGryphnFormatToVulkanFormat(presentationInfo.format.format);
     VkColorSpaceKHR convertedColorSpace = vkGryphnColorSpaceToVulkanColorSpace(presentationInfo.format.colorSpace);
 

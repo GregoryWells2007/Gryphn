@@ -4,12 +4,23 @@
 #include "core/src/output_device/gryphn_output_device.h"
 #include "core/src/window_surface/gryphn_surface.h"
 
-gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info) {
-    CHECK_FUNCTION_WITH_RETURN_CODE(instance, _gnCreateInstance, instanceFunctions, instance, info);
+gnReturnCode checkCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* info, gryphnFunctionLayer* next) {
+    if (next->function == NULL) {
+        gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
+            .message = gnCreateString("Failed to load gnCreateInstance this indicates a bug within gryphn")
+        });
+        return GN_FAILED_TO_LOAD_FUNCTION;
+    }
+    return (*(PFN_gnCreateInstance*)next->function)(instance, info, next->next);
 }
 
-void checkDestroyInstance(gnInstance instance) {
-    CHECK_VOID_FUNCTION(instance, _gnDestroyInstance, instanceFunctions, instance);
+void checkDestroyInstance(gnInstanceHandle instance, gryphnFunctionLayer* next) {
+    if (next->function == NULL) {
+        gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
+            .message = gnCreateString("Failed to load gnDestroyInstance this indicates a bug within gryphn")
+        });
+    }
+    (*(PFN_gnDestroyInstance*)next->function)(instance, next->next);
 }
 
 gnPhysicalDevice* checkGetPhysicalDevices(gnInstanceHandle instance, uint32_t* count) {
@@ -19,11 +30,11 @@ gnBool checkCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle wind
     CHECK_RETURNED_FUNCTION(device->instance, _gnPhysicalDeviceCanPresentToSurface, instanceFunctions, GN_FALSE, device, windowSurface);
 }
 
-gnReturnCode checkCreateOutputDevice(gnOutputDeviceHandle device, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo) {
-    CHECK_FUNCTION_WITH_RETURN_CODE(instance, _gnCreateOutputDevice, instanceFunctions, device, instance, deviceInfo);
+gnReturnCode checkCreateOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo) {
+    CHECK_FUNCTION_WITH_RETURN_CODE(instance, _gnCreateOutputDevice, instanceFunctions, instance, device, deviceInfo);
 }
-void checkDestroyOutputDevice(gnOutputDeviceHandle device) {
-    CHECK_VOID_FUNCTION(device->instance, _gnDestroyOutputDevice, instanceFunctions, device);
+void checkDestroyOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device) {
+    CHECK_VOID_FUNCTION(device->instance, _gnDestroyOutputDevice, instanceFunctions, instance, device);
 }
 
 #ifdef GN_PLATFORM_MACOS
