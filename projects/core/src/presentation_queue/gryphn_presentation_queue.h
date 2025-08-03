@@ -1,5 +1,5 @@
 #pragma once
-#include <utils/gryphn_image_format.h>
+#include <core/gryphn_image_format.h>
 #include <output_device/gryphn_output_device.h>
 #include <window_surface/gryphn_surface.h>
 #include "gryphn_handles.h"

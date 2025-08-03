@@ -1,6 +1,6 @@
 #pragma once
 #include <gryphn_platform_include.h>
-#include <utils/gryphn_image_format.h>
+#include <core/gryphn_image_format.h>
 #include <instance/gryphn_instance.h>
 #include "utils/math/gryphn_vec2.h"
 

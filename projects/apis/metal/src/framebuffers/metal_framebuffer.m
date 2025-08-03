@@ -3,7 +3,7 @@
 #include "renderpass/gryphn_render_pass_descriptor.h"
 #include "instance/gryphn_instance.h"
 #include "output_device/gryphn_output_device.h"
-#include "utils/gryphn_image_format.h"
+#include "core/gryphn_image_format.h"
 gnReturnCode createMetalFramebuffer(gnFramebuffer framebuffer, gnOutputDevice device, gnFramebufferInfo info) {
     framebuffer->framebuffer = malloc(sizeof(struct gnPlatformFramebuffer_t));
 
