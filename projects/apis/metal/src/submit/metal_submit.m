@@ -1,6 +1,8 @@
 #include "metal_submit.h"
+#include "instance/gryphn_debugger.h"
 #include "synchronization/fence/gryphn_fence.h"
 #include "sync/fence/metal_fence.h"
+#include "instance/gryphn_instance.h"
 
 gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
     if (device == GN_NULL_HANDLE) return GN_INVALID_HANDLE;
@@ -21,12 +23,12 @@ gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
             mtlSignalSemaphore(info.signalSemaphores[c], commandBuffer);
 
         [info.commandBuffers[i]->commandBuffer->commandBuffer addCompletedHandler:^(id<MTLCommandBuffer> buffer) {
-            if (buffer.error) {
-                NSLog(@"Command buffer error: %s", buffer.error.localizedDescription.UTF8String);
-            }
-            if (atomic_fetch_sub_explicit(&buffersLeft, 1, memory_order_acq_rel) == 1) {
+            if (buffer.error)
+                gnDebuggerSetErrorMessage(info.commandBuffers[i]->instance->debugger, (gnMessageData){
+                    .message = gnCombineStrings(gnCreateString("Command buffer failed to run "), buffer.error.localizedDescription.UTF8String)
+                });
+            if (atomic_fetch_sub_explicit(&buffersLeft, 1, memory_order_acq_rel) == 1)
                 [fenceToSignal->fence->event setSignaledValue:fenceToSignal->fence->currentValue];
-            }
         }];
 
         [commandBuffer commit];
