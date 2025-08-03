@@ -10,31 +10,47 @@
 #include <apis/opengl/loader/opengl_loader.h>
 #endif
 
-#include "stdio.h"
 #include "core/src/instance/gryphn_instance.h"
 
-// load the speedy API functions or something like that
-dispatcher_bool loadAPIInstanceFunctions(dispatcher_layer* layer) {
-    gnRenderingAPI api = *(gnRenderingAPI*)layer->userData;
-    gnInstanceFunctions* funcs = (gnInstanceFunctions*)layer->function_array;
+gryphnInstanceFunctionLayers gryphnLoadAPILayer(gnRenderingAPI api) {
     switch (api) {
-    case GN_RENDERINGAPI_NONE: *funcs = (gnInstanceFunctions){ NULL };
+    case GN_RENDERINGAPI_NONE: return (gryphnInstanceFunctionLayers){};
 #ifdef GN_API_VULKAN
-    case GN_RENDERINGAPI_VULKAN: *funcs = loadVulkanInstanceFunctions();
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanAPILayer();
 #endif
 
-    case GN_RENDERINGAPI_SOFTWARE: *funcs = (gnInstanceFunctions){ NULL };
-    case GN_RENDERINGAPI_DIRECTX11: *funcs = (gnInstanceFunctions){ NULL };
-    case GN_RENDERINGAPI_DIRECTX12: *funcs = (gnInstanceFunctions){ NULL };
+    case GN_RENDERINGAPI_SOFTWARE: return  (gryphnInstanceFunctionLayers){};
+    case GN_RENDERINGAPI_DIRECTX11: return (gryphnInstanceFunctionLayers){};
+    case GN_RENDERINGAPI_DIRECTX12: return (gryphnInstanceFunctionLayers){};
 #ifdef GN_API_OPENGL
-    case GN_RENDERINGAPI_OPENGL: *funcs = loadOpenGLInstanceFunctions();
+    // case GN_RENDERINGAPI_OPENGL: return loadOpenGLInstanceFunctions();
 #endif
 #ifdef GN_API_METAL
-    case GN_RENDERINGAPI_METAL: *funcs = loadMetalInstanceFunctions();
+    // case GN_RENDERINGAPI_METAL: return loadMetalInstanceFunctions();
 #endif
-    default: *funcs = (gnInstanceFunctions){NULL};
+    default: return (gryphnInstanceFunctionLayers){};
     }
-    return dispatcher_true;
+}
+
+// load the speedy API functions or something like that
+gnInstanceFunctions loadAPIInstanceFunctions(gnRenderingAPI api) {
+    switch (api) {
+    case GN_RENDERINGAPI_NONE: return (gnInstanceFunctions){ NULL };
+#ifdef GN_API_VULKAN
+    case GN_RENDERINGAPI_VULKAN: return loadVulkanInstanceFunctions();
+#endif
+
+    case GN_RENDERINGAPI_SOFTWARE: return (gnInstanceFunctions){ NULL };
+    case GN_RENDERINGAPI_DIRECTX11: return (gnInstanceFunctions){ NULL };
+    case GN_RENDERINGAPI_DIRECTX12: return (gnInstanceFunctions){ NULL };
+#ifdef GN_API_OPENGL
+    case GN_RENDERINGAPI_OPENGL: return loadOpenGLInstanceFunctions();
+#endif
+#ifdef GN_API_METAL
+    case GN_RENDERINGAPI_METAL: return loadMetalInstanceFunctions();
+#endif
+    default: return (gnInstanceFunctions){NULL};
+    }
 }
 
 gnDeviceFunctions loadAPIDeviceFunctions(gnRenderingAPI api) {

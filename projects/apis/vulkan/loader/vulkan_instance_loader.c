@@ -4,10 +4,15 @@
 #include <output_device/vulkan_output_devices.h>
 #include <vulkan_surface/vulkan_surface.h>
 
+gryphnInstanceFunctionLayers loadVulkanAPILayer() {
+    return (gryphnInstanceFunctionLayers) {
+        .createInstance = {vulkanCreateInstance, NULL},
+        .destroyInstance = {vulkanDestroyInstance, NULL}
+    };
+}
+
 gnInstanceFunctions loadVulkanInstanceFunctions() {
     return (gnInstanceFunctions){
-        .createInstance = (PFN_gnCreateInstance)createVulkanInstance,
-        .destroyInstance = (PFN_gnDestroyInstance)destroyVulkanInstance,
 
         ._gnGetPhysicalDevices = getPhysicalDevices,
         ._gnPhysicalDeviceCanPresentToSurface = deviceCanPresentToSurface,

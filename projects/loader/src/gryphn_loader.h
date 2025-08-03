@@ -1,4 +1,5 @@
 #pragma once
+#include "gryphn_instance_functions.h"
 #include "gryphn_device_functions.h"
 #include "gryphn_command_functions.h"
 #include "gryphn_loader_info.h"
@@ -7,6 +8,17 @@
 
 #include "extensions/synchronization/loader/sync_functions.h"
 #include "extensions/queues/queues_functions.h"
+
+typedef struct gryphnFunctionLayer {
+    void* function;
+    struct gryphnFunctionLayer* next;
+} gryphnFunctionLayer;
+
+typedef struct gryphnInstanceFunctionLayers {
+    gryphnFunctionLayer createInstance; // PFN_gnCreateInstance
+    gryphnFunctionLayer destroyInstance; // PFN_gnDestroyInstance
+} gryphnInstanceFunctionLayers;
+gryphnInstanceFunctionLayers gryphnLoadAPILayer(gnRenderingAPI api);
 
 typedef struct loaderLayer {
     // idk why I sperate these info different classes, I should really shove them in one bit class
@@ -31,9 +43,6 @@ GN_ARRAY_LIST(loaderLayer);
 loaderLayer* loaderGetNextLayer(gnInstance instance);
 void resetLayer(gnInstance instance);
 
+gnInstanceFunctions loadAPIInstanceFunctions(gnRenderingAPI api);
 gnSyncExtFunctions loadAPISyncFunctions(gnRenderingAPI api);
 gnQueueExtFunctions loadAPIQueueFunctions(gnRenderingAPI api);
-
-
-
-dispatcher_bool loadAPIInstanceFunctions(dispatcher_layer* layer);

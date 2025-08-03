@@ -35,7 +35,7 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_TRUE;
 }
 
-gnReturnCode createVulkanInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, PFN_gnCreateInstance* next) {
+gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnFunctionLayer* next) {
     instance->instance = malloc(sizeof(gnPlatformInstance));
 
     vkStringArrayList extensions = vkStringArrayListCreate();
@@ -101,6 +101,6 @@ gnReturnCode createVulkanInstance(gnInstanceHandle instance, gnInstanceCreateInf
     return VkResultToGnReturnCode(vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance));
 }
 
-void destroyVulkanInstance(gnInstanceHandle instance, PFN_gnDestroyInstance* next) {
+void vulkanDestroyInstance(gnInstanceHandle instance, gryphnFunctionLayer* next) {
     vkDestroyInstance(instance->instance->vk_instance, NULL);
 }
