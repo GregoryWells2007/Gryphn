@@ -19,7 +19,7 @@ VkDescriptorSetLayout vkGryphnCreateSetLayouts(
     gnUniformSet uniformSet = *set;
 
     VkDescriptorSetLayoutBinding* bindings = malloc(sizeof(VkDescriptorSetLayoutBinding) * uniformSet.uniformBindingCount);
-    for (int i = 0; i < uniformSet.uniformBindingCount; i++) {
+    for (uint32_t i = 0; i < uniformSet.uniformBindingCount; i++) {
         bindings[i] = (VkDescriptorSetLayoutBinding){
             .binding = uniformSet.uniformBindings[i].binding,
             .descriptorCount = 1,

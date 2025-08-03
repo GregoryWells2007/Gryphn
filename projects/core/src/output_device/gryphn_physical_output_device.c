@@ -4,7 +4,7 @@
 
 gnPhysicalOutputDeviceHandle* gnGetPhyscialDevices(gnInstanceHandle instance, uint32_t* count) {;
     gnPhysicalOutputDeviceHandle* devices = instance->callingLayer->instanceFunctions._gnGetPhysicalDevices(instance, count);
-    for (int i = 0; i < *count; i++)
+    for (uint32_t i = 0; i < *count; i++)
         devices[i]->instance = instance;
     return devices;
 }

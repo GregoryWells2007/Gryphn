@@ -7,7 +7,7 @@
 
 VkGryphnUniformPool* GetLastUniformPool(VkGryphnUniformPoolArrayList list) {
     uint32_t count = VkGryphnUniformPoolArrayListCount(list);
-    return VkGryphnUniformPoolArrayListRefAt(list, count);
+    return VkGryphnUniformPoolArrayListRefAt(list, count - 1);
 }
 
 gnReturnCode createUniformPool(gnUniformPool pool, gnDeviceHandle device) {

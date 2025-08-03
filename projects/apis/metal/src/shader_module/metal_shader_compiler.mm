@@ -9,7 +9,7 @@ typedef struct mtlCompiler_t {
 } mtlInternalCompiler;
 
 void handle_resources(spirv_cross::CompilerMSL& compiler, spirv_cross::SmallVector<spirv_cross::Resource>& resources) {
-    for (int i = 0; i < resources.size(); i++) {
+    for (size_t i = 0; i < resources.size(); i++) {
         uint32_t set = compiler.get_decoration(resources[i].id, spv::DecorationDescriptorSet);
         compiler.unset_decoration(resources[i].id, spv::DecorationDescriptorSet);
         compiler.set_decoration(resources[i].id, spv::DecorationDescriptorSet, set + 1);
@@ -38,9 +38,9 @@ GN_CPP_FUNCTION const char* mtlCompilerShader(mtlCompiler compiler, gnUniformLay
 
     if (compiler->usingArgumentBuffers) {
         // std::vector<spirv_cross::MSLResourceBinding> bindings;
-        for (int i = 0; i < uniformLayout->setCount; i++) {
+        for (uint32_t i = 0; i < uniformLayout->setCount; i++) {
             uint32_t currentBinding = 0;
-            for (int c = 0; c < uniformLayout->sets[i].uniformBindingCount; c++) {
+            for (size_t c = 0; c < uniformLayout->sets[i].uniformBindingCount; c++) {
                 gnUniformBinding gryphnBinding = uniformLayout->sets[i].uniformBindings[c];
                 spirv_cross::MSLResourceBinding binding = {
                     .binding = gryphnBinding.binding,

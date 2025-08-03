@@ -1,7 +1,7 @@
 #pragma once
 #include <uniforms/gryphn_uniform_pool.h>
 
-typedef struct gnPlatformUniformPool_t {} gnPlatformUniformPool;
+typedef struct gnPlatformUniformPool_t { gnBool warningAvoider; } gnPlatformUniformPool;
 
 gnReturnCode createMetalUniformPool(gnUniformPool pool, gnDeviceHandle device);
 gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationInfo allocInfo);

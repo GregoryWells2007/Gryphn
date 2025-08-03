@@ -2,14 +2,17 @@
 #include <uniforms/gryphn_uniform.h>
 #include "metal_uniform.h"
 #include "devices/metal_output_devices.h"
+#include "metal_uniform_pool.h"
 
 gnReturnCode createMetalUniformPool(gnUniformPool pool, gnDeviceHandle device) {
+    if (device == NULL) return GN_INVALID_HANDLE;
+    pool->uniformPool = malloc(sizeof(gnPlatformUniformPool));
     return GN_SUCCESS;
 }
 
 gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationInfo allocInfo) {
     gnUniform* uniforms = malloc(sizeof(gnUniform) * allocInfo.setCount);
-    for (int i = 0; i < allocInfo.setCount; i++) {
+    for (uint32_t i = 0; i < allocInfo.setCount; i++) {
         uniforms[i] = malloc(sizeof(struct gnUniform_t));
         uniforms[i]->uniform = malloc(sizeof(gnPlatformUniform));
         int currentIndex = 0;
@@ -17,7 +20,7 @@ gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationIn
         NSMutableArray* vertexArguments = [NSMutableArray arrayWithCapacity:allocInfo.sets[i].uniformBindingCount];
         NSMutableArray* fragmentArguments = [NSMutableArray arrayWithCapacity:allocInfo.sets[i].uniformBindingCount];
 
-        for (int c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
+        for (uint32_t c = 0; c < allocInfo.sets[i].uniformBindingCount; c++) {
             gnUniformBinding binding = allocInfo.sets[i].uniformBindings[c];
             switch (binding.type) {
             case GN_UNIFORM_BUFFER_DESCRIPTOR:
@@ -75,7 +78,7 @@ gnUniform* allocateMetalUniforms(gnUniformPool pool, const gnUniformAllocationIn
             [uniforms[i]->uniform->encoders[mtlFragment] setArgumentBuffer:uniforms[i]->uniform->argumentBuffers[mtlFragment] offset:0];
         }
 
-        for (int k = 0; k < totalArguments.count; k++) [[totalArguments objectAtIndex:k] release];
+        for (uint32_t k = 0; k < totalArguments.count; k++) [[totalArguments objectAtIndex:k] release];
         [totalArguments release];
         for (int g = 0; g < MAX_METAL_BINDINGS; g++) uniforms[i]->uniform->indexMap[g] = -1;
     }
