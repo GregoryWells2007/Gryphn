@@ -1,9 +1,11 @@
 #include "vulkan_uniform_pool.h"
 #include "vulkan_uniform_layout.h"
 #include "stdlib.h"
+#include "stdio.h"
 #include "output_device/vulkan_output_devices.h"
 #include "uniforms/gryphn_uniform.h"
 #include "vulkan_uniform.h"
+#include <string.h>
 
 VkGryphnUniformPool* GetLastUniformPool(VkGryphnUniformPoolArrayList list) {
     uint32_t count = VkGryphnUniformPoolArrayListCount(list);
@@ -53,6 +55,8 @@ gnUniform* allocateUniforms(gnUniformPool pool, gnUniformAllocationInfo allocInf
 
         // TODO: redo this, its not warning me IDK why cuz its totally wrong
         VkDescriptorPoolSize poolSizes[GN_UNIFORM_TYPE_MAX];
+        memset(poolSizes, 0, sizeof(poolSizes));
+
         for (uint32_t i = 0; i < allocInfo.setCount; i++)
             for (uint32_t c = 0; c < allocInfo.sets[i].uniformBindingCount; c++)
                 poolSizes[allocInfo.sets[i].uniformBindings[c].type].descriptorCount++;
