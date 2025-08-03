@@ -5,7 +5,6 @@
 #include "core/gryphn_return_code.h"
 #include "core/src/instance/gryphn_debugger.h"
 #include <gryphn_extensions.h>
-#include "Dispatcher/dispatcher.h"
 
 typedef struct gnApplicationInfo {
     gnString  applicationName;
@@ -25,10 +24,13 @@ typedef struct gnInstanceCreateInfo {
 
 #ifdef GN_REVEAL_IMPL
 #include <loader/src/gryphn_loader.h>
+
 struct gnInstance_t {
     struct gnPlatformInstance_t* instance;
     gnDebuggerCreateInfo debugger;
     gnBool enabledExtensions[GN_EXT_MAX];
+
+    gryphnInstanceFunctionLayers functions;
 
     loaderLayerArrayList layers;
     loaderLayer* callingLayer;

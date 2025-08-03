@@ -1,10 +1,10 @@
 #include "metal_instance.h"
 
 // metal instances are kinda useless
-gnReturnCode createMetalInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo) {
+gnReturnCode metalCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnFunctionLayer* next) {
     if (instance->instance == NULL) instance->instance = malloc(sizeof(gnPlatformInstance));
     return GN_SUCCESS;
 }
-void destroyMetalInstance(gnInstance instance) {
+void metalDestroyInstance(gnInstanceHandle instance, gryphnFunctionLayer* next) {
     free(instance->instance);
 }

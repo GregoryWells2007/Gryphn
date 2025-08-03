@@ -5,6 +5,9 @@
 #include "extensions/synchronization/loader/sync_functions.h"
 #include "core/gryphn_extensions.h"
 
+typedef struct gryphnInstanceFunctionLayers gryphnInstanceFunctionLayers;
+gryphnInstanceFunctionLayers metalLoadAPILayer();
+
 gnInstanceFunctions loadMetalInstanceFunctions();
 gnDeviceFunctions loadMetalDeviceFunctions();
 gnCommandFunctions loadMetalCommandFunctions();

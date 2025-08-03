@@ -26,7 +26,7 @@ gryphnInstanceFunctionLayers gryphnLoadAPILayer(gnRenderingAPI api) {
     // case GN_RENDERINGAPI_OPENGL: return loadOpenGLInstanceFunctions();
 #endif
 #ifdef GN_API_METAL
-    // case GN_RENDERINGAPI_METAL: return loadMetalInstanceFunctions();
+    case GN_RENDERINGAPI_METAL: return metalLoadAPILayer();
 #endif
     default: return (gryphnInstanceFunctionLayers){};
     }

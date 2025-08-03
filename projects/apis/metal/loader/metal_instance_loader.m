@@ -3,10 +3,15 @@
 #include "surface/metal_surface.h"
 #include "devices/metal_output_devices.h"
 
+gryphnInstanceFunctionLayers metalLoadAPILayer() {
+    return (gryphnInstanceFunctionLayers) {
+        .createInstance = { metalCreateInstance, NULL },
+        .destroyInstance = { metalDestroyInstance, NULL }
+    };
+}
+
 gnInstanceFunctions loadMetalInstanceFunctions() {
     return (gnInstanceFunctions){
-        ._gnCreateInstance = createMetalInstance,
-        ._gnDestroyInstance = destroyMetalInstance,
         ._gnGetPhysicalDevices = getMetalDevices,
         ._gnPhysicalDeviceCanPresentToSurface = metalCanDevicePresent,
         ._gnCreateOutputDevice = createMetalOutputDevice,

@@ -7,5 +7,5 @@ typedef struct gnPlatformInstance_t {
     NSView* metalContentView;
 } gnPlatformInstance;
 
-gnReturnCode createMetalInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo);
-void destroyMetalInstance(gnInstance instance);
+gnReturnCode metalCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnFunctionLayer* next);
+void metalDestroyInstance(gnInstance instance, gryphnFunctionLayer* next);

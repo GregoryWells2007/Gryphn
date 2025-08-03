@@ -6,6 +6,9 @@
 #include "extensions/queues/queues_functions.h"
 #include "core/gryphn_extensions.h"
 
+typedef struct gryphnInstanceFunctionLayers gryphnInstanceFunctionLayers;
+gryphnInstanceFunctionLayers loadVulkanAPILayer();
+
 gnInstanceFunctions loadVulkanInstanceFunctions();
 gnDeviceFunctions loadVulkanDeviceFunctions();
 gnCommandFunctions loadVulkanCommandFunctions();
