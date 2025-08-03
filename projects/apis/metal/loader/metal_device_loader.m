@@ -14,7 +14,7 @@
 #include "submit/metal_submit.h"
 #include "present/metal_present.h"
 
-gnDeviceFunctions loadMetalDeviceFunctions() {
+gnDeviceFunctions loadMetalDeviceFunctions(void) {
     return (gnDeviceFunctions){
         ._gnCreatePresentationQueue = createMetalPresentationQueue,
         ._gnPresentationQueueGetImage = getMetalPresentQueueImage,

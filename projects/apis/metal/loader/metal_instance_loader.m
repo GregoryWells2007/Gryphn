@@ -3,7 +3,7 @@
 #include "surface/metal_surface.h"
 #include "devices/metal_output_devices.h"
 
-gryphnInstanceFunctionLayers metalLoadAPILayer() {
+gryphnInstanceFunctionLayers metalLoadAPILayer(void) {
     return (gryphnInstanceFunctionLayers) {
         .createInstance = metalCreateInstance,
         .destroyInstance = metalDestroyInstance,
@@ -11,7 +11,7 @@ gryphnInstanceFunctionLayers metalLoadAPILayer() {
     };
 }
 
-gnInstanceFunctions loadMetalInstanceFunctions() {
+gnInstanceFunctions loadMetalInstanceFunctions(void) {
     return (gnInstanceFunctions){
         ._gnGetPhysicalDevices = getMetalDevices,
         ._gnPhysicalDeviceCanPresentToSurface = metalCanDevicePresent,

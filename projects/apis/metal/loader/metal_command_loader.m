@@ -2,7 +2,7 @@
 #include "commands/command_buffer/metal_command_buffer.h"
 #include "commands/commands/metal_commands.h"
 
-gnCommandFunctions loadMetalCommandFunctions() {
+gnCommandFunctions loadMetalCommandFunctions(void) {
     return (gnCommandFunctions){
         ._gnCommandPoolAllocateCommandBuffers = allocateMetalCommandBuffers,
         ._gnBeginCommandBuffer = beginMetalCommandBuffer,

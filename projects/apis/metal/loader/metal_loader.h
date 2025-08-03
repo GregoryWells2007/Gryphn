@@ -6,11 +6,11 @@
 #include "core/gryphn_extensions.h"
 
 typedef struct gryphnInstanceFunctionLayers gryphnInstanceFunctionLayers;
-gryphnInstanceFunctionLayers metalLoadAPILayer();
+gryphnInstanceFunctionLayers metalLoadAPILayer(void);
 
-gnInstanceFunctions loadMetalInstanceFunctions();
-gnDeviceFunctions loadMetalDeviceFunctions();
-gnCommandFunctions loadMetalCommandFunctions();
-gnSyncExtFunctions loadMetalSyncFunctions();
+gnInstanceFunctions loadMetalInstanceFunctions(void);
+gnDeviceFunctions loadMetalDeviceFunctions(void);
+gnCommandFunctions loadMetalCommandFunctions(void);
+gnSyncExtFunctions loadMetalSyncFunctions(void);
 
 gnBool metalIsExtensionSupported(gnExtension extension);

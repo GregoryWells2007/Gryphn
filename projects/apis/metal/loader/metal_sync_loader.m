@@ -5,7 +5,7 @@
 #include "submit/metal_submit.h"
 #include "present/metal_present.h"
 
-gnSyncExtFunctions loadMetalSyncFunctions() {
+gnSyncExtFunctions loadMetalSyncFunctions(void) {
     return (gnSyncExtFunctions){
         ._gnPresentationQueueGetImageAsync = getMetalPresentQueueImageAsync,
 
