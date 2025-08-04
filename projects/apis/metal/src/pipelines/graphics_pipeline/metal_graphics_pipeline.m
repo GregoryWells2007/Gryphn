@@ -76,7 +76,8 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
         // printf("shader code: %s\n", shaderCode);
 
         NSError* error = nil;
-        MTLCompileOptions* mtloptions = nil;
+        MTLCompileOptions* mtloptions = [[MTLCompileOptions alloc] init];
+        mtloptions.mathMode = MTLMathModeFast;
         NSString* sourceCode = [NSString stringWithCString:shaderCode encoding:NSUTF8StringEncoding];
         id<MTLLibrary> shaderLib = [device->outputDevice->device    newLibraryWithSource:sourceCode options:mtloptions error:&error];
         if (!shaderLib) {
