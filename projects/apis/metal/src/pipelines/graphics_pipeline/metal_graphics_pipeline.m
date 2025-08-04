@@ -65,8 +65,9 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
 
         if (subpass.depthAttachment != NULL) {
             descriptor.depthAttachmentPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
-            descriptor.depthAttachmentPixelFormat = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex].depthAttachment.texture.pixelFormat;
-            descriptor.stencilAttachmentPixelFormat = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex].stencilAttachment.texture.pixelFormat;
+            descriptor.stencilAttachmentPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+            // descriptor.depthAttachmentPixelFormat = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex].depthAttachment.texture.pixelFormat;
+            // descriptor.stencilAttachmentPixelFormat = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex].stencilAttachment.texture.pixelFormat;
         }
     }
 

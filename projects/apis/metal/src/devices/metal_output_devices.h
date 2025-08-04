@@ -14,6 +14,11 @@ struct gnPlatformOutputDevice_t {
 
     id<MTLCommandBuffer> executingCommandBuffer;
     id<MTLCommandQueue> transferQueue;
+
+    id<MTLBuffer> fullScreenQuadBuffer;
+    id<MTLLibrary> fullScreenShader;
+    id<MTLFunction> fullScreenVertex, fullScreenFragment;
+    id<MTLRenderPipelineState> fullScreenPipeline;
 } gnPlatformOutputDevice;
 
 gnPhysicalDevice* getMetalDevices(gnInstanceHandle instance, uint32_t* deviceCount);
