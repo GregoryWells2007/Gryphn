@@ -15,6 +15,8 @@ struct gnPlatformOutputDevice_t {
     id<MTLCommandBuffer> executingCommandBuffer;
     id<MTLCommandQueue> transferQueue;
 
+    id<MTLBuffer> stagingBuffer;
+
     id<MTLBuffer> fullScreenQuadBuffer;
     id<MTLLibrary> fullScreenShader;
     id<MTLFunction> fullScreenVertex, fullScreenFragment;

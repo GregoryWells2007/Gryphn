@@ -18,7 +18,7 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
     MTLTextureDescriptor *textureDescriptor = [[MTLTextureDescriptor alloc] init];
     textureDescriptor.sampleCount = mtlSampleCount(info.samples);
     textureDescriptor.usage = MTLTextureUsageRenderTarget | MTLTextureUsageShaderRead;
-    textureDescriptor.storageMode = MTLStorageModeShared;             // Most efficient for GPU-only textures
+    textureDescriptor.storageMode = MTLStorageModePrivate;
     textureDescriptor.depth = info.extent.depth;
     textureDescriptor.width = info.extent.width;
     textureDescriptor.height = info.extent.height;
@@ -45,16 +45,65 @@ gnReturnCode createMetalTexture(gnTexture texture, gnDevice device, const gnText
 }
 
 void metalTextureData(gnTextureHandle texture, void* pixelData) {
-    MTLRegion region = {
-        { 0, 0, 0 },
-        {texture->info.extent.width, texture->info.extent.height, texture->info.extent.depth}
-    };
+    NSUInteger fullBytesPerRow = 4 * texture->info.extent.width;
+    id<MTLBuffer> stagingBuffer = [texture->device->outputDevice->stagingBuffer retain];
+    NSUInteger maxRowsPerChunk = stagingBuffer.length / fullBytesPerRow;
+    if (maxRowsPerChunk == 0) maxRowsPerChunk = 1;
+    NSUInteger yOffset = 0;
+    while (yOffset < texture->info.extent.height) {
+        NSUInteger rowsThisChunk = MIN(maxRowsPerChunk, texture->info.extent.height - yOffset);
+        NSUInteger chunkSize = rowsThisChunk * fullBytesPerRow;
 
-    NSUInteger bytesPerRow = 4 * texture->info.extent.width; // TODO: fix this should not be set to 4
-    [texture->texture->texture replaceRegion:region
-                mipmapLevel:0
-                  withBytes:pixelData
-                bytesPerRow:bytesPerRow];
+        // Copy chunk of pixel data into staging buffer
+        memcpy(stagingBuffer.contents, (uint8_t*)pixelData + yOffset * fullBytesPerRow, chunkSize);
+
+        id<MTLCommandBuffer> cmd = [texture->device->outputDevice->transferQueue commandBuffer];
+        id<MTLBlitCommandEncoder> blitEncoder = [cmd blitCommandEncoder];
+
+        MTLOrigin origin = { 0, (NSUInteger)yOffset, 0 };
+        MTLSize size = { (NSUInteger)texture->info.extent.width, (NSUInteger)rowsThisChunk, 1 };
+
+        [blitEncoder copyFromBuffer:stagingBuffer
+                      sourceOffset:0
+                 sourceBytesPerRow:fullBytesPerRow
+               sourceBytesPerImage:chunkSize
+                        sourceSize:size
+                         toTexture:texture->texture->texture
+                  destinationSlice:0
+                  destinationLevel:0
+                 destinationOrigin:origin];
+
+        [blitEncoder endEncoding];
+        [cmd commit];
+
+        yOffset += rowsThisChunk;
+    }
+
+    [stagingBuffer release];
+
+    // NSUInteger chunkSize = texture->device->outputDevice->stagingBuffer.length;
+    // NSUInteger totalSize = texture->info.extent.width * texture->info.extent.height * texture->info.extent.depth * 4;
+    // NSUInteger offset = 0;
+
+    // while (offset < totalSize) {
+    //     NSUInteger sizeToCopy = MIN(chunkSize, totalSize - offset);
+    //     memcpy(texture->device->outputDevice->stagingBuffer.contents, (char*)pixelData + offset, sizeToCopy);
+
+    //     id<MTLCommandBuffer> transfer = [texture->device->outputDevice->transferQueue commandBuffer];
+    //     id<MTLBlitCommandEncoder> blit = [transfer blitCommandEncoder];
+
+    //     [blit copyFromBuffer:texture->device->outputDevice->stagingBuffer
+    //                   sourceOffset:0
+    //                       toTexture:gpuBuffer
+    //              destinationOffset:offset
+    //                           size:sizeToCopy];
+
+    //     [blit endEncoding];
+    //     [transfer commit];
+
+    //     offset += sizeToCopy;
+    // }
+
 }
 
 void metalDestroyTexture(gnTexture texture) {

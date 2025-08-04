@@ -13,6 +13,8 @@ gnReturnCode createMetalOutputDevice(gnInstanceHandle instance, gnOutputDeviceHa
     outputDevice->outputDevice->device = deviceInfo.physicalDevice->physicalDevice->device.retain;
     outputDevice->outputDevice->transferQueue = outputDevice->outputDevice->device.newCommandQueue;
 
+    outputDevice->outputDevice->stagingBuffer = [outputDevice->outputDevice->device newBufferWithLength:(128 * 1024 * 1024) options:MTLResourceStorageModeShared];
+
     // create full screen quad
     float verticies[] = {
         -1.0f, -1.0f, 0.0f, 1.0f,
