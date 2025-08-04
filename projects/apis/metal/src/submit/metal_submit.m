@@ -28,7 +28,7 @@ gnReturnCode metalSyncSubmit(gnOutputDevice device, gnSubmitSyncInfo info) {
                     .message = gnCombineStrings(gnCreateString("Command buffer failed to run "), buffer.error.localizedDescription.UTF8String)
                 });
             if (atomic_fetch_sub_explicit(&buffersLeft, 1, memory_order_acq_rel) == 1)
-                [fenceToSignal->fence->event setSignaledValue:fenceToSignal->fence->currentValue];
+                signalMetalFence(fenceToSignal);
         }];
 
         [commandBuffer commit];

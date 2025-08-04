@@ -32,6 +32,7 @@ gnReturnCode createMetalPresentationQueue(gnPresentationQueueHandle presentation
     }
     [textureDescriptor release];
 
+    presentationQueue->presentationQueue->neededImages = mtlImageNeededArrayListCreate();
     return GN_SUCCESS;
 }
 
@@ -45,18 +46,20 @@ void mtlTakeImageFromQueue(uint32_t* whereToPut, gnPresentationQueue queue, gnSe
 }
 
 void mtlAddImageBackToQueue(gnPresentationQueue queue, uint32_t index) {
+    uint32_tArrayListAdd(queue->presentationQueue->avaliableTextures, index);
     if (mtlImageNeededArrayListCount(queue->presentationQueue->neededImages) > 0) {
         mtlImageNeeded* needed = mtlImageNeededArrayListRefAt(queue->presentationQueue->neededImages, mtlImageNeededArrayListCount(queue->presentationQueue->neededImages) - 1);
         mtlTakeImageFromQueue(needed->whereToPut, queue, needed->semaphoreToSignal);
         mtlImageNeededArrayListRemove(queue->presentationQueue->neededImages);
     }
-    else
+    else {
         uint32_tArrayListAdd(queue->presentationQueue->avaliableTextures, index);
+    }
 }
 
 gnReturnCode getMetalPresentQueueImageAsync(gnPresentationQueueHandle presentationQueue, uint64_t timeout, gnSemaphore semaphore, uint32_t* imageIndex) {
     time_t last_time = time(NULL);
-    while(uint32_tArrayListCount(presentationQueue->presentationQueue->avaliableTextures) == 0 || timeout >= 0) {
+    while(uint32_tArrayListCount(presentationQueue->presentationQueue->avaliableTextures) == 0 && timeout >= 0) {
         time_t curr_time = time(NULL);
         timeout -= (curr_time - last_time);
         last_time = curr_time;

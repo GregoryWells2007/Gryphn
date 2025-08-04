@@ -5,9 +5,7 @@
 #include "loader/src/gryphn_loader.h"
 #include "loader/src/gryphn_loader.h"
 #include "stdio.h"
-
 #include "validation_layers/function_loader/loader/function_loader.h"
-
 
 // this implementation of gnCreateInstance cannot return GN_UNLOADED_LAYER
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* info) {
@@ -28,8 +26,8 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
         if (!gnIsExtensionSuppoted(info->coreAPI, info->extensions[i])) unsupportedExtension = GN_TRUE;
     }
 
-    // if ((*instance)->enabledExtensions[GN_EXT_SYNCHRONIZATION]) (*instance)->layers.data[0].syncFunctions = loadAPISyncFunctions(info->coreAPI);
-    // if ((*instance)->enabledExtensions[GN_EXT_QUEUES]) (*instance)->layers.data[0].queueFunctions = loadAPIQueueFunctions(info->coreAPI);
+    if ((*instance)->enabledExtensions[GN_EXT_SYNCHRONIZATION]) loaderLayerArrayListRefAt((*instance)->layers, 0)->syncFunctions = loadAPISyncFunctions(info->coreAPI);
+    if ((*instance)->enabledExtensions[GN_EXT_QUEUES]) loaderLayerArrayListRefAt((*instance)->layers, 0)->queueFunctions = loadAPIQueueFunctions(info->coreAPI);
 
     if (info->debuggerInfo.layerCount > 0) {
         for (uint32_t i = 0; i < info->debuggerInfo.layerCount; i++) {

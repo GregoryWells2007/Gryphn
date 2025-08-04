@@ -10,5 +10,6 @@ typedef struct gnPlatformFence_t {
 
 gnReturnCode createMetalFence(gnFence fence, gnDevice device);
 void waitForMetalFence(gnFence fence, uint64_t timeout);
+void signalMetalFence(gnFence fence);
 void resetMetalFence(gnFence fence);
 void destroyMetalFence(gnFence fence);
