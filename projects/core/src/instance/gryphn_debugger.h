@@ -43,7 +43,7 @@ typedef struct gnDebuggerCreateInfo {
 
 #ifdef GN_REVEAL_IMPL
 static inline void gnDebuggerSetErrorMessage(gnDebuggerCreateInfo debugger, gnMessageData data) {
-    // if (debugger == NULL) return;
+    if (debugger.callback == 0) return;
     debugger.callback(
         GN_MESSAGE_ERROR,
         GN_DEBUG_MESSAGE_VALIDATION,

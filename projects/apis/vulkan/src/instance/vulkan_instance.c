@@ -83,10 +83,11 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
     #endif
 
     VkDebugUtilsMessengerCreateInfoEXT debugCreateInfo;
+    const char* enabledLayerNames = "VK_LAYER_KHRONOS_validation";
     if (instance->enabledLayerCounts[GN_DEBUGGER_LAYER_PLATFORM] > 0) {
         vkStringArrayListAdd(extensions, VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
         createInfo.enabledLayerCount = 1;
-        createInfo.ppEnabledLayerNames = (const char*[]){ "VK_LAYER_KHRONOS_validation" };
+        createInfo.ppEnabledLayerNames = &enabledLayerNames;
 
         instance->instance->userData.debuggerCallback = instanceInfo->debuggerInfo.callback;
         instance->instance->userData.userData = instanceInfo->debuggerInfo.userData;

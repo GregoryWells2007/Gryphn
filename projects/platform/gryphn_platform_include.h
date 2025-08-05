@@ -1,5 +1,6 @@
 #pragma once
 #include <gryphn_rendering_api.h>
+#include "utils/gryphn_bool.h"
 
 #ifdef GN_PLATFORM_LINUX
 #include <platform_linux/gryphn_platform_linux.h>

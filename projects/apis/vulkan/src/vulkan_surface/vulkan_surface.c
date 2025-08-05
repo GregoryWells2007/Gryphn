@@ -2,7 +2,7 @@
 #include <instance/vulkan_instance.h>
 #include "vulkan_surface.h"
 #include <output_device/vulkan_physical_device.h>
-
+#include "vulkan_result_converter.h"
 
 #ifdef GN_PLATFORM_LINUX
 #ifdef GN_WINDOW_X11
@@ -14,11 +14,7 @@ gnReturnCode createX11WindowSurface(gnWindowSurfaceHandle windowSurface, gnInsta
     info.sType = VK_STRUCTURE_TYPE_XLIB_SURFACE_CREATE_INFO_KHR;
     info.dpy = createInfo.display;
     info.window = createInfo.window;
-
-    VkResult result = vkCreateXlibSurfaceKHR(instance->instance->vk_instance, &info, NULL, &windowSurface->windowSurface->surface);
-    if (result != VK_SUCCESS)
-        return GN_FAILED_TO_ATTACH_WINDOW;
-    return GN_SUCCESS;
+    return VkResultToGnReturnCode(vkCreateXlibSurfaceKHR(instance->instance->vk_instance, &info, NULL, &windowSurface->windowSurface->surface));
 }
 #endif
 
