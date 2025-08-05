@@ -1,11 +1,12 @@
 #include "opengl_physical_device.h"
+#include "stdlib.h"
 
 gnPhysicalDevice* getOpenGLDevice(gnInstanceHandle instance, uint32_t* deviceCount) {
     *deviceCount = 1;
 
     gnPhysicalDevice* devices = malloc(sizeof(gnPhysicalDevice));
-
-    gnPhysicalDevice device = {
+    devices[0] = malloc(sizeof(struct gnPhysicalOutputDevice_t));
+    *devices[0] = (struct gnPhysicalOutputDevice_t){
         .physicalDevice = malloc(sizeof(gnPlatformPhysicalDevice)),
         .features = {
             .maxColorSamples = GN_SAMPLE_BIT_1,
@@ -16,20 +17,10 @@ gnPhysicalDevice* getOpenGLDevice(gnInstanceHandle instance, uint32_t* deviceCou
         .properties = {
             .deviceType = GN_DEDICATED_DEVICE,
             .name = gnCreateString("Generic OpenGL device")
-        },
-        .queueProperties = {
-            .queueCount = 1,
-            .queueProperties = (gnQueueProperties[1]){
-                (gnQueueProperties){
-                    .queueCount = 1,
-                    .queueType = GN_QUEUE_GRAPHICS
-                }
-            }
         }
     };
-    devices[0] = device;
     return devices;
 }
-gnBool openGLQueueCanPresent(const gnPhysicalDevice device, uint32_t queueIndex, gnWindowSurfaceHandle windowSurface) {
-    return gnTrue;
+gnBool openglCanDevicePresent(gnPhysicalDevice device, gnWindowSurfaceHandle windowSurface) {
+    return GN_TRUE;
 }

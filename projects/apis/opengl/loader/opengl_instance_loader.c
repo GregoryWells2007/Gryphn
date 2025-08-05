@@ -4,12 +4,18 @@
 #include "device/opengl_physical_device.h"
 #include "device/opengl_output_device.h"
 
+gryphnInstanceFunctionLayers loadOpenGLAPILayer() {
+    return (gryphnInstanceFunctionLayers) {
+        .createInstance = openglCreateInstance,
+        .destroyInstance = openglDestroyInstance,
+        NULL
+    };
+}
+
 gnInstanceFunctions loadOpenGLInstanceFunctions() {
     return (gnInstanceFunctions){
-        ._gnCreateInstance = createOpenGLInstance,
-        ._gnDestroyInstance = destroyOpenGLInstance,
         ._gnGetPhysicalDevices = getOpenGLDevice,
-        ._gnQueueCanPresentToSurface = openGLQueueCanPresent,
+        ._gnPhysicalDeviceCanPresentToSurface = openglCanDevicePresent,
         ._gnCreateOutputDevice = createOpenGLOutputDevice,
         ._gnDestroyOutputDevice = destroyOpenGLOutputDevice,
         #ifdef GN_PLATFORM_LINUX

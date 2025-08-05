@@ -1,8 +1,9 @@
 #include "opengl_instance.h"
 
-gnReturnCode createOpenGLInstance(gnInstanceHandle instance, gnInstanceInfo instanceInfo) {
+gnReturnCode openglCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next) {
+    if (instanceInfo->coreAPI != GN_RENDERINGAPI_OPENGL) return GN_UNSUPPORTED_API;
     return GN_SUCCESS;
 }
-void destroyOpenGLInstance(gnInstanceHandle instance) {
+void openglDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next) {
 
 }

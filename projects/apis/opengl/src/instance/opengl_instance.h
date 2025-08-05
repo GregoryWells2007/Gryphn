@@ -4,5 +4,5 @@
 
 typedef struct gnPlatformInstance_t {} gnPlatformInstance;
 
-gnReturnCode createOpenGLInstance(gnInstanceHandle instance, gnInstanceInfo instanceInfo);
-void destroyOpenGLInstance(gnInstanceHandle instance);
+gnReturnCode openglCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next);
+void openglDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next);

@@ -34,7 +34,7 @@ add_subdirectory(projects/core) # build gryphn core
 add_subdirectory(projects/extensions)
 add_subdirectory(projects/platform) # build gryphn platform
 add_subdirectory(projects/validation_layers/function_loader/)
-target_link_libraries(Gryphn INTERFACE GryphnUtils GryphnCore GryphnLoader GryphnPlatform GryphnFunctionValidator GryphnExtensions)
+target_link_libraries(Gryphn INTERFACE GryphnCore GryphnLoader GryphnPlatform GryphnFunctionValidator GryphnExtensions)
 
 if (VULKAN_BUILT)
     target_link_libraries(Gryphn INTERFACE GryphnVulkanImpl)
@@ -45,3 +45,5 @@ endif()
 if (OPENGL_BUILT)
     target_link_libraries(Gryphn INTERFACE GryphnOpenGLImpl)
 endif()
+
+target_link_libraries(Gryphn INTERFACE GryphnUtils)

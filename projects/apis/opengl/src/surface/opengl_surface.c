@@ -1,6 +1,7 @@
 #include <glad/glad.h>
 #include "GL/glext.h"
 #include "opengl_surface.h"
+#include "utils/gryphn_string.h"
 
 #ifdef GN_PLATFORM_LINUX
 #ifdef GN_WINDOW_X11
@@ -17,11 +18,16 @@ gnReturnCode createGLXContext(gnWindowSurfaceHandle windowSurface, gnInstanceHan
     XVisualInfo* vi = glXChooseVisual(createInfo.display, 0, attribs);
     windowSurface->windowSurface->context = glXCreateContext(createInfo.display, vi, NULL, GL_TRUE);
     if (glXMakeCurrent(createInfo.display, createInfo.window, windowSurface->windowSurface->context) == GL_FALSE)
-        return GN_FAILED_TO_ATTACH_WINDOW;
+        return GN_WINDOW_IN_USE;
     windowSurface->windowSurface->window = createInfo.window;
     windowSurface->windowSurface->display = createInfo.display;
-    if (!gladLoadGLLoader((GLADloadproc)glXGetProcAddress))
-        return GN_FAILED_TO_INIT_OPENGL;
+    if (!gladLoadGLLoader((GLADloadproc)glXGetProcAddress)) {
+        gnDebuggerSetErrorMessage(instance->debugger, (gnMessageData){
+            .message = gnCreateString("Failed to load OpenGL functions")
+        });
+
+        return GN_UNKNOWN_ERROR;
+    }
     return GN_SUCCESS;
 }
 

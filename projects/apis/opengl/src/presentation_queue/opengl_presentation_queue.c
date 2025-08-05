@@ -27,17 +27,21 @@ gnReturnCode createOpenGLPresentationQueue(gnPresentationQueueHandle presentatio
             NULL
         );
 
-        GLuintArrayListAdd(&presentationQueue->presentationQueue->textures, presentationQueue->images[i]->texture->id);
-        uint32_tArrayListAdd(&presentationQueue->presentationQueue->avaliableTextures, i);
+        GLuintArrayListAdd(presentationQueue->presentationQueue->textures, presentationQueue->images[i]->texture->id);
+        uint32_tArrayListAdd(presentationQueue->presentationQueue->avaliableTextures, i);
     }
     return GN_SUCCESS;
 }
 gnReturnCode getOpenGLPresentationQueueImage(gnPresentationQueue presentationQueue, uint32_t* imageIndex) {
-    while (presentationQueue->presentationQueue->avaliableTextures.count == 0) {}
-    *imageIndex = presentationQueue->presentationQueue->avaliableTextures.data[0];
-    uint32_tArrayListPopHead(&presentationQueue->presentationQueue->avaliableTextures);
+    while (uint32_tArrayListCount(presentationQueue->presentationQueue->avaliableTextures) == 0) {}
+    *imageIndex = uint32_tArrayListAt(presentationQueue->presentationQueue->avaliableTextures, 0);
+    uint32_tArrayListPopHead(presentationQueue->presentationQueue->avaliableTextures);
     return GN_SUCCESS;
 }
 void destroyOpenGLPresentationQueue(gnPresentationQueueHandle presentationQueue) {
     free(presentationQueue->presentationQueue);
 }
+
+
+
+GN_ARRAY_LIST_DEFINITION(GLuint);

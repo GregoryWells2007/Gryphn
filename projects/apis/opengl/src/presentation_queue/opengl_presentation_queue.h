@@ -2,7 +2,7 @@
 #include <glad/glad.h>
 #include "presentation_queue/gryphn_presentation_queue.h"
 
-GN_ARRAY_LIST(GLuint);
+GN_ARRAY_LIST_HEADER(GLuint);
 
 typedef struct gnPlatformPresentationQueue_t {
     GLuintArrayList textures;

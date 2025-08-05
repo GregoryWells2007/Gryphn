@@ -3,6 +3,6 @@
 
 typedef struct gnPlatformOutputDevice_t {} gnPlatformOutputDevice;
 
-gnReturnCode createOpenGLOutputDevice(gnOutputDeviceHandle outputDevice, gnInstanceHandle instance, gnOutputDeviceInfo deviceInfo);
+gnReturnCode createOpenGLOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo);
 void waitForOpenGLDevice(const gnOutputDeviceHandle device);
 void destroyOpenGLOutputDevice(gnOutputDeviceHandle device);
