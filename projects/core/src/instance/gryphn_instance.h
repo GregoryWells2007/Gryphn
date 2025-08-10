@@ -4,7 +4,9 @@
 #include "utils/gryphn_version.h"
 #include "core/gryphn_return_code.h"
 #include "core/src/instance/gryphn_debugger.h"
+#include "gryphn_allocators.h"
 #include <gryphn_extensions.h>
+
 
 typedef struct gnApplicationInfo {
     gnString  applicationName;
@@ -32,12 +34,14 @@ struct gnInstance_t {
     int enabledLayerCounts[GN_LAYER_MAX];
     gryphnInstanceFunctionLayers* allLayers;
     gryphnInstanceFunctionLayers* functions;
+    gnAllocators allocators;
 
     loaderLayerArrayList layers;
     loaderLayer* callingLayer;
     uint32_t currentLayer;
     gnBool hasDebugger;
 };
+
 #endif
 
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* info);

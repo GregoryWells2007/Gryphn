@@ -1,14 +1,14 @@
 #include "metal_instance.h"
 
 // metal instances are kinda useless
-gnReturnCode metalCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next) {
+gnReturnCode metalCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next, gnAllocators* allocators) {
     if (next != NULL) return GN_SUCCESS;
 
     if (instanceInfo == NULL) return GN_INCOMPLETE;
-    instance->instance = malloc(sizeof(gnPlatformInstance));
+    instance->instance = allocators->malloc(sizeof(gnPlatformInstance), allocators->userData);
     return GN_SUCCESS;
 }
-void metalDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next) {
+void metalDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next, gnAllocators* allocators) {
     if (next != NULL) return;
-    free(instance->instance);
+    allocators->free(instance->instance, allocators->userData);
 }
