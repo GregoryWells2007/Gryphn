@@ -43,7 +43,17 @@ typedef struct gnDebuggerCreateInfo {
 } gnDebuggerCreateInfo;
 
 #ifdef GN_REVEAL_IMPL
-void gnDebuggerSetVerboseMessage(gnDebuggerCreateInfo* debugger, gnMessageData data);
+#include "stdlib.h"
+static inline void gnDebuggerSetVerboseMessage(gnDebuggerCreateInfo* debugger, gnMessageData data) {
+    if (debugger->callback == 0 || debugger == NULL) return;
+    debugger->callback(
+        GN_MESSAGE_VERBOSE,
+        GN_DEBUG_MESSAGE_GENERAL,
+        data,
+        debugger->userData
+    );
+}
+
 static inline void gnDebuggerSetErrorMessage(gnDebuggerCreateInfo debugger, gnMessageData data) {
     if (debugger.callback == 0) return;
     debugger.callback(
