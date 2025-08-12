@@ -1,5 +1,7 @@
 set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 project(GryphnVulkanImpl)
+set(CMAKE_CXX_STANDARD 17)
+
 add_compile_definitions(GN_REVEAL_IMPL)
 
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS "src/*.c" "src/*.h")
@@ -9,8 +11,10 @@ if (APPLE)
 endif()
 
 find_package(Vulkan REQUIRED)
-add_library(GryphnVulkanImpl STATIC ${SOURCE_FILES} ${METAL_FILES} ${LOADER_FILES})
+add_library(GryphnVulkanImpl STATIC ${SOURCE_FILES} ${METAL_FILES} ${LOADER_FILES} depends/memory_allocator/vk_mem_alloc.cpp)
 target_link_libraries(GryphnVulkanImpl ${Vulkan_LIBRARY})
+
+target_compile_options(GryphnVulkanImpl PRIVATE -Wno-nullability-completeness)
 
 target_include_directories(GryphnVulkanImpl PUBLIC
     ${Vulkan_INCLUDE_DIRS}
@@ -23,6 +27,7 @@ target_include_directories(GryphnVulkanImpl PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/../../
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../include/
     ${CMAKE_CURRENT_SOURCE_DIR}/../../../depends/
+    ${CMAKE_CURRENT_SOURCE_DIR}/depends/
 )
 
 if(WIN32)

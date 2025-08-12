@@ -29,7 +29,8 @@ typedef gnBool (*gnDebuggerCallback)(
 
 typedef enum gnDebuggerLayer {
     GN_DEBUGGER_LAYER_PLATFORM,  // enable platform (vulkan validation) layers
-    GN_DEBUGGER_LAYER_FUNCTIONS, // enable the checks on every function
+    GN_DEBUGGER_LAYER_FUNCTIONS, // enable the checks on every function,
+    GN_DEBUGGER_LAYER_ALLOCATORS, // enable the layer which debugs all allocations within Gryphn
 
     GN_LAYER_MAX
 } gnDebuggerLayer;
@@ -42,6 +43,7 @@ typedef struct gnDebuggerCreateInfo {
 } gnDebuggerCreateInfo;
 
 #ifdef GN_REVEAL_IMPL
+void gnDebuggerSetVerboseMessage(gnDebuggerCreateInfo* debugger, gnMessageData data);
 static inline void gnDebuggerSetErrorMessage(gnDebuggerCreateInfo debugger, gnMessageData data) {
     if (debugger.callback == 0) return;
     debugger.callback(

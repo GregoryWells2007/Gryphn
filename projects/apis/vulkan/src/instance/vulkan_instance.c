@@ -43,9 +43,9 @@ static VKAPI_ATTR VkBool32 VKAPI_CALL vk_debuggerDebugCallback(
     return VK_TRUE;
 }
 
-gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next) {
+gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next, gnAllocators* alloctors) {
     if (next != NULL) { return GN_SUCCESS; }
-    instance->instance = malloc(sizeof(gnPlatformInstance));
+    instance->instance = alloctors->malloc(sizeof(gnPlatformInstance), alloctors->userData);
 
     vkStringArrayList extensions = vkStringArrayListCreate();
     vkStringArrayListAdd(extensions, "VK_KHR_surface");
@@ -109,7 +109,8 @@ gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInf
     return VkResultToGnReturnCode(vkCreateInstance(&createInfo, NULL, &instance->instance->vk_instance));
 }
 
-void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next) {
+void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next, gnAllocators* alloctors) {
     if (next != NULL) { return; }
     vkDestroyInstance(instance->instance->vk_instance, NULL);
+    alloctors->free(instance->instance, alloctors->userData);
 }

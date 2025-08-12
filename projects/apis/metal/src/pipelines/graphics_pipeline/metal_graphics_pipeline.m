@@ -50,7 +50,7 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     mtlSubpass subpass = info.renderPassDescriptor->renderPassDescriptor->subpasses[info.subpassIndex];
     mtlSubpassCopyInfo copyInfo = info.renderPassDescriptor->renderPassDescriptor->copyInfos[info.subpassIndex];
     for (uint32_t i = 0; i < copyInfo.colorAttachmentCount; i++) {
-        descriptor.colorAttachments[i].pixelFormat = copyInfo.colorAttachments[i].format;
+        [descriptor.colorAttachments objectAtIndexedSubscript:i].pixelFormat = copyInfo.colorAttachments[i].format;
         if (info.colorBlending.enable == GN_TRUE) {
             [descriptor.colorAttachments objectAtIndexedSubscript:i].blendingEnabled = YES;
             [descriptor.colorAttachments objectAtIndexedSubscript:i].rgbBlendOperation = mtlGryphnBlendOperation(info.colorBlending.colorBlendOperation);
@@ -85,7 +85,6 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
             gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
                 .message = gnCombineStrings(gnCreateString("Failed to compile metal library "), errorString)
             });
-            [shaderLib release];
             free((void*)shaderCode);
             return GN_FAILED_CREATE_OBJECT;
         }
@@ -134,7 +133,6 @@ gnReturnCode createMetalGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gn
     graphicsPipeline->graphicsPipeline->graphicsPipeline = [device->outputDevice->device newRenderPipelineStateWithDescriptor:descriptor error:&error];
     [descriptor release];
     [vertexDescriptor release];
-    [error release];
     if (graphicsPipeline->graphicsPipeline->graphicsPipeline == nil) return GN_FAILED_CREATE_OBJECT;
     return GN_SUCCESS;
 }

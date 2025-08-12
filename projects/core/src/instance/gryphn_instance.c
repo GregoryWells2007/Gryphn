@@ -4,12 +4,30 @@
 #include "loader/src/gryphn_extension_loader.h"
 #include "loader/src/gryphn_loader.h"
 #include "loader/src/gryphn_loader.h"
-#include "stdio.h"
 #include "validation_layers/function_loader/loader/function_loader.h"
+#include "validation_layers/allocators/allocator_checker.h"
 
 // this implementation of gnCreateInstance cannot return GN_UNLOADED_LAYER
 gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* info) {
-    *instance = malloc(sizeof(struct gnInstance_t));
+    *instance = GN_NULL_HANDLE;
+    gnAllocators tmpAllocators = {
+        .userData = &info->debuggerInfo,
+        .malloc = (PFN_gnMalloc)malloc,
+        .calloc = (PFN_gnCalloc)calloc,
+        .realloc = (PFN_gnRealloc)realloc,
+        .free = (PFN_gnFree)free
+    };
+
+    for (int i = 0; i < info->debuggerInfo.layerCount; i++) {
+        if (info->debuggerInfo.layers[i] == GN_DEBUGGER_LAYER_ALLOCATORS) {
+            tmpAllocators.malloc = gnMallocFunc;
+            tmpAllocators.calloc = gnCallocFunc;
+            tmpAllocators.realloc = gnReallocFunc;
+            tmpAllocators.free = gnFreeFunc;
+        }
+    }
+
+    *instance = tmpAllocators.malloc(sizeof(struct gnInstance_t), tmpAllocators.userData);
     (*instance)->hasDebugger = GN_FALSE;
     (*instance)->layers = loaderLayerArrayListCreate();
 
@@ -61,11 +79,14 @@ gnReturnCode gnCreateInstance(gnInstanceHandle* instance, gnInstanceCreateInfo* 
     for (uint32_t i = 0; i < loaderLayerArrayListCount((*instance)->layers); i++) loaderLayerArrayListRefAt((*instance)->layers, i)->layerIndex = i;
     (*instance)->callingLayer = loaderLayerArrayListRefAt((*instance)->layers, (*instance)->currentLayer);
     if (unsupportedExtension) return GN_UNLOADED_EXTENSION;
-    return (*instance)->functions->createInstance(*instance, info, (*instance)->functions->next);
+    (*instance)->allocators = tmpAllocators;
+    (*instance)->allocators.userData = &(*instance)->debugger;
+    return (*instance)->functions->createInstance(*instance, info, (*instance)->functions->next, &(*instance)->allocators);
 }
 
 void gnDestroyInstance(gnInstanceHandle* instance) {
     if (instance == GN_NULL_HANDLE) return;
-    (*instance)->functions->destroyInstance(*instance, (*instance)->functions->next);
+    (*instance)->functions->destroyInstance(*instance, (*instance)->functions->next, &(*instance)->allocators);
+    (*instance)->allocators.free(*instance, (*instance)->allocators.userData);
     *instance = GN_NULL_HANDLE;
 }

@@ -9,10 +9,10 @@ typedef enum gnIndexType {
 } gnIndexType;
 
 typedef enum gnBufferType {
-    GN_VERTEX_BUFFER  = 0x00000001,
-    GN_INDEX_BUFFER   = 0x00000002,
-    GN_UNIFORM_BUFFER = 0x00000004,
-    GN_STORAGE_BUFFER = 0x00000008
+    GN_VERTEX_BUFFER  = 1 << 0,
+    GN_INDEX_BUFFER   = 1 << 2,
+    GN_UNIFORM_BUFFER = 1 << 3,
+    GN_STORAGE_BUFFER = 1 << 4
 } gnBufferType; // I need to support more buffer types
 
 // i love that OpenGL does this so im stealing it
@@ -44,4 +44,5 @@ gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device,
 void gnBufferData(gnBufferHandle buffer, size_t dataSize, gnBufferMemory data);
 void gnBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, gnBufferMemory data);
 gnBufferMemory gnMapBuffer(gnBufferHandle buffer);
+void gnUnmapBuffer(gnBufferHandle buffer);
 void gnDestroyBuffer(gnBufferHandle buffer);

@@ -70,6 +70,9 @@ void checkBufferSubData(gnBufferHandle buffer, size_t offset, size_t size, void*
 void* checkMapBuffer(gnBufferHandle buffer) {
     CHECK_RETURNED_FUNCTION(buffer->device->instance, _gnMapBuffer, deviceFunctions, NULL, buffer);
 }
+void checkUnmapBuffer(gnBufferHandle buffer) {
+    CHECK_VOID_FUNCTION(buffer->device->instance, _gnUnmapBuffer, deviceFunctions, buffer);
+}
 void checkDestroyBuffer(gnBufferHandle buffer) {
     CHECK_VOID_FUNCTION(buffer->device->instance, _gnDestroyBuffer, deviceFunctions, buffer);
 }

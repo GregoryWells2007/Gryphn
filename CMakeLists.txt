@@ -33,8 +33,15 @@ add_subdirectory(projects/loader) # build gryphn loader
 add_subdirectory(projects/core) # build gryphn core
 add_subdirectory(projects/extensions)
 add_subdirectory(projects/platform) # build gryphn platform
+
 add_subdirectory(projects/validation_layers/function_loader/)
+<<<<<<< HEAD
 target_link_libraries(Gryphn INTERFACE GryphnCore GryphnLoader GryphnPlatform GryphnFunctionValidator GryphnExtensions)
+=======
+add_subdirectory(projects/validation_layers/allocators/)
+
+target_link_libraries(Gryphn INTERFACE GryphnUtils GryphnCore GryphnLoader GryphnPlatform GryphnFunctionValidator GryphnAllocatorChecker GryphnExtensions)
+>>>>>>> acf2f8c22860b57d65172e2356704813fa2e18f0
 
 if (VULKAN_BUILT)
     target_link_libraries(Gryphn INTERFACE GryphnVulkanImpl)

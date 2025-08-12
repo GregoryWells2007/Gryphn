@@ -4,6 +4,7 @@
 #include "vulkan_device_extensions.h"
 #include "instance/gryphn_instance.h"
 #include "commands/command_buffer/vulkan_command_buffer.h"
+#include "instance/vulkan_instance.h"
 #include "vulkan_result_converter.h"
 #include "string.h"
 
@@ -95,15 +96,34 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
     VkResult fence_result = vkCreateFence(device->outputDevice->device, &fenceInfo, NULL, &device->outputDevice->barrierFence);
     if (fence_result != VK_SUCCESS) VkResultToGnReturnCode(fence_result);
 
+    VmaAllocatorCreateInfo allocatorCreateInfo = {
+        .device = device->outputDevice->device,
+        .physicalDevice = device->outputDevice->physicalDevice,
+        .instance = instance->instance->vk_instance,
+    };
+    if (vmaCreateAllocator(&allocatorCreateInfo, &device->outputDevice->allocator) != VK_SUCCESS)
+        return GN_FAILED_CREATE_ALLOCATOR;
+
     // create the massive staging buffer
     device->outputDevice->stagingBufferSize = 128 * 1024 * 1024;
-    gnReturnCode code = VkCreateBuffer(
-        &device->outputDevice->stagingBuffer,
-        device->outputDevice->stagingBufferSize, device,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
-        VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-    );
-    return code; // lowkey is a hack
+
+    VkBufferCreateInfo bufferCreateInfo = {
+        .sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO,
+        .pNext = NULL,
+        .flags = 0,
+        .queueFamilyIndexCount = 0,
+        .size = device->outputDevice->stagingBufferSize,
+        .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
+        .usage = VK_BUFFER_USAGE_TRANSFER_SRC_BIT
+    };
+
+    VmaAllocationCreateInfo bufferAllocationInfo = {
+        .usage = VMA_MEMORY_USAGE_CPU_ONLY,
+        .flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT,
+        .requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
+    };
+
+    return VkResultToGnReturnCode(vmaCreateBuffer(device->outputDevice->allocator, &bufferCreateInfo, &bufferAllocationInfo, &device->outputDevice->stagingBuffer.buffer, &device->outputDevice->stagingBuffer.allocation, NULL)); // lowkey is a hack
 }
 
 void waitForDevice(const gnOutputDeviceHandle device) {
@@ -112,8 +132,9 @@ void waitForDevice(const gnOutputDeviceHandle device) {
 
 void destroyVulkanOutputDevice(gnOutputDeviceHandle device) {
     vkDestroyFence(device->outputDevice->device, device->outputDevice->barrierFence, NULL);
-    gnDestroyVulkanBuffer(&device->outputDevice->stagingBuffer, device->outputDevice->device);
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);
+    vmaDestroyBuffer(device->outputDevice->allocator, device->outputDevice->stagingBuffer.buffer, device->outputDevice->stagingBuffer.allocation);
+    vmaDestroyAllocator(device->outputDevice->allocator);
     vkDestroyDevice(device->outputDevice->device, NULL);
     free(device->outputDevice);
 }

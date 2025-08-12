@@ -3,6 +3,7 @@
 #include <output_device/gryphn_output_device.h>
 #include "buffers/vulkan_buffer.h"
 #include "vulkan_physical_device.h"
+#include <memory_allocator/vk_mem_alloc.h>
 
 typedef struct vulkanQueue {
     VkQueue queue;
@@ -24,6 +25,8 @@ typedef struct gnPlatformOutputDevice_t {
 
     VkFence barrierFence;
     gnBool enabledOversizedDescriptorPools;
+
+    VmaAllocator allocator;
 } gnPlatformOutputDevice;
 
 VkCommandBuffer gnBeginVulkanTransferOperation(gnDevice device);

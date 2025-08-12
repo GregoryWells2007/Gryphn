@@ -42,6 +42,7 @@ typedef struct gnDeviceFunctions {
     void (*_gnBufferData)(gnBufferHandle buffer, size_t size, void* data);
     void (*_gnBufferSubData)(gnBufferHandle buffer, size_t offset, size_t dataSize, void* data);
     void* (*_gnMapBuffer)(gnBufferHandle buffer);
+    void (*_gnUnmapBuffer)(gnBufferHandle buffer);
     void (*_gnDestroyBuffer)(gnBufferHandle buffer);
 
     gnReturnCode (*_gnCreateUniformPool)(gnUniformPool pool, gnDeviceHandle device);

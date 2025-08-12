@@ -14,8 +14,8 @@ typedef struct gnPlatformInstance_t {
     vkUserData userData;
 } gnPlatformInstance;
 
-gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next);
-void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next);
+gnReturnCode vulkanCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next, gnAllocators* alloctors);
+void vulkanDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next, gnAllocators* alloctors);
 
 typedef const char* vkString;
 GN_ARRAY_LIST_HEADER(vkString);
