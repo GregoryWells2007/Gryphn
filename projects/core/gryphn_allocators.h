@@ -1,5 +1,5 @@
 #pragma once
-#include <stdlib.h>
+#include <stddef.h>
 
 typedef void* (*PFN_gnMalloc)   (size_t size, void* userData);
 typedef void* (*PFN_gnCalloc)   (int cnt, size_t size, void* userData);
@@ -13,5 +13,3 @@ typedef struct gnAllocators {
     PFN_gnRealloc realloc;
     PFN_gnFree    free;
 } gnAllocators;
-
-#define gnMalloc(allocators, size) allocators->malloc(size, allocators->userData)
