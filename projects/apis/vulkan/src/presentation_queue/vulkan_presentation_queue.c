@@ -6,6 +6,8 @@
 #include "sync/semaphore/vulkan_semaphore.h"
 #include <vulkan_result_converter.h>
 
+#include "stdio.h"
+
 gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
@@ -40,17 +42,25 @@ gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue
         presentQueueCreateInfo.queueFamilyIndexCount = presentationInfo.queueFamilyCount;
         presentQueueCreateInfo.pQueueFamilyIndices = presentationInfo.queueFamilies;
     } else {
-        if (presentationInfo.surface->windowSurface->presentQueueIndex != device->outputDevice->graphicsQueueIndex) {
+        uint32_t queueFamilyCount = 0;
+        vkGetPhysicalDeviceQueueFamilyProperties(device->outputDevice->physicalDevice, &queueFamilyCount, NULL);
+        for (uint32_t i = 0; i < queueFamilyCount; i++) {
+            VkBool32 supportsPresent;
+            vkGetPhysicalDeviceSurfaceSupportKHR(device->outputDevice->physicalDevice, i, presentationInfo.surface->windowSurface->surface, &supportsPresent);
+            if (supportsPresent) { presentationQueue->presentationQueue->presentQueueIndex = i; break; };
+        }
+
+        if (presentationQueue->presentationQueue->presentQueueIndex != device->outputDevice->graphicsQueueIndex) {
             presentQueueCreateInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
             presentQueueCreateInfo.queueFamilyIndexCount = 2;
             presentQueueCreateInfo.pQueueFamilyIndices = (uint32_t[]){
-                device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex,
+                presentationQueue->presentationQueue->presentQueueIndex,
                 device->outputDevice->queues[device->outputDevice->graphicsQueueIndex].queueInfo.queueIndex
             };
         } else {
             presentQueueCreateInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
             presentQueueCreateInfo.queueFamilyIndexCount = 1;
-            presentQueueCreateInfo.pQueueFamilyIndices = &device->outputDevice->queues[presentationInfo.surface->windowSurface->presentQueueIndex].queueInfo.queueIndex;
+            presentQueueCreateInfo.pQueueFamilyIndices = &presentationQueue->presentationQueue->presentQueueIndex;
         }
     }
 

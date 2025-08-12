@@ -5,7 +5,7 @@
 
 typedef struct gnPlatformWindowSurface_t {
     VkSurfaceKHR surface;
-    uint32_t presentQueueIndex;
+    // uint32_t presentQueueIndex;
 } gnPlatformWindowSurface;
 
 VkFormat vkGryphnFormatToVulkanFormat(gnImageFormat format);
