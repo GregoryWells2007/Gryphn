@@ -14,6 +14,8 @@ find_package(Vulkan REQUIRED)
 add_library(GryphnVulkanImpl STATIC ${SOURCE_FILES} ${METAL_FILES} ${LOADER_FILES} depends/memory_allocator/vk_mem_alloc.cpp)
 target_link_libraries(GryphnVulkanImpl ${Vulkan_LIBRARY})
 
+target_compile_options(GryphnVulkanImpl PRIVATE -Wno-nullability-completeness)
+
 target_include_directories(GryphnVulkanImpl PUBLIC
     ${Vulkan_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/
