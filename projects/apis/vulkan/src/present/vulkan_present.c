@@ -1,6 +1,5 @@
 #include "vulkan_present.h"
 #include "extensions/synchronization/commands/gryphn_sync_present.h"
-#include "vulkan_surface/vulkan_surface.h"
 #include "vulkan_result_converter.h"
 
 gnReturnCode vulkanQueuePresentSync(gnDevice device, gnQueue queue, gnPresentSyncInfo info) {
@@ -25,7 +24,7 @@ gnReturnCode vulkanQueuePresentSync(gnDevice device, gnQueue queue, gnPresentSyn
 }
 
 gnReturnCode vulkanPresentSync(gnDevice device, gnPresentSyncInfo info) {
-    return vulkanQueuePresentSync(device, (gnQueue)device->outputDevice->queues[info.presentationQueues[0]->info.surface->windowSurface->presentQueueIndex].queue, info);
+    return vulkanQueuePresentSync(device, (gnQueue)device->outputDevice->queues[info.presentationQueues[0]->presentationQueue->presentQueueIndex].queue, info);
 }
 
 gnReturnCode vulkanQueuePresent(gnDevice device, gnQueue queue, gnPresentInfo info) {
@@ -47,5 +46,5 @@ gnReturnCode vulkanQueuePresent(gnDevice device, gnQueue queue, gnPresentInfo in
 }
 
 gnReturnCode vulkanPresent(gnDevice device, gnPresentInfo info) {
-    return vulkanQueuePresent(device, (gnQueue)device->outputDevice->queues[info.presentationQueues[0]->info.surface->windowSurface->presentQueueIndex].queue, info);
+    return vulkanQueuePresent(device, (gnQueue)device->outputDevice->queues[info.presentationQueues[0]->presentationQueue->presentQueueIndex].queue, info);
 }

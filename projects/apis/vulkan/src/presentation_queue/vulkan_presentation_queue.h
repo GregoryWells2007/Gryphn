@@ -7,6 +7,8 @@ typedef struct gnPlatformPresentationQueue_t {
 
     VkImage* swapChainImages;
     VkImageView* swapChainImageViews;
+
+    uint32_t presentQueueIndex;
 } gnPlatformPresentationQueue;
 
 gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo);
