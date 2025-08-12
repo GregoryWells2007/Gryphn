@@ -21,6 +21,9 @@ void* gnMapBuffer(gnBufferHandle buffer) {
     if (buffer->info.usage == GN_STATIC_DRAW) return NULL;
     return buffer->device->instance->callingLayer->deviceFunctions._gnMapBuffer(buffer);
 }
+void gnUnmapBuffer(gnBufferHandle buffer) {
+    buffer->device->instance->callingLayer->deviceFunctions._gnUnmapBuffer(buffer);
+}
 void gnDestroyBuffer(gnBufferHandle buffer) {
     buffer->device->instance->callingLayer->deviceFunctions._gnDestroyBuffer(buffer);
 }

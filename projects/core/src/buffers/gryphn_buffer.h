@@ -44,4 +44,5 @@ gnReturnCode gnCreateBuffer(gnBufferHandle* buffer, gnOutputDeviceHandle device,
 void gnBufferData(gnBufferHandle buffer, size_t dataSize, gnBufferMemory data);
 void gnBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, gnBufferMemory data);
 gnBufferMemory gnMapBuffer(gnBufferHandle buffer);
+void gnUnmapBuffer(gnBufferHandle buffer);
 void gnDestroyBuffer(gnBufferHandle buffer);

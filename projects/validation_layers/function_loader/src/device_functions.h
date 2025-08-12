@@ -23,6 +23,7 @@ gnReturnCode checkCreateBuffer(gnBufferHandle buffer, gnDeviceHandle device, gnB
 void checkBufferData(gnBufferHandle buffer, size_t size, void* data);
 void checkBufferSubData(gnBufferHandle buffer, size_t offset, size_t size, void* data);
 void* checkMapBuffer(gnBufferHandle buffer);
+void checkUnmapBuffer(gnBufferHandle buffer);
 void checkDestroyBuffer(gnBufferHandle buffer);
 
 gnReturnCode checkCreateUniformPool(gnUniformPool pool, gnDeviceHandle device);

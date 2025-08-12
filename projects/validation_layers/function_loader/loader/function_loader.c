@@ -68,6 +68,7 @@ gnDeviceFunctions loadFunctionLoaderDeviceFunctions(void) {
         ._gnBufferData = checkBufferData,
         ._gnBufferSubData = checkBufferSubData,
         ._gnMapBuffer = checkMapBuffer,
+        ._gnUnmapBuffer = checkUnmapBuffer,
         ._gnDestroyBuffer = checkDestroyBuffer,
 
         ._gnCreateUniformPool = checkCreateUniformPool,
