@@ -143,18 +143,10 @@ void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, gnExtent3D 
 
 gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
-
     size_t imageSize = info.extent.width * info.extent.height;
     if (info.format == GN_FORMAT_BGRA8_SRGB) { imageSize *= 4; }
     if (info.format == GN_FORMAT_RGBA8_SRGB) { imageSize *= 4; }
-
-    gnReturnCode staginBufferCreateCode = VkCreateBuffer(
-        &texture->texture->buffer, imageSize, device,
-        VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT, VK_BUFFER_USAGE_TRANSFER_SRC_BIT
-    );
-    if (staginBufferCreateCode != GN_SUCCESS) return staginBufferCreateCode;
     texture->texture->size = imageSize;
-
     VkImageCreateInfo imageInfo = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
         .sharingMode = VK_SHARING_MODE_EXCLUSIVE,
@@ -172,27 +164,14 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
         .imageType = vkGryphnTextureType(info.type),
         .format = vkGryphnFormatToVulkanFormat(info.format)
     };
-
-    VkResult res = vkCreateImage(device->outputDevice->device, &imageInfo, NULL, &texture->texture->image.image);
-    if (res != VK_SUCCESS) return VkResultToGnReturnCode(res);
-
-    VkMemoryRequirements memRequirements;
-    vkGetImageMemoryRequirements(device->outputDevice->device, texture->texture->image.image, &memRequirements);
-
-    gnBool foundMemory = GN_FALSE;
-    VkMemoryAllocateInfo allocInfo = {
-        .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-        .allocationSize = memRequirements.size,
-        .memoryTypeIndex = VkMemoryIndex(device->outputDevice->physicalDevice, memRequirements.memoryTypeBits, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, &foundMemory)
+    VmaAllocationCreateInfo allocationInfo = {
+        .usage = VMA_MEMORY_USAGE_AUTO_PREFER_DEVICE,
+        .requiredFlags = VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT
     };
-    if (!foundMemory) return GN_FAILED_TO_ALLOCATE_MEMORY;
-
-    VkResult allocationRes = vkAllocateMemory(device->outputDevice->device, &allocInfo, NULL, &texture->texture->image.memory);
-    if (allocationRes != VK_SUCCESS) return VkResultToGnReturnCode(allocationRes);
-    vkBindImageMemory(device->outputDevice->device, texture->texture->image.image, texture->texture->image.memory, 0);
+    VkResult imageCreateInfo = vmaCreateImage(device->outputDevice->allocator, &imageInfo, &allocationInfo, &texture->texture->image.image, &texture->texture->image.allocation, NULL);
+    if (imageCreateInfo != VK_SUCCESS) return VkResultToGnReturnCode(imageCreateInfo);
 
     texture->texture->beenWrittenToo = GN_FALSE;
-
     VkImageViewCreateInfo viewInfo = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
         .image = texture->texture->image.image,
@@ -242,28 +221,37 @@ gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureIn
 }
 
 void textureData(gnTextureHandle texture, void* pixelData) {
-    void* data;
-    vkMapMemory(texture->device->outputDevice->device, texture->texture->buffer.memory, 0, texture->texture->size, 0, &data);
-    memcpy(data, pixelData, texture->texture->size);
-    vkUnmapMemory(texture->device->outputDevice->device, texture->texture->buffer.memory);
-
-    //gnDevice device, VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout
     VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-    VkCopyBufferToImage(texture->texture->buffer, texture->texture->image, texture->info.extent, texture->device);
-    VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
+    void* textureData;
+    VkGryphnBuffer* stagingBuffer = &texture->device->outputDevice->stagingBuffer;
+    VkDeviceSize sizeLeft = texture->texture->size, dataSize = texture->texture->size;
+    while (sizeLeft > 0) {
+        VkDeviceSize chunkSize = (texture->device->outputDevice->stagingBufferSize < sizeLeft) ? texture->device->outputDevice->stagingBufferSize : sizeLeft;
+        vulkanMapBufferInternal(texture->device, *stagingBuffer, &textureData);
+        memcpy(textureData, (char*)pixelData + (dataSize - sizeLeft), chunkSize);
+        vulkanUnmapBufferInternal(texture->device, *stagingBuffer);
+
+        VkBufferCopy copyRegion = {
+            .srcOffset = 0,
+            .dstOffset = dataSize - sizeLeft,
+            .size = chunkSize
+        };
+        sizeLeft -= chunkSize;
+
+        VkCopyBufferToImage(texture->device->outputDevice->stagingBuffer, texture->texture->image, texture->info.extent, texture->device);
+    }
+
+    VkTransitionImageLayout(texture->device, texture->texture->image.image, texture->info.format, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
     texture->texture->beenWrittenToo = GN_TRUE;
 }
 
-void gnDestroyVulkanImage(VkGryphnImage* image, VkDevice device) {
-    vkDestroyImage(device, image->image, NULL);
-    vkDestroyImageView(device, image->imageView, NULL);
-    vkFreeMemory(device, image->memory, NULL);
+void gnDestroyVulkanImage(VkGryphnImage* image, gnDevice device) {
+    vmaDestroyImage(device->outputDevice->allocator, image->image, image->allocation);
+    vkDestroyImageView(device->outputDevice->device, image->imageView, NULL);
 }
 
 void destroyTexture(gnTexture texture) {
     vkDestroySampler(texture->device->outputDevice->device, texture->texture->sampler, NULL);
-
-    gnDestroyVulkanBuffer(&texture->texture->buffer, texture->device->outputDevice->device);
-    gnDestroyVulkanImage(&texture->texture->image, texture->device->outputDevice->device);
+    gnDestroyVulkanImage(&texture->texture->image, texture->device);
 }
