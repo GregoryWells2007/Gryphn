@@ -132,10 +132,10 @@ void waitForDevice(const gnOutputDeviceHandle device) {
 
 void destroyVulkanOutputDevice(gnOutputDeviceHandle device) {
     vkDestroyFence(device->outputDevice->device, device->outputDevice->barrierFence, NULL);
-    vmaDestroyBuffer(device->outputDevice->allocator, device->outputDevice->stagingBuffer.buffer, device->outputDevice->stagingBuffer.allocation);
     vkDestroyCommandPool(device->outputDevice->device, device->outputDevice->transferCommandPool, NULL);
-    vkDestroyDevice(device->outputDevice->device, NULL);
+    vmaDestroyBuffer(device->outputDevice->allocator, device->outputDevice->stagingBuffer.buffer, device->outputDevice->stagingBuffer.allocation);
     vmaDestroyAllocator(device->outputDevice->allocator);
+    vkDestroyDevice(device->outputDevice->device, NULL);
     free(device->outputDevice);
 }
 
