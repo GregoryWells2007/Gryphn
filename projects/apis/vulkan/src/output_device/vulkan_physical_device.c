@@ -106,38 +106,47 @@ gnPhysicalDevice* getPhysicalDevices(gnInstanceHandle instance, uint32_t* device
 }
 
 gnBool deviceCanPresentToSurface(gnPhysicalDevice device, gnWindowSurface surface) {
-    gnBool foundQueue = GN_FALSE;
-    for (uint32_t i = 0; i < device->physicalDevice->neededQueueCount; i++) {
-        VkBool32 supportsPresent = VK_FALSE;
-        vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, device->physicalDevice->neededQueues[i].queueIndex, surface->windowSurface->surface, &supportsPresent);
-        if (supportsPresent) {
-            device->physicalDevice->neededQueues[i].usedForPresent = GN_TRUE;
-            foundQueue = GN_TRUE;
-            break;
-        }
-        surface->windowSurface->presentQueueIndex = i;
+    uint32_t queueFamilyCount = 0;
+    vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, NULL);
+    for (uint32_t i = 0; i < queueFamilyCount; i++) {
+        VkBool32 supportsPresent;
+        vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, i, surface->windowSurface->surface, &supportsPresent);
+        if (supportsPresent) return GN_TRUE;
     }
-
-    if (!foundQueue) {
-        uint32_t queueFamilyCount = 0;
-        vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, NULL);
-
-        for (uint32_t i = 0; i < queueFamilyCount; i++) {
-            VkBool32 supportsPresent = VK_FALSE;
-            vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, i, surface->windowSurface->surface, &supportsPresent);
-            if (supportsPresent) {
-                device->physicalDevice->neededQueues[device->physicalDevice->neededQueueCount] = (vulkanNeededQueue){
-                    .queueIndex = i,
-                    .createFlags = 0,
-                    .usedForPresent = GN_TRUE
-                };
-                foundQueue = GN_TRUE;
-                surface->windowSurface->presentQueueIndex = device->physicalDevice->neededQueueCount;
-                device->physicalDevice->neededQueueCount++;
-                break;
-            }
-        }
-    }
-
-    return foundQueue;
+    return GN_FALSE;
 }
+
+    // gnBool foundQueue = GN_FALSE;
+    // for (uint32_t i = 0; i < device->physicalDevice->neededQueueCount; i++) {
+    //     VkBool32 supportsPresent = VK_FALSE;
+    //     vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, device->physicalDevice->neededQueues[i].queueIndex, surface->windowSurface->surface, &supportsPresent);
+    //     if (supportsPresent) {
+    //         device->physicalDevice->neededQueues[i].usedForPresent = GN_TRUE;
+    //         foundQueue = GN_TRUE;
+    //         break;
+    //     }
+    //     surface->windowSurface->presentQueueIndex = i;
+    // }
+
+    // if (!foundQueue) {
+    //     uint32_t queueFamilyCount = 0;
+    //     vkGetPhysicalDeviceQueueFamilyProperties(device->physicalDevice->device, &queueFamilyCount, NULL);
+
+    //     for (uint32_t i = 0; i < queueFamilyCount; i++) {
+    //         VkBool32 supportsPresent = VK_FALSE;
+    //         vkGetPhysicalDeviceSurfaceSupportKHR(device->physicalDevice->device, i, surface->windowSurface->surface, &supportsPresent);
+    //         if (supportsPresent) {
+    //             device->physicalDevice->neededQueues[device->physicalDevice->neededQueueCount] = (vulkanNeededQueue){
+    //                 .queueIndex = i,
+    //                 .createFlags = 0,
+    //                 .usedForPresent = GN_TRUE
+    //             };
+    //             foundQueue = GN_TRUE;
+    //             surface->windowSurface->presentQueueIndex = device->physicalDevice->neededQueueCount;
+    //             device->physicalDevice->neededQueueCount++;
+    //             break;
+    //         }
+    //     }
+    // }
+
+    // return foundQueue;
