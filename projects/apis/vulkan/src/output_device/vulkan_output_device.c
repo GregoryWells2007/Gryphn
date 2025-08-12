@@ -21,6 +21,7 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
         float queuePriority = 1.0f;
         for (uint32_t i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
             queueCreateInfos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+            queueCreateInfos[i].pNext = NULL;
             queueCreateInfos[i].flags = 0;
             queueCreateInfos[i].queueCount = 1;
             queueCreateInfos[i].queueFamilyIndex = deviceInfo.physicalDevice->physicalDevice->neededQueues[i].queueIndex;
@@ -32,6 +33,7 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
         for (uint32_t i = 0; i < deviceInfo.queueInfoCount; i++) {
             queueCreateInfos[i].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
             queueCreateInfos[i].flags = 0;
+            queueCreateInfos[i].pNext = NULL;
             queueCreateInfos[i].queueCount = deviceInfo.queueInfos[i].queueCount;
             queueCreateInfos[i].queueFamilyIndex = deviceInfo.queueInfos[i].queueFamilyIndex;
             queueCreateInfos[i].pQueuePriorities = deviceInfo.queueInfos[i].queuePrioritys;
@@ -44,6 +46,8 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
 
     VkDeviceCreateInfo deviceCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO,
+        .flags = 0,
+        .pNext = NULL,
         .queueCreateInfoCount = createQueueCount,
         .pQueueCreateInfos = queueCreateInfos,
         .pEnabledFeatures = &deviceFeatures
@@ -85,7 +89,8 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
     VkCommandPoolCreateInfo poolInfo = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
         .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
-        .queueFamilyIndex = transferQueue
+        .queueFamilyIndex = transferQueue,
+        .pNext = NULL
     };
 
     VkResult command_pool_result = vkCreateCommandPool(device->outputDevice->device, &poolInfo, NULL, &device->outputDevice->transferCommandPool);
