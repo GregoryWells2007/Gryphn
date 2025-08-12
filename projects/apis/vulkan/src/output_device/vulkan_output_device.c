@@ -8,6 +8,8 @@
 #include "vulkan_result_converter.h"
 #include "string.h"
 
+#include "stdio.h"
+
 gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceHandle device, gnOutputDeviceInfo deviceInfo) {
     device->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
     device->outputDevice->physicalDevice = deviceInfo.physicalDevice->physicalDevice->device;
@@ -72,17 +74,20 @@ gnReturnCode createVulkanOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
 
     device->outputDevice->queues = malloc(sizeof(vulkanQueue) * deviceInfo.physicalDevice->physicalDevice->neededQueueCount);
     uint32_t transferQueue = 0;
+    gnBool foundTransferQueue = GN_FALSE, foundGraphicsQueue = GN_FALSE;
     for (uint32_t i = 0; i < deviceInfo.physicalDevice->physicalDevice->neededQueueCount; i++) {
         device->outputDevice->queues[i].queueInfo = deviceInfo.physicalDevice->physicalDevice->neededQueues[i];
 
         vkGetDeviceQueue(device->outputDevice->device, deviceInfo.physicalDevice->physicalDevice->neededQueues[i].queueIndex, 0, &device->outputDevice->queues[i].queue);
-        if ((device->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT) {
+        if ((device->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_TRANSFER_BIT) == VK_QUEUE_TRANSFER_BIT && !foundTransferQueue) {
             device->outputDevice->transferQueueIndex = i;
             transferQueue = device->outputDevice->queues[i].queueInfo.queueIndex;
+            foundTransferQueue = GN_TRUE;
         }
 
-        if ((device->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT) {
+        if ((device->outputDevice->queues[i].queueInfo.createFlags & VK_QUEUE_GRAPHICS_BIT) == VK_QUEUE_GRAPHICS_BIT && !foundGraphicsQueue) {
             device->outputDevice->graphicsQueueIndex = i;
+            foundGraphicsQueue = GN_FALSE;
         }
     }
 

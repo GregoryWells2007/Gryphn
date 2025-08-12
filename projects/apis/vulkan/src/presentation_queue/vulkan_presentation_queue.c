@@ -6,8 +6,6 @@
 #include "sync/semaphore/vulkan_semaphore.h"
 #include <vulkan_result_converter.h>
 
-#include "stdio.h"
-
 gnReturnCode createPresentationQueue(gnPresentationQueueHandle presentationQueue, const gnDevice device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
 
