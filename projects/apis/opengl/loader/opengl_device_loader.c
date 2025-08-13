@@ -5,6 +5,7 @@
 #include "renderpass/opengl_render_pass_descriptor.h"
 #include "uniforms/pool/opengl_uniform_pool.h"
 #include "commands/pool/opengl_command_pool.h"
+#include "buffer/opengl_buffer.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -27,11 +28,12 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnCreateCommandPool = openglCreateCommandPool,
         ._gnDestroyCommandPool = openglDestroyCommandPool,
 
-        ._gnCreateBuffer = NULL,
-        ._gnBufferData = NULL,
-        ._gnBufferSubData = NULL,
-        ._gnMapBuffer = NULL,
-        ._gnDestroyBuffer = NULL,
+        ._gnCreateBuffer = openglCreateBuffer,
+        ._gnBufferData = openglBufferData,
+        ._gnBufferSubData = openglBufferSubData,
+        ._gnMapBuffer = openglMapBuffer,
+        ._gnUnmapBuffer = openglUnmapBuffer,
+        ._gnDestroyBuffer = openglDestroyBuffer,
 
         ._gnCreateUniformPool = openglCreateUniformPool,
         ._gnUniformPoolAllocateUniforms = openglAllocateUniforms,
