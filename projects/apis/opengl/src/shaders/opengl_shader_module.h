@@ -4,6 +4,7 @@
 
 typedef struct gnPlatformShaderModule_t {
     glShader shader;
+    GLuint id;
 } gnPlatformShaderModule;
 
 gnReturnCode openglCreateShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
