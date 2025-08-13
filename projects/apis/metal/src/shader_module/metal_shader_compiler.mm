@@ -1,5 +1,6 @@
 #include "metal_shader_compiler.h"
 #include "spirv_msl.hpp"
+#include "stdlib.h"
 // #include "iostream"
 
 typedef struct mtlCompiler_t {

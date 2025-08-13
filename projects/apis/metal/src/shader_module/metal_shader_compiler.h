@@ -1,6 +1,5 @@
 #pragma once
 #include "stdint.h"
-#include "stdlib.h"
 #include "utils/gryphn_bool.h"
 #include <core/src/uniforms/gryphn_uniform_layout.h>
 
