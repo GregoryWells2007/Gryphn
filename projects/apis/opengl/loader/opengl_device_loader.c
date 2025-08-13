@@ -4,6 +4,7 @@
 #include "shaders/opengl_shader_module.h"
 #include "renderpass/opengl_render_pass_descriptor.h"
 #include "uniforms/pool/opengl_uniform_pool.h"
+#include "commands/pool/opengl_command_pool.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -23,8 +24,8 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnCreateFramebuffer = NULL,
         ._gnDestroyFramebuffer = NULL,
 
-        ._gnCreateCommandPool = NULL,
-        ._gnDestroyCommandPool = NULL,
+        ._gnCreateCommandPool = openglCreateCommandPool,
+        ._gnDestroyCommandPool = openglDestroyCommandPool,
 
         ._gnCreateBuffer = NULL,
         ._gnBufferData = NULL,

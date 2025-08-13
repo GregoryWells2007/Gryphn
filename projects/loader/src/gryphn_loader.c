@@ -84,7 +84,9 @@ gnCommandFunctions loadAPICommandFunctions(gnRenderingAPI api) {
     case GN_RENDERINGAPI_SOFTWARE: return (gnCommandFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX11: return (gnCommandFunctions){ NULL };
     case GN_RENDERINGAPI_DIRECTX12: return (gnCommandFunctions){ NULL };
-    case GN_RENDERINGAPI_OPENGL: return (gnCommandFunctions){ NULL };
+#ifdef GN_API_OPENGL
+    case GN_RENDERINGAPI_OPENGL: return loadOpenGLCommandFunctions();
+#endif
 #ifdef GN_API_METAL
     case GN_RENDERINGAPI_METAL: return loadMetalCommandFunctions();
 #endif
