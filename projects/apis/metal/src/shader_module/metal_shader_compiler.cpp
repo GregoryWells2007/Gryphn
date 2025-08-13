@@ -44,10 +44,10 @@ GN_CPP_FUNCTION const char* mtlCompilerShader(mtlCompiler compiler, gnUniformLay
             for (size_t c = 0; c < uniformLayout->sets[i].uniformBindingCount; c++) {
                 gnUniformBinding gryphnBinding = uniformLayout->sets[i].uniformBindings[c];
                 spirv_cross::MSLResourceBinding binding = {
+                    .stage = (compiler->stage == mtlVertex) ? spv::ExecutionModelVertex : spv::ExecutionModelFragment,
+                    .desc_set = ((uint32_t)i + 1),
                     .binding = gryphnBinding.binding,
                     .count = 1,
-                    .desc_set = ((uint32_t)i + 1),
-                    .stage = (compiler->stage == mtlVertex) ? spv::ExecutionModelVertex : spv::ExecutionModelFragment,
                 };
                 if (gryphnBinding.type == GN_COMBINED_IMAGE_SAMPLER_DESCRIPTOR) {
                     binding.msl_texture = currentBinding;
