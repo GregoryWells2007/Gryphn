@@ -20,3 +20,17 @@ gnReturnCode openglCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* comm
 
     return GN_SUCCESS;
 }
+
+void openglResetCommandBuffer(gnCommandBuffer commandBuffer) {
+    // commandBuffer->commandBuffer->
+    // nothing, for now command buffers are implictly reset on begin
+}
+gnReturnCode openglBeginCommandBuffer(gnCommandBuffer commandBuffer) {
+    return GN_SUCCESS;
+}
+gnReturnCode openglEndCommandBuffer(gnCommandBuffer commandBuffer) {
+    return GN_SUCCESS;
+}
+void openglDestroyCommandBuffer(gnCommandBuffer commandBuffer) {
+    commandBuffer->commandPool->commandPool->canBeReallocated[commandBuffer->commandBuffer->index] = GN_TRUE;
+}
