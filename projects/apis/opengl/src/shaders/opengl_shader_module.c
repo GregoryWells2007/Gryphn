@@ -9,7 +9,9 @@ gnReturnCode openglCreateShaderModule(gnShaderModule module, gnDevice device, gn
         .wordCount = shaderModuleInfo.size / 4,
         .entryPoint = gnToCString(shaderModuleInfo.entryPoint),
     };
-    module->shaderModule->compiler = glCreateCompiler(&info);
+    glCompiler compiler = glCreateCompiler(&info);
+    module->shaderModule->shader = glCompilerCompilerShader(compiler);
+    glDestroyCompiler(compiler);
     return GN_SUCCESS;
 }
 void openglDestroyShaderModule(gnShaderModule module) {

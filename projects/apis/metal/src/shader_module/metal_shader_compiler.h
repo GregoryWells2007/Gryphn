@@ -4,8 +4,8 @@
 #include "utils/gryphn_cpp_function.h"
 #include <core/src/uniforms/gryphn_uniform_layout.h>
 
-#define MAX_METAL_SETS 32
-#define MAX_METAL_BINDINGS 16
+#define MAX_METAL_SETS 16
+#define MAX_METAL_BINDINGS 32
 
 typedef struct mtlCompiler_t* mtlCompiler;
 

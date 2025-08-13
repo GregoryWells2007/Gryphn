@@ -3,7 +3,7 @@
 #include "opengl_shader_compiler.h"
 
 typedef struct gnPlatformShaderModule_t {
-   glCompiler compiler;
+    glShader shader;
 } gnPlatformShaderModule;
 
 gnReturnCode openglCreateShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
