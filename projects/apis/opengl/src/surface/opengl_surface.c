@@ -1,5 +1,4 @@
 #include <glad/glad.h>
-#include "GL/glext.h"
 #include "opengl_surface.h"
 #include "utils/gryphn_string.h"
 
@@ -76,24 +75,24 @@ void destroyOpenGLSurface(gnWindowSurface surface) {
 GLint glGryphnFormatToOpenGLFormat(gnImageFormat format) {
     switch (format) {
     case GN_FORMAT_NONE: return GL_NONE;
-    case GN_FORMAT_BGRA8: return GL_BGRA;
     case GN_FORMAT_RGBA8_SRGB: return GL_SRGB_ALPHA;
     case GN_FORMAT_D32S8_UINT: return GL_DEPTH_STENCIL;
     case GN_FORMAT_D24S8_UINT: return GL_DEPTH_STENCIL;
 
     // unsupprted formats
+    case GN_FORMAT_BGRA8: return GL_NONE;
     case GN_FORMAT_BGRA8_SRGB: return GL_NONE;
     }
 }
 GLint glGryphnFormatToOpenGLInternalFormat(gnImageFormat format) {
     switch (format) {
     case GN_FORMAT_NONE: return GL_NONE;
-    case GN_FORMAT_BGRA8: return GL_BGRA8_EXT;
     case GN_FORMAT_RGBA8_SRGB: return GL_SRGB8_ALPHA8;
     case GN_FORMAT_D32S8_UINT: return GL_DEPTH32F_STENCIL8;
     case GN_FORMAT_D24S8_UINT: return GL_DEPTH24_STENCIL8;
 
     // unsupprted formats
+    case GN_FORMAT_BGRA8: return GL_NONE;
     case GN_FORMAT_BGRA8_SRGB: return GL_NONE;
     }
 }
