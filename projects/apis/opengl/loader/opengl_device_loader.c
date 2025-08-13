@@ -2,6 +2,7 @@
 #include "device/opengl_output_device.h"
 #include "presentation_queue/opengl_presentation_queue.h"
 #include "shaders/opengl_shader_module.h"
+#include "renderpass/opengl_render_pass_descriptor.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -12,8 +13,8 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnCreateShaderModule = openglCreateShaderModule,
         ._gnDestroyShaderModule = openglDestroyShaderModule,
 
-        ._gnCreateRenderPassDescriptor = NULL,
-        ._gnDestroyRenderPassDescriptor = NULL,
+        ._gnCreateRenderPassDescriptor = openglCreateRenderPass,
+        ._gnDestroyRenderPassDescriptor = openglDestroyRenderPass,
 
         ._gnCreateGraphicsPipeline = NULL,
         ._gnDestroyGraphicsPipeline = NULL,
