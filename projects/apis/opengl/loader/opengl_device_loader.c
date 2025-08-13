@@ -3,6 +3,7 @@
 #include "presentation_queue/opengl_presentation_queue.h"
 #include "shaders/opengl_shader_module.h"
 #include "renderpass/opengl_render_pass_descriptor.h"
+#include "uniforms/pool/opengl_uniform_pool.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -31,9 +32,9 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnMapBuffer = NULL,
         ._gnDestroyBuffer = NULL,
 
-        ._gnCreateUniformPool = NULL,
-        ._gnUniformPoolAllocateUniforms = NULL,
-        ._gnDestroyUniformPool = NULL,
+        ._gnCreateUniformPool = openglCreateUniformPool,
+        ._gnUniformPoolAllocateUniforms = openglAllocateUniforms,
+        ._gnDestroyUniformPool = openglDestroyUniformPool,
 
         ._gnUpdateBufferUniform = NULL,
         ._gnUpdateStorageUniform = NULL,
