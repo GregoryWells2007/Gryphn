@@ -22,8 +22,6 @@ typedef struct gnPlatformRenderPassDescriptor_t {
     uint32_t subpassCount;
     mtlSubpass* subpasses;
     mtlSubpassCopyInfo* copyInfos;
-
-
 } gnPlatformRenderPassDescriptor;
 
 gnReturnCode createMetalRenderPass(gnRenderPassDescriptor renderPass, gnDevice device, gnRenderPassDescriptorInfo info);
