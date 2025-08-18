@@ -2,6 +2,8 @@
 #include "opengl_surface.h"
 #include "utils/gryphn_string.h"
 
+#include "stdio.h"
+
 void GLAPIENTRY openglMessageCallback( GLenum source,
                  GLenum type,
                  GLuint id,
@@ -9,32 +11,44 @@ void GLAPIENTRY openglMessageCallback( GLenum source,
                  GLsizei length,
                  const GLchar* message,
                  const void* userParam ) {
-  // fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-  //          ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-  //           type, severity, message );
+    gnInstanceHandle handle = (gnInstanceHandle)userParam;
 
-  gnMessageSeverity gryphnSeverity;
-  if (severity == GL_DEBUG_SEVERITY_HIGH) gryphnSeverity = GN_MESSAGE_ERROR;
-  if (severity == GL_DEBUG_SEVERITY_MEDIUM) gryphnSeverity = GN_MESSAGE_WARNING;
-  if (severity == GL_DEBUG_SEVERITY_LOW) gryphnSeverity = GN_MESSAGE_VERBOSE;
+    gnMessageSeverity gryphnSeverity;
+    if (severity == GL_DEBUG_SEVERITY_HIGH) gryphnSeverity = GN_MESSAGE_ERROR;
+    else if (severity == GL_DEBUG_SEVERITY_MEDIUM) gryphnSeverity = GN_MESSAGE_WARNING;
+    else if (severity == GL_DEBUG_SEVERITY_LOW) gryphnSeverity = GN_MESSAGE_WARNING;
+    else if (severity == GL_DEBUG_SEVERITY_NOTIFICATION) gryphnSeverity = GN_MESSAGE_VERBOSE;
+    else {
+        handle->debugger.callback(
+            GN_MESSAGE_ERROR,
+            GN_DEBUG_MESSAGE_VALIDATION,
+            (gnMessageData){ .message = gnCreateString("Uknown severity type from OpenGL") },
+            handle->debugger.userData
+        );
+    }
 
-  gnMessageType gryphnType;
-  if (type == GL_DEBUG_TYPE_ERROR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
-  if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
-  if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
-  if (type == GL_DEBUG_TYPE_PORTABILITY) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
-  if (type == GL_DEBUG_TYPE_PERFORMANCE) gryphnType = GN_DEBUG_MESSAGE_PERFORMANCE;
-  if (type == GL_DEBUG_TYPE_OTHER) gryphnType = GN_DEBUG_MESSAGE_GENERAL;
+    gnMessageType gryphnType;
+    if (type == GL_DEBUG_TYPE_ERROR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+    else if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+    else if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+    else if (type == GL_DEBUG_TYPE_PORTABILITY) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+    else if (type == GL_DEBUG_TYPE_PERFORMANCE) gryphnType = GN_DEBUG_MESSAGE_PERFORMANCE;
+    else if (type == GL_DEBUG_TYPE_OTHER) gryphnType = GN_DEBUG_MESSAGE_GENERAL;
+    else {
+        handle->debugger.callback(
+            GN_MESSAGE_ERROR,
+            GN_DEBUG_MESSAGE_VALIDATION,
+            (gnMessageData){ .message = gnCreateString("Uknown message type from OpenGL") },
+            handle->debugger.userData
+        );
+    }
 
-  gnInstanceHandle handle = (gnInstanceHandle)userParam;
-  handle->debugger.callback(
-      gryphnSeverity,
-      gryphnType,
-      (gnMessageData){ .message = gnCreateString(message) },
-      handle->debugger.userData
-  );
-
-
+    handle->debugger.callback(
+        gryphnSeverity,
+        gryphnType,
+        (gnMessageData){ .message = gnCreateString(message) },
+        handle->debugger.userData
+    );
 }
 
 #ifdef GN_PLATFORM_LINUX
