@@ -4,6 +4,7 @@
 #include "shaders/opengl_shader_module.h"
 #include "renderpass/opengl_render_pass_descriptor.h"
 #include "uniforms/pool/opengl_uniform_pool.h"
+#include "uniforms/uniform/opengl_uniform.h"
 #include "commands/pool/opengl_command_pool.h"
 #include "buffer/opengl_buffer.h"
 
@@ -39,9 +40,9 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnUniformPoolAllocateUniforms = openglAllocateUniforms,
         ._gnDestroyUniformPool = openglDestroyUniformPool,
 
-        ._gnUpdateBufferUniform = NULL,
-        ._gnUpdateStorageUniform = NULL,
-        ._gnUpdateImageUniform = NULL,
+        ._gnUpdateBufferUniform = openglUpdateBufferUniform,
+        ._gnUpdateStorageUniform = openglUpdateStorageUniform,
+        ._gnUpdateImageUniform = openglUpdateImageUniform,
 
         ._gnCreateTexture = NULL,
         ._gnTextureData = NULL,
