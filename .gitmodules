@@ -3,7 +3,7 @@
 	url = https://github.com/KhronosGroup/SPIRV-Cross.git
 [submodule "projects/utils"]
 	path = projects/utils
-	url = https://github.com/GregoryWells2007/GryphnUtils.git
+	url = https://git.astraltech.xyz/AstralTech/Gryphn-Utils.git
 [submodule "projects/apis/opengl/depends/SPIRV-Cross"]
 	path = projects/apis/opengl/depends/SPIRV-Cross
 	url = https://github.com/KhronosGroup/SPIRV-Cross.git
