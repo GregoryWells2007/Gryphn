@@ -1,7 +1,6 @@
 #include "opengl_presentation_queue.h"
 #include "surface/opengl_surface.h"
 #include "textures/opengl_texture.h"
-#include "stdio.h"
 
 gnReturnCode createOpenGLPresentationQueue(gnPresentationQueueHandle presentationQueue, gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
@@ -13,19 +12,13 @@ gnReturnCode createOpenGLPresentationQueue(gnPresentationQueueHandle presentatio
     for (int i = 0; i < presentationInfo.minImageCount; i++) {
         presentationQueue->images[i] = malloc(sizeof(struct gnTexture_t));
         presentationQueue->images[i]->texture = malloc(sizeof(gnPlatformTexture));
-        glGenTextures(1, &presentationQueue->images[i]->texture->id);
-
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
+        glCreateTextures(GL_TEXTURE_2D, 1, &presentationQueue->images[i]->texture->id);
+        glTextureStorage2D(
+            presentationQueue->images[i]->texture->id,
+            1,
             glGryphnFormatToOpenGLInternalFormat(presentationInfo.format.format),
-            presentationInfo.imageSize.x, presentationInfo.imageSize.y,
-            0,
-            glGryphnFormatToOpenGLFormat(presentationInfo.format.format),
-            GL_UNSIGNED_BYTE,
-            NULL
+            presentationInfo.imageSize.x, presentationInfo.imageSize.y
         );
-
         GLuintArrayListAdd(presentationQueue->presentationQueue->textures, presentationQueue->images[i]->texture->id);
         uint32_tArrayListAdd(presentationQueue->presentationQueue->avaliableTextures, i);
     }
