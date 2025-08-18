@@ -14,6 +14,7 @@ gnReturnCode openglCreateBuffer(gnBufferHandle buffer, gnDevice device, gnBuffer
     glCreateBuffers(1, &buffer->buffer->id);
     buffer->buffer->type = gnBufferTypeToGLEnum(info.type);
     buffer->buffer->usage = (info.usage == GN_DYNAMIC_DRAW) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
+    glNamedBufferData(buffer->buffer->id, info.size, NULL, buffer->buffer->usage);
     return GN_SUCCESS;
 }
 void openglBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
