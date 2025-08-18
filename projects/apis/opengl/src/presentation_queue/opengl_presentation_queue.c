@@ -1,11 +1,10 @@
 #include "opengl_presentation_queue.h"
 #include "surface/opengl_surface.h"
 #include "textures/opengl_texture.h"
+#include "stdio.h"
 
 gnReturnCode createOpenGLPresentationQueue(gnPresentationQueueHandle presentationQueue, gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo) {
     presentationQueue->presentationQueue = malloc(sizeof(struct gnPlatformPresentationQueue_t));
-
-    uint32_t convertedFormat = glGryphnFormatToOpenGLFormat(presentationInfo.format.format);
 
     presentationQueue->imageCount = presentationInfo.minImageCount;
     presentationQueue->images = malloc(sizeof(gnTexture) * presentationInfo.minImageCount);
