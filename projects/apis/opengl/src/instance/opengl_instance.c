@@ -2,6 +2,9 @@
 
 gnReturnCode openglCreateInstance(gnInstanceHandle instance, gnInstanceCreateInfo* instanceInfo, gryphnInstanceFunctionLayers* next, gnAllocators* allocators) {
     if (instanceInfo->coreAPI != GN_RENDERINGAPI_OPENGL) return GN_UNSUPPORTED_API;
+    instance->instance = malloc(sizeof(gnPlatformInstance));
+    instance->instance->enableDebugger = instance->enabledLayerCounts[GN_DEBUGGER_LAYER_PLATFORM] >= 1;
+
     return GN_SUCCESS;
 }
 void openglDestroyInstance(gnInstanceHandle instance, gryphnInstanceFunctionLayers* next, gnAllocators* allocators) {

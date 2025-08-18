@@ -2,6 +2,41 @@
 #include "opengl_surface.h"
 #include "utils/gryphn_string.h"
 
+void GLAPIENTRY openglMessageCallback( GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar* message,
+                 const void* userParam ) {
+  // fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+  //          ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+  //           type, severity, message );
+
+  gnMessageSeverity gryphnSeverity;
+  if (severity == GL_DEBUG_SEVERITY_HIGH) gryphnSeverity = GN_MESSAGE_ERROR;
+  if (severity == GL_DEBUG_SEVERITY_MEDIUM) gryphnSeverity = GN_MESSAGE_WARNING;
+  if (severity == GL_DEBUG_SEVERITY_LOW) gryphnSeverity = GN_MESSAGE_VERBOSE;
+
+  gnMessageType gryphnType;
+  if (type == GL_DEBUG_TYPE_ERROR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+  if (type == GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+  if (type == GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+  if (type == GL_DEBUG_TYPE_PORTABILITY) gryphnType = GN_DEBUG_MESSAGE_VALIDATION;
+  if (type == GL_DEBUG_TYPE_PERFORMANCE) gryphnType = GN_DEBUG_MESSAGE_PERFORMANCE;
+  if (type == GL_DEBUG_TYPE_OTHER) gryphnType = GN_DEBUG_MESSAGE_GENERAL;
+
+  gnInstanceHandle handle = (gnInstanceHandle)userParam;
+  handle->debugger.callback(
+      gryphnSeverity,
+      gryphnType,
+      (gnMessageData){ .message = gnCreateString(message) },
+      handle->debugger.userData
+  );
+
+
+}
+
 #ifdef GN_PLATFORM_LINUX
 #ifdef GN_WINDOW_X11
 #include <X11/Xlib.h>
@@ -27,6 +62,10 @@ gnReturnCode createGLXContext(gnWindowSurfaceHandle windowSurface, gnInstanceHan
 
         return GN_UNKNOWN_ERROR;
     }
+
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(openglMessageCallback, instance);
+
     return GN_SUCCESS;
 }
 
@@ -50,11 +89,14 @@ gnSurfaceDetails genOpenGLSurfaceDetails(
 ) {
     gnSurfaceDetails surfaceDetails;
     surfaceDetails.formatCount = 1;
-    surfaceDetails.formats = (gnSurfaceFormat[]){
-        (gnSurfaceFormat){
-            .format = GN_FORMAT_RGBA8_SRGB,
-            .colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR
-        }
+    surfaceDetails.formats = malloc(sizeof(gnSurfaceFormat) * 2);
+    surfaceDetails.formats[0] = (gnSurfaceFormat){
+        .format = GN_FORMAT_RGBA8,
+        .colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR
+    };
+    surfaceDetails.formats[1] = (gnSurfaceFormat){
+        .format = GN_FORMAT_RGBA8_SRGB,
+        .colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR
     };
 
     surfaceDetails.minImageCount = 2;
@@ -75,6 +117,7 @@ void destroyOpenGLSurface(gnWindowSurface surface) {
 GLint glGryphnFormatToOpenGLFormat(gnImageFormat format) {
     switch (format) {
     case GN_FORMAT_NONE: return GL_NONE;
+    case GN_FORMAT_RGBA8: return GL_RGBA;
     case GN_FORMAT_RGBA8_SRGB: return GL_SRGB_ALPHA;
     case GN_FORMAT_D32S8_UINT: return GL_DEPTH_STENCIL;
     case GN_FORMAT_D24S8_UINT: return GL_DEPTH_STENCIL;
@@ -87,6 +130,7 @@ GLint glGryphnFormatToOpenGLFormat(gnImageFormat format) {
 GLint glGryphnFormatToOpenGLInternalFormat(gnImageFormat format) {
     switch (format) {
     case GN_FORMAT_NONE: return GL_NONE;
+    case GN_FORMAT_RGBA8: return GL_RGBA8;
     case GN_FORMAT_RGBA8_SRGB: return GL_SRGB8_ALPHA8;
     case GN_FORMAT_D32S8_UINT: return GL_DEPTH32F_STENCIL8;
     case GN_FORMAT_D24S8_UINT: return GL_DEPTH24_STENCIL8;
