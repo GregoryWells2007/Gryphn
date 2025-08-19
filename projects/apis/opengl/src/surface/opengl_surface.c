@@ -89,6 +89,10 @@ gnUInt2 getWindowSize(gnPlatformWindowSurface* surface) {
     return (gnUInt2){ attr.width, attr.height };
 }
 
+void swapBuffers(gnWindowSurface surface) {
+    glXSwapBuffers(surface->windowSurface->display, surface->windowSurface->window);
+}
+
 #endif
 
 #ifdef GN_WINFDOW_WAYLAND
