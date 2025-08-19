@@ -8,7 +8,7 @@ typedef struct glColorAttachment {
     gnLoadOperation loadOperation;
     gnStoreOperation storeOperation;
 
-    GLint format;
+    GLenum format;
     uint32_t attachmentIndex;
     int resolveAttachmentIndex; // -1 = no attachment
 } glColorAttachment;

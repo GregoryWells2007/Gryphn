@@ -6,23 +6,29 @@
 #include <string.h>
 #include "buffer/opengl_buffer.h"
 #include "graphics_pipeline/opengl_graphics_pipeline.h"
+#include "renderpass/opengl_render_pass_descriptor.h"
 
-GN_CPP_FUNCTION void openglBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
+GN_CPP_FUNCTION void openglBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo sPassInfo) {
+    gnRenderPassInfo passInfo = sPassInfo;
     gnClearValue* values = (gnClearValue*)malloc(sizeof(gnClearValue*) * passInfo.clearValueCount);
     memcpy(values, passInfo.clearValues, sizeof(gnClearValue*) * passInfo.clearValueCount);
 
     openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([passInfo, values]{
         glBindFramebuffer(GL_FRAMEBUFFER, passInfo.framebuffer->framebuffer->framebuffers[0]);
+        if (passInfo.renderPassDescriptor->renderPassDescriptor->subpasses[0].colorAttachments[0].format == GL_SRGB8_ALPHA8) glEnable(GL_FRAMEBUFFER_SRGB);
         glClearColor(values[0].r, values[0].g, values[0].b, values[0].a);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
         glViewport(passInfo.offset.x, passInfo.offset.y, passInfo.size.x, passInfo.size.y);
+
+
         free(values);
     }));
 }
 GN_CPP_FUNCTION void openglEndRenderPass(gnCommandBuffer buffer) {
     openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([]{
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glDisable(GL_FRAMEBUFFER_SRGB);
     }));
 }
 GN_CPP_FUNCTION void openglBindGraphicsPipeline(gnCommandBuffer commandBuffer, gnGraphicsPipeline graphicsPipeline) {
@@ -74,7 +80,10 @@ GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle sBuffer, gnIndexTyp
     }));
 }
 GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
-
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([]{
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, 5);
+    }));
 }
 GN_CPP_FUNCTION void openglPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
 

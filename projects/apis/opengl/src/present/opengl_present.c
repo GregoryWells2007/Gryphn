@@ -9,6 +9,8 @@ gnReturnCode openglPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
 
         glBindVertexArray(0);
 
+        if (info.presentationQueues[i]->presentationQueue->format == GL_SRGB8_ALPHA8) glEnable(GL_FRAMEBUFFER_SRGB);
+
         glUseProgram(device->outputDevice->shaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, device->outputDevice->buffer);
         glBindTexture(GL_TEXTURE_2D, GLuintArrayListAt(info.presentationQueues[i]->presentationQueue->textures, info.imageIndices[i]));
@@ -18,6 +20,8 @@ gnReturnCode openglPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         swapBuffers(info.presentationQueues[i]->info.surface);
+
+        glDisable(GL_FRAMEBUFFER_SRGB);
     }
 
     // for (uint32_t i = 0; i < info.presentationQueueCount; i++) {

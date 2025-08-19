@@ -7,6 +7,7 @@ GN_ARRAY_LIST_HEADER(GLuint);
 typedef struct gnPlatformPresentationQueue_t {
     GLuintArrayList textures;
     uint32_tArrayList avaliableTextures;
+    GLenum format;
 } gnPlatformPresentationQueue_t;
 
 gnReturnCode createOpenGLPresentationQueue(gnPresentationQueueHandle presentationQueue, gnOutputDeviceHandle device, gnPresentationQueueInfo presentationInfo);

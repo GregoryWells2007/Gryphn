@@ -18,7 +18,9 @@ gnReturnCode openglCreateTexture(gnTexture texture, gnDevice device, const gnTex
     );
     return GN_SUCCESS;
 }
+#include "stdio.h"
 void openglTextureData(gnTextureHandle texture, void* pixelData) {
+    printf("OpenGL id: %u\n", texture->texture->id);
     glTextureSubImage2D(
         texture->texture->id,
     	0,

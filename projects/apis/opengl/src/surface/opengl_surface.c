@@ -109,11 +109,11 @@ gnSurfaceDetails genOpenGLSurfaceDetails(
     surfaceDetails.formatCount = 1;
     surfaceDetails.formats = malloc(sizeof(gnSurfaceFormat) * 2);
     surfaceDetails.formats[0] = (gnSurfaceFormat){
-        .format = GN_FORMAT_RGBA8,
+        .format = GN_FORMAT_RGBA8_SRGB,
         .colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR
     };
     surfaceDetails.formats[1] = (gnSurfaceFormat){
-        .format = GN_FORMAT_RGBA8_SRGB,
+        .format = GN_FORMAT_RGBA8,
         .colorSpace = GN_COLOR_SPACE_SRGB_NONLINEAR
     };
 

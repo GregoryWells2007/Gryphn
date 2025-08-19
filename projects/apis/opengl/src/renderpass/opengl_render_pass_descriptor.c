@@ -26,7 +26,7 @@ gnReturnCode openglCreateRenderPass(gnRenderPassDescriptor renderPass, gnDevice 
                 .storeOperation = info.attachmentInfos[attachmentIndex].storeOperation,
                 .attachmentIndex = attachmentIndex,
                 .resolveAttachmentIndex = resolveAttachmentIndex,
-                .format = glGryphnFormatToOpenGLFormat(info.attachmentInfos[attachmentIndex].format)
+                .format = glGryphnFormatToOpenGLInternalFormat(info.attachmentInfos[attachmentIndex].format)
             };
         }
 
@@ -34,7 +34,7 @@ gnReturnCode openglCreateRenderPass(gnRenderPassDescriptor renderPass, gnDevice 
             uint32_t depthAttachmentIndex = info.subpassInfos[i].depthAttachment->index;
             renderPass->renderPassDescriptor->subpasses[i].depthAttachment = (gnDepthAttachment){
                 .index = depthAttachmentIndex,
-                .format = glGryphnFormatToOpenGLFormat(info.attachmentInfos[depthAttachmentIndex].format),
+                .format = glGryphnFormatToOpenGLInternalFormat(info.attachmentInfos[depthAttachmentIndex].format),
                 .loadOperation  = info.attachmentInfos[depthAttachmentIndex].loadOperation,
                 .storeOperation = info.attachmentInfos[depthAttachmentIndex].storeOperation,
             };

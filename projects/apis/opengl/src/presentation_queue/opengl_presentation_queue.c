@@ -9,6 +9,7 @@ gnReturnCode createOpenGLPresentationQueue(gnPresentationQueueHandle presentatio
     presentationQueue->images = malloc(sizeof(gnTexture) * presentationInfo.minImageCount);
     presentationQueue->presentationQueue->textures = GLuintArrayListCreate();
     presentationQueue->presentationQueue->avaliableTextures = uint32_tArrayListCreate();
+    presentationQueue->presentationQueue->format = glGryphnFormatToOpenGLInternalFormat(presentationInfo.format.format);
     for (int i = 0; i < presentationInfo.minImageCount; i++) {
         presentationQueue->images[i] = malloc(sizeof(struct gnTexture_t));
         presentationQueue->images[i]->texture = malloc(sizeof(gnPlatformTexture));
