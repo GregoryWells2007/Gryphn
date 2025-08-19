@@ -144,8 +144,15 @@ void VkCopyBufferToImage(VkGryphnBuffer buffer, VkGryphnImage image, gnExtent3D 
 gnReturnCode createTexture(gnTexture texture, gnDevice device, const gnTextureInfo info) {
     texture->texture = malloc(sizeof(struct gnPlatformTexture_t));
     size_t imageSize = info.extent.width * info.extent.height;
-    if (info.format == GN_FORMAT_BGRA8_SRGB) { imageSize *= 4; }
-    if (info.format == GN_FORMAT_RGBA8_SRGB) { imageSize *= 4; }
+    switch (info.format) {
+        case GN_FORMAT_NONE: imageSize *= 0; break;
+        case GN_FORMAT_BGRA8_SRGB: imageSize *= 4; break;
+        case GN_FORMAT_BGRA8: imageSize *= 4; break;
+        case GN_FORMAT_RGBA8: imageSize *= 4; break;
+        case GN_FORMAT_RGBA8_SRGB: imageSize *= 4; break;
+        case GN_FORMAT_D32S8_UINT: imageSize *= 5; break;
+        case GN_FORMAT_D24S8_UINT: imageSize *= 4; break;
+    };
     texture->texture->size = imageSize;
     VkImageCreateInfo imageInfo = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
