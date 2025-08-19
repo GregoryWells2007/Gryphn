@@ -24,7 +24,6 @@ gnReturnCode openglCreateFramebuffer(gnFramebuffer framebuffer, gnDevice device,
             });
             return GN_FAILED_CREATE_OBJECT;
         }
-
     }
     return GN_SUCCESS;
 }

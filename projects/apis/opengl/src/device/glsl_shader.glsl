@@ -18,6 +18,6 @@ const char * fragment_shader_source =
     "in vec2 texcoord;\n"
     "\n"
     "void main() {\n"
-    "    //FragColor = texture(tex, texcoord);\n"
-    "   FragColor = vec4(texcoord, 0.0, 1.0);\n"
+    "   FragColor = texture(tex, texcoord);\n"
+    "   //FragColor = vec4(texcoord, 0.0, 1.0);\n"
     "}\n" ;
