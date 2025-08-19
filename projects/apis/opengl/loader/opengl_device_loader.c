@@ -9,6 +9,7 @@
 #include "buffer/opengl_buffer.h"
 #include "textures/opengl_texture.h"
 #include "framebuffer/opengl_framebuffer.h"
+#include "graphics_pipeline/opengl_graphics_pipeline.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -22,8 +23,8 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnCreateRenderPassDescriptor = openglCreateRenderPass,
         ._gnDestroyRenderPassDescriptor = openglDestroyRenderPass,
 
-        ._gnCreateGraphicsPipeline = NULL,
-        ._gnDestroyGraphicsPipeline = NULL,
+        ._gnCreateGraphicsPipeline = openglCreateGraphicsPipeline,
+        ._gnDestroyGraphicsPipeline = openglDestroyGraphicsPipeline,
 
         ._gnCreateFramebuffer = openglCreateFramebuffer,
         ._gnDestroyFramebuffer = openglDestroyFramebuffer,
