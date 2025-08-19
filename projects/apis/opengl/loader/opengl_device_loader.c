@@ -8,6 +8,7 @@
 #include "commands/pool/opengl_command_pool.h"
 #include "buffer/opengl_buffer.h"
 #include "textures/opengl_texture.h"
+#include "framebuffer/opengl_framebuffer.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -24,8 +25,8 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnCreateGraphicsPipeline = NULL,
         ._gnDestroyGraphicsPipeline = NULL,
 
-        ._gnCreateFramebuffer = NULL,
-        ._gnDestroyFramebuffer = NULL,
+        ._gnCreateFramebuffer = openglCreateFramebuffer,
+        ._gnDestroyFramebuffer = openglDestroyFramebuffer,
 
         ._gnCreateCommandPool = openglCreateCommandPool,
         ._gnDestroyCommandPool = openglDestroyCommandPool,
