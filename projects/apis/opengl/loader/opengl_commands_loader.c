@@ -1,5 +1,6 @@
 #include "opengl_loader.h"
 #include "commands/buffers/opengl_command_buffer.h"
+#include "commands/commands/opengl_commands.h"
 
 gnCommandFunctions loadOpenGLCommandFunctions() {
     return (gnCommandFunctions) {
@@ -10,8 +11,8 @@ gnCommandFunctions loadOpenGLCommandFunctions() {
         ._gnEndCommandBuffer = openglEndCommandBuffer,
         ._gnDestroyCommandBuffer = openglDestroyCommandBuffer,
 
-        ._gnCommandBeginRenderPass = NULL,
-        ._gnCommandEndRenderPass = NULL,
+        ._gnCommandBeginRenderPass = openglBeginRenderPass,
+        ._gnCommandEndRenderPass = openglEndRenderPass,
 
         ._gnCommandBindGraphicsPipeline = NULL,
         ._gnCommandSetViewport = NULL,
