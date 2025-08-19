@@ -5,6 +5,7 @@ typedef void (*openglFunctionBinding)();
 
 GN_CPP_FUNCTION openglCommandRunner openglCreateCommandRunner();
 GN_CPP_FUNCTION void openglResetCommandRunner(openglCommandRunner runner);
+GN_CPP_FUNCTION void openglRunCommandRunner(openglCommandRunner runner);
 GN_CPP_FUNCTION void openglDestroyCommandRunner(openglCommandRunner* runner);
 
 void openglCommandRunnerBindFunction(openglCommandRunner runner, openglFunctionBinding binding);

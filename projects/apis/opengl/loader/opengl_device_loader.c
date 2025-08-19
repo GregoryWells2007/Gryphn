@@ -10,6 +10,7 @@
 #include "textures/opengl_texture.h"
 #include "framebuffer/opengl_framebuffer.h"
 #include "graphics_pipeline/opengl_graphics_pipeline.h"
+#include "submit/opengl_submit.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -51,7 +52,7 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnTextureData = openglTextureData,
         ._gnDestroyTexture = openglDestroyTexture,
 
-        ._gnSubmit = NULL,
+        ._gnSubmit = openglSubmit,
         ._gnPresent = NULL,
 
         ._gnWaitForDevice = waitForOpenGLDevice
