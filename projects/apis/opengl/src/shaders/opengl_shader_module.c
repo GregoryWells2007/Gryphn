@@ -4,6 +4,8 @@
 #include "instance/gryphn_instance.h"
 #include "stdlib.h"
 
+#include "stdio.h"
+
 GLenum gnShaderTypeToGLEnum(gnShaderModuleStage stage) {
     switch (stage) {
     case GN_VERTEX_SHADER_MODULE: return GL_VERTEX_SHADER;
@@ -25,6 +27,7 @@ gnReturnCode openglCreateShaderModule(gnShaderModule module, gnDevice device, gn
 
     module->shaderModule->id = glCreateShader(gnShaderTypeToGLEnum(shaderModuleInfo.stage));
     const char* source = module->shaderModule->shader.source;
+    printf("Shader Source %s\n", source);
     glShaderSource(module->shaderModule->id, 1, &source, NULL);
     glCompileShader(module->shaderModule->id);
 
