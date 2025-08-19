@@ -14,14 +14,16 @@ gnReturnCode openglCreateBuffer(gnBufferHandle buffer, gnDevice device, gnBuffer
     glCreateBuffers(1, &buffer->buffer->id);
     buffer->buffer->type = gnBufferTypeToGLEnum(info.type);
     buffer->buffer->usage = (info.usage == GN_DYNAMIC_DRAW) ? GL_DYNAMIC_DRAW : GL_STATIC_DRAW;
-    glNamedBufferData(buffer->buffer->id, info.size, NULL, buffer->buffer->usage);
+    glNamedBufferStorage(buffer->buffer->id, info.size, NULL,  GL_DYNAMIC_STORAGE_BIT | GL_MAP_READ_BIT | GL_MAP_WRITE_BIT |  GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT);
     return GN_SUCCESS;
 }
 void openglBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
-    glNamedBufferData(buffer->buffer->id, dataSize, data, buffer->buffer->usage);
+    openglBufferSubData(buffer, 0, dataSize, data);
 }
+#include "stdio.h"
 void openglBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, gnBufferMemory data) {
-    glNamedBufferSubData(buffer->buffer->id, offset, dataSize, data);
+    glBindBuffer(buffer->buffer->type, buffer->buffer->id);
+    glBufferSubData(buffer->buffer->type, 0, dataSize, data);
 }
 void* openglMapBuffer(gnBufferHandle buffer) {
     return glMapNamedBuffer(buffer->buffer->id, GL_READ_WRITE);

@@ -7,6 +7,8 @@ gnReturnCode openglPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
     for (uint32_t i =0 ; i < info.presentationQueueCount; i++) {
         uint32_tArrayListAdd(info.presentationQueues[i]->presentationQueue->avaliableTextures, info.imageIndices[i]);
 
+        glBindVertexArray(0);
+
         glUseProgram(device->outputDevice->shaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, device->outputDevice->buffer);
         glBindTexture(GL_TEXTURE_2D, GLuintArrayListAt(info.presentationQueues[i]->presentationQueue->textures, info.imageIndices[i]));

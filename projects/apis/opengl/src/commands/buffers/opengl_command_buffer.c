@@ -9,6 +9,15 @@ gnReturnCode openglCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* comm
                 pool->commandPool->canBeReallocated[c] = GN_FALSE;
                 commandBuffers[i]->commandBuffer = &pool->commandPool->commandBuffers[c];
                 commandBuffers[i]->commandBuffer->commmandRunner = openglCreateCommandRunner();
+
+                // glGenBuffers(1, &commandBuffers[i]->commandBuffer->vertexBuffer);
+                // glBindBuffer(GL_ARRAY_BUFFER, commandBuffers[i]->commandBuffer->vertexBuffer);
+                // glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
+
+                // gl
+
+                // glGenBuffers(1, &commandBuffers[i]->commandBuffer->indexBuffer);
+
                 wasAbleToAllocate = GN_TRUE;
                 break;
             }

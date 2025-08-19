@@ -14,11 +14,11 @@ gnCommandFunctions loadOpenGLCommandFunctions() {
         ._gnCommandBeginRenderPass = openglBeginRenderPass,
         ._gnCommandEndRenderPass = openglEndRenderPass,
 
-        ._gnCommandBindGraphicsPipeline = NULL,
-        ._gnCommandSetViewport = NULL,
-        ._gnCommandSetScissor = NULL,
-        ._gnCommandBindUniform = NULL,
-        ._gnCommandPushConstant = NULL,
+        ._gnCommandBindGraphicsPipeline = openglBindGraphicsPipeline,
+        ._gnCommandSetViewport = openglSetViewport,
+        ._gnCommandSetScissor = openglSetScissor,
+        ._gnCommandBindUniform = openglBindUniform,
+        ._gnCommandPushConstant = openglPushConstant,
 
         ._gnCommandBindBuffer = openglBindBuffer,
         ._gnCommandDraw = openglDraw,

@@ -11,4 +11,4 @@ GN_CPP_FUNCTION void openglBindBuffer(gnCommandBufferHandle buffer, gnBufferHand
 GN_CPP_FUNCTION void openglDraw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
 GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance);
 GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets);
-GN_CPP_FUNCTION void openglBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);
+GN_CPP_FUNCTION void openglPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);

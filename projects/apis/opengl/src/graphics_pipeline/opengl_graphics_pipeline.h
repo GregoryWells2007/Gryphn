@@ -4,6 +4,9 @@
 
 typedef struct gnPlatformGraphicsPipeline_t {
     GLuint program;
+
+    GLuint vertexArrayObject;
+    GLsizei stride;
 } gnPlatformGraphicsPipeline;
 
 gnReturnCode openglCreateGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info);

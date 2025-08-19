@@ -5,6 +5,7 @@
 #include "framebuffer/opengl_framebuffer.h"
 #include <string.h>
 #include "buffer/opengl_buffer.h"
+#include "graphics_pipeline/opengl_graphics_pipeline.h"
 
 GN_CPP_FUNCTION void openglBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo passInfo) {
     gnClearValue* values = (gnClearValue*)malloc(sizeof(gnClearValue*) * passInfo.clearValueCount);
@@ -13,7 +14,7 @@ GN_CPP_FUNCTION void openglBeginRenderPass(gnCommandBuffer buffer, gnRenderPassI
     openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([passInfo, values]{
         glBindFramebuffer(GL_FRAMEBUFFER, passInfo.framebuffer->framebuffer->framebuffers[0]);
         glClearColor(values[0].r, values[0].g, values[0].b, values[0].a);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
         glViewport(passInfo.offset.x, passInfo.offset.y, passInfo.size.x, passInfo.size.y);
         free(values);
@@ -24,23 +25,57 @@ GN_CPP_FUNCTION void openglEndRenderPass(gnCommandBuffer buffer) {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }));
 }
-GN_CPP_FUNCTION void openglBindGraphicsPipeline(gnCommandBuffer buffer, gnGraphicsPipeline graphicsPipeline);
-GN_CPP_FUNCTION void openglSetViewport(gnCommandBuffer buffer, gnViewport viewport);
-GN_CPP_FUNCTION void openglSetScissor(gnCommandBuffer buffer, gnScissor scissor);
-GN_CPP_FUNCTION void openglBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
-    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([&]{
-        glBindBuffer(gnBufferTypeToGLEnum(type), bufferToBind->buffer->id);
+GN_CPP_FUNCTION void openglBindGraphicsPipeline(gnCommandBuffer commandBuffer, gnGraphicsPipeline graphicsPipeline) {
+    gnGraphicsPipeline pipeline = graphicsPipeline;
+    gnCommandBuffer buffer = commandBuffer;
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([buffer, pipeline]{
+        buffer->commandBuffer->boundGraphicsPipeline = pipeline;
+
+        glBindVertexArray(buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject);
+        glUseProgram(buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->program);
     }));
 }
-GN_CPP_FUNCTION void openglDraw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
-    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([&]{
+GN_CPP_FUNCTION void openglSetViewport(gnCommandBuffer buffer, gnViewport viewport) {
+
+}
+GN_CPP_FUNCTION void openglSetScissor(gnCommandBuffer buffer, gnScissor scissor) {
+
+}
+GN_CPP_FUNCTION void openglBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
+    gnBufferType bType = type;
+    gnCommandBufferHandle bBuffer = buffer;
+    gnBufferHandle bBufferToBind = bufferToBind;
+
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([bType, bBuffer, bBufferToBind]{
+        if (bType == GN_VERTEX_BUFFER) {
+            glVertexArrayVertexBuffer(
+                bBuffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject, 0,
+                bBufferToBind->buffer->id, 0,
+                bBuffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->stride
+            );
+        } else if (bType == GN_INDEX_BUFFER) {
+            glVertexArrayElementBuffer(bBuffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject, bBufferToBind->buffer->id);
+        }
+    }));
+}
+GN_CPP_FUNCTION void openglDraw(gnCommandBuffer buffer, int sVertexCount, int sFirstVertex, int sInstanceCount, int sFirstInstance) {
+    int vertexCount = sVertexCount, firstVertex = sFirstVertex, instanceCount = sInstanceCount, firstInstance = sFirstInstance;
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([vertexCount, firstVertex, instanceCount, firstInstance]{
         glDrawArraysInstancedBaseInstance(GL_TRIANGLES, firstVertex, vertexCount, instanceCount, firstInstance);
     }));
 }
-GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance) {
-    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([&]{
-        glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * firstIndex), instanceCount, vertexOffset, firstInstance);
+// #include "stdio.h"
+GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle sBuffer, gnIndexType sType, int sIndexCount, int sFirstIndex, int sVertexOffset, int sInstanceCount, int sFirstInstance) {
+    gnCommandBuffer buffer = sBuffer;
+    gnIndexType type = sType;
+    int indexCount = sIndexCount, firstIndex = sFirstIndex, vertexOffset = sVertexOffset, instanceCount = sInstanceCount, firstInstance = sFirstInstance;
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([buffer, type, indexCount, firstIndex, instanceCount, vertexOffset, firstInstance]{
+        glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indexCount, (type == GN_UINT16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * firstIndex), instanceCount, vertexOffset, firstInstance);
     }));
 }
-GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets);
-GN_CPP_FUNCTION void openglBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);
+GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
+
+}
+GN_CPP_FUNCTION void openglPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
+
+}
