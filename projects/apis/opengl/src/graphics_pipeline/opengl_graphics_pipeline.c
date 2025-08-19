@@ -4,9 +4,8 @@
 gnReturnCode openglCreateGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(gnPlatformGraphicsPipeline));
     graphicsPipeline->graphicsPipeline->program = glCreateProgram();
-    for (int i = 0; i < info.shaderModuleCount; i++) {
+    for (int i = 0; i < info.shaderModuleCount; i++)
         glAttachShader(graphicsPipeline->graphicsPipeline->program, info.shaderModules[i]->shaderModule->id);
-    }
     glLinkProgram(graphicsPipeline->graphicsPipeline->program);
     return GN_SUCCESS;
 }

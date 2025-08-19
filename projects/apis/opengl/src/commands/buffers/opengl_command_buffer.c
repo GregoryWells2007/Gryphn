@@ -26,9 +26,11 @@ void openglResetCommandBuffer(gnCommandBuffer commandBuffer) {
     // nothing, for now command buffers are implictly reset on begin
 }
 gnReturnCode openglBeginCommandBuffer(gnCommandBuffer commandBuffer) {
+    commandBuffer->commandBuffer->commmandRunner = openglCreateCommandRunner();
     return GN_SUCCESS;
 }
 gnReturnCode openglEndCommandBuffer(gnCommandBuffer commandBuffer) {
+    openglDestroyCommandRunner(commandBuffer->commandBuffer->commmandRunner);
     return GN_SUCCESS;
 }
 void openglDestroyCommandBuffer(gnCommandBuffer commandBuffer) {
