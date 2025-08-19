@@ -2,7 +2,7 @@
 #include "vector"
 
 typedef struct openglCommandRunner_t {
-    std::vector<openglFunctionBinding> commands = {};
+    std::vector<std::function<void()>> commands;
 } glCommandRunner;
 
 GN_CPP_FUNCTION openglCommandRunner openglCreateCommandRunner() { return new glCommandRunner(); }
@@ -16,4 +16,8 @@ GN_CPP_FUNCTION void openglDestroyCommandRunner(openglCommandRunner* runner) {
     delete runner;
 }
 
-void openglCommandRunnerBindFunction(openglCommandRunner runner, openglFunctionBinding binding) { runner->commands.push_back(binding); }
+void openglCommandRunnerBindFunction(openglCommandRunner runner, std::function<void()> function) {
+    runner->commands.push_back(function);
+}
+
+// void openglCommandRunnerBindFunction(openglCommandRunner runner, openglFunctionBinding binding) { runner->commands.push_back(binding); }
