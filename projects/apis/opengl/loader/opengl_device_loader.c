@@ -7,6 +7,7 @@
 #include "uniforms/uniform/opengl_uniform.h"
 #include "commands/pool/opengl_command_pool.h"
 #include "buffer/opengl_buffer.h"
+#include "textures/opengl_texture.h"
 
 gnDeviceFunctions loadOpenGLDeviceFunctions() {
     return (gnDeviceFunctions){
@@ -44,9 +45,9 @@ gnDeviceFunctions loadOpenGLDeviceFunctions() {
         ._gnUpdateStorageUniform = openglUpdateStorageUniform,
         ._gnUpdateImageUniform = openglUpdateImageUniform,
 
-        ._gnCreateTexture = NULL,
-        ._gnTextureData = NULL,
-        ._gnDestroyTexture = NULL,
+        ._gnCreateTexture = openglCreateTexture,
+        ._gnTextureData = openglTextureData,
+        ._gnDestroyTexture = openglDestroyTexture,
 
         ._gnSubmit = NULL,
         ._gnPresent = NULL,
