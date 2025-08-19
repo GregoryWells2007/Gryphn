@@ -27,8 +27,20 @@ GN_CPP_FUNCTION void openglEndRenderPass(gnCommandBuffer buffer) {
 GN_CPP_FUNCTION void openglBindGraphicsPipeline(gnCommandBuffer buffer, gnGraphicsPipeline graphicsPipeline);
 GN_CPP_FUNCTION void openglSetViewport(gnCommandBuffer buffer, gnViewport viewport);
 GN_CPP_FUNCTION void openglSetScissor(gnCommandBuffer buffer, gnScissor scissor);
-GN_CPP_FUNCTION void openglBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type);
-GN_CPP_FUNCTION void openglDraw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance);
-GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance);
+GN_CPP_FUNCTION void openglBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([&]{
+        glBindBuffer(gnBufferTypeToGLEnum(type), bufferToBind->buffer->id);
+    }));
+}
+GN_CPP_FUNCTION void openglDraw(gnCommandBuffer buffer, int vertexCount, int firstVertex, int instanceCount, int firstInstance) {
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([&]{
+        glDrawArraysInstancedBaseInstance(GL_TRIANGLES, firstVertex, vertexCount, instanceCount, firstInstance);
+    }));
+}
+GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle buffer, gnIndexType type, int indexCount, int firstIndex, int vertexOffset, int instanceCount, int firstInstance) {
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([&]{
+        glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * firstIndex), instanceCount, vertexOffset, firstInstance);
+    }));
+}
 GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets);
 GN_CPP_FUNCTION void openglBindVertexBytes(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data);

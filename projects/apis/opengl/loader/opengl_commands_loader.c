@@ -20,8 +20,8 @@ gnCommandFunctions loadOpenGLCommandFunctions() {
         ._gnCommandBindUniform = NULL,
         ._gnCommandPushConstant = NULL,
 
-        ._gnCommandBindBuffer = NULL,
-        ._gnCommandDraw = NULL,
-        ._gnCommandDrawIndexed = NULL,
+        ._gnCommandBindBuffer = openglBindBuffer,
+        ._gnCommandDraw = openglDraw,
+        ._gnCommandDrawIndexed = openglDrawIndexed,
     };
 }

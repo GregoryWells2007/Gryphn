@@ -1,6 +1,7 @@
 #pragma once
 #include "core/src/buffers/gryphn_buffer.h"
 #include "glad/glad.h"
+#include "utils/gryphn_cpp_function.h"
 
 typedef struct gnPlatformBuffer_t {
     GLuint id;
@@ -13,3 +14,6 @@ void openglBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, 
 void* openglMapBuffer(gnBufferHandle buffer);
 void openglUnmapBuffer(gnBufferHandle buffer);
 void openglDestroyBuffer(gnBufferHandle buffer);
+
+
+GN_CPP_FUNCTION GLenum gnBufferTypeToGLEnum(gnBufferType type);
