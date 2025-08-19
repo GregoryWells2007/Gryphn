@@ -8,6 +8,7 @@ gnReturnCode openglCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* comm
             if (pool->commandPool->canBeReallocated[c] == GN_TRUE) {
                 pool->commandPool->canBeReallocated[c] = GN_FALSE;
                 commandBuffers[i]->commandBuffer = &pool->commandPool->commandBuffers[c];
+                commandBuffers[i]->commandBuffer->commmandRunner = openglCreateCommandRunner();
                 wasAbleToAllocate = GN_TRUE;
                 break;
             }
@@ -21,18 +22,15 @@ gnReturnCode openglCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* comm
     return GN_SUCCESS;
 }
 
-void openglResetCommandBuffer(gnCommandBuffer commandBuffer) {
-    // commandBuffer->commandBuffer->
-    // nothing, for now command buffers are implictly reset on begin
-}
+void openglResetCommandBuffer(gnCommandBuffer commandBuffer) { /* nothing, for now command buffers are implictly reset on begin */ }
 gnReturnCode openglBeginCommandBuffer(gnCommandBuffer commandBuffer) {
-    commandBuffer->commandBuffer->commmandRunner = openglCreateCommandRunner();
+    openglResetCommandRunner(commandBuffer->commandBuffer->commmandRunner);
     return GN_SUCCESS;
 }
 gnReturnCode openglEndCommandBuffer(gnCommandBuffer commandBuffer) {
-    openglDestroyCommandRunner(commandBuffer->commandBuffer->commmandRunner);
     return GN_SUCCESS;
 }
 void openglDestroyCommandBuffer(gnCommandBuffer commandBuffer) {
     commandBuffer->commandPool->commandPool->canBeReallocated[commandBuffer->commandBuffer->index] = GN_TRUE;
+    openglDestroyCommandRunner(&commandBuffer->commandBuffer->commmandRunner);
 }
