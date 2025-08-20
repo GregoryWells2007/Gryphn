@@ -36,8 +36,17 @@ GN_CPP_FUNCTION void openglBindGraphicsPipeline(gnCommandBuffer commandBuffer, g
     gnCommandBuffer buffer = commandBuffer;
     openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([buffer, pipeline]{
         buffer->commandBuffer->boundGraphicsPipeline = pipeline;
-
         glBindVertexArray(buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject);
+
+        if (buffer->commandBuffer->boundVertexBuffer != GN_NULL_HANDLE)
+            glVertexArrayVertexBuffer(
+                buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject, 0,
+                buffer->commandBuffer->boundVertexBuffer->buffer->id, 0,
+                buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->stride
+            );
+        if (buffer->commandBuffer->boundIndexBuffer != GN_NULL_HANDLE)
+            glVertexArrayElementBuffer(buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject, buffer->commandBuffer->boundIndexBuffer->buffer->id);
+
         glUseProgram(buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->program);
     }));
 }
@@ -54,12 +63,14 @@ GN_CPP_FUNCTION void openglBindBuffer(gnCommandBufferHandle buffer, gnBufferHand
 
     openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([bType, bBuffer, bBufferToBind]{
         if (bType == GN_VERTEX_BUFFER) {
+            bBuffer->commandBuffer->boundVertexBuffer = bBufferToBind;
             glVertexArrayVertexBuffer(
                 bBuffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject, 0,
-                bBufferToBind->buffer->id, 0,
+                bBuffer->commandBuffer->boundVertexBuffer->buffer->id, 0,
                 bBuffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->stride
             );
         } else if (bType == GN_INDEX_BUFFER) {
+            bBuffer->commandBuffer->boundIndexBuffer = bBufferToBind;
             glVertexArrayElementBuffer(bBuffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->vertexArrayObject, bBufferToBind->buffer->id);
         }
     }));
@@ -70,7 +81,6 @@ GN_CPP_FUNCTION void openglDraw(gnCommandBuffer buffer, int sVertexCount, int sF
         glDrawArraysInstancedBaseInstance(GL_TRIANGLES, firstVertex, vertexCount, instanceCount, firstInstance);
     }));
 }
-// #include "stdio.h"
 GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle sBuffer, gnIndexType sType, int sIndexCount, int sFirstIndex, int sVertexOffset, int sInstanceCount, int sFirstInstance) {
     gnCommandBuffer buffer = sBuffer;
     gnIndexType type = sType;

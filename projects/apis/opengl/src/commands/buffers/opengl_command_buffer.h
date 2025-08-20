@@ -7,6 +7,7 @@ typedef struct gnPlatformCommandBuffer_t {
     int index;
     openglCommandRunner commmandRunner;
     gnGraphicsPipeline boundGraphicsPipeline;
+    gnBuffer boundVertexBuffer, boundIndexBuffer;
 } gnPlatformCommandBuffer;
 gnReturnCode openglCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* commandBuffers, uint32_t count, gnCommandPoolHandle pool);
 

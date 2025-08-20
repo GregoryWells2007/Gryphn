@@ -10,6 +10,9 @@ gnReturnCode openglCommandPoolAllocateCommandBuffers(gnCommandBufferHandle* comm
                 commandBuffers[i]->commandBuffer = &pool->commandPool->commandBuffers[c];
                 commandBuffers[i]->commandBuffer->commmandRunner = openglCreateCommandRunner();
 
+                commandBuffers[i]->commandBuffer->boundVertexBuffer = GN_NULL_HANDLE;
+                commandBuffers[i]->commandBuffer->boundIndexBuffer = GN_NULL_HANDLE;
+
                 // glGenBuffers(1, &commandBuffers[i]->commandBuffer->vertexBuffer);
                 // glBindBuffer(GL_ARRAY_BUFFER, commandBuffers[i]->commandBuffer->vertexBuffer);
                 // glBufferData(GL_ARRAY_BUFFER, sizeof(verts), verts, GL_STATIC_DRAW);
