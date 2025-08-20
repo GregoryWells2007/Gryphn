@@ -9,6 +9,7 @@ gnUniform* openglAllocateUniforms(gnUniformPool pool, const gnUniformAllocationI
     for (int i = 0; i < allocInfo.setCount; i++) {
         uniforms[i] = malloc(sizeof(struct gnUniform_t));
         uniforms[i]->uniform = malloc(sizeof(struct gnPlatformUniform_t));
+        for (int c = 0; c < MAX_OPENGL_BINDINGS; c++) uniforms[i]->uniform->bindings[c].isUpdated = GN_FALSE;
     }
     return uniforms;
 }

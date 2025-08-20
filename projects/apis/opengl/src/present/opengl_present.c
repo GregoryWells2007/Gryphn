@@ -9,6 +9,7 @@ gnReturnCode openglPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
 
         glBindVertexArray(0);
 
+        glDisable(GL_DEPTH_TEST);
         if (info.presentationQueues[i]->presentationQueue->format == GL_SRGB8_ALPHA8) glEnable(GL_FRAMEBUFFER_SRGB);
 
         glUseProgram(device->outputDevice->shaderProgram);

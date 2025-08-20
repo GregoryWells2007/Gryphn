@@ -1,4 +1,5 @@
 #include "opengl_buffer.h"
+#include "string.h"
 
 GLenum gnBufferTypeToGLEnum(gnBufferType type) {
     switch (type) {
@@ -22,11 +23,12 @@ void openglBufferData(gnBufferHandle buffer, size_t dataSize, void* data) {
 }
 #include "stdio.h"
 void openglBufferSubData(gnBufferHandle buffer, size_t offset, size_t dataSize, gnBufferMemory data) {
-    glBindBuffer(buffer->buffer->type, buffer->buffer->id);
-    glBufferSubData(buffer->buffer->type, 0, dataSize, data);
+    void* buff = glMapNamedBufferRange(buffer->buffer->id, offset, buffer->info.size, GL_MAP_WRITE_BIT);
+    memcpy(buff, data, dataSize);
+    glUnmapNamedBuffer(buffer->buffer->id);
 }
 void* openglMapBuffer(gnBufferHandle buffer) {
-    return glMapNamedBuffer(buffer->buffer->id, GL_READ_WRITE);
+    return glMapNamedBufferRange(buffer->buffer->id, 0, buffer->info.size, GL_MAP_WRITE_BIT | GL_MAP_PERSISTENT_BIT | GL_MAP_COHERENT_BIT);
 }
 void openglUnmapBuffer(gnBufferHandle buffer) {
     glUnmapNamedBuffer(buffer->buffer->id);

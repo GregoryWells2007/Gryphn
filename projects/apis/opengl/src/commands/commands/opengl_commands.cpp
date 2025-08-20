@@ -19,11 +19,9 @@ GN_CPP_FUNCTION void openglBeginRenderPass(gnCommandBuffer buffer, gnRenderPassI
         glBindFramebuffer(GL_FRAMEBUFFER, passInfo.framebuffer->framebuffer->framebuffers[0]);
         if (passInfo.renderPassDescriptor->renderPassDescriptor->subpasses[0].colorAttachments[0].format == GL_SRGB8_ALPHA8) glEnable(GL_FRAMEBUFFER_SRGB);
         glClearColor(values[0].r, values[0].g, values[0].b, values[0].a);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_DEPTH_TEST);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glViewport(passInfo.offset.x, passInfo.offset.y, passInfo.size.x, passInfo.size.y);
-
-
         free(values);
     }));
 }
@@ -91,6 +89,7 @@ GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle sBuffer, gnIndexTyp
         glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indexCount, (type == GN_UINT16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * firstIndex), instanceCount, vertexOffset, firstInstance);
     }));
 }
+#include "stdio.h"
 GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle sBuffer, gnUniform sUniform, uint32_t sSet, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
     gnCommandBufferHandle buffer = sBuffer;
     gnUniform uniform = sUniform;
@@ -98,10 +97,20 @@ GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle sBuffer, gnUniform 
 
     openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([buffer, uniform, set]{
         for (int i = 0; i < MAX_OPENGL_BINDINGS; i++) {
-            if (!uniform->uniform->bindings[i].isUpdated) continue;
+            if (uniform->uniform->bindings[i].isUpdated != GN_TRUE) continue;
             if (uniform->uniform->bindings[i].type == gl_image) {
                 glActiveTexture(GL_TEXTURE0 + buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->setMap[set].bindings[uniform->uniform->bindings[i].image_info.binding]);
                 glBindTexture(GL_TEXTURE_2D, uniform->uniform->bindings[i].image_info.texture->texture->id);
+            } else if (uniform->uniform->bindings[i].type == gl_buffer) {
+                glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform->uniform->bindings[i].buffer_info.buffer->buffer->id);
+                glUniformBlockBinding(
+                    buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->program,
+                    buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->setMap[set].bindings[uniform->uniform->bindings[i].buffer_info.binding],
+                    0
+                );
+            } else if (uniform->uniform->bindings[i].type == gl_storage) {
+                // glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, uniform->uniform->bindings[i].storage_info.buffer->buffer->id);
+                // glFlushMappedNamedBufferRange(uniform->uniform->bindings[i].buffer_info.buffer->buffer->id, 0, uniform->uniform->bindings[i].buffer_info.buffer->info.size);
             }
         }
     }));
