@@ -9,9 +9,8 @@ Gryphn works to abstract away platform API functions (Vulkan, Metal, D3D11/D3D12
 - [x] Metal
 - [ ] Direct 3D 11
 - [ ] Direct 3D 12
-- [ ] OpenGL
+- [x] OpenGL
 - [ ] Software
-* Currently working on the OpenGL backend
 
 # Features
 #### Application objects
@@ -98,3 +97,8 @@ if (code != GN_SUCCESS) printf("Failed to create XXXX %s\n", gnErrorCodeToCStrin
 
 
 ```
+# Known limitations
+### OpenGL:
+OpenGL currently doesn't support push constants, I have some ideas brainstormed to help me support them but for the time being the max push constant size is set to zero
+### Metal:
+The device must support argument buffers for metal, at some point I will work on a solition to support both
