@@ -5,16 +5,15 @@ typedef struct glCompiler_t {
     spirv_cross::CompilerGLSL* glsl;
 } glInternalCompiler;
 
-void handle_resources(spirv_cross::CompilerGLSL& compiler, spirv_cross::SmallVector<spirv_cross::Resource>& resources, int* currentBinding, glSet* setMap) {
+
+
+void handle_resources(spirv_cross::CompilerGLSL& compiler, spirv_cross::SmallVector<spirv_cross::Resource>& resources, glSet* setMap) {
     for (size_t i = 0; i < resources.size(); i++) {
         uint32_t
             set     = compiler.get_decoration(resources[i].id, spv::DecorationDescriptorSet),
             binding = compiler.get_decoration(resources[i].id, spv::DecorationBinding);
-        setMap[set].bindings[binding] = *currentBinding;
-
         compiler.unset_decoration(resources[i].id, spv::DecorationBinding);
-        compiler.set_decoration(resources[i].id, spv::DecorationBinding, *currentBinding);
-        *currentBinding = (*currentBinding) + 1;
+        compiler.set_decoration(resources[i].id, spv::DecorationBinding, setMap[set].bindings[binding]);
     }
 }
 
@@ -25,16 +24,21 @@ GN_CPP_FUNCTION glCompiler glCreateCompiler(glCompilerInfo* info) {
     // compiler->glsl->set_common_options(options);
     return compiler;
 }
-GN_CPP_FUNCTION glShader glCompilerCompilerShader(glCompiler compiler) {
-    int current_binding = 0;
-
+GN_CPP_FUNCTION glShader glCompilerCompilerShader(glCompiler compiler, gnUniformLayout* layout) {
     glShader shader = {};
-    auto arg_buffers = compiler->glsl->get_shader_resources();
-    handle_resources(*compiler->glsl, arg_buffers.uniform_buffers, &current_binding, shader.sets);
-    handle_resources(*compiler->glsl, arg_buffers.storage_buffers, &current_binding, shader.sets);
-    handle_resources(*compiler->glsl, arg_buffers.sampled_images, &current_binding, shader.sets);
+    uint32_t currentBinding = 0;
+    for (uint32_t i = 0; i < layout->setCount; i++) {
+        for (size_t c = 0; c < layout->sets[i].uniformBindingCount; c++) {
+            gnUniformBinding gryphnBinding = layout->sets[i].uniformBindings[c];
+            shader.sets[i].bindings[c] = currentBinding;
+            currentBinding++;
+        }
+    }
 
-    shader.sets[0].bindings[3] = 69;
+    auto arg_buffers = compiler->glsl->get_shader_resources();
+    handle_resources(*compiler->glsl, arg_buffers.uniform_buffers, shader.sets);
+    handle_resources(*compiler->glsl, arg_buffers.storage_buffers, shader.sets);
+    handle_resources(*compiler->glsl, arg_buffers.sampled_images, shader.sets);
 
     std::string output = compiler->glsl->compile();
     shader.source = (char*)malloc(sizeof(char*) * (output.size() + 1));

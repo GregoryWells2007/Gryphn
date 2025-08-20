@@ -2,6 +2,7 @@
 #include "stdint.h"
 #include "glad/glad.h"
 #include "utils/gryphn_cpp_function.h"
+#include "core/src/uniforms/gryphn_uniform_layout.h"
 
 #define MAX_OPENGL_SETS 16
 #define MAX_OPENGL_BINDINGS 32
@@ -28,5 +29,5 @@ typedef struct glShader {
 
 typedef struct glCompiler_t* glCompiler;
 GN_CPP_FUNCTION glCompiler glCreateCompiler(glCompilerInfo* info);
-GN_CPP_FUNCTION glShader glCompilerCompilerShader(glCompiler compiler);
+GN_CPP_FUNCTION glShader glCompilerCompilerShader(glCompiler compiler, gnUniformLayout* layout);
 GN_CPP_FUNCTION void glDestroyCompiler(glCompiler compiler);

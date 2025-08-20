@@ -3,9 +3,10 @@
 #include "opengl_shader_compiler.h"
 
 typedef struct gnPlatformShaderModule_t {
-    glShader shader;
-    GLuint id;
+    glCompiler compiler;
 } gnPlatformShaderModule;
+
+GLenum gnShaderTypeToGLEnum(gnShaderModuleStage stage);
 
 gnReturnCode openglCreateShaderModule(gnShaderModule module, gnDevice device, gnShaderModuleInfo shaderModuleInfo);
 void openglDestroyShaderModule(gnShaderModule module);

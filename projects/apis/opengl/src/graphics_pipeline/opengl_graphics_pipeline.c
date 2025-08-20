@@ -6,9 +6,31 @@
 
 gnReturnCode openglCreateGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
     graphicsPipeline->graphicsPipeline = malloc(sizeof(gnPlatformGraphicsPipeline));
+
+    GLuint* ids = malloc(sizeof(GLuint) * info.shaderModuleCount);
+    for (int i = 0; i < info.shaderModuleCount; i++) {
+        glShader shader = glCompilerCompilerShader(info.shaderModules[i]->shaderModule->compiler, &info.uniformLayout);
+
+        ids[i] = glCreateShader(gnShaderTypeToGLEnum(info.shaderModules[i]->info.stage));
+        const char* source = shader.source;
+        printf("Shader Source %s\n", source);
+        glShaderSource(ids[i], 1, &source, NULL);
+        glCompileShader(ids[i]);
+
+        GLint returnCode;
+        glGetShaderiv(ids[i], GL_COMPILE_STATUS, &returnCode);
+        if(!returnCode) {
+            char infoLog[512];
+            glGetShaderInfoLog(ids[i], 512, NULL, infoLog);
+            gnDebuggerSetErrorMessage(device->instance->debugger, (gnMessageData){
+                .message = gnCreateString(infoLog)
+            });
+        }
+    }
+
     graphicsPipeline->graphicsPipeline->program = glCreateProgram();
     for (int i = 0; i < info.shaderModuleCount; i++)
-        glAttachShader(graphicsPipeline->graphicsPipeline->program, info.shaderModules[i]->shaderModule->id);
+        glAttachShader(graphicsPipeline->graphicsPipeline->program, ids[i]);
     glLinkProgram(graphicsPipeline->graphicsPipeline->program);
     GLint linked;
     glGetProgramiv(graphicsPipeline->graphicsPipeline->program, GL_LINK_STATUS, &linked);
@@ -23,6 +45,9 @@ gnReturnCode openglCreateGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, g
             .message = gnCreateString("Successfully linked program")
         });
     }
+
+    for (int i = 0; i < info.shaderModuleCount; i++)
+        glDeleteShader(ids[i]);
 
     glCreateVertexArrays(1, &graphicsPipeline->graphicsPipeline->vertexArrayObject);
 
