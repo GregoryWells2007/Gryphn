@@ -7,6 +7,8 @@
 #include "buffer/opengl_buffer.h"
 #include "graphics_pipeline/opengl_graphics_pipeline.h"
 #include "renderpass/opengl_render_pass_descriptor.h"
+#include "uniforms/uniform/opengl_uniform.h"
+#include "textures/opengl_texture.h"
 
 GN_CPP_FUNCTION void openglBeginRenderPass(gnCommandBuffer buffer, gnRenderPassInfo sPassInfo) {
     gnRenderPassInfo passInfo = sPassInfo;
@@ -89,10 +91,19 @@ GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle sBuffer, gnIndexTyp
         glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indexCount, (type == GN_UINT16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * firstIndex), instanceCount, vertexOffset, firstInstance);
     }));
 }
-GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle buffer, gnUniform uniform, uint32_t set, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
-    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([]{
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, 5);
+GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle sBuffer, gnUniform sUniform, uint32_t sSet, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
+    gnCommandBufferHandle buffer = sBuffer;
+    gnUniform uniform = sUniform;
+    uint32_t set = sSet;
+
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([buffer, uniform, set]{
+        for (int i = 0; i < MAX_OPENGL_BINDINGS; i++) {
+            if (!uniform->uniform->bindings[i].isUpdated) continue;
+            if (uniform->uniform->bindings[i].type == gl_image) {
+                glActiveTexture(GL_TEXTURE0 + buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->setMap[set].bindings[uniform->uniform->bindings[i].image_info.binding]);
+                glBindTexture(GL_TEXTURE_2D, uniform->uniform->bindings[i].image_info.texture->texture->id);
+            }
+        }
     }));
 }
 GN_CPP_FUNCTION void openglPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {

@@ -13,9 +13,9 @@ gnReturnCode openglPresent(gnOutputDeviceHandle device, gnPresentInfo info) {
 
         glUseProgram(device->outputDevice->shaderProgram);
         glBindBuffer(GL_ARRAY_BUFFER, device->outputDevice->buffer);
+        glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, GLuintArrayListAt(info.presentationQueues[i]->presentationQueue->textures, info.imageIndices[i]));
         glDrawArrays(GL_TRIANGLES, 0, 6);
-        glActiveTexture(GL_TEXTURE0);
         glUseProgram(0);
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
