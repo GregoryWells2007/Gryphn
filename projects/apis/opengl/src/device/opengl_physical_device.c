@@ -12,7 +12,7 @@ gnPhysicalDevice* getOpenGLDevice(gnInstanceHandle instance, uint32_t* deviceCou
             .maxColorSamples = GN_SAMPLE_BIT_1,
             .maxDepthSamples = GN_SAMPLE_BIT_1,
             .maxMemoryAllocations = 0x40000000,
-            .maxPushConstantSize = 256
+            .maxPushConstantSize = 0
         },
         .properties = {
             .deviceType = GN_DEDICATED_DEVICE,

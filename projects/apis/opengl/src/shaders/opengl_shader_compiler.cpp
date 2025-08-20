@@ -1,11 +1,8 @@
 #include "opengl_shader_compiler.h"
 #include "spirv_glsl.hpp"
-
 typedef struct glCompiler_t {
     spirv_cross::CompilerGLSL* glsl;
 } glInternalCompiler;
-
-
 
 void handle_resources(spirv_cross::CompilerGLSL& compiler, spirv_cross::SmallVector<spirv_cross::Resource>& resources, glSet* setMap) {
     for (size_t i = 0; i < resources.size(); i++) {
@@ -39,6 +36,29 @@ GN_CPP_FUNCTION glShader glCompilerCompilerShader(glCompiler compiler, gnUniform
     handle_resources(*compiler->glsl, arg_buffers.uniform_buffers, shader.sets);
     handle_resources(*compiler->glsl, arg_buffers.storage_buffers, shader.sets);
     handle_resources(*compiler->glsl, arg_buffers.sampled_images, shader.sets);
+
+    // for (auto &pc : arg_buffers.push_constant_buffers) {
+    //     compiler->glsl->set_name(pc.id, "gnPushConstantBlock");
+    //     auto type = compiler->glsl->get_type(pc.type_id);
+    //     // printf("members: %lu\n", type.member_types.size());
+    //     for (uint32_t i = 0; i < type.member_types.size(); ++i) {
+    //     //     // std::string name = compiler->glsl->get_member_name(pc.type_id, i);
+
+    //     //     compiler.set_member_name(push_constant_type_id, 0, "myMat4");
+    //     //     compiler.set_member_name(push_constant_type_id, 1, "myVec3");
+    //     //     compiler.set_member_name(push_constant_type_id, 2, "myInt");
+
+    //         auto member_type = compiler->glsl->get_type(type.member_types[i]);
+
+    //     //     // Example: check if it's a mat4, vec3, or int
+    //     //     if (member_type.columns == 4 && member_type.vecsize == 4)
+    //     //         printf("member %s: mat4\n", name.c_str());
+    //     //     else if (member_type.vecsize == 3 && member_type.columns == 1)
+    //     //         printf("member %s: vec3\n", name.c_str());
+    //     //     else if (member_type.basetype == spirv_cross::SPIRType::Int)
+    //     //         printf("member %s: int\n", name.c_str());
+    //     }
+    // }
 
     std::string output = compiler->glsl->compile();
     shader.source = (char*)malloc(sizeof(char*) * (output.size() + 1));

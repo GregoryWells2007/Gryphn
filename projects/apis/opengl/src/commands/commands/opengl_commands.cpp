@@ -50,11 +50,18 @@ GN_CPP_FUNCTION void openglBindGraphicsPipeline(gnCommandBuffer commandBuffer, g
         glUseProgram(buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->program);
     }));
 }
-GN_CPP_FUNCTION void openglSetViewport(gnCommandBuffer buffer, gnViewport viewport) {
-
+GN_CPP_FUNCTION void openglSetViewport(gnCommandBuffer buffer, gnViewport sViewport) {
+    gnViewport viewport = sViewport;
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([viewport]{
+        glViewport(viewport.position.x, viewport.position.y, viewport.size.x, viewport.size.y);
+        glDepthRange(viewport.minDepth, viewport.maxDepth);
+    }));
 }
-GN_CPP_FUNCTION void openglSetScissor(gnCommandBuffer buffer, gnScissor scissor) {
-
+GN_CPP_FUNCTION void openglSetScissor(gnCommandBuffer buffer, gnScissor sScissor) {
+    gnScissor scissor = sScissor;
+    openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([scissor]{
+        glScissor(scissor.position.x, scissor.position.y, scissor.size.x, scissor.size.y);
+    }));
 }
 GN_CPP_FUNCTION void openglBindBuffer(gnCommandBufferHandle buffer, gnBufferHandle bufferToBind, gnBufferType type) {
     gnBufferType bType = type;
@@ -121,6 +128,18 @@ GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle sBuffer, gnUniform 
         }
     }));
 }
-GN_CPP_FUNCTION void openglPushConstant(gnCommandBufferHandle buffer, gnPushConstantLayout layout, void* data) {
+// #include "stdio.h"
+GN_CPP_FUNCTION void openglPushConstant(gnCommandBufferHandle sBuffer, gnPushConstantLayout sLayout, void* sData) {
+    // gnCommandBufferHandle buffer = sBuffer;
+    // // gnPushConstantLayout layout = sLayout;
+    // // void* data = malloc(sizeof(sLayout.size));
+    // // memcpy(data, sData, sizeof(sLayout.size));
 
+    // openglCommandRunnerBindFunction(buffer->commandBuffer->commmandRunner, std::function<void()>([buffer]{
+    //     //TODO: implement OpenGL push constants, its just hard because OpenGL is a bitch and i hate it
+
+    //     // GLint loc = glGetUniformLocation(buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->program, "gnPushConstantBlock");
+    //     // printf("member loc: %i\n", loc);
+    //     // if (loc == -1) return;
+    // }));
 }
