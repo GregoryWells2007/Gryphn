@@ -89,7 +89,6 @@ GN_CPP_FUNCTION void openglDrawIndexed(gnCommandBufferHandle sBuffer, gnIndexTyp
         glDrawElementsInstancedBaseVertexBaseInstance(GL_TRIANGLES, indexCount, (type == GN_UINT16) ? GL_UNSIGNED_SHORT : GL_UNSIGNED_INT, (void*)(sizeof(GLuint) * firstIndex), instanceCount, vertexOffset, firstInstance);
     }));
 }
-#include "stdio.h"
 GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle sBuffer, gnUniform sUniform, uint32_t sSet, uint32_t dynamicOffsetCount, uint32_t* dynamicOffsets) {
     gnCommandBufferHandle buffer = sBuffer;
     gnUniform uniform = sUniform;
@@ -102,15 +101,22 @@ GN_CPP_FUNCTION void openglBindUniform(gnCommandBufferHandle sBuffer, gnUniform 
                 glActiveTexture(GL_TEXTURE0 + buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->setMap[set].bindings[uniform->uniform->bindings[i].image_info.binding]);
                 glBindTexture(GL_TEXTURE_2D, uniform->uniform->bindings[i].image_info.texture->texture->id);
             } else if (uniform->uniform->bindings[i].type == gl_buffer) {
-                glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniform->uniform->bindings[i].buffer_info.buffer->buffer->id);
+                glBindBufferBase(
+                    GL_UNIFORM_BUFFER,
+                    buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->setMap[set].bindings[uniform->uniform->bindings[i].buffer_info.binding],
+                    uniform->uniform->bindings[i].buffer_info.buffer->buffer->id
+                );
                 glUniformBlockBinding(
                     buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->program,
                     buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->setMap[set].bindings[uniform->uniform->bindings[i].buffer_info.binding],
                     0
                 );
             } else if (uniform->uniform->bindings[i].type == gl_storage) {
-                // glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, uniform->uniform->bindings[i].storage_info.buffer->buffer->id);
-                // glFlushMappedNamedBufferRange(uniform->uniform->bindings[i].buffer_info.buffer->buffer->id, 0, uniform->uniform->bindings[i].buffer_info.buffer->info.size);
+                glBindBufferBase(
+                    GL_SHADER_STORAGE_BUFFER,
+                    buffer->commandBuffer->boundGraphicsPipeline->graphicsPipeline->setMap[set].bindings[uniform->uniform->bindings[i].storage_info.binding],
+                    uniform->uniform->bindings[i].storage_info.buffer->buffer->id
+                );
             }
         }
     }));
