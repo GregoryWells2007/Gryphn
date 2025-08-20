@@ -1,7 +1,6 @@
 #include "opengl_graphics_pipeline.h"
-#include "shaders/opengl_shader_module.h"
 #include "core/src/instance/gryphn_instance.h"
-
+#include "shaders/opengl_shader_module.h"
 #include "stdio.h"
 
 gnReturnCode openglCreateGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, gnOutputDevice device, gnGraphicsPipelineInfo info) {
@@ -10,6 +9,10 @@ gnReturnCode openglCreateGraphicsPipeline(gnGraphicsPipeline graphicsPipeline, g
     GLuint* ids = malloc(sizeof(GLuint) * info.shaderModuleCount);
     for (int i = 0; i < info.shaderModuleCount; i++) {
         glShader shader = glCompilerCompilerShader(info.shaderModules[i]->shaderModule->compiler, &info.uniformLayout);
+        if (i == 0)
+            for (int set = 0; set < MAX_OPENGL_SETS; set++)
+                for (int binding = 0; binding < MAX_OPENGL_BINDINGS; binding++)
+                    graphicsPipeline->graphicsPipeline->setMap[set].bindings[binding] = shader.sets[set].bindings[binding];
 
         ids[i] = glCreateShader(gnShaderTypeToGLEnum(info.shaderModules[i]->info.stage));
         const char* source = shader.source;
