@@ -10,13 +10,13 @@ gnReturnCode createOpenGLOutputDevice(gnInstanceHandle instance, gnOutputDeviceH
 
     device->outputDevice = malloc(sizeof(gnPlatformOutputDevice));
     float vertices[] = {
-        -1.0f,  1.0f, 0.0f, 0.0f,
-        -1.0f, -1.0f, 0.0f, 1.0f,
-         1.0f, -1.0f, 1.0f, 1.0f,
+        -1.0f,  1.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 0.0f,
+         1.0f, -1.0f, 1.0f, 0.0f,
 
-        -1.0f,  1.0f, 0.0f, 0.0f,
-         1.0f,  1.0f, 1.0f, 0.0f,
-         1.0f, -1.0f, 1.0f, 1.0f,
+        -1.0f,  1.0f, 0.0f, 1.0f,
+         1.0f,  1.0f, 1.0f, 1.0f,
+         1.0f, -1.0f, 1.0f, 0.0f,
     };
     glCreateBuffers(1, &device->outputDevice->buffer);
     glBindBuffer(GL_ARRAY_BUFFER, device->outputDevice->buffer);
